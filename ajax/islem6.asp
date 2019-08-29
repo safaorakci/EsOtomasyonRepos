@@ -1,5 +1,7 @@
 ﻿<!-- #include virtual="/data_root/conn.asp" -->
-<!-- #include virtual="/data_root/functions.asp" -->
+<!-- #include virtual="/data_root/functions.asp" bilal -->
+
+
 <% 
 
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
