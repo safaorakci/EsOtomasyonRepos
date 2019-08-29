@@ -1,0 +1,161 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <br /><br /><br /><br /><br /><br />
+    <div class="container">
+        <div style="width:100%;  border-radius:10px; padding:10px;">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home">Rezervasyon</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active" style="padding:10px; border:solid 1px #e8e8e8; margin-top:-1px; -webkit-border-bottom-right-radius: 10px; -webkit-border-bottom-left-radius: 10px;
+-moz-border-radius-bottomright: 10px; -moz-border-radius-bottomleft: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; ">
+                    <style>
+                        .rezTable tr td {
+                            padding: 5px;
+                            font-family: Tahoma;
+                            font-size: 14px;
+                        }
+                    </style>
+                    <script type="text/javascript">
+                        (function (factory) {
+                            if (typeof define === "function" && define.amd) {
+                                define(["../widgets/datepicker"], factory);
+                            } else {
+                                factory(jQuery.datepicker);
+                            }
+                        }(function (datepicker) {
+
+                            datepicker.regional.tr = {
+                                closeText: "kapat",
+                                prevText: "&#x3C;geri",
+                                nextText: "ileri&#x3e",
+                                currentText: "bugün",
+                                monthNames: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+                                monthNamesShort: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+                                dayNames: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
+                                dayNamesShort: ["Pz", "Pt", "Sa", "Ça", "Pe", "Cu", "Ct"],
+                                dayNamesMin: ["Pz", "Pt", "Sa", "Ça", "Pe", "Cu", "Ct"],
+                                weekHeader: "Hf",
+                                dateFormat: "dd.mm.yy",
+                                firstDay: 1,
+                                isRTL: false,
+                                showMonthAfterYear: false,
+                                yearSuffix: ""
+                            };
+
+                            datepicker.setDefaults(datepicker.regional.tr);
+
+                            return datepicker.regional.tr;
+
+                        }));
+                    </script>
+                    <script type="text/javascript">
+
+                        function cocuk_yas_sectim(deger) {
+
+                            $(".cocuklar").hide();
+                            if (deger > 0) {
+                                $(".cocuk1").show();
+                            }
+                            if (deger > 1) {
+                                $(".cocuk2").show();
+                            }
+
+                        }
+
+                        $(function () {
+
+                            $(".tabs").tabs();
+                            $("#widget_date2").datepicker({
+                                firstDay: 1,
+                                dateFormat: "dd.mm.yy",
+                            });
+
+                            $("#widget_date1").datepicker({
+                                firstDay: 1,
+                                dateFormat: "dd.mm.yy",
+                                onSelect: function () {
+                                    var tarih = $("#widget_date1").datepicker("getDate");
+                                    var gun = tarih.getDate() + 3;
+                                    var ay = tarih.getMonth() + 1;
+                                    var yil = tarih.getFullYear();
+                                    if (parseInt(gun) > 29) {
+                                        gun = "01";
+                                        ay = parseInt(ay) + 1;
+                                    }
+                                    if (ay == "13") {
+                                        ay = "01";
+                                        yil = parseInt(yil) + 1;
+                                    }
+                                    if (parseInt(gun) < 10) {
+                                        gun = "0" + parseInt(gun);
+                                    }
+                                    if (parseInt(ay) < 10) {
+                                        ay = "0" + parseInt(ay);
+                                    }
+                                    tarih = gun + "." + ay + "." + yil;
+                                    $("#widget_date2").val(tarih);
+                                    setTimeout(function () {
+                                        $("#widget_date2").focus();
+                                    }, 500);
+                                }
+                            });
+
+                            $("#widget_date1").datepicker($.datepicker.regional["tr"]);
+                            $("#widget_date2").datepicker($.datepicker.regional["tr"]);
+
+                        });
+
+                    </script>
+
+                    <form action="https://tatilia.travelus.pro/booking/" method="post" target="_blank" autocomplete="off">
+                        <input type="hidden" name="customer" value="dGF0aWxpYQ==" />
+                        <input type="hidden" name="hotel" value="212" />
+                        <table class="rezTable">
+                            <tr>
+                                <td>Giriş Tarihi</td>
+                                <td>Çıkış Tarihi</td>
+                                <td>Yetişkin</td>
+                                <td>Çocuk</td>
+                                <td class="cocuklar cocuk1" style="display:none;">1. Çocuk</td>
+                                <td class="cocuklar cocuk2" style="display:none;">2. Çocuk</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><input id="widget_date1" class="form-control" placeholder="Giriş Tarihi" name="basla"></td>
+                                <td><input id="widget_date2" class="form-control" placeholder="Çıkış Tarihi" name="bitis"></td>
+                                <td>
+                                    <select id="adult" class="form-control" name="adult">
+                                        <option value="0" selected="">Yetişkin</option>
+                                        <option value="1">1 Yetişkin</option>
+                                        <option value="2">2 Yetişkin</option>
+                                        <option value="3">3 Yetişkin</option>
+                                        <option value="4">4 Yetişkin</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="child" class="form-control" onchange="cocuk_yas_sectim(this.value);" name="child">
+                                        <option value="0" selected="">Çocuk Sayısı</option>
+                                        <option value="1">1 Çocuk</option>
+                                        <option value="2">2 Çocuk</option>
+                                    </select>
+                                </td>
+                                <td class="cocuklar cocuk1" style="display:none;"><input id="child1" class="form-control" style="width:145px;" placeholder="1. Çocuk Doğum Yılı" name="child1"></td>
+                                <td class="cocuklar cocuk2" style="display:none;"><input id="child2" class="form-control" style="width:145px;" placeholder="2. Çocuk Doğum Yılı" name="child2"></td>
+                                <td><button type="submit" id="widget_button" class="btn btn-primary">Odaları Listele</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1213 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <%--bismillahirrahmanirrahim--%>
+    <title><% Response.Write(LNG("Es Otomasyon | Süreç Yönetimi")); %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="Makrogem Bilişim Teknolojileri A.Ş" />
+    <link rel="icon" href="/files/assets/images/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/files/bower_components/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/files/assets/icon/themify-icons/themify-icons.css">
+    <link rel="stylesheet" type="text/css" href="/files/assets/icon/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/files/assets/css/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="/files/assets/pages/chart/radial/css/radial.css" type="text/css" media="all">
+    <link rel="stylesheet" type="text/css" href="/files/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/ozel_css.css">
+    <link rel="stylesheet" type="text/css" href="/files/assets/icon/icofont/css/icofont.css">
+    <link rel="stylesheet" type="text/css" href="/files/bower_components/switchery/css/switchery.min.css">
+    <link rel="stylesheet" type="text/css" href="/files/bower_components/sweetalert/css/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="/files/bower_components/pnotify/css/pnotify.css">
+    <link rel="stylesheet" type="text/css" href="/files/bower_components/pnotify/css/pnotify.brighttheme.css">
+    <link rel="stylesheet" type="text/css" href="/files/bower_components/pnotify/css/pnotify.mobile.css">
+    <link rel="stylesheet" type="text/css" href="/files/assets/pages/pnotify/notify.css">
+    <link rel="stylesheet" type="text/css" href="/css/proskop.css">
+    <link href="/js/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="/css/spectrum.css">
+    <link rel="stylesheet" type="text/css" href="/js/tabs/css/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="/js/tabs/css/tabstyles.css" />
+    <link rel="stylesheet" type="text/css" href="/js/select2.min.css" />
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="/js/NumberFormat154.js"></script>
+</head>
+<body>
+    <div class="theme-loader">
+        <div class="loader-track">
+            <svg id="loader2" viewBox="0 0 100 100">
+                <circle id="circle-loader2" cx="50" cy="50" r="45"></circle>
+            </svg>
+        </div>
+    </div>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <nav class="navbar header-navbar pcoded-header">
+                <div class="navbar-wrapper">
+                    <div class="navbar-logo">
+                        <a class="mobile-menu" id="mobile-collapse" href="#!">
+                            <i class="ti-menu"></i>
+                        </a>
+                        <div class="mobile-search">
+                            <div class="header-search" style="display: none;">
+                                <div class="main-search morphsearch-search">
+                                    <div class="input-group">
+                                        <span class="input-group-addon search-close"><i class="ti-close"></i></span>
+                                        <input type="text" class="form-control" placeholder="Enter Keyword">
+                                        <span class="input-group-addon search-btn"><i class="ti-search"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/default.aspx">
+                            <img class="img-fluid" style="max-height: 50px;" src="/images/proyeni_logo.png" />
+                        </a>
+                        <a class="mobile-options">
+                            <i class="ti-more"></i>
+                        </a>
+                    </div>
+
+                    <div class="navbar-container container-fluid">
+                        <ul class="nav-left">
+                            <li>
+                                <div class="sidebar_toggle"><a href="javascript:void(0)"><i class="ti-menu"></i></a></div>
+                            </li>
+                            <li class="header-search" style="display: none;">
+                                <div class="main-search morphsearch-search">
+                                    <div class="input-group">
+                                        <span class="input-group-addon search-close"><i class="ti-close"></i></span>
+                                        <input type="text" class="form-control">
+                                        <span class="input-group-addon search-btn"><i class="ti-search"></i></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li style="margin-left: 30px; margin-top: 4px;">
+                                <a href="#!" onclick="javascript:toggleFullScreen()">
+                                    <i class="ti-fullscreen"></i>
+                                </a>
+                            </li>
+                            <li></li>
+                        </ul>
+                        <ul class="nav-right">
+                            <li class="header-notification header-notification2">
+                                <a href="#!">
+                                    <i class="ti-bell"></i>
+                                    <span id="bildirim_var" style="display: none;" class="badge bg-c-green">10</span>
+                                </a>
+                                <div id="bildirim_listesi">
+                                </div>
+                            </li>
+
+                            <li style="display: none;">
+                                <div id="toolbar-options" class="hidden">
+                                    <a href="javascript:void(0);" onclick="ajax_dil('turkce');">
+                                        <img src="/images/tr.png" style="width: 20px;" /></a>
+                                    <a href="javascript:void(0);" onclick="ajax_dil('ingilizce');">
+                                        <img src="/images/gb.png" style="width: 20px;" /></a>
+                                    <a href="javascript:void(0);" onclick="ajax_dil('almanca');">
+                                        <img src="/images/de.png" style="width: 20px;" /></a>
+                                </div>
+                            </li>
+                            <li class="" style="display: none;">
+                                <a href="#!" class="displayChatbox">
+                                    <i class="ti-comments"></i>
+                                    <span class="badge bg-c-green"></span>
+                                </a>
+                            </li>
+                            <li class="user-profile header-notification">
+                                <a href="#!">
+                                    <img src="<%: SessionManager.CurrentUser.resim %>" class="img-radius" alt="User-Profile-Image">
+                                    <span><%: SessionManager.CurrentUser.kullanici_adsoyad %></span>
+                                    <i class="ti-angle-down"></i>
+                                </a>
+                                <ul class="show-notification profile-notification">
+                                    <li style="display: none;">
+                                        <a href="javascript:void(0);">
+                                            <i class="ti-settings"></i><% Response.Write(LNG("Ayarlar")); %>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="sayfagetir('/profil_ayarlari/', 'jsid=4559');">
+                                            <i class="ti-user"></i><% Response.Write(LNG("Profil")); %>
+                                        </a>
+                                    </li>
+                                    <li style="display: none;">
+                                        <a href="javascript:void(0);">
+                                            <i class="ti-email"></i><% Response.Write(LNG("Mesajlarım")); %>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/logout/">
+                                            <i class="ti-layout-sidebar-left"></i><% Response.Write(LNG("Güvenli Çıkış")); %>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div id="sidebar" class="users p-chat-user showChat">
+                <div class="had-container">
+                    <div class="card card_main p-fixed users-main">
+                        <div class="user-box">
+                            <div class="chat-search-box">
+                                <a class="back_friendlist">
+                                    <i class="fa fa-chevron-left"></i>
+                                </a>
+                                <div class="right-icon-control">
+                                    <input type="text" class="form-control  search-text" placeholder="Arama Yap" id="search-friends">
+                                    <div class="form-icon">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="main-friend-list">
+                                <div class="media userlist-box" data-id="1" data-status="online" data-username="Kadir Dağcı" data-toggle="tooltip" data-placement="left" title="Josephin Doe">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-radius img-radius" src="/files/upload/ucgem_28.12.2017_06.40.53_a8hc4.jpg" alt="Generic placeholder image ">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Kadir Dağcı</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Safa Orakçı" data-toggle="tooltip" data-placement="left" title="Lary Doe">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-radius" src="/files/upload/ucgem_28.12.2017_06.41.32_MAcGS.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Safa Orakçı</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="3" data-status="online" data-username="Cem HELİMOĞLU" data-toggle="tooltip" data-placement="left" title="Alice">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-radius" src="/files/upload/ucgem_28.12.2017_06.39.49_x6dM3.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Cem HELİMOĞLU</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="4" data-status="online" data-username="Salih ŞAHİN" data-toggle="tooltip" data-placement="left" title="Alia">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-radius" src="/upload/upload/ucgem_24.07.2018_23.49.59_1z1PA.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Salih ŞAHİN</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="showChat_inner">
+                <div class="media chat-inner-header">
+                    <a class="back_chatBox">
+                        <i class="fa fa-chevron-left"></i>Salih ŞAHİN
+                    </a>
+                </div>
+                <div class="media chat-messages">
+                    <a class="media-left photo-table" href="#!">
+                        <img class="media-object img-radius img-radius m-t-5" src="/upload/upload/ucgem_24.07.2018_23.49.59_1z1PA.jpg" alt="Generic placeholder image">
+                    </a>
+                    <div class="media-body chat-menu-content">
+                        <div class="">
+                            <p class="chat-cont">
+                                Merhaba, Teklif hazır müşteriyle iletişime geçebilirsiniz.
+                            <p class="chat-time">9:20.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="media chat-messages">
+                    <div class="media-body chat-menu-reply">
+                        <div class="">
+                            <p class="chat-cont">OK, Teşekkürler.</p>
+                            <p class="chat-time">9:22</p>
+                        </div>
+                    </div>
+                    <div class="media-right photo-table">
+                        <a href="#!">
+                            <img class="media-object img-radius img-radius m-t-5" src="/files/upload/ucgem_28.12.2017_06.41.32_MAcGS.jpg" alt="Generic placeholder image">
+                        </a>
+                    </div>
+                </div>
+                <div class="chat-reply-box p-b-20">
+                    <div class="right-icon-control">
+                        <input type="text" class="form-control search-text" placeholder="Bir mesaj yaz...">
+                        <div class="form-icon">
+                            <i class="fa fa-paper-plane"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>Sistemden Çıkmak İstediğinize Emin misiniz
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <nav class="pcoded-navbar">
+                        <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+                        <div class="pcoded-inner-navbar main-menu">
+
+                            <ul class="pcoded-item pcoded-left-item" style="margin-top: 20px;">
+
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",60,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/anasayfa/', 'jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-home"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><%Response.Write(LNG("Pano")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",61,") > 0)
+                                    {%>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/is_listesi/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-view-list-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><%Response.Write(LNG("İş Emirleri")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+
+
+
+                                <li class="" style="display: none;">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/is_listesi_yeni/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-view-list-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><%Response.Write(LNG("İş Emirleri")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+
+                                <% } %>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",62,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/talepler/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-view-list-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><%Response.Write(LNG("Talep Fişleri")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+
+
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",63,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/ajanda/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-calendar"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Ajanda")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",64,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/santiyeler/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-pencil-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Projeler")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",65,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/parcalar/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-pencil-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Parçalar / Envanter")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",66,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/satinalma-siparisleri/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-pencil-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Satınalma Siparişleri")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",67,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/bakim_yonetimi/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-pencil-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Periyodik Bakım Kayıtları")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",68,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/firma_yonetimi/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-id-badge"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Müşteri Yönetimi")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",69,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/taseron_yonetimi/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="fa fa-group"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Tedarikçi Yönetimi")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",70,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/personel_yonetimi/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-user"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Personel Yönetimi")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+
+
+
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",71,") > 0)
+                                    {%>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i><b>BC</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Raporlar")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",82,") > 0)
+                                            {%>
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/rapor_personel_is_yuku/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Personel İş Yükü Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",83,") > 0)
+                                            {%>
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/rapor_departmanlardaki_is_hacmi/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Departmanlardaki İş Hacmi Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",84,") > 0)
+                                            {%>
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/rapor_is_gucu_verimlilik/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("İş Gücü Verimlilik Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",85,") > 0)
+                                            {%>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/personel_performans_raporu/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Personel Performans Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",86,") > 0)
+                                            {%>
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/proje_adam_saat_raporu/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Proje Adam-Saat Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",87,") > 0)
+                                            {%>
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/departman_adam_saat_raporu/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Departman Adam-Saat Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",88,") > 0)
+                                            {%>
+
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/personel_adam_saat_raporu/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Personel Adam-Saat Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                    </ul>
+                                </li>
+                                <% } %>
+
+
+
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",72,") > 0)
+                                    {%>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i><b>BC</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Tanımlamalar")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",76,") > 0)
+                                            {%>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/uretim_sablonlari/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Üretim Şablonları")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",77,") > 0)
+                                            {%>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/santiye_durum/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Proje Durum Tanımlamaları")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",78,") > 0)
+                                            {%>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/kategori_tanimlamalari/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Kategori Tanımlamaları")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/yasakli_izin_gunleri/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Yasaklı İzin Günleri")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",78,") > 0)
+                                            {%>
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/departmanlar/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Departman Tanımlamaları")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",80,") > 0)
+                                            {%>
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/gorevler/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Görev Tanımlamaları")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                    </ul>
+                                </li>
+                                <% } %>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",73,") > 0)
+                                    {%>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="fa fa-cogs"></i><b>BC</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Ayarlar")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                    <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",81,") > 0)
+                                        {%>
+                                    <ul class="pcoded-submenu">
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/sirket_ayarlari/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Şirket Ayarları")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <% } %>
+                                
+
+
+                                </li>
+                                <% } %>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",74,") > 0)
+                                    {%>
+                                <li class=""></li>
+                                <li class="" style="margin-top: 25px;">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/is_listesi2/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-view-list-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><%Response.Write(LNG("İş Emirleri (Montaj Birimi)")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",75,") > 0)
+                                    {%>
+                                <li class=""></li>
+                                <li class="" style="margin-top: 25px;">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/profil_ayarlari/', 'jsid=4559');">
+                                        <span class="pcoded-micon"><i class="ti-view-list-alt"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><%Response.Write(LNG("Personel İşleri")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                <li class=""></li>
+                                <li class="" style="margin-top: 25px;">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/beta_hatalari/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="fa fa-line-chart"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Destek")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+
+
+
+                            </ul>
+
+                        </div>
+                    </nav>
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <div class="page-body">
+                                        <div id="ortadiv">
+                                            <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="styleSelector"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/files/bower_components/jquery/js/jquery.min.js "></script>
+    <script src="/files/bower_components/jquery-ui/js/jquery-ui.min.js "></script>
+    <script src="/files/bower_components/popper.js/js/popper.min.js"></script>
+    <script src="/files/bower_components/bootstrap/js/bootstrap.min.js "></script>
+    <script src="/files/assets/pages/widget/excanvas.js "></script>
+    <script src="/files/bower_components/jquery-slimscroll/js/jquery.slimscroll.js "></script>
+    <script src="/files/bower_components/modernizr/js/modernizr.js "></script>
+    <script src="/files/assets/js/SmoothScroll.js"></script>
+    <script src="/files/assets/js/jquery.mCustomScrollbar.concat.min.js "></script>
+    <script src="/files/bower_components/chart.js/js/Chart.js"></script>
+    <script src="/files/assets/pages/widget/amchart/amcharts.js"></script>
+    <script src="/files/assets/pages/widget/amchart/serial.js"></script>
+    <script src="/files/assets/pages/widget/amchart/light.js"></script>
+    <script src="/files/assets/js/pcoded.js"></script>
+    <script src="/files/assets/js/vertical/vertical-layout.js"></script>
+    <script src="/files/assets/js/script.js"></script>
+    <script src="/files/assets/js/bootstrap-growl.min.js"></script>
+    <script src="/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script>
+    <script src="/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+    <script src="/js/plugin/sparkline/jquery.sparkline.min.js"></script>
+    <script src="/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+    <script src="/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+    <script src="/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+    <script src="/js/plugin/fastclick/fastclick.min.js"></script>
+    <script src="/js/smart-chat-ui/smart.chat.ui.min.js"></script>
+    <script src="/js/smart-chat-ui/smart.chat.manager.min.js"></script>
+    <script src="/js/plugin/flot/jquery.flot.cust.min.js"></script>
+    <script src="/js/plugin/flot/jquery.flot.resize.min.js"></script>
+    <script src="/js/plugin/flot/jquery.flot.time.min.js"></script>
+    <script src="/js/plugin/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="/js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="/js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="/js/plugin/moment/moment.min.js"></script>
+    <script src="/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script>
+
+    <script src="/js/plugin/datatables/jquery.dataTables.min.js"></script>
+    <script src="/js/plugin/datatables/dataTables.colVis.min.js"></script>
+    <script src="/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+    <script src="/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
+    <%--<script src="/js/yenidatatable/datatables.js"></script>--%>
+    <script src="/files/assets/pages/data-table/js/jszip.min.js"></script>
+    <script src="/files/assets/pages/data-table/js/pdfmake.min.js"></script>
+    <script src="/files/assets/pages/data-table/js/vfs_fonts.js"></script>
+    <script src="/files/bower_components/switchery/js/switchery.min.js"></script>
+    <script src="/files/bower_components/sweetalert/js/sweetalert.min.js"></script>
+    <script src="/files/bower_components/pnotify/js/pnotify.js"></script>
+    <script src="/files/bower_components/pnotify/js/pnotify.mobile.js"></script>
+    <script src="/files/bower_components/pnotify/js/pnotify.buttons.js"></script>
+    <script src="/js/select2.full.min.js"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyADkAddLO7eqRWbN-6DrgG4xkbCsbI6WKg"></script>
+    <script src="/js/components/filestyle/jquery.filestyle.js"></script>
+    <script src="/js/yeniimage.js"></script>
+    <script src="/js/plugin/jquery-validate/jquery.validate.min.js"></script>
+    <script src="/js/plugin/bootstrapvalidator/bootstrapValidator.min.js"></script>
+    <script src="/js/plugin/noUiSlider/jquery.nouislider.min.js"></script>
+    <script src="/js/autosize.js"></script>
+    <link rel="stylesheet" href="/css/multiple-select.css" />
+    <script src="/js/multiple-select.js"></script>
+    <script src="/js/plugin/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="https://d3js.org/d3-path.v1.min.js"></script>
+    <script src="https://d3js.org/d3-shape.v1.min.js"></script>
+    <div style="display: none;" id="koftiden"></div>
+    <script src="/files/assets/pages/chart/knob/jquery.knob.js"></script>
+    <script src="/js/tasimalar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.1/moment-with-locales.min.js"></script>
+    <script src="/js/vis.js"></script>
+    <script src="/js/proskop.js"></script>
+    <script src="/js/proskop_script.js"></script>
+    <script src="/js/proskop_script2.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/js/components/jquery.autotab-1.1b.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>
+    <script type="text/javascript" src="/js/spectrum.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="/js/tabs/js/cbpFWTabs.js"></script>
+    <script src="/js/jquery.maskMoney.js"></script>
+    <script src="/js/components/print/jquery.printPage.js"></script>
+    <script src="/js/easytimer/easytimer.min.js"></script>
+    <div class="modal fade modal-flex" id="Modal-overflow3" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog3 " role="document">
+            <div class="modal-content">
+                <div id="modal_div3"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-flex" id="Modal-overflow2" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog2" role="document">
+            <div class="modal-content">
+                <div id="modal_div2"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-flex" id="Modal-overflow" tabindex="-1" role="dialog">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div id="modal_div"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            bildirimleri_almaya_basla();
+            $(window).on('beforeunload',
+                function (e) {
+                    saveGanttOnServer();
+                });
+            sayfagetir('/anasayfa/', 'jsid=4559');
+            // sayfagetir('/santiye_detay/','jsid=4559&id=16&departman_id=6');
+        });
+    </script>
+    <%--<script type="text/javascript">
+
+        var ge;
+        var ret;
+
+        $(function () {
+            //localStorage.clear();
+            var canWrite = true; //this is the default for test purposes
+
+            // here starts gantt initialization
+            ge = new GanttMaster();
+            ge.set100OnClose = false;
+            ge.shrinkParent = false;
+            ge.init($("#workSpace"));
+            loadI18n(); //overwrite with localized ones
+
+            //in order to force compute the best-fitting zoom level
+            delete ge.gantt.zoom;
+
+            /*
+    
+            var project = loadFromLocalStorage();
+    
+            if (!project.canWrite)
+                $(".ganttButtonBar button.requireWrite").attr("disabled", "true");
+    
+            ge.loadProject(project);
+            ge.checkpoint(); //empty the undo stack
+    
+            */
+
+            var asd = loadGanttFromServer('<%=proje_id %>');
+
+
+        });
+
+
+
+        function getDemoProject() {
+            //console.debug("getDemoProject")
+            ret = {
+                "tasks": [
+                    { "id": -1, "name": "sHavalandırma Tesisatı", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 0, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 20, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
+
+
+                    { "id": -2, "name": "Kanal İmalatı", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 10, "end": 1398203999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
+
+                    { "id": -3, "name": "Kanal Uygulama", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 2, "end": 1397167199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
+
+                    { "id": -4, "name": "Kanal Vidalama", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "3", "canWrite": true, "start": 1397167200000, "duration": 4, "end": 1397685599999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
+
+                    { "id": -5, "name": "Kanal Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_SUSPENDED", "depends": "2:5", "canWrite": true, "start": 1398981600000, "duration": 5, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
+
+                    { "id": -6, "name": "Kalın Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "", "canWrite": true, "start": 1398981600000, "duration": 2, "end": 1399327199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
+
+                    { "id": -7, "name": "Orta Boy Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 3, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
+
+                    { "id": -8, "name": "İnce Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 2, "end": 1539980581804, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false }
+                ], "selectedRow": 2, "deletedTaskIds": [],
+                "resources": [
+                    { "id": "tmp_1", "name": "Kaynak 1" },
+                    { "id": "tmp_2", "name": "Kaynak 2" },
+                    { "id": "tmp_3", "name": "Kaynak 3" },
+                    { "id": "tmp_4", "name": "Kaynak 4" }
+                ],
+                "roles": [
+                    { "id": "tmp_1", "name": "Proje Yöneticisi" },
+                    { "id": "tmp_2", "name": "İşçi" },
+                    { "id": "tmp_3", "name": "Taşeron" },
+                    { "id": "tmp_4", "name": "Müşteri" }
+                ], "canWrite": true, "canDelete": true, "canWriteOnParent": true, canAdd: true
+            }
+
+
+            //actualize data
+            var offset = new Date().getTime() - ret.tasks[0].start;
+            for (var i = 0; i < ret.tasks.length; i++) {
+                ret.tasks[i].start = ret.tasks[i].start + offset;
+            }
+            return ret;
+        }
+
+
+        function iterationCopy(src) {
+            let target = {};
+            for (let prop in src) {
+                if (src.hasOwnProperty(prop)) {
+                    target[prop] = src[prop];
+                }
+            }
+            return target;
+        }
+
+        function loadGanttFromServer(taskId, callback) {
+
+            var asd;
+            //this is a simulation: load data from the local storage if you have already played with the demo or a textarea with starting demo data
+            //var ret = loadFromLocalStorage();
+
+            //this is the real implementation
+
+            //var taskId = $("#taskSelector").val();
+            //var prof = new Profiler("loadServerSide");
+            //prof.reset();
+
+            $.getJSON("/ajax_planlama/?jsid=4559&tip=<%=request("tip")%>&proje_id=<%=request("proje_id")%>", { CM: "LOADPROJECT", taskId: taskId }, function (response) {
+                //console.debug(response);
+
+
+
+                if (response.ok) {
+
+
+                    if (!response.project.canWrite)
+                        $(".ganttButtonBar button.requireWrite").attr("disabled", "true");
+
+
+                    //prof.stop();
+
+                    ge.loadProject(response.project);
+                    ge.checkpoint(); //empty the undo stack
+
+                    if (typeof (callback) == "function") {
+                        callback(response);
+                    }
+                } else {
+                    //jsonErrorHandling(response);
+                }
+            });
+
+
+            return asd;
+        }
+
+
+        function saveGanttOnServer() {
+
+            var prj = ge.saveProject();
+
+            //console.log(JSON.stringify(prj));
+
+            //this is a simulation: save data to the local storage or to the textarea
+            // saveInLocalStorage();
+
+            delete prj.resources;
+            delete prj.roles;
+
+            /*
+            var prof = new Profiler("saveServerSide");
+            prof.reset();
+            */
+
+            /*
+            if (ge.deletedTaskIds.length > 0) {
+                if (!confirm("TASK_THAT_WILL_BE_REMOVED" + ge.deletedTaskIds.length)) {
+                    return;
+                }
+            }*/
+
+            console.log(prj.tasks[0].start);
+
+            $.ajax("/ajax_planlama/", {
+                dataType: "json",
+                data: { islem: "kayit", tip: "<%=tip%>", proje_id: "<%=request("proje_id")%>", prj: JSON.stringify(prj) },
+            type: "POST",
+            success: function (response) {
+                //console.log("girdi");
+                window.parent.mesaj_ver("Proje Planı", "<%=LNG("Kayıt Başarıyla Güncellendi")%>", "success");
+                    if (response.ok) {
+                        if (response.project) {
+                            ge.loadProject(response.project); //must reload as "tmp_" ids are now the good ones
+
+                        } else {
+                            ge.reset();
+                        }
+                    } else {
+                        var errMsg = "Hata Oluştu\n";
+                        if (response.message) {
+                            errMsg = errMsg + response.message + "\n";
+                        }
+
+                        if (response.errorMessages.length) {
+                            errMsg += response.errorMessages.join("\n");
+                        }
+                        alert(errMsg);
+                    }
+                }
+
+            });
+
+        }
+
+        function newProject() {
+            clearGantt();
+        }
+
+
+        function clearGantt() {
+            ge.reset();
+        }
+
+        //-------------------------------------------  Get project file as JSON (used for migrate project from gantt to Teamwork) ------------------------------------------------------
+        function getFile() {
+            $("#gimBaPrj").val(JSON.stringify(ge.saveProject()));
+            $("#gimmeBack").submit();
+            $("#gimBaPrj").val("");
+
+            /*  var uriContent = "data:text/html;charset=utf-8," + encodeURIComponent(JSON.stringify(prj));
+             neww=window.open(uriContent,"dl");*/
+        }
+
+
+        function loadFromLocalStorage() {
+            var ret;
+            if (localStorage) {
+                if (localStorage.getObject("teamworkGantDemo")) {
+                    ret = localStorage.getObject("teamworkGantDemo");
+                }
+            }
+
+            //if not found create a new example task
+            if (!ret || !ret.tasks || ret.tasks.length == 0) {
+                ret = getDemoProject();
+            }
+            return ret;
+        }
+
+
+        function saveInLocalStorage() {
+            var prj = ge.saveProject();
+            if (localStorage) {
+                localStorage.setObject("teamworkGantDemo", prj);
+            }
+        }
+
+
+        //-------------------------------------------  Open a black popup for managing resources. This is only an axample of implementation (usually resources come from server) ------------------------------------------------------
+        function editResources() {
+
+            //make resource editor
+            var resourceEditor = $.JST.createFromTemplate({}, "RESOURCE_EDITOR");
+            var resTbl = resourceEditor.find("#resourcesTable");
+
+            for (var i = 0; i < ge.resources.length; i++) {
+                var res = ge.resources[i];
+                resTbl.append($.JST.createFromTemplate(res, "RESOURCE_ROW"))
+            }
+
+
+            //bind add resource
+            resourceEditor.find("#addResource").click(function () {
+                resTbl.append($.JST.createFromTemplate({ id: "new", name: "resource" }, "RESOURCE_ROW"))
+            });
+
+            //bind save event
+            resourceEditor.find("#resSaveButton").click(function () {
+                var newRes = [];
+                //find for deleted res
+                for (var i = 0; i < ge.resources.length; i++) {
+                    var res = ge.resources[i];
+                    var row = resourceEditor.find("[resId=" + res.id + "]");
+                    if (row.length > 0) {
+                        //if still there save it
+                        var name = row.find("input[name]").val();
+                        if (name && name != "")
+                            res.name = name;
+                        newRes.push(res);
+                    } else {
+                        //remove assignments
+                        for (var j = 0; j < ge.tasks.length; j++) {
+                            var task = ge.tasks[j];
+                            var newAss = [];
+                            for (var k = 0; k < task.assigs.length; k++) {
+                                var ass = task.assigs[k];
+                                if (ass.resourceId != res.id)
+                                    newAss.push(ass);
+                            }
+                            task.assigs = newAss;
+                        }
+                    }
+                }
+
+                //loop on new rows
+                var cnt = 0
+                resourceEditor.find("[resId=new]").each(function () {
+                    cnt++;
+                    var row = $(this);
+                    var name = row.find("input[name]").val();
+                    if (name && name != "")
+                        newRes.push(new Resource("tmp_" + new Date().getTime() + "_" + cnt, name));
+                });
+
+                ge.resources = newRes;
+
+                closeBlackPopup();
+                ge.redraw();
+            });
+
+
+            var ndo = createModalPopup(400, 500).append(resourceEditor);
+        }
+
+        function toplam_calisma_girdim(nesne) {
+
+            var gun_sayisi = $("#duration").val();
+            var gunluk_saat = parseFloat($(nesne).val()) / parseFloat(gun_sayisi);
+            var taskId = $(nesne).attr("taskId");
+            var assId = $(nesne).attr("assId");
+            if (gunluk_saat == NaN) {
+                gunluk_saat = 0;
+            }
+            gunluk_saat = parseFloat(Math.round(gunluk_saat * 100) / 100).toFixed(2);
+            $("input[name=gunluk_calisma][taskId=" + taskId + "][assId=" + assId + "]").val(gunluk_saat);
+        }
+
+
+
+        function gunluk_calisma_girdim(nesne) {
+            var gun_sayisi = $("#duration").val();
+            var toplam_saat = parseFloat($(nesne).val().replace(",", ".")) * parseFloat(gun_sayisi);
+            var taskId = $(nesne).attr("taskId");
+            var assId = $(nesne).attr("assId");
+            if (toplam_saat == NaN) {
+                toplam_saat = 0;
+            }
+            toplam_saat = parseFloat(Math.round(toplam_saat * 100) / 100).toFixed(2);
+            $("input[name=effort][taskId=" + taskId + "][assId=" + assId + "]").val(toplam_saat);
+        }
+
+        function is_yuku_cizelgesi_ac2(start, end) {
+            var start = $("#start").val();
+            var end = $("#end").val();
+            parent.is_yuku_cizelgesi_ac(start, end);
+        }
+
+        function initializeHistoryManagement() {
+
+            //si chiede al server se c'è della hisory per la root
+            $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", { CM: "GETGANTTHISTPOINTS", OBJID: 10236 }, function (response) {
+
+                //se c'è
+                if (response.ok == true && response.historyPoints && response.historyPoints.length > 0) {
+
+                    //si crea il bottone sulla bottoniera
+                    var histBtn = $("<button>").addClass("button textual icon lreq30 lreqLabel").attr("title", "SHOW_HISTORY").append("<span class=\"teamworkIcon\">&#x60;</span>");
+
+                    //al click
+                    histBtn.click(function () {
+                        var el = $(this);
+                        var ganttButtons = $(".ganttButtonBar .buttons");
+
+                        //è gi�  in modalit�  history?
+                        if (!ge.element.is(".historyOn")) {
+                            ge.element.addClass("historyOn");
+                            ganttButtons.find(".requireCanWrite").hide();
+
+                            //si carica la history server side
+                            if (false) return;
+                            showSavingMessage();
+                            $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", { CM: "GETGANTTHISTPOINTS", OBJID: ge.tasks[0].id }, function (response) {
+                                jsonResponseHandling(response);
+                                hideSavingMessage();
+                                if (response.ok == true) {
+                                    var dh = response.historyPoints;
+                                    //ge.historyPoints=response.historyPoints;
+                                    if (dh && dh.length > 0) {
+                                        //si crea il div per lo slider
+                                        var sliderDiv = $("<div>").prop("id", "slider").addClass("lreq30 lreqHide").css({ "display": "inline-block", "width": "500px" });
+                                        ganttButtons.append(sliderDiv);
+
+                                        var minVal = 0;
+                                        var maxVal = dh.length - 1;
+
+                                        $("#slider").show().mbSlider({
+                                            rangeColor: '#2f97c6',
+                                            minVal: minVal,
+                                            maxVal: maxVal,
+                                            startAt: maxVal,
+                                            showVal: false,
+                                            grid: 1,
+                                            formatValue: function (val) {
+                                                return new Date(dh[val]).format();
+                                            },
+                                            onSlideLoad: function (obj) {
+                                                this.onStop(obj);
+
+                                            },
+                                            onStart: function (obj) { },
+                                            onStop: function (obj) {
+                                                var val = $(obj).mbgetVal();
+                                                showSavingMessage();
+                                                $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", { CM: "GETGANTTHISTORYAT", OBJID: ge.tasks[0].id, millis: dh[val] }, function (response) {
+                                                    jsonResponseHandling(response);
+                                                    hideSavingMessage();
+                                                    if (response.ok) {
+                                                        ge.baselines = response.baselines;
+                                                        ge.showBaselines = true;
+                                                        ge.baselineMillis = dh[val];
+                                                        ge.redraw();
+                                                    }
+                                                })
+
+                                            },
+                                            onSlide: function (obj) {
+                                                clearTimeout(obj.renderHistory);
+                                                var self = this;
+                                                obj.renderHistory = setTimeout(function () {
+                                                    self.onStop(obj);
+                                                }, 200)
+
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+
+
+                            // quando si spenge
+                        } else {
+                            //si cancella lo slider
+                            $("#slider").remove();
+                            ge.element.removeClass("historyOn");
+                            if (ge.permissions.canWrite)
+                                ganttButtons.find(".requireCanWrite").show();
+
+                            ge.showBaselines = false;
+                            ge.baselineMillis = undefined;
+                            ge.redraw();
+                        }
+
+                    });
+                    $("#saveGanttButton").before(histBtn);
+                }
+            })
+        }
+
+        function showBaselineInfo(event, element) {
+            //alert(element.attr("data-label"));
+            $(element).showBalloon(event, $(element).attr("data-label"));
+            ge.splitter.secondBox.one("scroll", function () {
+                $(element).hideBalloon();
+            })
+        }
+
+
+        function karsilastirmali_gosterim_calistir(nesne) {
+
+            if ($(nesne).attr("checked") == "checked") {
+                $(nesne).removeAttr("checked")
+            } else {
+                $(nesne).attr("checked", "checked");
+            }
+
+            setTimeout(function () {
+                $('#workSpace').trigger('expandAll.gantt');
+                if ($("#karsilastirmali_gosterim").attr("checked") != "checked") {
+                    $(".taskBoxGolge").hide();
+                }
+            }, 500);
+
+        }
+
+    </script>--%>
+    <button id="modal_butonum" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow"></button>
+    <button id="modal_butonum2" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow2"></button>
+    <button id="modal_butonum3" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow3"></button>
+</body>
+</html>

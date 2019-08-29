@@ -1,0 +1,443 @@
+body, div, td
+{
+	font: 13px 'Open Sans';
+}
+h1
+{
+    margin-top:5px;
+}
+.prettyprint
+{
+	line-height:1.2em;
+	padding:30px;
+	border:0px !important;
+}
+input, select, textarea
+{
+	border-radius: 1px;
+	border:1px solid #ccc;
+	padding:5px;
+}
+
+blockquote
+{
+	font-style: italic;
+	font-family: Georgia, Times, "Times New Roman", serif;
+	padding: 2px 0;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0;
+	padding-left: 20px;
+	padding-right: 8px;
+	border-left-width: 5px;
+}
+.container
+{
+	padding:0px;
+}
+.top
+{
+	padding:30px;
+}
+.content
+{
+	padding:20px;
+	padding-top:0px;
+	min-width:280px;
+
+}
+.content h2
+{
+	text-transform:uppercase;
+}
+.row .column
+{
+	display:inline-block;
+	vertical-align:top;
+}
+
+.clear
+{
+	clear:both;
+}
+
+.login
+{
+    margin: 0;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    background: #e3e3e3;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eee', endColorstr='#fff');
+    background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#fff));
+    background: -moz-linear-gradient(top,  #eee,  #fff);
+    border: solid 1px #bbb;
+    padding:20px;
+}
+.login img
+{
+    width:200px;
+    height:60px;
+}
+.ballon
+{
+    position:relative;
+}
+
+.title
+{
+	font-size:2.2em;
+	font-weight:bold;
+}
+.index
+{
+	margin-top:40px;
+	margin-bottom:60px;
+}
+.index
+{
+	list-style:none;
+	line-height:2.4em;
+}
+.index a
+{
+	text-decoration:none;
+	color:#1f71cf;
+}
+.index .first
+{
+	font-weight:bold;
+}
+.index .second
+{
+	font-weight:normal;
+	margin-left:20px;
+}
+#search
+{
+	padding:30px;
+}
+
+.search-button
+{
+	border-radius: 5px;
+	border:0px;
+	padding:6px;
+}
+
+.search-input
+{
+	display: inline-block;
+}
+
+#logo
+{
+    margin-right:30px;
+}
+
+#menu
+{
+	padding-top:30px;
+	clear:both;
+}
+#menu ul
+{
+	padding:0px;
+	margin:0px;
+}
+#menu li
+{
+	display:inline-block;
+	margin-left:10px;
+}
+#menu a
+{
+	margin: 10px;
+	font-size: 17px;
+	text-decoration: none;
+	text-transform:uppercase;
+	color:#000;
+}
+
+/* Content CSS */
+
+#content-left ul
+{
+	margin:5px 0px 5px 0px;
+	padding:5px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width:280px;
+}
+
+#content-left a
+{
+	text-decoration:none;
+	color:black;
+	font-size:13px;
+	font-weight:600;
+	text-transform:uppercase;
+}
+
+#content-left li
+{
+	list-style:none;
+	padding:15px;
+	padding-left:12px;
+	border-left:4px solid transparent;
+	background-color:#f8f8f8;
+	border-left:4px solid #ddd;
+	cursor:pointer;
+	margin-bottom:2px;
+}
+
+#content-left li:hover
+{
+	color:#444;
+	background-color:#eee;
+	border-left:4px solid #888;
+}
+
+#content-left li.selected
+{
+	border-left:4px solid black;
+}
+
+#content-left span
+{
+	font-size:10px;
+	color:#999;
+	text-transform:uppercase;
+    font-weight:300;
+}
+
+.folder li
+{
+	margin-bottom:10px;
+}
+.readmore
+{
+	text-decoration:none;
+	font-size:0.9em;
+}
+
+
+.breadcrumb
+{
+    list-style:none;
+    margin-bottom:10px;
+    padding:0px;
+}
+.breadcrumb li
+{
+    display:inline-block;
+}
+
+
+.rotateText
+{
+    background-color:#eee;
+    width:70px;
+    border-radius:4px;
+}
+.rotateText div
+{
+    text-align:center;
+    text-transform:uppercase;
+}
+.rotateText p
+{
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    writing-mode: rl-tb; 
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=90);
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=90)";
+}
+
+
+.tag-editor {
+    border: 1px solid #ccc;
+    max-width: 450px;
+}
+
+.tag-editor .tag-editor-tag {
+    background-color:#fff;
+    color:#000;
+}
+
+.tag-editor .tag-editor-delete i:before {
+    font-size:1em;
+    color:#000;
+}
+
+.tag-editor .tag-editor-delete {
+    background-color:#fff;
+}
+
+#tree
+{
+    margin-top:10px;
+}
+
+.jquery_calendar_icon
+{
+    position:relative;
+    top:5px;
+    left:-19px;
+}
+
+.products .product-container
+{
+    display: inline-block;
+    border:1px solid #eee;
+    width:170px;
+    margin:10px;
+}
+
+.products .product-offer
+{
+    height:4px;
+    position:absolute;
+}
+.products .product
+{
+    padding:10px
+}
+
+.products .product-heart
+{
+    position:absolute;
+}
+
+.products .fa
+{
+    color:#ccc;
+}
+
+.products .product .love
+{
+    width:30px;
+    font-size:20px;
+}
+
+.products .product .rate
+{
+    font-size:13px;
+    text-align:right;
+}
+
+.products .product .rate label
+{
+    font-size:10px;
+    color:#aaa;
+    margin-left:3px;
+}
+
+.products .product .love, .products .product .rate
+{
+    cursor:pointer;
+}
+
+.products .product .product-image img
+{
+    width:150px;
+    border-radius:4px;
+}
+
+.products .products .product-image img
+{
+    width:150px;
+    height:150px;
+    border-radius:4px;
+}
+
+.products .product-control
+{
+    width:100%;
+    height:40px;
+    background-color:#eee;
+    border:1px solid #eee;
+}
+.products .product-control-add, .product-control-del
+{
+    width:40px;
+    height:40px;
+    background-color:#eee;
+    border:1px solid #eee;
+}
+.products .product-control-add i, .product-control-del i
+{
+    color:#aaa;
+}
+
+
+.cart .product-container
+{
+    vertical-align:top;
+    display:inline-block;
+    margin:8px;
+}
+.cart .product
+{
+    width:60px;
+}
+.cart .product-quant
+{
+    font-size:9px;
+    position:relative;
+    width:13px;
+    height:13px;
+    border-radius:20px;
+    background-color:#eee;
+    padding:5px;
+    top:60px;
+    left:45px;
+}
+
+.cart .product-image img
+{
+    width:60px;
+    height:60px;
+    border-radius:4px;
+}
+.cart .product-title
+{
+    font-size:9px;
+    position:absolute;
+}
+
+#flags div 
+{
+    display:inline-block;
+    width:120px;
+}
+
+#files
+{
+    min-height:200px;
+    border:1px solid #ccc;
+    padding:10px;
+    position:relative;
+}
+#files .thumbs
+{
+    display:inline-block;
+}
+
+#files .thumbs::after
+{
+    position:relative;
+    top:-180px;
+    left:-20px;
+    content: "\F057";
+    font-family: FontAwesome;
+    font-size:15px;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    color:#444;
+    cursor:pointer;
+}

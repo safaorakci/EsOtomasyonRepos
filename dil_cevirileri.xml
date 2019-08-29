@@ -1,0 +1,1963 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<diller>
+<dil>
+  <id>740</id>
+  <turkce>. günü</turkce>
+  <ingilizce>. Day</ingilizce>
+  <almanca>.Tage</almanca>
+</dil>
+<dil>
+  <id>966</id>
+  <turkce>30 Dakika Geç Kaldı</turkce>
+  <ingilizce>30 Minutes Late</ingilizce>
+  <almanca>30 Min, verspätet</almanca>
+</dil>
+<dil>
+  <id>967</id>
+  <turkce>30 Dakikadan Fazla Geç Kaldı</turkce>
+  <ingilizce>More Than 30 Minutes Late</ingilizce>
+  <almanca>mehr als 30 Min. verspätet</almanca>
+</dil>
+<dil>
+  <id>742</id>
+  <turkce>Açıklama</turkce>
+  <ingilizce>Explanation</ingilizce>
+  <almanca>Erklärung</almanca>
+</dil>
+<dil>
+  <id>948</id>
+  <turkce>Ad Soyad</turkce>
+  <ingilizce>Name Surname</ingilizce>
+  <almanca>Name Nachname</almanca>
+</dil>
+<dil>
+  <id>942</id>
+  <turkce>Adam-Saat Cetveli</turkce>
+  <ingilizce>Man Hour Schedule</ingilizce>
+  <almanca>Person-Stunde Zeitplan</almanca>
+</dil>
+<dil>
+  <id>664</id>
+  <turkce>Ajanda</turkce>
+  <ingilizce>Calendar</ingilizce>
+  <almanca>Kalender</almanca>
+</dil>
+<dil>
+  <id>801</id>
+  <turkce>Ajanda da Göster</turkce>
+  <ingilizce>Add to Calendar</ingilizce>
+  <almanca>zum Kalender Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>743</id>
+  <turkce>Ajanda kaydı senkronize edilecek kişiler :</turkce>
+  <ingilizce>Users that Syncronized the Calendar</ingilizce>
+  <almanca>Benutzer, die den Kalender synchronisiert haben</almanca>
+</dil>
+<dil>
+  <id>744</id>
+  <turkce>Ajanda Kayıt Ekle</turkce>
+  <ingilizce>Add to Calendar Record</ingilizce>
+  <almanca>Zum Kalender hinzufügen</almanca>
+</dil>
+<dil>
+  <id>853</id>
+  <turkce>Alacak</turkce>
+  <ingilizce>Credit</ingilizce>
+  <almanca>Kredit</almanca>
+</dil>
+<dil>
+  <id>921</id>
+  <turkce>Alındı</turkce>
+  <ingilizce>Taken</ingilizce>
+  <almanca>Kassiert</almanca>
+</dil>
+<dil>
+  <id>665</id>
+  <turkce>Ayarlar</turkce>
+  <ingilizce>Settings</ingilizce>
+  <almanca>Einstellungen</almanca>
+</dil>
+<dil>
+  <id>745</id>
+  <turkce>ayda bir</turkce>
+  <ingilizce>Monthly</ingilizce>
+  <almanca>Monatlich</almanca>
+</dil>
+<dil>
+  <id>746</id>
+  <turkce>Aylık</turkce>
+  <ingilizce>Monthly</ingilizce>
+  <almanca>Monatlich</almanca>
+</dil>
+<dil>
+  <id>854</id>
+  <turkce>BAKİYE</turkce>
+  <ingilizce>Arrears</ingilizce>
+  <almanca>Guthaben</almanca>
+</dil>
+<dil>
+  <id>747</id>
+  <turkce>Başlangıç Saati :</turkce>
+  <ingilizce>Begin Time</ingilizce>
+  <almanca>Anfangsuhrzeit</almanca>
+</dil>
+<dil>
+  <id>748</id>
+  <turkce>Başlangıç Tarihi :</turkce>
+  <ingilizce>Begin Date</ingilizce>
+  <almanca>Anfangsdatum</almanca>
+</dil>
+<dil>
+  <id>749</id>
+  <turkce>Başlık</turkce>
+  <ingilizce>Title</ingilizce>
+  <almanca>Title</almanca>
+</dil>
+<dil>
+  <id>953</id>
+  <turkce>Bay</turkce>
+  <ingilizce>Male</ingilizce>
+  <almanca>Herr</almanca>
+</dil>
+<dil>
+  <id>954</id>
+  <turkce>Bayan</turkce>
+  <ingilizce>Female</ingilizce>
+  <almanca>Frau</almanca>
+</dil>
+<dil>
+  <id>811</id>
+  <turkce>BEKLİYOR</turkce>
+  <ingilizce>Waiting</ingilizce>
+  <almanca>WARTEN</almanca>
+</dil>
+<dil>
+  <id>1013</id>
+  <turkce>Belge Gönder</turkce>
+  <ingilizce>Send the Document</ingilizce>
+  <almanca>Dokument Senden</almanca>
+</dil>
+<dil>
+  <id>1014</id>
+  <turkce>Belgeniz Hazır.</turkce>
+  <ingilizce>Ready</ingilizce>
+  <almanca>Dokument ist fertiggestellt.</almanca>
+</dil>
+<dil>
+  <id>1012</id>
+  <turkce>Belgeniz Hazır. Yazdır</turkce>
+  <ingilizce>Ready. Print</ingilizce>
+  <almanca>Dokument ist fertiggestellt. Ausdrücken</almanca>
+</dil>
+<dil>
+  <id>1010</id>
+  <turkce>Belgeniz Oluşturuluyor...</turkce>
+  <ingilizce>Creating Your Document</ingilizce>
+  <almanca>Ihr Dokument wird erstellt…</almanca>
+</dil>
+<dil>
+  <id>750</id>
+  <turkce>birinci</turkce>
+  <ingilizce>First</ingilizce>
+  <almanca>Erste</almanca>
+</dil>
+<dil>
+  <id>751</id>
+  <turkce>Bitiş Saati :</turkce>
+  <ingilizce>End Time</ingilizce>
+  <almanca>Enduhrzeit</almanca>
+</dil>
+<dil>
+  <id>752</id>
+  <turkce>Bitiş Tarihi :</turkce>
+  <ingilizce>End Date</ingilizce>
+  <almanca>Enddatum</almanca>
+</dil>
+<dil>
+  <id>812</id>
+  <turkce>BİTTİ</turkce>
+  <ingilizce>Done</ingilizce>
+  <almanca>Fertig</almanca>
+</dil>
+<dil>
+  <id>855</id>
+  <turkce>Borç</turkce>
+  <ingilizce>Debt</ingilizce>
+  <almanca>Schuld</almanca>
+</dil>
+<dil>
+  <id>908</id>
+  <turkce>Bütçe Hesabı</turkce>
+  <ingilizce>Budget Acoount </ingilizce>
+  <almanca>Budgetkonto</almanca>
+</dil>
+<dil>
+  <id>917</id>
+  <turkce>Bütçe Hesabı Adı</turkce>
+  <ingilizce>Name Of Budget Acoount</ingilizce>
+  <almanca>Budgetkonto-Name</almanca>
+</dil>
+<dil>
+  <id>909</id>
+  <turkce>Bütçe Hesabı Ekle</turkce>
+  <ingilizce>Add Budget Account</ingilizce>
+  <almanca> Budgetkonto Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>910</id>
+  <turkce>Bütçe Hesap Adı</turkce>
+  <ingilizce>Name Of Budget Acoount</ingilizce>
+  <almanca>Budgetkonto-Name</almanca>
+</dil>
+<dil>
+  <id>911</id>
+  <turkce>Bütçe Hesapları</turkce>
+  <ingilizce>Budget Acoounts</ingilizce>
+  <almanca>Budgetkonten</almanca>
+</dil>
+<dil>
+  <id>856</id>
+  <turkce>Cari hareket kaydı bulunamadı.</turkce>
+  <ingilizce>Current Activities Records No Found</ingilizce>
+  <almanca>Konto-Aktivitäten nicht gefunden</almanca>
+</dil>
+<dil>
+  <id>1008</id>
+  <turkce>Cari Hesap Adı</turkce>
+  <ingilizce>Current Account Name</ingilizce>
+  <almanca>Aktueller Kontoname</almanca>
+</dil>
+<dil>
+  <id>846</id>
+  <turkce>Cari İşlemler Dökümü</turkce>
+  <ingilizce>Current Accounts Breakdown</ingilizce>
+  <almanca>Konto-Aktivitäten Detail</almanca>
+</dil>
+<dil>
+  <id>753</id>
+  <turkce>Cmt</turkce>
+  <ingilizce>Sat</ingilizce>
+  <almanca>Sa.</almanca>
+</dil>
+<dil>
+  <id>754</id>
+  <turkce>Cum</turkce>
+  <ingilizce>Fri</ingilizce>
+  <almanca>Fr.</almanca>
+</dil>
+<dil>
+  <id>755</id>
+  <turkce>cuma</turkce>
+  <ingilizce>Friday</ingilizce>
+  <almanca>Freitag</almanca>
+</dil>
+<dil>
+  <id>756</id>
+  <turkce>cumartesi</turkce>
+  <ingilizce>Saturday</ingilizce>
+  <almanca>Samstag</almanca>
+</dil>
+<dil>
+  <id>757</id>
+  <turkce>Çar</turkce>
+  <ingilizce>Wed</ingilizce>
+  <almanca>Mit.</almanca>
+</dil>
+<dil>
+  <id>758</id>
+  <turkce>çarşamba</turkce>
+  <ingilizce>Wednesday</ingilizce>
+  <almanca>Mittwoch</almanca>
+</dil>
+<dil>
+  <id>874</id>
+  <turkce>Çek Ödeme</turkce>
+  <ingilizce>Cheques Payment</ingilizce>
+  <almanca>Schecks Zahlung</almanca>
+</dil>
+<dil>
+  <id>868</id>
+  <turkce>Çek Tahsilat</turkce>
+  <ingilizce>Cheques Collection</ingilizce>
+  <almanca>Schecks Kassieren</almanca>
+</dil>
+<dil>
+  <id>1212</id>
+  <turkce>Çıkış</turkce>
+  <ingilizce>Exit</ingilizce>
+  <almanca>Abmelden</almanca>
+</dil>
+<dil>
+  <id>968</id>
+  <turkce>Çıkış Saati</turkce>
+  <ingilizce>Exit Time</ingilizce>
+  <almanca>Abmeldungzeit</almanca>
+</dil>
+<dil>
+  <id>759</id>
+  <turkce>ÇİZİM</turkce>
+  <ingilizce>DRAWING</ingilizce>
+  <almanca>ZEICHNUNG</almanca>
+</dil>
+<dil>
+  <id>955</id>
+  <turkce>Demo Kullancı</turkce>
+  <ingilizce>Trial User</ingilizce>
+  <almanca>Dummy benutzer</almanca>
+</dil>
+<dil>
+  <id>949</id>
+  <turkce>Departman</turkce>
+  <ingilizce>Department</ingilizce>
+  <almanca>Abteilung</almanca>
+</dil>
+<dil>
+  <id>668</id>
+  <turkce>Departman Adam-Saat Raporu</turkce>
+  <ingilizce>Department Man Hour Report</ingilizce>
+  <almanca>Person/Stunden-Bericht der Abteilung</almanca>
+</dil>
+<dil>
+  <id>669</id>
+  <turkce>Departman Tanımlamaları</turkce>
+  <ingilizce>Department Definitions</ingilizce>
+  <almanca>Abteilungsdefinitionen</almanca>
+</dil>
+<dil>
+  <id>1018</id>
+  <turkce>Departmanlara Harcanan Süre</turkce>
+  <ingilizce>Time Spent In Departments</ingilizce>
+  <almanca>In Abteilungen verbrachteZeit</almanca>
+</dil>
+<dil>
+  <id>670</id>
+  <turkce>Departmanlardaki İş Hacmi Raporu</turkce>
+  <ingilizce>Job Volume Report in Departments</ingilizce>
+  <almanca>Bericht zur Jobbelastung auf den Abteilungen</almanca>
+</dil>
+<dil>
+  <id>671</id>
+  <turkce>Destek</turkce>
+  <ingilizce>Support</ingilizce>
+  <almanca>Support</almanca>
+</dil>
+<dil>
+  <id>1009</id>
+  <turkce>Detaylar</turkce>
+  <ingilizce>Details</ingilizce>
+  <almanca>Details</almanca>
+</dil>
+<dil>
+  <id>802</id>
+  <turkce>Detaylı Giriş</turkce>
+  <ingilizce>Detailed Entry</ingilizce>
+  <almanca>Detailierte Eingabe</almanca>
+</dil>
+<dil>
+  <id>813</id>
+  <turkce>DEVAM EDİYOR</turkce>
+  <ingilizce>Continues</ingilizce>
+  <almanca>GEHT WEITER</almanca>
+</dil>
+<dil>
+  <id>880</id>
+  <turkce>Dosya Adı</turkce>
+  <ingilizce>File Name</ingilizce>
+  <almanca>Dateiname</almanca>
+</dil>
+<dil>
+  <id>877</id>
+  <turkce>Dosya Adı:</turkce>
+  <ingilizce>File Name:</ingilizce>
+  <almanca>Dateiname:</almanca>
+</dil>
+<dil>
+  <id>878</id>
+  <turkce>Dosya Ekle</turkce>
+  <ingilizce>Add File</ingilizce>
+  <almanca>Datei Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>879</id>
+  <turkce>Dosya Listesi</turkce>
+  <ingilizce>File List</ingilizce>
+  <almanca>Dateilist</almanca>
+</dil>
+<dil>
+  <id>944</id>
+  <turkce>Dönem</turkce>
+  <ingilizce>Period</ingilizce>
+  <almanca>Zeitraum</almanca>
+</dil>
+<dil>
+  <id>884</id>
+  <turkce>Dönem :</turkce>
+  <ingilizce>Period:</ingilizce>
+  <almanca>Zeitraum:</almanca>
+</dil>
+<dil>
+  <id>715</id>
+  <turkce>Dönem:</turkce>
+  <ingilizce>Period:</ingilizce>
+  <almanca>Zeitraum:</almanca>
+</dil>
+<dil>
+  <id>760</id>
+  <turkce>dördüncü</turkce>
+  <ingilizce>Fourth</ingilizce>
+  <almanca>Vierte</almanca>
+</dil>
+<dil>
+  <id>728</id>
+  <turkce>Durum</turkce>
+  <ingilizce>Status</ingilizce>
+  <almanca>Status</almanca>
+</dil>
+<dil>
+  <id>803</id>
+  <turkce>Düşük</turkce>
+  <ingilizce>Low</ingilizce>
+  <almanca>Niedrig</almanca>
+</dil>
+<dil>
+  <id>814</id>
+  <turkce>Ekleme Başlangıç Tarihi :</turkce>
+  <ingilizce>Addition Begin Time:</ingilizce>
+  <almanca>Zusatzbeginnzeit:</almanca>
+</dil>
+<dil>
+  <id>815</id>
+  <turkce>Ekleme Bitiş Tarihi :</turkce>
+  <ingilizce>Addition Finish Time:</ingilizce>
+  <almanca>Zusatz-Endzeit:</almanca>
+</dil>
+<dil>
+  <id>881</id>
+  <turkce>Ekleme Saati</turkce>
+  <ingilizce>Addition Time</ingilizce>
+  <almanca>Additionsstunden</almanca>
+</dil>
+<dil>
+  <id>882</id>
+  <turkce>Ekleme Tarihi</turkce>
+  <ingilizce>Addition Date</ingilizce>
+  <almanca>Additionsdatum</almanca>
+</dil>
+<dil>
+  <id>729</id>
+  <turkce>Ekleyen</turkce>
+  <ingilizce>Adding</ingilizce>
+  <almanca>Hinzugefügte</almanca>
+</dil>
+<dil>
+  <id>950</id>
+  <turkce>E-Posta</turkce>
+  <ingilizce>E-Mail</ingilizce>
+  <almanca>E-Mail</almanca>
+</dil>
+<dil>
+  <id>940</id>
+  <turkce>Ertelendi</turkce>
+  <ingilizce>Delayed</ingilizce>
+  <almanca>Verschoben</almanca>
+</dil>
+<dil>
+  <id>730</id>
+  <turkce>Etiketler</turkce>
+  <ingilizce>Tags</ingilizce>
+  <almanca>Stichworte</almanca>
+</dil>
+<dil>
+  <id>761</id>
+  <turkce>Etiketler :</turkce>
+  <ingilizce>Tags:</ingilizce>
+  <almanca>Stichworte:</almanca>
+</dil>
+<dil>
+  <id>1019</id>
+  <turkce>Etiketlere Göre İş Dağılımı</turkce>
+  <ingilizce>Job Distribution As Per Tags</ingilizce>
+  <almanca>Jobverteilung nach Stichwörte</almanca>
+</dil>
+<dil>
+  <id>837</id>
+  <turkce>EUR</turkce>
+  <ingilizce>EUR</ingilizce>
+  <almanca>EUR</almanca>
+</dil>
+<dil>
+  <id>673</id>
+  <turkce>Finansman</turkce>
+  <ingilizce>Financing</ingilizce>
+  <almanca>Finanzierung</almanca>
+</dil>
+<dil>
+  <id>889</id>
+  <turkce>Firma</turkce>
+  <ingilizce>Company</ingilizce>
+  <almanca>Firma</almanca>
+</dil>
+<dil>
+  <id>830</id>
+  <turkce>Firma Adı</turkce>
+  <ingilizce>Company Name</ingilizce>
+  <almanca>Name der Firma</almanca>
+</dil>
+<dil>
+  <id>838</id>
+  <turkce>Firma Logo</turkce>
+  <ingilizce>Company Logo</ingilizce>
+  <almanca>Firmenlogo</almanca>
+</dil>
+<dil>
+  <id>816</id>
+  <turkce>GECİKTİ</turkce>
+  <ingilizce>Lated</ingilizce>
+  <almanca>VERSPÄTET</almanca>
+</dil>
+<dil>
+  <id>817</id>
+  <turkce>Geçerli Departmanlar :</turkce>
+  <ingilizce>Valid Departments:</ingilizce>
+  <almanca>Gültige Abteilungen:</almanca>
+</dil>
+<dil>
+  <id>818</id>
+  <turkce>Geçerli Firmalar :</turkce>
+  <ingilizce>Valid Companies:</ingilizce>
+  <almanca>GültigeFirmen:</almanca>
+</dil>
+<dil>
+  <id>819</id>
+  <turkce>Geçerli Görevliler :</turkce>
+  <ingilizce>Valid Attendant:</ingilizce>
+  <almanca>Gültige Teilnehmer:</almanca>
+</dil>
+<dil>
+  <id>820</id>
+  <turkce>Geçerli Projeler :</turkce>
+  <ingilizce>Valid Projects:</ingilizce>
+  <almanca>Gültige Projekte:</almanca>
+</dil>
+<dil>
+  <id>935</id>
+  <turkce>Gelir Adı</turkce>
+  <ingilizce>Income Name</ingilizce>
+  <almanca>Name des Einkommens</almanca>
+</dil>
+<dil>
+  <id>930</id>
+  <turkce>Gelir Ekle</turkce>
+  <ingilizce>Add Income</ingilizce>
+  <almanca>Einkommen Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>912</id>
+  <turkce>Gerçek</turkce>
+  <ingilizce>Real</ingilizce>
+  <almanca>Real</almanca>
+</dil>
+<dil>
+  <id>936</id>
+  <turkce>Gerçek Tarih</turkce>
+  <ingilizce>Real Date</ingilizce>
+  <almanca>Reales Datum</almanca>
+</dil>
+<dil>
+  <id>922</id>
+  <turkce>Gerçekleşen Tutar</turkce>
+  <ingilizce>Real Deal</ingilizce>
+  <almanca>Aktuelle Kosten</almanca>
+</dil>
+<dil>
+  <id>1030</id>
+  <turkce>Girilen Kriterlere Uygun Kayıt Bulunamadı.</turkce>
+  <ingilizce>"</ingilizce>
+</dil>
+<dil>
+  <turkce>Es wurden keine Einträge für die eingegebenen Kriterien gefunden.</turkce>
+</dil>
+<dil>
+  <id>1213</id>
+  <turkce>Giriş</turkce>
+  <ingilizce>Entry</ingilizce>
+  <almanca>Eintritt</almanca>
+</dil>
+<dil>
+  <id>969</id>
+  <turkce>Giriş Saati</turkce>
+  <ingilizce>Entry Time</ingilizce>
+  <almanca>Eintritt-Uhrzeit</almanca>
+</dil>
+<dil>
+  <id>976</id>
+  <turkce>Giriş Tarihi</turkce>
+  <ingilizce>Entry Date</ingilizce>
+  <almanca>Eintritt-Datum</almanca>
+</dil>
+<dil>
+  <id>951</id>
+  <turkce>Görev</turkce>
+  <ingilizce>Task</ingilizce>
+  <almanca>Aufgabe</almanca>
+</dil>
+<dil>
+  <id>674</id>
+  <turkce>Görev Tanımlamaları</turkce>
+  <ingilizce>Task Definitions</ingilizce>
+  <almanca>Aufgabendefinitionen</almanca>
+</dil>
+<dil>
+  <id>731</id>
+  <turkce>Görevliler</turkce>
+  <ingilizce>Attendants</ingilizce>
+  <almanca>Teilnehmer</almanca>
+</dil>
+<dil>
+  <id>945</id>
+  <turkce>Gösterim</turkce>
+  <ingilizce>Projection</ingilizce>
+  <almanca>Präsentation</almanca>
+</dil>
+<dil>
+  <id>952</id>
+  <turkce>GSM</turkce>
+  <ingilizce>GSM</ingilizce>
+  <almanca>Mobil</almanca>
+</dil>
+<dil>
+  <id>762</id>
+  <turkce>gün</turkce>
+  <ingilizce>day</ingilizce>
+  <almanca>Tag</almanca>
+</dil>
+<dil>
+  <id>732</id>
+  <turkce>Güncelleme</turkce>
+  <ingilizce>Updating</ingilizce>
+  <almanca>Aktualisierung</almanca>
+</dil>
+<dil>
+  <id>890</id>
+  <turkce>Güncelleme Tarihi</turkce>
+  <ingilizce>Updating Date</ingilizce>
+  <almanca>Aktualisierungsdatum</almanca>
+</dil>
+<dil>
+  <id>763</id>
+  <turkce>günde bir</turkce>
+  <ingilizce>once a day</ingilizce>
+  <almanca>einmal am Tag</almanca>
+</dil>
+<dil>
+  <id>988</id>
+  <turkce>Gündem</turkce>
+  <ingilizce>Agenda</ingilizce>
+  <almanca>Agenda</almanca>
+</dil>
+<dil>
+  <id>1003</id>
+  <turkce>Gündem Ekle</turkce>
+  <ingilizce>Add Agenda</ingilizce>
+  <almanca>Agenda Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>998</id>
+  <turkce>Gündem Listesi</turkce>
+  <ingilizce>Agenda List</ingilizce>
+  <almanca>Agenda-Liste</almanca>
+</dil>
+<dil>
+  <id>989</id>
+  <turkce>Gündeme Özel</turkce>
+  <ingilizce>Special For Agenda</ingilizce>
+  <almanca>Speziell für die Agenda</almanca>
+</dil>
+<dil>
+  <id>764</id>
+  <turkce>Günlük</turkce>
+  <ingilizce>Daily</ingilizce>
+  <almanca>Täglich</almanca>
+</dil>
+<dil>
+  <id>675</id>
+  <turkce>Günlük İş Saatleri</turkce>
+  <ingilizce>Daily Job Time</ingilizce>
+  <almanca>Tägliche Arbeitszeit</almanca>
+</dil>
+<dil>
+  <id>676</id>
+  <turkce>Günlük İş Sayıları</turkce>
+  <ingilizce>Daily Job Numbers</ingilizce>
+  <almanca>Anzahl der täglichen Jobs</almanca>
+</dil>
+<dil>
+  <id>765</id>
+  <turkce>günü</turkce>
+  <ingilizce>day</ingilizce>
+  <almanca>Tag</almanca>
+</dil>
+<dil>
+  <id>677</id>
+  <turkce>Güvenli Çıkış</turkce>
+  <ingilizce>Safe Logout</ingilizce>
+  <almanca>Sichere Abmeldung</almanca>
+</dil>
+<dil>
+  <id>766</id>
+  <turkce>haftada bir yenile</turkce>
+  <ingilizce>repeat once week</ingilizce>
+  <almanca>einmal wöchentlich wiederholen</almanca>
+</dil>
+<dil>
+  <id>767</id>
+  <turkce>Haftalık</turkce>
+  <ingilizce>Weekly</ingilizce>
+  <almanca>Wöchentlich</almanca>
+</dil>
+<dil>
+  <id>738</id>
+  <turkce>Hata Oluştu</turkce>
+  <ingilizce>Error Occured</ingilizce>
+  <almanca>Ein Fehler ist aufgetreten</almanca>
+</dil>
+<dil>
+  <id>987</id>
+  <turkce>Haziran</turkce>
+  <ingilizce>June</ingilizce>
+  <almanca>Juni</almanca>
+</dil>
+<dil>
+  <id>903</id>
+  <turkce>Hedef Proje</turkce>
+  <ingilizce>Target Project</ingilizce>
+  <almanca>Zielprojekt</almanca>
+</dil>
+<dil>
+  <id>904</id>
+  <turkce>Hedef Projedeki Planlamanın Üstüne Yaz</turkce>
+  <ingilizce>Write On The Planning In The Target Project</ingilizce>
+  <almanca>Schreiben Sie über die Planung im Zielprojekt</almanca>
+</dil>
+<dil>
+  <id>905</id>
+  <turkce>Hedef Projedeki Planlamaya Ekle</turkce>
+  <ingilizce>Add To Planning In The Target Project</ingilizce>
+  <almanca>Zur Planung im Zielprojekt hinzufügen</almanca>
+</dil>
+<dil>
+  <id>768</id>
+  <turkce>Her</turkce>
+  <ingilizce>All</ingilizce>
+  <almanca>Alle</almanca>
+</dil>
+<dil>
+  <id>769</id>
+  <turkce>Her İş Günü</turkce>
+  <ingilizce>All Workday</ingilizce>
+  <almanca>Alle Arbeitstage</almanca>
+</dil>
+<dil>
+  <id>831</id>
+  <turkce>ID</turkce>
+  <ingilizce>ID</ingilizce>
+  <almanca>ID</almanca>
+</dil>
+<dil>
+  <id>770</id>
+  <turkce>ikinci</turkce>
+  <ingilizce>second</ingilizce>
+  <almanca>zweite</almanca>
+</dil>
+<dil>
+  <id>902</id>
+  <turkce>İndir</turkce>
+  <ingilizce>download</ingilizce>
+  <almanca>herunterladen</almanca>
+</dil>
+<dil>
+  <id>821</id>
+  <turkce>İPTAL</turkce>
+  <ingilizce>CANCEL</ingilizce>
+  <almanca>Abbrechen</almanca>
+</dil>
+<dil>
+  <id>891</id>
+  <turkce>İş</turkce>
+  <ingilizce>Job</ingilizce>
+  <almanca>Job</almanca>
+</dil>
+<dil>
+  <id>822</id>
+  <turkce>İş :</turkce>
+  <ingilizce>Job:</ingilizce>
+  <almanca>Job:</almanca>
+</dil>
+<dil>
+  <id>823</id>
+  <turkce>İş Arama</turkce>
+  <ingilizce>Job Find</ingilizce>
+  <almanca>Job Finden</almanca>
+</dil>
+<dil>
+  <id>733</id>
+  <turkce>İş Başlangıç</turkce>
+  <ingilizce>Job Start</ingilizce>
+  <almanca> Job Starten</almanca>
+</dil>
+<dil>
+  <id>824</id>
+  <turkce>İş Başlangıç Tarihi :</turkce>
+  <ingilizce>Job Start Date:</ingilizce>
+  <almanca>Job Startdatum:</almanca>
+</dil>
+<dil>
+  <id>825</id>
+  <turkce>İş Bitiş Tarihi :</turkce>
+  <ingilizce>Job Finish Date:</ingilizce>
+  <almanca>Job Ende-Datum:</almanca>
+</dil>
+<dil>
+  <id>826</id>
+  <turkce>İş Durumu :</turkce>
+  <ingilizce>Job Status:</ingilizce>
+  <almanca>Job status</almanca>
+</dil>
+<dil>
+  <id>678</id>
+  <turkce>İş Gücü Verimlilik Raporu</turkce>
+  <ingilizce>Workforce Productivity Report</ingilizce>
+  <almanca>Bericht zur Produktivität der Belegschaft</almanca>
+</dil>
+<dil>
+  <id>679</id>
+  <turkce>İş Listesi</turkce>
+  <ingilizce>Job List</ingilizce>
+  <almanca>Job-Liste</almanca>
+</dil>
+<dil>
+  <id>680</id>
+  <turkce>İş Sayısı</turkce>
+  <ingilizce>Number Of Job</ingilizce>
+  <almanca>Anzahl des jobs</almanca>
+</dil>
+<dil>
+  <id>727</id>
+  <turkce>İş Yükü Çizelgesi</turkce>
+  <ingilizce>Workload Schedule</ingilizce>
+  <almanca>Arbeitszeitplan</almanca>
+</dil>
+<dil>
+  <id>885</id>
+  <turkce>İş Yükü Gösterim Tipi</turkce>
+  <ingilizce>Workload Projection Type</ingilizce>
+  <almanca>Workload-Projektionstyp</almanca>
+</dil>
+<dil>
+  <id>681</id>
+  <turkce>İş Yükü Gösterim Tipi:</turkce>
+  <ingilizce>Workload Projection Type:</ingilizce>
+  <almanca>Workload-Projektionstyp:</almanca>
+</dil>
+<dil>
+  <id>832</id>
+  <turkce>İşlem</turkce>
+  <ingilizce>Operation</ingilizce>
+  <almanca>Transaktion</almanca>
+</dil>
+<dil>
+  <id>857</id>
+  <turkce>İşlem Tarihi</turkce>
+  <ingilizce>Operation Date</ingilizce>
+  <almanca>Transaktion-Datum</almanca>
+</dil>
+<dil>
+  <id>858</id>
+  <turkce>İşlem Tipi</turkce>
+  <ingilizce>Operation Type</ingilizce>
+  <almanca>Transaktion-Typ</almanca>
+</dil>
+<dil>
+  <id>1214</id>
+  <turkce>İşlem Türü</turkce>
+  <ingilizce>Operation Type</ingilizce>
+  <almanca>Transaktion-Typ</almanca>
+</dil>
+<dil>
+  <id>859</id>
+  <turkce>İşlemler</turkce>
+  <ingilizce>Operations</ingilizce>
+  <almanca>Transaktionen</almanca>
+</dil>
+<dil>
+  <id>894</id>
+  <turkce>İşListesi</turkce>
+  <ingilizce>Job List</ingilizce>
+  <almanca>Jobliste</almanca>
+</dil>
+<dil>
+  <id>979</id>
+  <turkce>İzin Tarihi</turkce>
+  <ingilizce>Permit Date</ingilizce>
+  <almanca>Erlaubnisdatum</almanca>
+</dil>
+<dil>
+  <id>937</id>
+  <turkce>KALAN TOPLAM :</turkce>
+  <ingilizce>SUM RESIDUAL:</ingilizce>
+  <almanca>SUMME</almanca>
+</dil>
+<dil>
+  <id>1007</id>
+  <turkce>Karar</turkce>
+  <ingilizce>Decision</ingilizce>
+  <almanca>Entscheidung</almanca>
+</dil>
+<dil>
+  <id>1004</id>
+  <turkce>Karar Ekle</turkce>
+  <ingilizce>Add Decision</ingilizce>
+  <almanca>Entscheidung Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>1005</id>
+  <turkce>Kararlar Listesi</turkce>
+  <ingilizce>Decisions List</ingilizce>
+  <almanca>Entscheidungsliste</almanca>
+</dil>
+<dil>
+  <id>990</id>
+  <turkce>Katılımcılar :</turkce>
+  <ingilizce>Participants:</ingilizce>
+  <almanca>Teilnehmer:</almanca>
+</dil>
+<dil>
+  <id>883</id>
+  <turkce>Kayıt Yok</turkce>
+  <ingilizce>No Record</ingilizce>
+  <almanca>Kein Antrag</almanca>
+</dil>
+<dil>
+  <id>946</id>
+  <turkce>Kaynak Maliyet Çizelgesi</turkce>
+  <ingilizce>Supply Cost Scheduler</ingilizce>
+  <almanca>Ressourse Kosten  Schedular</almanca>
+</dil>
+<dil>
+  <id>683</id>
+  <turkce>Kaynaklar</turkce>
+  <ingilizce>Supplies</ingilizce>
+  <almanca>Ressoursen</almanca>
+</dil>
+<dil>
+  <id>804</id>
+  <turkce>Kontrol ve Bildirim</turkce>
+  <ingilizce>Control And Notice</ingilizce>
+  <almanca>Kontrolle und Hinweis</almanca>
+</dil>
+<dil>
+  <id>1015</id>
+  <turkce>Konu</turkce>
+  <ingilizce>Subject</ingilizce>
+  <almanca>Thema</almanca>
+</dil>
+<dil>
+  <id>906</id>
+  <turkce>Kopyalanacak Proje Planı</turkce>
+  <ingilizce>Copied Project Plan</ingilizce>
+  <almanca>Kopierter Projektplan</almanca>
+</dil>
+<dil>
+  <id>805</id>
+  <turkce>MAIL</turkce>
+  <ingilizce>MAIL</ingilizce>
+  <almanca>MAIL</almanca>
+</dil>
+<dil>
+  <id>943</id>
+  <turkce>Maliyet</turkce>
+  <ingilizce>Cost</ingilizce>
+  <almanca>Kosten</almanca>
+</dil>
+<dil>
+  <id>869</id>
+  <turkce>Meblağ</turkce>
+  <ingilizce>Deal</ingilizce>
+  <almanca>Beitrag</almanca>
+</dil>
+<dil>
+  <id>1016</id>
+  <turkce>Mesajınız</turkce>
+  <ingilizce>Message</ingilizce>
+  <almanca>Ihr Nachricht</almanca>
+</dil>
+<dil>
+  <id>685</id>
+  <turkce>Mesajlarım</turkce>
+  <ingilizce>My Messages</ingilizce>
+  <almanca>My Nachricht</almanca>
+</dil>
+<dil>
+  <id>771</id>
+  <turkce>MUHASEBE</turkce>
+  <ingilizce>ACCOUNTING</ingilizce>
+  <almanca>BUCHHALTUNG</almanca>
+</dil>
+<dil>
+  <id>839</id>
+  <turkce>Müşteri Bilgileri</turkce>
+  <ingilizce>Customer İnformation</ingilizce>
+  <almanca>Kunde Information</almanca>
+</dil>
+<dil>
+  <id>840</id>
+  <turkce>Müşteri E-Posta</turkce>
+  <ingilizce>Customer E-Mail</ingilizce>
+  <almanca>Kunde Email</almanca>
+</dil>
+<dil>
+  <id>841</id>
+  <turkce>Müşteri Telefon</turkce>
+  <ingilizce>Customer Phone Number</ingilizce>
+  <almanca>Kunde Tel-Nr.</almanca>
+</dil>
+<dil>
+  <id>1215</id>
+  <turkce>Müşteri/Tedarikçi</turkce>
+  <ingilizce>Customer/Supplier</ingilizce>
+  <almanca>Kunde/Lieferant</almanca>
+</dil>
+<dil>
+  <id>686</id>
+  <turkce>Müşteriler</turkce>
+  <ingilizce>Customers</ingilizce>
+  <almanca>Kunden</almanca>
+</dil>
+<dil>
+  <id>687</id>
+  <turkce>Nakit Akış Raporu</turkce>
+  <ingilizce>Cash Flow Report</ingilizce>
+  <almanca>Bericht zum Bargeld-Fluss</almanca>
+</dil>
+<dil>
+  <id>875</id>
+  <turkce>Nakit Ödeme</turkce>
+  <ingilizce>Cash Payment</ingilizce>
+  <almanca>Barzahlung</almanca>
+</dil>
+<dil>
+  <id>870</id>
+  <turkce>Nakit Tahsilat</turkce>
+  <ingilizce>Cash Collection</ingilizce>
+  <almanca>Barbezahlung</almanca>
+</dil>
+<dil>
+  <id>806</id>
+  <turkce>Normal</turkce>
+  <ingilizce>Normal</ingilizce>
+  <almanca>Normal</almanca>
+</dil>
+<dil>
+  <id>1000</id>
+  <turkce>Notlar</turkce>
+  <ingilizce>Notes</ingilizce>
+  <almanca>Notizen</almanca>
+</dil>
+<dil>
+  <id>688</id>
+  <turkce>Ocak</turkce>
+  <ingilizce>January</ingilizce>
+  <almanca>januar</almanca>
+</dil>
+<dil>
+  <id>689</id>
+  <turkce>OK, Teşekkürler.</turkce>
+  <ingilizce>OK, Thanks</ingilizce>
+  <almanca>OK, Danke schön</almanca>
+</dil>
+<dil>
+  <id>892</id>
+  <turkce>Olay</turkce>
+  <ingilizce>Case</ingilizce>
+  <almanca>Ereignis</almanca>
+</dil>
+<dil>
+  <id>898</id>
+  <turkce>Olay :</turkce>
+  <ingilizce>Case:</ingilizce>
+  <almanca>Ereignis:</almanca>
+</dil>
+<dil>
+  <id>895</id>
+  <turkce>Olay Çizelgesi Olay Ekle</turkce>
+  <ingilizce>Case Schedule Add Case </ingilizce>
+  <almanca>Ereignisliste Ereignis Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>899</id>
+  <turkce>Olay Ekle</turkce>
+  <ingilizce>Add Case</ingilizce>
+  <almanca>Ereignis Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>900</id>
+  <turkce>Olay Saati :</turkce>
+  <ingilizce>Case Time:</ingilizce>
+  <almanca>Ereignis-Uhrzeit:</almanca>
+</dil>
+<dil>
+  <id>772</id>
+  <turkce>Olay Süresi :</turkce>
+  <ingilizce>Case Duration:</ingilizce>
+  <almanca>Ereigniszeit:</almanca>
+</dil>
+<dil>
+  <id>901</id>
+  <turkce>Olay Tarihi :</turkce>
+  <ingilizce>Case Date:</ingilizce>
+  <almanca>Ereignis-Datum:</almanca>
+</dil>
+<dil>
+  <id>773</id>
+  <turkce>Olay Tipi :</turkce>
+  <ingilizce>Case Type:</ingilizce>
+  <almanca>Ereignis-Typ:</almanca>
+</dil>
+<dil>
+  <id>896</id>
+  <turkce>OlayÇizelgesi</turkce>
+  <ingilizce>Case Schedule</ingilizce>
+  <almanca>Ereignis-Schedule:</almanca>
+</dil>
+<dil>
+  <id>1001</id>
+  <turkce>Oluşturma Tarihi</turkce>
+  <ingilizce>Generation Date</ingilizce>
+  <almanca>Erzeugung-Datum</almanca>
+</dil>
+<dil>
+  <id>774</id>
+  <turkce>OPERASYON</turkce>
+  <ingilizce>OPERATION</ingilizce>
+  <almanca>Transaktion</almanca>
+</dil>
+<dil>
+  <id>876</id>
+  <turkce>Ödeme Ekle</turkce>
+  <ingilizce>Add Payment</ingilizce>
+  <almanca>Bezahlung Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>923</id>
+  <turkce>Ödeme Tarihi</turkce>
+  <ingilizce>Payment Date</ingilizce>
+  <almanca>Bezahlung-Datum</almanca>
+</dil>
+<dil>
+  <id>866</id>
+  <turkce>Ödemeler</turkce>
+  <ingilizce>Payments</ingilizce>
+  <almanca>Bezahlungen</almanca>
+</dil>
+<dil>
+  <id>690</id>
+  <turkce>Ödemeler Raporu</turkce>
+  <ingilizce>Payments Report</ingilizce>
+  <almanca>Bericht zu Bezahlungen</almanca>
+</dil>
+<dil>
+  <id>924</id>
+  <turkce>Ödendi</turkce>
+  <ingilizce>Paid</ingilizce>
+  <almanca>Bezahlt</almanca>
+</dil>
+<dil>
+  <id>734</id>
+  <turkce>Öncelik</turkce>
+  <ingilizce>Priority</ingilizce>
+  <almanca>Priorität</almanca>
+</dil>
+<dil>
+  <id>913</id>
+  <turkce>Öngörülen</turkce>
+  <ingilizce>Predicted</ingilizce>
+  <almanca>Vorgesehen</almanca>
+</dil>
+<dil>
+  <id>914</id>
+  <turkce>Öngörülen / Kalan</turkce>
+  <ingilizce>Predicted/Remaining</ingilizce>
+  <almanca>Vorgesehen/Rest</almanca>
+</dil>
+<dil>
+  <id>938</id>
+  <turkce>Öngörülen Tarih</turkce>
+  <ingilizce>Prodicted Date</ingilizce>
+  <almanca>Vorgesehenes Datum</almanca>
+</dil>
+<dil>
+  <id>925</id>
+  <turkce>Öngörülen Tutar</turkce>
+  <ingilizce>Predicted Deal</ingilizce>
+  <almanca>Vorgesehenes Kosten</almanca>
+</dil>
+<dil>
+  <id>691</id>
+  <turkce>Örnek Proje</turkce>
+  <ingilizce>Sample Project</ingilizce>
+  <almanca>Musterprojekt</almanca>
+</dil>
+<dil>
+  <id>692</id>
+  <turkce>Pano</turkce>
+  <ingilizce>Panel</ingilizce>
+  <almanca>Pinwand</almanca>
+</dil>
+<dil>
+  <id>871</id>
+  <turkce>Para birimi :</turkce>
+  <ingilizce>Currency:</ingilizce>
+  <almanca>Währung:</almanca>
+</dil>
+<dil>
+  <id>918</id>
+  <turkce>Parabirimi</turkce>
+  <ingilizce>Currency</ingilizce>
+  <almanca>Währung</almanca>
+</dil>
+<dil>
+  <id>956</id>
+  <turkce>Parola</turkce>
+  <ingilizce>Password</ingilizce>
+  <almanca>Kennwort</almanca>
+</dil>
+<dil>
+  <id>775</id>
+  <turkce>pazar</turkce>
+  <ingilizce>Sunday</ingilizce>
+  <almanca>Sonntag</almanca>
+</dil>
+<dil>
+  <id>776</id>
+  <turkce>pazartesi</turkce>
+  <ingilizce>Monday</ingilizce>
+  <almanca>Montag</almanca>
+</dil>
+<dil>
+  <id>777</id>
+  <turkce>Per</turkce>
+  <ingilizce>Thu</ingilizce>
+  <almanca>Don</almanca>
+</dil>
+<dil>
+  <id>957</id>
+  <turkce>Personel Ad</turkce>
+  <ingilizce>Staff Name</ingilizce>
+  <almanca>Name des Mitarbeiter</almanca>
+</dil>
+<dil>
+  <id>693</id>
+  <turkce>Personel Adam-Saat Raporu</turkce>
+  <ingilizce>Staff Man-Hour Report</ingilizce>
+  <almanca>Mitarbeiter Person-Stunde Bericht</almanca>
+</dil>
+<dil>
+  <id>958</id>
+  <turkce>Personel Bilgileri</turkce>
+  <ingilizce>Staff Information</ingilizce>
+  <almanca>Mitarbeiter Informationen</almanca>
+</dil>
+<dil>
+  <id>959</id>
+  <turkce>Personel Cinsiyet</turkce>
+  <ingilizce>Staff Gender</ingilizce>
+  <almanca>Mitarbeiter Geschlecht</almanca>
+</dil>
+<dil>
+  <id>970</id>
+  <turkce>Personel Çalışma Saatleri</turkce>
+  <ingilizce>Staff Working Hour</ingilizce>
+  <almanca>Arbeitszeit des Mitarbeiter</almanca>
+</dil>
+<dil>
+  <id>960</id>
+  <turkce>Personel Doğum Tarihi</turkce>
+  <ingilizce>Staff Date Of Birth</ingilizce>
+  <almanca>Mitarbeiter Geburtsdatum</almanca>
+</dil>
+<dil>
+  <id>961</id>
+  <turkce>Personel E-Posta</turkce>
+  <ingilizce>Staff E-Mail</ingilizce>
+  <almanca>Mitarbeiter E-mail</almanca>
+</dil>
+<dil>
+  <id>971</id>
+  <turkce>Personel Giriş Çıkış Bilgileri</turkce>
+  <ingilizce>Staff Entrance And Exit Informations</ingilizce>
+  <almanca>Mitarbeiter Eintritts- und Ausgangsinformationen</almanca>
+</dil>
+<dil>
+  <id>972</id>
+  <turkce>Personel Giriş Çıkış Raporu</turkce>
+  <ingilizce>Staff Entrance And Exit Report</ingilizce>
+  <almanca>Mitarbeiter Eintritts- und Ausgangsbericht</almanca>
+</dil>
+<dil>
+  <id>977</id>
+  <turkce>Personel Giriş Çıkış Saati Ekle</turkce>
+  <ingilizce>Add Staff Entrance And Exit Hour</ingilizce>
+  <almanca>Mitarbeiter Eintritts- und Ausgangsuhrzeit Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>974</id>
+  <turkce>Personel Giriş-Çıkış Kaydı Bulunamadı.</turkce>
+  <ingilizce>Staff Entrance And Exit Record No Found.</ingilizce>
+  <almanca>Mitarbeiter Eintritts- und Ausgangsbericht nicht gefunden</almanca>
+</dil>
+<dil>
+  <id>694</id>
+  <turkce>Personel İş Yükü Çizelgesi</turkce>
+  <ingilizce>Staff Workload Schedule</ingilizce>
+  <almanca>Liste der Jobbelastung zur Mitarbeiter </almanca>
+</dil>
+<dil>
+  <id>695</id>
+  <turkce>Personel İş Yükü Raporu</turkce>
+  <ingilizce>Staff Workload Report</ingilizce>
+  <almanca>Bericht der Jobbelastung zur Mitarbeiter </almanca>
+</dil>
+<dil>
+  <id>980</id>
+  <turkce>Personel İzin Ekle</turkce>
+  <ingilizce>Add Staff Permission</ingilizce>
+  <almanca>Mitarbeiter-Urlaub Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>696</id>
+  <turkce>Personel Performans Raporu</turkce>
+  <ingilizce>Staff Performance Report</ingilizce>
+  <almanca>Leistungsbericht der Mitarbeiter</almanca>
+</dil>
+<dil>
+  <id>962</id>
+  <turkce>Personel Resim</turkce>
+  <ingilizce>Personel Photograph</ingilizce>
+  <almanca>Mitarbeiterbild</almanca>
+</dil>
+<dil>
+  <id>963</id>
+  <turkce>Personel Saatlik Maliyet</turkce>
+  <ingilizce>Staff Hourly Cost</ingilizce>
+  <almanca>Stundensatz der Mitarbeiter</almanca>
+</dil>
+<dil>
+  <id>964</id>
+  <turkce>Personel Soyad</turkce>
+  <ingilizce>Staff Surname</ingilizce>
+  <almanca>Nachmane des Mitarbeiter</almanca>
+</dil>
+<dil>
+  <id>965</id>
+  <turkce>Personel Telefon</turkce>
+  <ingilizce>Staff Phone Number</ingilizce>
+  <almanca>Telefon des Mitarbeiter</almanca>
+</dil>
+<dil>
+  <id>697</id>
+  <turkce>Personeller</turkce>
+  <ingilizce>Staffs</ingilizce>
+  <almanca>Mitarbeiter</almanca>
+</dil>
+<dil>
+  <id>778</id>
+  <turkce>perşembe</turkce>
+  <ingilizce>Thursday</ingilizce>
+  <almanca>Donnerstag</almanca>
+</dil>
+<dil>
+  <id>797</id>
+  <turkce>Planlanan Başlangıç</turkce>
+  <ingilizce>Planned Begin</ingilizce>
+  <almanca>Geplanntes Beginzeit</almanca>
+</dil>
+<dil>
+  <id>735</id>
+  <turkce>Planlanan Bitiş</turkce>
+  <ingilizce>Planned Ending</ingilizce>
+  <almanca>Geplanntes Endzeit</almanca>
+</dil>
+<dil>
+  <id>798</id>
+  <turkce>Planlanan Bitiş :</turkce>
+  <ingilizce>Planned Ending:</ingilizce>
+  <almanca>Geplanntes Endzeit:</almanca>
+</dil>
+<dil>
+  <id>941</id>
+  <turkce>Planlanan Tarih</turkce>
+  <ingilizce>Planned Date</ingilizce>
+  <almanca>Geplanntes Datum</almanca>
+</dil>
+<dil>
+  <id>991</id>
+  <turkce>Planlanan Toplantı Süresi :</turkce>
+  <ingilizce>Planned Meeting Duration:</ingilizce>
+  <almanca>Geplante Besprechungszeit:</almanca>
+</dil>
+<dil>
+  <id>926</id>
+  <turkce>Planlandı</turkce>
+  <ingilizce>Planned</ingilizce>
+  <almanca>Geplant</almanca>
+</dil>
+<dil>
+  <id>698</id>
+  <turkce>Profil</turkce>
+  <ingilizce>Profile</ingilizce>
+  <almanca>Profil</almanca>
+</dil>
+<dil>
+  <id>886</id>
+  <turkce>Proje</turkce>
+  <ingilizce>Project</ingilizce>
+  <almanca>Projekt</almanca>
+</dil>
+<dil>
+  <id>699</id>
+  <turkce>Proje Adam-Saat Raporu</turkce>
+  <ingilizce>Project Man-Hour Report</ingilizce>
+  <almanca>Bericht zum Projekt Person-Stunde </almanca>
+</dil>
+<dil>
+  <id>893</id>
+  <turkce>Proje Adı</turkce>
+  <ingilizce>Project Name</ingilizce>
+  <almanca>Projektname</almanca>
+</dil>
+<dil>
+  <id>700</id>
+  <turkce>Proje Durum Tanımlamaları</turkce>
+  <ingilizce>Project Status Definitions</ingilizce>
+  <almanca>Definition des Projektstatus</almanca>
+</dil>
+<dil>
+  <id>931</id>
+  <turkce>Proje Gelirleri</turkce>
+  <ingilizce>Project Incomes</ingilizce>
+  <almanca>Einkommen der Projekte</almanca>
+</dil>
+<dil>
+  <id>915</id>
+  <turkce>Proje GiderleriYeni Satın Alma Ekle</turkce>
+  <ingilizce>Project Expense Add New Purchasing</ingilizce>
+  <almanca>Projektkosten neues Kauf hinzufügen</almanca>
+</dil>
+<dil>
+  <id>701</id>
+  <turkce>Proje Maliyet Raporu</turkce>
+  <ingilizce>Project Cost Report</ingilizce>
+  <almanca>Projektkosten Bericht</almanca>
+</dil>
+<dil>
+  <id>1026</id>
+  <turkce>Proje No</turkce>
+  <ingilizce>Project No</ingilizce>
+  <almanca>Projektnummer</almanca>
+</dil>
+<dil>
+  <id>897</id>
+  <turkce>Proje Olay Kaydı Bulunamadı</turkce>
+  <ingilizce>Project Case Record No Found</ingilizce>
+  <almanca>Projektereignis nicht gefunden</almanca>
+</dil>
+<dil>
+  <id>907</id>
+  <turkce>Proje Plan Kopyala</turkce>
+  <ingilizce>Copy Project Plan</ingilizce>
+  <almanca>Projekt-Plannung kopieren</almanca>
+</dil>
+<dil>
+  <id>702</id>
+  <turkce>Proje:</turkce>
+  <ingilizce>Project:</ingilizce>
+  <almanca>Projekt:</almanca>
+</dil>
+<dil>
+  <id>703</id>
+  <turkce>Projeler</turkce>
+  <ingilizce>Projects</ingilizce>
+  <almanca>Projekte</almanca>
+</dil>
+<dil>
+  <id>1020</id>
+  <turkce>Projelere Göre İş Dağılımı</turkce>
+  <ingilizce>Job Distribution As Per Projects</ingilizce>
+  <almanca>Aufgabeteilung auf die Projekte</almanca>
+</dil>
+<dil>
+  <id>1021</id>
+  <turkce>Projelere Harcanan Süre</turkce>
+  <ingilizce>Time Spent For Projects</ingilizce>
+  <almanca>Zeitaufwand für Projekte</almanca>
+</dil>
+<dil>
+  <id>779</id>
+  <turkce>Pzr</turkce>
+  <ingilizce>Sun</ingilizce>
+  <almanca>So</almanca>
+</dil>
+<dil>
+  <id>780</id>
+  <turkce>Pzt</turkce>
+  <ingilizce>Mon</ingilizce>
+  <almanca>Mo</almanca>
+</dil>
+<dil>
+  <id>1027</id>
+  <turkce>Rapor Bilgileri :</turkce>
+  <ingilizce>Report Informations</ingilizce>
+  <almanca>Bericht Informationen:</almanca>
+</dil>
+<dil>
+  <id>704</id>
+  <turkce>Raporlar</turkce>
+  <ingilizce>Reports</ingilizce>
+  <almanca>Berichte</almanca>
+</dil>
+<dil>
+  <id>1028</id>
+  <turkce>Raporu Alan :</turkce>
+  <ingilizce>User Receiving Report</ingilizce>
+  <almanca>Berichtsempfänger</almanca>
+</dil>
+<dil>
+  <id>781</id>
+  <turkce>Renk</turkce>
+  <ingilizce>Colour</ingilizce>
+  <almanca>Farbe</almanca>
+</dil>
+<dil>
+  <id>782</id>
+  <turkce>Rutin</turkce>
+  <ingilizce>Routine</ingilizce>
+  <almanca>Routine</almanca>
+</dil>
+<dil>
+  <id>799</id>
+  <turkce>Saat</turkce>
+  <ingilizce>Clock</ingilizce>
+  <almanca>Uhrzeit</almanca>
+</dil>
+<dil>
+  <id>800</id>
+  <turkce>Saat :</turkce>
+  <ingilizce>Clock:</ingilizce>
+  <almanca>Uhrzeit</almanca>
+</dil>
+<dil>
+  <id>978</id>
+  <turkce>Saat Tipi</turkce>
+  <ingilizce>Clock Type</ingilizce>
+  <almanca>Uhrzeittyp</almanca>
+</dil>
+<dil>
+  <id>783</id>
+  <turkce>Sal</turkce>
+  <ingilizce>Tue</ingilizce>
+  <almanca>Di</almanca>
+</dil>
+<dil>
+  <id>784</id>
+  <turkce>salı</turkce>
+  <ingilizce>Tuesday</ingilizce>
+  <almanca>Dienstag</almanca>
+</dil>
+<dil>
+  <id>916</id>
+  <turkce>Satınalma Adı</turkce>
+  <ingilizce>Purchasing Name</ingilizce>
+  <almanca>Kaufname</almanca>
+</dil>
+<dil>
+  <id>927</id>
+  <turkce>Satınalma Ekle</turkce>
+  <ingilizce>Add Pruchasing</ingilizce>
+  <almanca>Kauf Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>785</id>
+  <turkce>SATIŞ</turkce>
+  <ingilizce>SALE</ingilizce>
+  <almanca>VERKAUF</almanca>
+</dil>
+<dil>
+  <id>928</id>
+  <turkce>Sipariş Verildi</turkce>
+  <ingilizce>Ordered</ingilizce>
+  <almanca>Bestellt</almanca>
+</dil>
+<dil>
+  <id>807</id>
+  <turkce>SMS</turkce>
+  <ingilizce>SMS</ingilizce>
+  <almanca>SMS</almanca>
+</dil>
+<dil>
+  <id>786</id>
+  <turkce>son</turkce>
+  <ingilizce>last</ingilizce>
+  <almanca>letzte</almanca>
+</dil>
+<dil>
+  <id>833</id>
+  <turkce>Supervisor</turkce>
+  <ingilizce>Supervisor</ingilizce>
+  <almanca>Supervisor</almanca>
+</dil>
+<dil>
+  <id>842</id>
+  <turkce>Süpervisor</turkce>
+  <ingilizce>Supervisor</ingilizce>
+  <almanca>Supervisor</almanca>
+</dil>
+<dil>
+  <id>707</id>
+  <turkce>Şirket Ayarları</turkce>
+  <ingilizce>Company Settings</ingilizce>
+  <almanca>Firmeneinstellungen</almanca>
+</dil>
+<dil>
+  <id>939</id>
+  <turkce>TAHSİL EDİLEN TOPLAM :</turkce>
+  <ingilizce>SUM COLLECTED:</ingilizce>
+  <almanca>SUMME DER BEZAHLUNG:</almanca>
+</dil>
+<dil>
+  <id>872</id>
+  <turkce>Tahsilat Ekle</turkce>
+  <ingilizce>Add Collection</ingilizce>
+  <almanca>Bezahlung Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>1216</id>
+  <turkce>Tahsilat/Ödeme Tarihi</turkce>
+  <ingilizce>Collection/Payment Date</ingilizce>
+  <almanca>Bezahlung Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>867</id>
+  <turkce>Tahsilatlar</turkce>
+  <ingilizce>Collections</ingilizce>
+  <almanca>Bezahlungen</almanca>
+</dil>
+<dil>
+  <id>708</id>
+  <turkce>Tahsilatlar Raporu</turkce>
+  <ingilizce>Collections Report</ingilizce>
+  <almanca>Bezahlungen Bericht</almanca>
+</dil>
+<dil>
+  <id>736</id>
+  <turkce>Tamamlanma</turkce>
+  <ingilizce>Completion</ingilizce>
+  <almanca>Ergänzung</almanca>
+</dil>
+<dil>
+  <id>737</id>
+  <turkce>Tamamlanma Durumu</turkce>
+  <ingilizce>Completion Status</ingilizce>
+  <almanca>Vollständigkeitsstatus</almanca>
+</dil>
+<dil>
+  <id>709</id>
+  <turkce>Tanımlamalar</turkce>
+  <ingilizce>Definitions</ingilizce>
+  <almanca>Definitionen</almanca>
+</dil>
+<dil>
+  <id>999</id>
+  <turkce>Tanımlanan gündem kaydı bulunamadı.</turkce>
+  <ingilizce>Defined Agenda Record Not Found</ingilizce>
+  <almanca>Definierter Agenda  nicht gefunden</almanca>
+</dil>
+<dil>
+  <id>739</id>
+  <turkce>Tarayıcınız Ajanda Uygulamasını Desteklemiyor.</turkce>
+  <ingilizce>"</ingilizce>
+</dil>
+<dil>
+  <turkce>Ihr Browser unterstüzt nicht die Kalender-Anwendung</turkce>
+</dil>
+<dil>
+  <id>873</id>
+  <turkce>Tarih</turkce>
+  <ingilizce>Date</ingilizce>
+  <almanca>Datum</almanca>
+</dil>
+<dil>
+  <id>1029</id>
+  <turkce>Tarih :</turkce>
+  <ingilizce>Date:</ingilizce>
+  <almanca>Datum:</almanca>
+</dil>
+<dil>
+  <id>787</id>
+  <turkce>TASARIM</turkce>
+  <ingilizce>DESIGN</ingilizce>
+  <almanca>DESIGN</almanca>
+</dil>
+<dil>
+  <id>843</id>
+  <turkce>Taşeron Saatlik Maliyet</turkce>
+  <ingilizce>Pieceworker Hourly Cost</ingilizce>
+  <almanca>Subfirma Stundensatz</almanca>
+</dil>
+<dil>
+  <id>929</id>
+  <turkce>Tedarikçi</turkce>
+  <ingilizce>Supplier</ingilizce>
+  <almanca>Lieferant</almanca>
+</dil>
+<dil>
+  <id>710</id>
+  <turkce>Tedarikçiler</turkce>
+  <ingilizce>Suppliers</ingilizce>
+  <almanca>Lieferanten</almanca>
+</dil>
+<dil>
+  <id>788</id>
+  <turkce>Tek</turkce>
+  <ingilizce>Single</ingilizce>
+  <almanca>Single</almanca>
+</dil>
+<dil>
+  <id>834</id>
+  <turkce>Telefon</turkce>
+  <ingilizce>Phone</ingilizce>
+  <almanca>Telefon</almanca>
+</dil>
+<dil>
+  <id>975</id>
+  <turkce>Tip</turkce>
+  <ingilizce>Type</ingilizce>
+  <almanca>Typ</almanca>
+</dil>
+<dil>
+  <id>860</id>
+  <turkce>TOPLAM ALACAK</turkce>
+  <ingilizce>SUM CREDIT</ingilizce>
+  <almanca>SUMME DES GUTHABEN</almanca>
+</dil>
+<dil>
+  <id>861</id>
+  <turkce>TOPLAM BORÇ</turkce>
+  <ingilizce>SUM DEBIT</ingilizce>
+  <almanca>TOTALE DES SCHULDEN</almanca>
+</dil>
+<dil>
+  <id>1022</id>
+  <turkce>TOPLAM:</turkce>
+  <ingilizce>SUM:</ingilizce>
+  <almanca>SUMME:</almanca>
+</dil>
+<dil>
+  <id>992</id>
+  <turkce>Toplantı Adı :</turkce>
+  <ingilizce>Meeting Name:</ingilizce>
+  <almanca>Name der Besprechung</almanca>
+</dil>
+<dil>
+  <id>993</id>
+  <turkce>Toplantı Saati :</turkce>
+  <ingilizce>Meeting Time:</ingilizce>
+  <almanca>Besprechungsuhrzeit:</almanca>
+</dil>
+<dil>
+  <id>994</id>
+  <turkce>Toplantı Tipi :</turkce>
+  <ingilizce>Meeting Type:</ingilizce>
+  <almanca>Besprechungstyp:</almanca>
+</dil>
+<dil>
+  <id>995</id>
+  <turkce>Toplantı Zamanı :</turkce>
+  <ingilizce>Meeting Duration:</ingilizce>
+  <almanca>Besprechungszeit:</almanca>
+</dil>
+<dil>
+  <id>711</id>
+  <turkce>Toplantılar</turkce>
+  <ingilizce>Meetings</ingilizce>
+  <almanca>Besprechungen</almanca>
+</dil>
+<dil>
+  <id>1006</id>
+  <turkce>Toplantıyla ilişkili karar kaydı bulunamadı.</turkce>
+  <ingilizce>Decision Releated To Meeting Record  Was Not Found.</ingilizce>
+  <almanca>Für die Besprechnung keine Entscheidung gefunden.</almanca>
+</dil>
+<dil>
+  <id>919</id>
+  <turkce>Tutar</turkce>
+  <ingilizce>Deal</ingilizce>
+  <almanca>Beitrag</almanca>
+</dil>
+<dil>
+  <id>712</id>
+  <turkce>Tüm Projeler</turkce>
+  <ingilizce>All Projects</ingilizce>
+  <almanca>Alle Projekte</almanca>
+</dil>
+<dil>
+  <id>827</id>
+  <turkce>Tümü</turkce>
+  <ingilizce>All</ingilizce>
+  <almanca>Alle</almanca>
+</dil>
+<dil>
+  <id>789</id>
+  <turkce>UYGULAMA</turkce>
+  <ingilizce>APPLICATION</ingilizce>
+  <almanca>ANWENDUNG</almanca>
+</dil>
+<dil>
+  <id>790</id>
+  <turkce>üçüncü</turkce>
+  <ingilizce>Third</ingilizce>
+  <almanca>Dritte</almanca>
+</dil>
+<dil>
+  <id>862</id>
+  <turkce>Vade Tarihi</turkce>
+  <ingilizce>Maturity Date</ingilizce>
+  <almanca>Fälligkeitsdatum</almanca>
+</dil>
+<dil>
+  <id>808</id>
+  <turkce>Yapılacak İş</turkce>
+  <ingilizce>Work To Do</ingilizce>
+  <almanca>ToDo</almanca>
+</dil>
+<dil>
+  <id>1011</id>
+  <turkce>Yazdır</turkce>
+  <ingilizce>Print</ingilizce>
+  <almanca>Drucken</almanca>
+</dil>
+<dil>
+  <id>809</id>
+  <turkce>Yeni İş Ekle</turkce>
+  <ingilizce>Add New Job</ingilizce>
+  <almanca>Neuen Job Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>791</id>
+  <turkce>Yeni müşteri</turkce>
+  <ingilizce>New Customer</ingilizce>
+  <almanca>Neu Kunde</almanca>
+</dil>
+<dil>
+  <id>1002</id>
+  <turkce>Yeni Not Ekle</turkce>
+  <ingilizce>Add New Note</ingilizce>
+  <almanca>Neue Notiz Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>792</id>
+  <turkce>Yeni tedarikçi</turkce>
+  <ingilizce>New Supplier</ingilizce>
+  <almanca>Neuer Lieferant</almanca>
+</dil>
+<dil>
+  <id>996</id>
+  <turkce>Yeni Toplantı Planla</turkce>
+  <ingilizce>Plan New Meeting</ingilizce>
+  <almanca>Neues Meeting planen</almanca>
+</dil>
+<dil>
+  <id>836</id>
+  <turkce>Yetkili Kişi</turkce>
+  <ingilizce>Authorized Person</ingilizce>
+  <almanca>Berechtigte Person</almanca>
+</dil>
+<dil>
+  <id>997</id>
+  <turkce>Yineleme Aralığı :</turkce>
+  <ingilizce>Repitition Range</ingilizce>
+  <almanca>Wiederholungsinterval</almanca>
+</dil>
+<dil>
+  <id>793</id>
+  <turkce>Yineleme Başlangıç Tarihi :</turkce>
+  <ingilizce>Repitition Begin Time:</ingilizce>
+  <almanca>Wiederholungsbeginnzeit:</almanca>
+</dil>
+<dil>
+  <id>794</id>
+  <turkce>Yineleme Bitiş Tarihi :</turkce>
+  <ingilizce>Repitition End Time:</ingilizce>
+  <almanca>Wiederholungsendzeit:</almanca>
+</dil>
+<dil>
+  <id>795</id>
+  <turkce>Yineleme Dönemi :</turkce>
+  <ingilizce>Repitition Period:</ingilizce>
+  <almanca>Wiederholungszeitraum:</almanca>
+</dil>
+<dil>
+  <id>796</id>
+  <turkce>YÖNETİM</turkce>
+  <ingilizce>MANAGEMENT</ingilizce>
+  <almanca>VERWALTUNG</almanca>
+</dil>
+<dil>
+  <id>810</id>
+  <turkce>Yüksek</turkce>
+  <ingilizce>High</ingilizce>
+  <almanca>Hoch</almanca>
+</dil>
+<dil>
+  <id>973</id>
+  <turkce>Zamanında</turkce>
+  <ingilizce>On Time</ingilizce>
+  <almanca>Pünktlich</almanca>
+</dil>
+<dil>
+  <id>983</id>
+  <turkce>Zimmet Eden</turkce>
+  <ingilizce>Giving Liability Person</ingilizce>
+  <almanca>Haftungsgeber</almanca>
+</dil>
+<dil>
+  <id>984</id>
+  <turkce>Zimmet Edilen</turkce>
+  <ingilizce>Receiving Liability Person</ingilizce>
+  <almanca>Haftungsnehmer</almanca>
+</dil>
+<dil>
+  <id>985</id>
+  <turkce>Zimmet Kaydı Bulunamadı</turkce>
+  <ingilizce>Liability Record Not Found</ingilizce>
+  <almanca>Haftungsnachweis nicht gefunden</almanca>
+</dil>
+<dil>
+  <id>981</id>
+  <turkce>Zimmet Kaydı Ekle</turkce>
+  <ingilizce>Add Liability Record</ingilizce>
+  <almanca>Haftungsnachweis Hinzufügen</almanca>
+</dil>
+<dil>
+  <id>982</id>
+  <turkce>Zimmet Listesi</turkce>
+  <ingilizce>Liability List</ingilizce>
+  <almanca>Haftungsliste</almanca>
+</dil>
+<dil>
+  <id>986</id>
+  <turkce>Zimmet Zamanı</turkce>
+  <ingilizce>Liability Time</ingilizce>
+  <almanca>Haftungszeit</almanca>
+</dil>
+</diller>
