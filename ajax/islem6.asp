@@ -3356,13 +3356,13 @@
                         </div>
                     </td>
                     <% elseif trim(satinalma("durum"))="Tamamlandı" then %>
-                    <td class="label-success" style="text-align: center;">
+                    <td style="text-align: center;">
                         <div style="width: 200px;">
                             <span class="label label-success">Tamamlandı</span>
                         </div>
                     </td>
                     <% else %>
-                    <td class="label-warning" style="text-align: center;">
+                    <td style="text-align: center;">
                         <div style="width: 200px;">
                             <span class="label label-warning ">Onay Bekliyor</span>
                         </div>
