@@ -636,6 +636,7 @@
 
 
     <div class="row">
+        <div></div>
         <label class="col-sm-12 col-form-label">Tedarikçi :</label>
         <div class="col-sm-12">
             <select name="satinalma_tedarikci_id" id="satinalma_tedarikci_id" class="select2">
