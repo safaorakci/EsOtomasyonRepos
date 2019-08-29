@@ -636,9 +636,9 @@
 
 
     <div class="row">
-        <div></div>
-        <label class="col-sm-12 col-form-label">Tedarikçi :</label>
-        <div class="col-sm-12">
+        <label class="col-sm-6 col-form-label">Tedarikçi :</label>
+        <label class="col-sm-6 col-form-label">Proje :</label>
+        <div class="col-sm-6">
             <select name="satinalma_tedarikci_id" id="satinalma_tedarikci_id" class="select2">
                 <%
                     SQL="select id, firma_adi from ucgem_firma_listesi where ekleyen_firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and cop = 'false' and yetki_kodu = 'TASERON'"
@@ -646,6 +646,20 @@
                     do while not firmacek.eof
                 %>
                 <option value="<%=firmacek("id") %>"><%=firmacek("firma_adi") %></option>
+                <%
+                    firmacek.movenext
+                    loop
+                %>
+            </select>
+        </div>
+        <div class="col-sm-6">
+            <select name="satinalma_proje_id" id="satinalma_proje_id" class="select2">
+                <%
+                    SQL="select * from ucgem_proje_listesi where durum = 'true' and cop = 'false'"
+                    set proje = baglanti.execute(SQL)
+                    do while not proje.eof
+                %>
+                <option value="<%=proje("id") %>"><%=firmacek("firma_adi") %></option>
                 <%
                     firmacek.movenext
                     loop
