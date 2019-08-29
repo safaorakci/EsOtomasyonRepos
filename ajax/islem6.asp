@@ -92,7 +92,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12"><br /><br />
+                            <div class="col-sm-12">
+                                <br />
+                                <br />
                                 <input type="button" class="btn btn-primary" onclick="kendi_personel_bilgilerini_guncelle();" value="<%=LNG("Bilgilerimi Güncelle")%>" />
                             </div>
                         </div>
@@ -426,9 +428,10 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h5 class="card-header-text"><%=LNG("İzin Raporum")%>
-                    </h5><div style="float:right; margin-top:-20px; font-weight:bold; margin-right:30px; line-height:10px; text-align:center; ">
-                        Kalan İzin Kullanım Hakkı<span class="label label-info" style=" font-size:13px; padding:3px; text-align:center; "><%=personel("kalan") %> gün</span><br />
-                        Hakediş Tarihi : <span class="label label-warning" style=" font-size:13px; padding:3px; text-align:center; "><%=personel_yillik_izin_hakedis %></span>
+                    </h5>
+                    <div style="float: right; margin-top: -20px; font-weight: bold; margin-right: 30px; line-height: 10px; text-align: center;">
+                        Kalan İzin Kullanım Hakkı<span class="label label-info" style="font-size: 13px; padding: 3px; text-align: center;"><%=personel("kalan") %> gün</span><br />
+                        Hakediş Tarihi : <span class="label label-warning" style="font-size: 13px; padding: 3px; text-align: center;"><%=personel_yillik_izin_hakedis %></span>
                     </div>
                     <br />
                     <br />
@@ -459,7 +462,7 @@
                             </tr>
                         </tbody>
                     </table>
-                  
+
                     <style>
                         .renk2_1 {
                             background-color: #f2f2f2;
@@ -1590,9 +1593,9 @@
     </button>
 </div>
 
-<div class="well" style="margin:30px;">
+<div class="well" style="margin: 30px;">
     <br />
-    <center style="text-align:center;">Yıllık İzin Süreniz : <strong><%=personel_yillik_izin %></strong> gündür. Yıllık İzin Hakediş Tarihiniz : <strong><%=cdate(personel_yillik_izin_hakedis) %></strong></center>
+    <center style="text-align: center;">Yıllık İzin Süreniz : <strong><%=personel_yillik_izin %></strong> gündür. Yıllık İzin Hakediş Tarihiniz : <strong><%=cdate(personel_yillik_izin_hakedis) %></strong></center>
     <br />
 </div>
 
@@ -2098,7 +2101,7 @@
                             <h5 style="font-size: 15px;">Bordro Ekle</h5>
                             <br>
                             <input class="form-control required" required type="file" id="bordro_dosya_yolu" tip="kucuk" yol="dosya_deposu/<%=etiket %>/" />
-                            
+
                             <br>
                             Dönem:<br>
                             <select name="bordro_donem" class="select2" id="bordro_donem">
@@ -2151,7 +2154,7 @@
                                             <td><%=cdate(bordro("ekleme_tarihi")) %>&nbsp;<%=left(bordro("ekleme_saati"),5) %></td>
                                             <td><%=bordro("aciklama") %></td>
                                             <td>
-                                                <input type="button" onclick="rapor_pdf_gonder('bordro_gonder','','','<%=bordro("dosya_yolu")%>');" class="btn btn-mini btn-primary" value="Gönder" />&nbsp;<input type="button" onclick="bordro_sil('<%=bordro("id")%>');" class="btn btn-mini btn-danger" value="Sil" /></td>
+                                                <input type="button" onclick="rapor_pdf_gonder('bordro_gonder', '', '', '<%=bordro("dosya_yolu")%>');" class="btn btn-mini btn-primary" value="Gönder" />&nbsp;<input type="button" onclick="bordro_sil('<%=bordro("id")%>');" class="btn btn-mini btn-danger" value="Sil" /></td>
                                         </tr>
                                         <%
                                     bordro.movenext
@@ -2496,7 +2499,7 @@
                     <td><%=parca("barcode") %></td>
                     <td><%=parca("adsoyad") %><br />
                         <%=cdate(parca("ekleme_tarihi")) %></td>
-                    <td style="text-align: center;"><span class="label label-warning" style="display:inline; font-size:13px; padding-left:10px; padding-right:10px;"><%=parca("kullanilan") %></span> /
+                    <td style="text-align: center;"><span class="label label-warning" style="display: inline; font-size: 13px; padding-left: 10px; padding-right: 10px;"><%=parca("kullanilan") %></span> /
                         <input type="button" class="btn btn-info btn-mini" onclick="ParcadanIsListesiBul('<%=parca("id")%>');" value="Aç" /></td>
                     <td style="text-align: center; width: 100px;">
                         <span id="santiye_durum_repeater_str<%=parca("id") %>santiye_label_0" onclick="durum_guncelleme_calistir('parca_listesi', '<%=parca("id") %>');">
@@ -2836,7 +2839,7 @@
                 if parca.eof then
             %>
             <tr>
-                <td colspan="2" style="text-align:center;">Bu Gruba Tanımlanan Parça Bulunamadı</td>
+                <td colspan="2" style="text-align: center;">Bu Gruba Tanımlanan Parça Bulunamadı</td>
             </tr>
             <%
                 end if
@@ -3020,8 +3023,8 @@
     %>
     <style>
         .label {
-            font-size:12px;
-            padding:3px;
+            font-size: 12px;
+            padding: 3px;
         }
     </style>
     <div class="dt-responsive table-responsive">
@@ -3084,11 +3087,11 @@
                         <span class="label label-warning ">Onay Bekliyor</span>
                     </td>
                     <% elseif trim(talepler("durum"))="Reddedildi" then %>
-                    <td  style="text-align: center; ">
+                    <td style="text-align: center;">
                         <span class="label label-danger">Reddedildi</span>
                     </td>
                     <% elseif trim(talepler("durum"))="Onaylandı" then %>
-                    <td  style="text-align: center; ">
+                    <td style="text-align: center;">
                         <span class="label label-success">Onaylandı</span>
                     </td>
                     <% end if %>
@@ -3247,7 +3250,7 @@
 
 
     %>
-    <div class="dt-responsive table-responsive" style="padding-bottom:400px;">
+    <div class="dt-responsive table-responsive" style="padding-bottom: 400px;">
         <table id="simpletable" class="table table-striped table-bordered nowrap datatableyap" style="width: 100%;">
             <thead>
                 <tr>
@@ -3320,69 +3323,57 @@
                     <td style="text-align: center;"><%=s %></td>
                     <% if trim(satinalma("oncelik"))="Düşük" then %>
                     <td style="text-align: center;">
-                        <div style="width: 200px;">
-                            <span class="label label-warning">Düşük</span>
-                        </div>
+                            <span class="label label-warning" style="font-size:11px">Düşük</span>
                     </td>
                     <% elseif trim(satinalma("oncelik"))="Yüksek" then %>
-                    <td  style="text-align: center;">
-                        <div style="width: 200px;">
-                            <span class="label label-danger ">Yüksek</span>
-                        </div>
+                    <td style="text-align: center;">
+                            <span class="label label-danger" style="font-size:11px">Yüksek</span>
                     </td>
                     <% elseif trim(satinalma("oncelik"))="Normal" then %>
                     <td style="text-align: center;">
-                        <div style="width: 200px;">
-                            <span class="label label-info ">Normal</span>
-                        </div>
+                            <span class="label label-info" style="font-size:11px">Normal</span>
                     </td>
                     <% end if %>
                     <td><%=satinalma("baslik") %></td>
                     <td><%=cdate(satinalma("siparis_tarihi")) %></td>
                     <td><%=satinalma("tedarikci") %></td>
-                    <td><%=formatnumber(satinalma("toplamtl"),2) %> TL<br />
-                        <%=formatnumber(satinalma("toplamusd"),2) %> USD<br />
+                    <td><%=formatnumber(satinalma("toplamtl"),2) %> TL - 
+                        <%=formatnumber(satinalma("toplamusd"),2) %> USD - 
                         <%=formatnumber(satinalma("toplameur"),2) %> EUR</td>
                     <td><%=satinalma("ekleyen") %><br />
                         <%=cdate(satinalma("ekleme_tarihi")) %></td>
                     <% if trim(satinalma("durum"))="Sipariş Edildi" then %>
                     <td style="text-align: center;">
-                            <span class="label label-info">Sipariş Edildi</span>
+                        <span class="label label-info" style="font-size:11px">Sipariş Edildi</span>
                     </td>
                     <% elseif trim(satinalma("durum"))="İptal Edildi" then %>
                     <td style="text-align: center;">
-                        <div style="width: 200px;">
-                            <span class="label label-danger">İptal Edildi</span>
-                        </div>
+                        <span class="label label-danger" style="font-size:11px">İptal Edildi</span>
                     </td>
                     <% elseif trim(satinalma("durum"))="Tamamlandı" then %>
                     <td style="text-align: center;">
-                        <div style="width: 200px;">
-                            <span class="label label-success">Tamamlandı</span>
-                        </div>
+                        <span class="label label-success" style="font-size:11px">Tamamlandı</span>
                     </td>
                     <% else %>
                     <td style="text-align: center;">
-                        <div style="width: 200px;">
-                            <span class="label label-warning ">Onay Bekliyor</span>
-                        </div>
+                        <span class="label label-warning" style="font-size:11px">Onay Bekliyor</span>
                     </td>
                     <% end if %>
 
-                      <td class="dropdown" style="width: 10px;">
-                                        <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
-                                        <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('satinalma_formu', '<%=satinalma("id") %>');"><i class="fa fa-download"></i>İndir</a>
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('satinalma_formu','<%=satinalma("id") %>');"><i class="fa fa-print"></i> Yazdır</a>
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('satinalma_formu','<%=satinalma("id") %>');"><i class="fa fa-send"></i> Gönder</a>
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitduzenle('<%=satinalma("id") %>');"><i class="icofont icofont-edit"></i>Düzenle</a>
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitsil('<%=satinalma("id") %>');"><i class="icofont icofont-ui-delete"></i>Sil</a>
+                    <td class="dropdown" style="width: 10px;">
+                        <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('satinalma_formu', '<%=satinalma("id") %>');"><i class="fa fa-download"></i>İndir</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('satinalma_formu','<%=satinalma("id") %>');"><i class="fa fa-print"></i>Yazdır</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('satinalma_formu','<%=satinalma("id") %>');"><i class="fa fa-send"></i>Gönder</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitduzenle('<%=satinalma("id") %>');"><i class="icofont icofont-edit"></i>Düzenle</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitsil('<%=satinalma("id") %>');"><i class="icofont icofont-ui-delete"></i>Sil</a>
 
-                                        </div>
-                                    </td>
+                        </div>
+                    </td>
 
 
-                  
+
                 </tr>
                 <% 
                     satinalma.movenext
@@ -4150,181 +4141,186 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             </div>
         </div>
         <div class="row">
-                <div class="col-sm-12 col-lg-12">
-            
-                              <div class="row toplanti_tipi rutin" style="display:nones; margin-top:10px;">
-        <div class="col-sm-6">
-            <label class="col-form-label"><%=LNG("Yineleme Başlangıç Tarihi :")%></label>
-            <div class="input-group input-group-primary">
-                <span class="input-group-addon">
-                    <i class="icon-prepend fa fa-user"></i>
-                </span>
-                <input type="text" id="yineleme_baslangic" name="yineleme_baslangic" class="form-control takvimyap required" required />
+            <div class="col-sm-12 col-lg-12">
+
+                <div class="row toplanti_tipi rutin" style="display: nones; margin-top: 10px;">
+                    <div class="col-sm-6">
+                        <label class="col-form-label"><%=LNG("Yineleme Başlangıç Tarihi :")%></label>
+                        <div class="input-group input-group-primary">
+                            <span class="input-group-addon">
+                                <i class="icon-prepend fa fa-user"></i>
+                            </span>
+                            <input type="text" id="yineleme_baslangic" name="yineleme_baslangic" class="form-control takvimyap required" required />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label class="col-form-label"><%=LNG("Yineleme Bitiş Tarihi :")%></label>
+                        <div class="input-group input-group-primary">
+                            <span class="input-group-addon">
+                                <i class="icon-prepend fa fa-user"></i>
+                            </span>
+                            <input type="text" id="yineleme_bitis" name="yineleme_bitis" class="form-control takvimyap required" required />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row toplanti_tipi rutin" style="display: nones;">
+                    <label class="col-sm-12 col-form-label"><%=LNG("Yineleme Dönemi :")%></label>
+                    <div class="col-sm-3">
+                        <table>
+                            <tr>
+                                <td>
+                                    <input type="radio" checked="checked" class="yineleme_donemi" name="yineleme_donemi" id="yineleme_donemi1" onclick="toplanti_ekle_yineleme_donemi(this);" value="gunluk" checkeds="checkeds" /></td>
+                                <td>
+                                    <label for="yineleme_donemi1"><%=LNG("Günlük")%></label></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 5px;">
+                                    <input type="radio" class="yineleme_donemi" id="yineleme_donemi2" onclick="toplanti_ekle_yineleme_donemi(this);" value="haftalik" name="yineleme_donemi" /></td>
+                                <td style="padding-top: 5px;">
+                                    <label for="yineleme_donemi2"><%=LNG("Haftalık")%></label></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 5px;">
+                                    <input type="radio" class="yineleme_donemi" id="yineleme_donemi3" onclick="toplanti_ekle_yineleme_donemi(this);" value="aylik" name="yineleme_donemi" /></td>
+                                <td style="padding-top: 5px;">
+                                    <label for="yineleme_donemi3"><%=LNG("Aylık")%></label></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-9" style="border-left: 1px solid #e8e8e8;">
+                        <div class="yineleme_yerleri gunluk_yineleme">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="radio" checked="checked" checkeds="checkeds" name="gunluk_yineleme_secim" id="gunluk_yineleme_secim1" onclick="radio_tikle(this);" value="gunluk" /></td>
+                                    <td><%=LNG("Her")%> </td>
+                                    <td>
+                                        <input type="text" required value="1" name="gunluk_yineleme_gun_aralik" id="gunluk_yineleme_gun_aralik1" style="width: 35px; text-align: center;" class="numericonly required" /></td>
+                                    <td><%=LNG("günde bir")%> </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 10px;">
+                                        <input type="radio" name="gunluk_yineleme_secim" id="gunluk_yineleme_secim2" onclick="radio_tikle(this);" value="is_gunu" /></td>
+                                    <td style="padding-top: 10px;" colspan="3"><%=LNG("Her İş Günü")%></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="yineleme_yerleri haftalik_yineleme" style="width: 100%; display: none;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td><%=LNG("Her")%></td>
+                                    <td>
+                                        <input required type="text" name="haftalik_yineleme_sikligi" id="haftalik_yineleme_sikligi" value="1" style="width: 35px; text-align: center;" class="numericonly required" /></td>
+                                    <td><%=LNG("haftada bir yenile")%></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <div style="width: 100%; padding-top: 15px;">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td><%=LNG("Pzt")%><br />
+                                                        <label class="onoffswitch-label" id="dst4_label">
+                                                            <input type="checkbox" value="2" class="js-switch dhaftalik_gunler" id="dst4" name="dhaftalik_gunler" />
+                                                        </label>
+                                                    </td>
+                                                    <td><%=LNG("Sal")%><br />
+                                                        <label class="onoffswitch-label" id="dst5_label">
+                                                            <input type="checkbox" value="3" class="js-switch dhaftalik_gunler" id="dst5" name="dhaftalik_gunler" />
+                                                        </label>
+                                                    </td>
+                                                    <td><%=LNG("Çar")%><br />
+                                                        <label class="onoffswitch-label" id="dst6_label">
+                                                            <input type="checkbox" value="4" class="js-switch dhaftalik_gunler" id="dst6" name="dhaftalik_gunler" />
+                                                        </label>
+                                                    </td>
+                                                    <td><%=LNG("Per")%><br />
+                                                        <label class="onoffswitch-label" id="dst7_label">
+                                                            <input type="checkbox" value="5" class="js-switch dhaftalik_gunler" id="dst7" name="dhaftalik_gunler" />
+                                                        </label>
+                                                    </td>
+                                                    <td><%=LNG("Cum")%><br />
+                                                        <label class="onoffswitch-label" id="dst8_label">
+                                                            <input type="checkbox" value="6" class="js-switch dhaftalik_gunler" id="dst8" name="dhaftalik_gunler" />
+                                                        </label>
+                                                    </td>
+                                                    <td><%=LNG("Cmt")%><br />
+                                                        <label class="onoffswitch-label" id="dst9_label">
+                                                            <input type="checkbox" value="7" class="js-switch dhaftalik_gunler" id="dst9" name="dhaftalik_gunler" />
+                                                        </label>
+                                                    </td>
+                                                    <td><%=LNG("Pzr")%><br />
+                                                        <label class="onoffswitch-label" id="dst10_label">
+                                                            <input type="checkbox" value="1" class="js-switch dhaftalik_gunler" id="dst10" name="dhaftalik_gunler" />
+                                                        </label>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="yineleme_yerleri aylik_yineleme" style="width: 100%; display: none;">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="aylik_yenileme_tipi" id="aylik_yenileme_tipi1" onclick="radio_tikle(this);" value="1" checked="checked" checkeds="checkeds" /></td>
+                                    <td style="width: 37px;"><%=LNG("Her")%></td>
+                                    <td>
+                                        <input type="text" value="1" name="aylik_gun" id="aylik_gun" style="width: 35px; text-align: center;" required class="numericonly required" /></td>
+                                    <td style="width: 65px;"><%=LNG(". günü")%></td>
+                                    <td>
+                                        <input type="text" value="1" style="width: 35px; text-align: center;" name="aylik_aralik" id="aylik_aralik" class="numericonly" required /></td>
+                                    <td><%=LNG("ayda bir")%></td>
+                                </tr>
+                            </table>
+                            <br />
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="aylik_yenileme_tipi" id="aylik_yenileme_tipi2" onclick="radio_tikle(this);" value="2" /></td>
+                                    <td style="width: 37px;"><%=LNG("Her")%></td>
+                                    <td>
+                                        <select name="aylik_yineleme1" id="aylik_yineleme1" class="yapilan">
+                                            <option value="1"><%=LNG("birinci")%></option>
+                                            <option value="2"><%=LNG("ikinci")%></option>
+                                            <option value="3"><%=LNG("üçüncü")%></option>
+                                            <option value="4"><%=LNG("dördüncü")%></option>
+                                            <option value="son"><%=LNG("son")%></option>
+                                        </select></td>
+                                    <td style="padding-left: 8px;">
+                                        <select name="aylik_yineleme2" id="aylik_yineleme2" class="yapilan">
+                                            <option value="gün"><%=LNG("gün")%></option>
+                                            <option value="2"><%=LNG("pazartesi")%></option>
+                                            <option value="3"><%=LNG("salı")%></option>
+                                            <option value="4"><%=LNG("çarşamba")%></option>
+                                            <option value="5"><%=LNG("perşembe")%></option>
+                                            <option value="6"><%=LNG("cuma")%></option>
+                                            <option value="7"><%=LNG("cumartesi")%></option>
+                                            <option value="1"><%=LNG("pazar")%></option>
+                                        </select></td>
+                                    <td><%=LNG("günü")%></td>
+
+                                </tr>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-      
-        <div class="col-sm-6">
-            <label class="col-form-label"><%=LNG("Yineleme Bitiş Tarihi :")%></label>
-            <div class="input-group input-group-primary">
-                <span class="input-group-addon">
-                    <i class="icon-prepend fa fa-user"></i>
-                </span>
-                <input type="text" id="yineleme_bitis" name="yineleme_bitis" class="form-control takvimyap required" required />
-            </div>
-        </div>
-    </div>
 
 
-    <div class="row toplanti_tipi rutin" style="display: nones;">
-        <label class="col-sm-12 col-form-label"><%=LNG("Yineleme Dönemi :")%></label>
-        <div class="col-sm-3">
-            <table>
-                <tr>
-                    <td>
-                        <input type="radio" checked="checked" class="yineleme_donemi" name="yineleme_donemi" id="yineleme_donemi1" onclick="toplanti_ekle_yineleme_donemi(this);" value="gunluk" checkeds="checkeds" /></td>
-                    <td><label for="yineleme_donemi1"><%=LNG("Günlük")%></label></td>
-                </tr>
-                <tr>
-                    <td style="padding-top: 5px;">
-                        <input type="radio" class="yineleme_donemi" id="yineleme_donemi2" onclick="toplanti_ekle_yineleme_donemi(this);" value="haftalik" name="yineleme_donemi" /></td>
-                    <td style="padding-top: 5px;"><label for="yineleme_donemi2"><%=LNG("Haftalık")%></label></td>
-                </tr>
-                <tr>
-                    <td style="padding-top: 5px;">
-                        <input type="radio" class="yineleme_donemi" id="yineleme_donemi3" onclick="toplanti_ekle_yineleme_donemi(this);" value="aylik" name="yineleme_donemi" /></td>
-                    <td style="padding-top: 5px;"><label for="yineleme_donemi3"><%=LNG("Aylık")%></label></td>
-                </tr>
-            </table>
-        </div>
-        <div class="col-sm-9" style="border-left: 1px solid #e8e8e8;">
-            <div class="yineleme_yerleri gunluk_yineleme">
-                <table>
-                    <tr>
-                        <td>
-                            <input type="radio" checked="checked" checkeds="checkeds" name="gunluk_yineleme_secim" id="gunluk_yineleme_secim1" onclick="radio_tikle(this);" value="gunluk" /></td>
-                        <td><%=LNG("Her")%> </td>
-                        <td>
-                            <input type="text" required value="1" name="gunluk_yineleme_gun_aralik" id="gunluk_yineleme_gun_aralik1" style="width: 35px; text-align: center;" class="numericonly required" /></td>
-                        <td><%=LNG("günde bir")%> </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 10px;">
-                            <input type="radio" name="gunluk_yineleme_secim" id="gunluk_yineleme_secim2" onclick="radio_tikle(this);" value="is_gunu" /></td>
-                        <td style="padding-top: 10px;" colspan="3"><%=LNG("Her İş Günü")%></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="yineleme_yerleri haftalik_yineleme" style="width: 100%; display: none;">
-                <table style="width: 100%;">
-                    <tr>
-                        <td><%=LNG("Her")%></td>
-                        <td><input required type="text" name="haftalik_yineleme_sikligi" id="haftalik_yineleme_sikligi" value="1" style="width: 35px; text-align: center;" class="numericonly required" /></td>
-                        <td><%=LNG("haftada bir yenile")%></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                            <div style="width: 100%; padding-top: 15px;">
-                                <table style="width: 100%;">
-                                    <tr>
-                                        <td><%=LNG("Pzt")%><br />
-                                            <label class="onoffswitch-label" id="dst4_label">
-                                                <input type="checkbox" value="2" class="js-switch dhaftalik_gunler" id="dst4" name="dhaftalik_gunler" />
-                                            </label>
-                                        </td>
-                                        <td><%=LNG("Sal")%><br />
-                                            <label class="onoffswitch-label" id="dst5_label">
-                                                <input type="checkbox" value="3" class="js-switch dhaftalik_gunler" id="dst5" name="dhaftalik_gunler" />
-                                            </label>
-                                        </td>
-                                        <td><%=LNG("Çar")%><br />
-                                            <label class="onoffswitch-label" id="dst6_label">
-                                                <input type="checkbox" value="4" class="js-switch dhaftalik_gunler" id="dst6" name="dhaftalik_gunler" />
-                                            </label>
-                                        </td>
-                                        <td><%=LNG("Per")%><br />
-                                            <label class="onoffswitch-label" id="dst7_label">
-                                                <input type="checkbox" value="5" class="js-switch dhaftalik_gunler" id="dst7" name="dhaftalik_gunler" />
-                                            </label>
-                                        </td>
-                                        <td><%=LNG("Cum")%><br />
-                                            <label class="onoffswitch-label" id="dst8_label">
-                                                <input type="checkbox" value="6" class="js-switch dhaftalik_gunler" id="dst8" name="dhaftalik_gunler" />
-                                            </label>
-                                        </td>
-                                        <td><%=LNG("Cmt")%><br />
-                                            <label class="onoffswitch-label" id="dst9_label">
-                                                <input type="checkbox" value="7" class="js-switch dhaftalik_gunler" id="dst9" name="dhaftalik_gunler" />
-                                            </label>
-                                        </td>
-                                        <td><%=LNG("Pzr")%><br />
-                                            <label class="onoffswitch-label" id="dst10_label">
-                                                <input type="checkbox" value="1" class="js-switch dhaftalik_gunler" id="dst10" name="dhaftalik_gunler" />
-                                            </label>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="yineleme_yerleri aylik_yineleme" style="width: 100%; display: none;">
-                <table>
-                    <tr>
-                        <td>
-                            <input type="radio" name="aylik_yenileme_tipi" id="aylik_yenileme_tipi1" onclick="radio_tikle(this);" value="1" checked="checked" checkeds="checkeds" /></td>
-                        <td style="width: 37px;"><%=LNG("Her")%></td>
-                        <td>
-                            <input type="text" value="1" name="aylik_gun" id="aylik_gun" style="width: 35px; text-align: center;" required class="numericonly required" /></td>
-                        <td style="width: 65px;"><%=LNG(". günü")%></td>
-                        <td>
-                            <input type="text" value="1" style="width: 35px; text-align: center;" name="aylik_aralik" id="aylik_aralik" class="numericonly" required /></td>
-                        <td><%=LNG("ayda bir")%></td>
-                    </tr>
-                </table>
-                <br />
-                <table>
-                    <tr>
-                        <td>
-                            <input type="radio" name="aylik_yenileme_tipi" id="aylik_yenileme_tipi2" onclick="radio_tikle(this);" value="2" /></td>
-                        <td style="width: 37px;"><%=LNG("Her")%></td>
-                        <td>
-                            <select name="aylik_yineleme1" id="aylik_yineleme1" class="yapilan">
-                                <option value="1"><%=LNG("birinci")%></option>
-                                <option value="2"><%=LNG("ikinci")%></option>
-                                <option value="3"><%=LNG("üçüncü")%></option>
-                                <option value="4"><%=LNG("dördüncü")%></option>
-                                <option value="son"><%=LNG("son")%></option>
-                            </select></td>
-                        <td style="padding-left: 8px;">
-                            <select name="aylik_yineleme2" id="aylik_yineleme2" class="yapilan">
-                                <option value="gün"><%=LNG("gün")%></option>
-                                <option value="2"><%=LNG("pazartesi")%></option>
-                                <option value="3"><%=LNG("salı")%></option>
-                                <option value="4"><%=LNG("çarşamba")%></option>
-                                <option value="5"><%=LNG("perşembe")%></option>
-                                <option value="6"><%=LNG("cuma")%></option>
-                                <option value="7"><%=LNG("cumartesi")%></option>
-                                <option value="1"><%=LNG("pazar")%></option>
-                            </select></td>
-                        <td><%=LNG("günü")%></td>
-
-                    </tr>
-
-                </table>
-
-            </div>
-        </div></div>
-    </div>
-    
-    
         </div>
         <div class="modal-footer">
-            <input type="button" class="btn btn-primary"  onclick="ProjeBakimKaydiEkle(0, 'true');" value="Periyodik Servis/Bakım Planı Ekle" />
+            <input type="button" class="btn btn-primary" onclick="ProjeBakimKaydiEkle(0, 'true');" value="Periyodik Servis/Bakım Planı Ekle" />
         </div>
     </form>
-<%
+    <%
     elseif trn(request("islem"))="personeller" then
 
         personel_tcno = trn(request("personel_tcno"))
@@ -4344,8 +4340,8 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             Response.End
         end if
         
-%>
-<%
+    %>
+    <%
     elseif trn(request("islem"))="YasakliGunEkle" then
 
 
@@ -4366,7 +4362,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
 
         end if
 
-%>
+    %>
     <table id="simpletable" class="table table-striped table-bordered nowrap datatableyap1">
         <thead>
             <tr>
@@ -4407,7 +4403,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             %>
         </tbody>
     </table>
-<% 
+    <% 
     elseif trn(request("islem"))="servis_formu" then
 
         is_id = trn(request("is_id"))
@@ -4426,4 +4422,4 @@ elseif trn(request("islem"))="uretim_sablonlari" then
 
     end if  
 
-%>
+    %>
