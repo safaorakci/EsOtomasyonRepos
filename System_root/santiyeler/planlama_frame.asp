@@ -37,9 +37,8 @@
 <link rel="stylesheet" type="text/css" href="/files/assets/icon/font-awesome/css/font-awesome.min.css">
 <div id="workSpace" style="padding: 0px; overflow-y: auto; overflow-x: hidden; position: relative; margin: 0 5px"></div>
 <style>
-
     .bwinPopupd {
-        margin-top:0!important;
+        margin-top: 0 !important;
     }
 
     .taskBoxGolge {
@@ -490,6 +489,14 @@
         parent.is_yuku_cizelgesi_ac(start, end);
     }
 
+    function ajandada_goster() {
+
+        var planning = "0";
+        if ($("#planning").attr("checked") === "checked") {
+            var planning = "1";
+        }
+    }
+
     function initializeHistoryManagement() {
 
         //si chiede al server se c'è della hisory per la root
@@ -810,7 +817,7 @@
         </tr>
 
         <tr>
-          <td  colspan="2">
+          <td>
             <label for="status" class=" "><%=LNG("Durum")%></label><br>
             <select id="status" name="status" class="taskStatus" status="(#=obj.status#)"  onchange="$(this).attr('STATUS',$(this).val());">
               <option value="STATUS_ACTIVE" class="taskStatus" status="STATUS_ACTIVE" ><%=LNG("Aktif")%></option>
@@ -820,6 +827,10 @@
               <option value="STATUS_FAILED" class="taskStatus" status="STATUS_FAILED" ><%=LNG("Hatalı")%></option>
               <option value="STATUS_UNDEFINED" class="taskStatus" status="STATUS_UNDEFINED" ><%=LNG("Diğer")%></option>
             </select>
+          </td>
+
+          <td>
+            <label style="float:left; cursor:pointer; margin-top:10px" ><input type="checkbox" checked="checked" class="js-switch" name="planning" id="planning" /> <%=LNG("Ajanda da Göster") %></label>
           </td>
 
           <td valign="top" nowrap>
@@ -853,7 +864,7 @@
         </div>
 
     <div style="text-align: right; padding-top: 20px">
-      <span id="saveButton" class="button first" onClick="$(this).trigger('saveFullEditor.gantt');"><%=LNG("Kaydet Bilal")%></span>
+      <span id="saveButton" class="button first" onClick="$(this).trigger('saveFullEditor.gantt');"><%=LNG("Kaydet")%></span>
     </div>
     </div>
     -->
@@ -947,7 +958,7 @@
             "CIRCULAR_REFERENCE": "<%=LNG("Dairesel referans.")%>",
             "CANNOT_DEPENDS_ON_ANCESTORS": "<%=LNG("Atalara bağlı olamaz.")%>",
             "INVALID_DATE_FORMAT": "<%=LNG("Eklenen veriler alan formatı için geçersiz.")%>",
-            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED": "<%=LNG("Veriler yüklenirken bir hata oluştu. Bir görev atıldı.")%>",
+            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED": "<%=LNG("Veriler yüklenirken bir hata oluştu.Bir görev atıldı.")%>",
             "CANNOT_CLOSE_TASK_IF_OPEN_ISSUE": "<%=LNG("Açık sorunları olan bir görev kapatılamıyor")%>",
             "TASK_MOVE_INCONSISTENT_LEVEL": "<%=LNG("Farklı derinlikteki görevleri değiştiremezsiniz.")%>",
             "CANNOT_MOVE_TASK": "<%=LNG("İş Adımı taşınamaz.")%>",

@@ -3045,7 +3045,7 @@
             </thead>
             <tbody>
                 <%
-                    SQL="select fis.*, kullanici.personel_ad, kullanici.personel_soyad, kul.personel_ad as 'telep_edilen_ad', kul.personel_soyad as 'talep_edilen_soyad' from talep_fisleri fis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = fis.ekleyen_id join ucgem_firma_kullanici_listesi kul on kul.id = fis.talep_edilen_id where fis.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and fis.cop = 'false' order by fis.id desc"
+                    SQL="select fis.*, kullanici.personel_ad, kullanici.personel_soyad, kul.personel_ad + ' ' + kul.personel_soyad as 'talep_edilen_adsoyad' from talep_fisleri fis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = fis.ekleyen_id join ucgem_firma_kullanici_listesi kul on kul.id = fis.talep_edilen_id where fis.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and fis.cop = 'false' order by fis.id desc"
                     set talepler = baglanti.execute(SQL)
 
 
@@ -3079,7 +3079,7 @@
                     <td><%=talepler("aciklama") %></td>
                     <td><%=talepler("personel_ad") & " " & talepler("personel_soyad") %><br />
                         <%=cdate(talepler("ekleme_tarihi")) & " " & left(talepler("ekleme_saati"),5) %></td>
-                    <td></td>
+                    <td><%=talepler("talep_edilen_adsoyad") %></td>
                     <% if trim(talepler("durum"))="İşlem Yapılıyor" then %>
                     <td style="text-align: center;">
                         <span class="label label-info">İşlem Yapılıyor</span>

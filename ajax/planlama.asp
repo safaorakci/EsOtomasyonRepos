@@ -274,7 +274,7 @@
                                                 SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& gorevli_id &"', @mesaj = '"& bildirim &"';"
                                                 set ekle2 = baglanti.execute(SQL)
 
-                                                SQL="select personel_ad + 'qwq ' + personel_soyad as personel_adsoyad, * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"';"
+                                                SQL="select personel_ad + '' + personel_soyad as personel_adsoyad, * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"';"
                                                 Set personelcek = baglanti.execute(SQL)
 
                                                 NetGSM_SMS personelcek("personel_telefon"), bildirim
@@ -646,8 +646,11 @@
     oJSON.data("project").Add "selectedRow", 0
     oJSON.data("project").Add "deletedTaskIds", oJSON.Collection()
 
-    SQL="select * from gantt_kaynaklar where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
+
+    SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= '"& start_tarih &"'  AND  bitis_tarihi >= '"& end_tarih &"' OR (baslangic_tarihi >= '"& start_tarih &"' AND  bitis_tarihi <= '"& end_tarih &"'))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
+    
     set kaynak = baglanti.execute(SQL)
+    
 
 
 

@@ -334,9 +334,9 @@ GanttMaster.messages = {
 };
 
 
-GanttMaster.prototype.createTask = function (id, name, code, level, start, duration) {
-  var factory = new TaskFactory();
-  return factory.build(id, name, code, level, start, duration);
+GanttMaster.prototype.createTask = function (id, name, code, level, start, duration, planning) {
+    var factory = new TaskFactory();
+    return factory.build(id, name, code, level, start, duration, planning);
 };
 
 

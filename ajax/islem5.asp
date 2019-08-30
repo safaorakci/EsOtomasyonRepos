@@ -2272,7 +2272,7 @@ works properly when clicked or hovered */
 <br />
 <div class="row">
     <div class="col-md-12">
-        <h5 style="font-size: 14px; font-weight: bold;">KULLANILAN PARÇALAR</h5>
+        <h5 style="font-size: 14px; margin-bottom:10px; font-weight: bold;">KULLANILAN PARÇALAR</h5>
         <div id="kullanilan_parcalar<%=IsID %>">
         </div>
     </div>
@@ -2709,14 +2709,10 @@ works properly when clicked or hovered */
             for x = 0 to ubound(split(guncellenecekler, "|"))
                 if len(split(guncellenecekler, "|")(x))>2 then
                     KayitId = split(split(guncellenecekler, "|")(x), "-")(0)
-                    Adet = split(split(guncellenecekler, "|")(x), "-")(1)
-
-                    SQL="update is_parca_listesi set Adet = '"& Adet &"' where id = '"& KayitId &"'"
-                    set guncelle = baglanti.execute(SQL)
-
+                    Adet = split(split(guncellenecekler, "|")(x), "-")(1)                
                 end if
             next
-            
+                      
 
         elseif trn(request("islem2"))="ekle" then
 
@@ -2877,13 +2873,13 @@ works properly when clicked or hovered */
             else
 
 %>
-<table border="0" class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th style="width: 120px; text-align: center;">Adet</th>
-            <th>Parça</th>
-            <th>Ekleyen</th>
-            <th>Ekleme Tarihi</th>
+            <th style="width: 80px; text-align: center;">Adet</th>
+            <th style="text-align: center">Parça</th>
+            <th style="text-align: center">Ekleyen</th>
+            <th style="text-align: center">Ekleme Tarihi</th>
             <th style="width: 100px; text-align: center;">İşlem</th>
         </tr>
     </thead>
@@ -2894,9 +2890,9 @@ works properly when clicked or hovered */
         <tr>
             <td style="padding: 1px!important; text-align: center;">
                 <input kayitid="<%=parca("id") %>" type="number" class="ictekiparcalar<%=IsID %>" style="width: 50px; text-align: center;" value="<%=parca("Adet") %>" /></td>
-            <td style="padding: 1px!important;"><%=parca("marka") & " - " & parca("parca_adi") %></td>
-            <td style="padding: 1px!important;"><%=parca("ekleyen") %></td>
-            <td style="padding: 1px!important;"><%=cdate(parca("ekleme_tarihi")) %></td>
+            <td style="padding: 1px!important; text-align: center"><%=parca("marka") & " - " & parca("parca_adi") %></td>
+            <td style="padding: 1px!important; text-align: center"><%=parca("ekleyen") %></td>
+            <td style="padding: 1px!important; text-align: center"><%=cdate(parca("ekleme_tarihi")) %></td>
             <td style="padding: 1px!important; text-align: center;" class="icon-list-demo2">
                 <a href="javascript:void(0);" onclick="KullanilanParcaSil('<%=IsID %>', '<%=parca("id") %>');" rel="tooltip" data-placement="top" data-original-title="Kaydı Sil"><i class="ti-trash"></i>
                 </a>
@@ -2908,7 +2904,7 @@ works properly when clicked or hovered */
         %>
     </tbody>
 </table>
-<input type="button" class="btn btn-primary btn-mini" onclick="KullanilanParcaListesiGuncelle('<%=IsID %>');" value="Güncelle" style="margin-left: 15px;" />
+<input type="button" class="btn btn-primary btn-mini" onclick="KullanilanParcaListesiGuncelle('<%=IsID %>');" value="Güncelle"/>
 
 <% end if %>
 
