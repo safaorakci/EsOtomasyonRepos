@@ -582,7 +582,6 @@ GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
         });
     }
 
-
     taskEditor.find("#name").val(task.name);
     taskEditor.find("#description").val(task.description);
     taskEditor.find("#code").val(task.code);

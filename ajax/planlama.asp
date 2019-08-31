@@ -646,7 +646,9 @@
     oJSON.data("project").Add "selectedRow", 0
     oJSON.data("project").Add "deletedTaskIds", oJSON.Collection()
 
+
     SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= '"& start_tarih &"'  AND  bitis_tarihi >= '"& end_tarih &"' OR (baslangic_tarihi >= '"& start_tarih &"' AND  bitis_tarihi <= '"& end_tarih &"'))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
+    
     set kaynak = baglanti.execute(SQL)
     
 

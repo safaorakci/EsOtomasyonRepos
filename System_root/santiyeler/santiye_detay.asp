@@ -557,26 +557,26 @@
                     <li class="nav-link_yeni"><a href="#uygulama_tab" onclick="onbellekten_proje_planlama_getir('<%=proje_id %>', 'uygulama', this); saveGanttOnServer();" class="tabbuton icon icon-display"><span><%=LNG("Uygulama")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",91,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#satinalma_tab" onclick="onbellekten_proje_satinalma_getir('<%=proje_id %>', this);" class="tabbuton icon icon-upload"><span><%=LNG("Maliyet")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#satinalma_tab" onclick="onbellekten_proje_satinalma_getir('<%=proje_id %>', this); saveGanttOnServer();" class="tabbuton icon icon-upload"><span><%=LNG("Maliyet")%></span></a></li>
                     <% end if %>
-                    <li class="nav-link_yeni" style="display:none;"><a href="#gelir_tab" onclick="onbellekten_proje_gelir_getir('<%=proje_id %>', this);" class="tabbuton icon icon-tools"><span><%=LNG("Gelir")%></span></a></li>               
+                    <li class="nav-link_yeni" style="display:none;"><a href="#gelir_tab" onclick="onbellekten_proje_gelir_getir('<%=proje_id %>', this); saveGanttOnServer();" class="tabbuton icon icon-tools"><span><%=LNG("Gelir")%></span></a></li>               
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",92,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#ajanda_tab" onclick="onbellekten_proje_ajanda_getir('<%=proje_id %>', this);" class="tabbuton icon icon-home"><span><%=LNG("Ajanda")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#ajanda_tab" onclick="onbellekten_proje_ajanda_getir('<%=proje_id %>', this); saveGanttOnServer();" class="tabbuton icon icon-home"><span><%=LNG("Ajanda")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",93,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#dosyalar_tab" onclick="onbellekten_proje_dosyalari_getir('<%=proje_id %>', this);" class="tabbuton icon icon-box"><span><%=LNG("Dosya")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#dosyalar_tab" onclick="onbellekten_proje_dosyalari_getir('<%=proje_id %>', this); saveGanttOnServer();" class="tabbuton icon icon-box"><span><%=LNG("Dosya")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",94,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#is_listesi_tab" onclick="onbellekten_proje_is_listesi_getir('<%=proje_id %>', this);" class="tabbuton icon icon-display"><span><%=LNG("İş Listesi")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#is_listesi_tab" onclick="onbellekten_proje_is_listesi_getir('<%=proje_id %>', this); saveGanttOnServer();" class="tabbuton icon icon-display"><span><%=LNG("İş Listesi")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",95,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#servis_tab" onclick="onbellekten_servis_getir('<%=proje_id %>', this);" class="icon icon-upload"><span><%=LNG("Bakım")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#servis_tab" onclick="onbellekten_servis_getir('<%=proje_id %>', this); saveGanttOnServer();" class="icon icon-upload"><span><%=LNG("Bakım")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",96,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#adam_saat_tab" onclick="onbellekten_santiye_adam_saat_getir('<%=proje_id %>', this);" class="icon icon-upload"><span><%=LNG("Adam-Saat")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#adam_saat_tab" onclick="onbellekten_santiye_adam_saat_getir('<%=proje_id %>', this); saveGanttOnServer();" class="icon icon-upload"><span><%=LNG("Adam-Saat")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",97,")>0 then %>
-                    <li class="nav-link_yeni"><a id="raporlar_tab_buton" href="#raporlar_tab" onclick="onbellekten_santiye_rapor_getir('<%=proje_id %>', this);" style="-webkit-border-top-right-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-bottomright: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" class="icon icon-tools"><span><%=LNG("Raporlar")%></span></a></li>
+                    <li class="nav-link_yeni"><a id="raporlar_tab_buton" href="#raporlar_tab" onclick="onbellekten_santiye_rapor_getir('<%=proje_id %>', this); saveGanttOnServer();" style="-webkit-border-top-right-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-bottomright: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" class="icon icon-tools"><span><%=LNG("Raporlar")%></span></a></li>
                     <% end if %>
                 </ul>
             </nav>
