@@ -3136,8 +3136,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         is_ara_button.Text = LNG("Arama Yap");
         ayarlar.cnn.Close();
     }
-
-    //[WebMethod(EnableSession = true)]
+    
     public void yeni_is_ekle()
     {
         string baslangic_tarihi = "";
@@ -3216,7 +3215,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
         //ayarlar.cmd.CommandText = "select id, personel_ad + ' ' + personel_soyad as personel_ad_soyad from ucgem_firma_kullanici_listesi where firma_id = @firma_id and durum = 'true' and cop = 'false';";
-        
+
         //Bilal TAŞ Yapılan
         ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <= '"+ baslangic_tarihi +"'  AND  bitis_tarihi >= '"+ bitis_tarihi+ "' OR(baslangic_tarihi >= '" + baslangic_tarihi + "' AND  bitis_tarihi <= '" + bitis_tarihi + "'))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
         
