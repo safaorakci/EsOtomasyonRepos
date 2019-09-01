@@ -8186,8 +8186,8 @@ function yeni_talep_fisi_ekle() {
 
     var baslik = $("#talep_baslik").val();
     var oncelik = $("#talep_oncelik").val();
-    var talep_edilen = $("#kullanici_select").text();
-    var bildirim = $("#kontrol_select").text();
+    var talep_edilen = $("#talep_edilen").val();
+    var bildirim = $("#kontrol_select").val();
     var aciklama = $("#talep_aciklama").val();
     var dosya = $("#talep_dosya").val();
 
