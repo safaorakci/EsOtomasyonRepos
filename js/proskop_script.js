@@ -111,10 +111,6 @@ function durum_guncelleme_calistir(tablo, id) {
 
 
 function kayit_sil(tablo, id, baslik, mesaj, fonksiyon) {
-
-
-
-
     swal({
         title: "Emin misiniz?",
         text: "Bu işlemi geri Alamayacaksınız, Kaydı Silmek İstediğinize Emin misiniz?",
@@ -1648,8 +1644,6 @@ function is_ekle_yeni_takvim_calistir() {
         }
     }).mask("99.99.9999");
 
-
-
     $("#yeni_is_bitis_tarihi").datepicker({
         firstDay: 1,
         minDate: 0,
@@ -1657,14 +1651,26 @@ function is_ekle_yeni_takvim_calistir() {
         onSelect: function (dateText, inst) {
 
             yeni_is_ekle_sure_hesap();
-
+            IzinliPersonelKontrol();
+         
+          
         }
     }).mask("99.99.9999");
-
-
 }
 
+function IzinliPersonelKontrol() {
+    var yeni_is_bitis_tarihi = $("#yeni_is_bitis_tarihi").val();
+    var yeni_is_baslangic_tarihi = $("#yeni_is_baslangic_tarihi").val();
+    console.log(yeni_is_bitis_tarihi + " " + yeni_is_baslangic_tarihi);
+    var data = "islem=personel_izin_kontrol";
+    data += "&yeni_is_baslangic_tarihi=" + yeni_is_baslangic_tarihi;
+    data += "&yeni_is_bitis_tarihi=" + yeni_is_bitis_tarihi;
 
+
+    $("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/personel_izin_kontrol", data: data }, function () {
+        mesaj_ver("İşler", "sorgu çalıştı ", "success");
+    });
+}
 
 function dis_ekle_yeni_takvim_calistir() {
 
@@ -1784,40 +1790,88 @@ function yeni_is_ekle_sure_hesap() {
 
 
 
-$(document).ready(function () {
-
-    $("#yeni_is_bitis_tarihi").change(function () {
-        alert(123);
-        var yeni_is_bitis_tarihi = $("#yeni_is_bitis_tarihi").val();
-        var yeni_is_baslangic_tarihi = $("#yeni_is_baslangic_tarihi").val();
-        var data = "islem=yeni_is_ekle";
-        data += "&baslangic_tarihi=" + yeni_is_baslangic_tarihi;
-        data += "&bitis_tarihi=" + yeni_is_bitis_tarihi;
-
-        console.log(data);
-
-        $("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/yeni_is_ekle", data: data }, function () {
-            mesaj_ver("İşler", "sorgu çalıştı", "success");
-        });
-    });
-
-    
-    //var data = "islem=yeni_is_ekle";
-    //data += "&baslangic_tarihi=" + yeni_is_baslangic_tarihi;
-    //data += "&bitis_tarihi=" + yeni_is_bitis_tarihi;
-
-    //console.log(data);
+//$(document).ready(function () {
 
 
-    //$("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/yeni_is_ekle", data: data }, function () {
-    //    mesaj_ver("İşler", "sorgu çalıştı", "success");
-    //});
-});
+//    $("#yeni_is_bitis_tarihi").datepicker({
+//        firstDay: 1,
+//        minDate: 0,
+//        onSelect: function () {
+//            alert(123);
+//            setTimeout(function () {
+
+//                var tarih = $("#yeni_is_baslangic_tarihi").datepicker("getDate");
+//                var eldeki_date = $("#yeni_is_baslangic_tarihi").datepicker("getDate");
+//                eldeki_date.setDate(eldeki_date.getDate());
+//                tarih.setDate(tarih.getDate());
+
+//                ay = parseFloat(tarih.getMonth()) + 1;
+//                if (ay < 10) {
+//                    ay = "0" + ay;
+//                }
+
+//                gun = parseFloat(tarih.getDate());
+//                if (gun < 10) {
+//                    gun = "0" + gun;
+//                }
+
+//                var yeni_tarih = gun + "." + ay + "." + tarih.getFullYear();
+
+//                $("#yeni_is_bitis_tarihi").val(yeni_tarih);
+
+//                $("#yeni_is_bitis_tarihi").datepicker('option', 'minDate', eldeki_date).focus();
+
+//                alert("Tarih Değişti");
+//                var yeni_is_bitis_tarihi = $("#yeni_is_bitis_tarihi").val();
+//                var yeni_is_baslangic_tarihi = $("#yeni_is_baslangic_tarihi").val();
+//                var data = "islem=yeni_is_ekle";
+//                data += "&baslangic_tarihi=" + yeni_is_baslangic_tarihi;
+//                data += "&bitis_tarihi=" + yeni_is_bitis_tarihi;
+
+//                console.log(data);
+
+//                $("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/yeni_is_ekle", data: data }, function () {
+//                    mesaj_ver("İşler", "sorgu çalıştı", "success");
+//                });
+
+//            }, 500);
+
+
+//        }
+//    }).mask("99.99.9999");
+
+//    //$("#yeni_is_bitis_tarihi").change(function () {
+//    //    alert(123);
+//    //    var yeni_is_bitis_tarihi = $("#yeni_is_bitis_tarihi").val();
+//    //    var yeni_is_baslangic_tarihi = $("#yeni_is_baslangic_tarihi").val();
+//    //    var data = "islem=yeni_is_ekle";
+//    //    data += "&baslangic_tarihi=" + yeni_is_baslangic_tarihi;
+//    //    data += "&bitis_tarihi=" + yeni_is_bitis_tarihi;
+
+//    //    console.log(data);
+
+//    //    $("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/yeni_is_ekle", data: data }, function () {
+//    //        mesaj_ver("İşler", "sorgu çalıştı", "success");
+//    //    });
+//    //});
+
+
+//    //var data = "islem=yeni_is_ekle";
+//    //data += "&baslangic_tarihi=" + yeni_is_baslangic_tarihi;
+//    //data += "&bitis_tarihi=" + yeni_is_bitis_tarihi;
+
+//    //console.log(data);
+
+
+//    //$("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/yeni_is_ekle", data: data }, function () {
+//    //    mesaj_ver("İşler", "sorgu çalıştı", "success");
+//    //});
+//});
 
 
 function yeni_is_sorgula() {
 
-    
+
     var data = "islem=yeni_is_ekle";
     data += "&baslangic_tarihi=" + $("#yeni_is_baslangic_tarihi").val();
     data += "&bitis_tarihi=" + $("#yeni_is_bitis_tarihi").val();
@@ -2818,7 +2872,7 @@ function izin_talebi_gonder(personel_id) {
             $("#izin_kayitlari").loadHTML({ url: "/ajax_request6/", data: data }, function () {
                 mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Eklendi");
             });
-        } 
+        }
     });
 }
 
@@ -3420,7 +3474,7 @@ function bordro_gönder(dosya_yolu) {
 
     $(window).off('beforeunload');
     window.location.href = "/ajax_request6/?jsid=4559&islem=bordro_gonder&dosya_yolu=" + encodeURI(dosya_yolu);
-    
+
 }
 
 function depo_dosya_indir(etiket, kayit_id, dosya_id) {
@@ -6592,7 +6646,7 @@ function TalebiIseDonustur(TalepId) {
     data += "&TalepVarmi=true";
     data += "&yeni_is_baslangic_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate(); // Ay +1, 0 dan basladıgı icin
     data += "&yeni_is_bitis_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
-    
+
     data = encodeURI(data);
     $("#modal_butonum").click();
     $("#modal_div").loadHTML({ url: "islem1", data: data }, function () {
@@ -6626,7 +6680,7 @@ function yeni_is_ekle(proje_id, departman_id) {
     var data = "islem=yeni_is_ekle";
     data += "&proje_id=" + proje_id;
     data += "&departman_id=" + departman_id;
-    data += "&yeni_is_baslangic_tarihi=" + d.getFullYear() + "-0" + (d.getMonth()+ 1) + "-" + d.getDate(); // Ay +1, 0 dan basladıgı icin
+    data += "&yeni_is_baslangic_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate(); // Ay +1, 0 dan basladıgı icin
     data += "&yeni_is_bitis_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
     console.log(data);
     data = encodeURI(data);
@@ -6728,7 +6782,7 @@ function yeni_is_kaydet(buton) {
         sinirlama_varmi = "1";
     }
     var ajanda_gosterim = "0";
-    if ($("#is_ajandada_goster").attr("checkeds") == "checkeds") {
+    if ($("#is_ajandada_goster").attr("checked") == "checked") {
         ajanda_gosterim = "1";
     }
     if (gorevliler === null) {
@@ -8192,10 +8246,13 @@ function yeni_talep_fisi_ekle() {
     var dosya = $("#talep_dosya").val();
 
     var data = "islem=talep_fisleri&islem2=ekle";
+
+
+
     data += "&baslik=" + baslik;
     data += "&oncelik=" + oncelik;
-    data += "&talep_edilen" + talep_edilen;
-    data += "&bildirim" + bildirim;
+    data += "&talep_edilen=" + talep_edilen;
+    data += "&bildirim=" + bildirim;
     data += "&aciklama=" + aciklama;
     data += "&dosya=" + dosya;
     data = encodeURI(data);
