@@ -37,8 +37,9 @@
 <link rel="stylesheet" type="text/css" href="/files/assets/icon/font-awesome/css/font-awesome.min.css">
 <div id="workSpace" style="padding: 0px; overflow-y: auto; overflow-x: hidden; position: relative; margin: 0 5px"></div>
 <style>
+
     .bwinPopupd {
-        margin-top: 0 !important;
+        margin-top:0!important;
     }
 
     .taskBoxGolge {
@@ -259,6 +260,11 @@
         //var taskId = $("#taskSelector").val();
         //var prof = new Profiler("loadServerSide");
         //prof.reset();
+
+        //var currentDate = new Date();  
+        //$("#start").datepicker("setDate",currentDate);
+        //$("#end").datepicker("setDate", currentDate);
+
 
         $.getJSON("/ajax_planlama/?jsid=4559&tip=<%=request("tip")%>&proje_id=<%=request("proje_id")%>", { CM: "LOADPROJECT", taskId: taskId }, function (response) {
             //console.debug(response);
@@ -802,13 +808,13 @@
             <div style="position:relative">
               <label for="<%=LNG("Başlangıç")%>"><%=LNG("Başlangıç")%></label>&nbsp;&nbsp;&nbsp;&nbsp;
               <input style="display:none;" type="checkbox" id="startIsMilestone" name="startIsMilestone" value="yes"> &nbsp;<label style="display:none;" for="startIsMilestone"><%=LNG("Kilometre Taşı")%></label>&nbsp;
-              <br><input type="text" name="start" id="start" size="8" class="form-control dateField validated date" autocomplete="off" maxlength="255" value="" oldvalue="1" entrytype="DATE">
+              <br><input type="text" name="start" id="start" size="8" class="form-control dateField validated date" autocomplete="off" maxlength="255" value="04.23.2014" oldvalue="1" entrytype="DATE">
               <span title="calendar" id="starts_inputDate" class="teamworkIcon openCalendar" onclick="$(this).dateField({inputField:$(this).prevAll(':input:first'),isSearchField:false});">m</span>          </div>
           </td>
           <td nowrap="">
             <label for="end"><%=LNG("Bitiş")%></label>&nbsp;&nbsp;&nbsp;&nbsp;
             <input type="checkbox" style=display:none; id="endIsMilestone" name="endIsMilestone" value="yes">&nbsp;<label style="display:none;" for="endIsMilestone"><%=LNG("Kilometre Taşı")%></label>&nbsp;
-            <br><input type="text" name="end" id="end" size="8" class="form-control dateField validated date" autocomplete="off" maxlength="255" value="" oldvalue="1" entrytype="DATE">
+            <br><input type="text" name="end" id="end" size="8" class="form-control dateField validated date" autocomplete="off" maxlength="255" value="04.23.2014" oldvalue="1" entrytype="DATE">
             <span title="calendar" id="ends_inputDate" class="teamworkIcon openCalendar" onclick="$(this).dateField({inputField:$(this).prevAll(':input:first'),isSearchField:false});">m</span>
           </td>
           <td nowrap="" >
@@ -818,7 +824,7 @@
         </tr>
 
         <tr>
-          <td>
+          <td  colspan="2">
             <label for="status" class=" "><%=LNG("Durum")%></label><br>
             <select id="status" name="status" class="taskStatus" status="(#=obj.status#)"  onchange="$(this).attr('STATUS',$(this).val());">
               <option value="STATUS_ACTIVE" class="taskStatus" status="STATUS_ACTIVE" ><%=LNG("Aktif")%></option>
@@ -828,10 +834,6 @@
               <option value="STATUS_FAILED" class="taskStatus" status="STATUS_FAILED" ><%=LNG("Hatalı")%></option>
               <option value="STATUS_UNDEFINED" class="taskStatus" status="STATUS_UNDEFINED" ><%=LNG("Diğer")%></option>
             </select>
-          </td>
-
-          <td>
-            <label style="float:left; cursor:pointer; margin-top:10px" ><input type="checkbox" checked="checked" class="js-switch" name="planning" id="planning" /> <%=LNG("Ajanda da Göster") %></label>
           </td>
 
           <td valign="top" nowrap>
@@ -865,7 +867,7 @@
         </div>
 
     <div style="text-align: right; padding-top: 20px">
-      <span id="saveButton" class="button first" onClick="$(this).trigger('saveFullEditor.gantt');"><%=LNG("Kaydet")%></span>
+      <span id="saveButton" class="button first" onClick="$(this).trigger('saveFullEditor.gantt');"><%=LNG("Kaydet ")%></span>
     </div>
     </div>
     -->
@@ -959,7 +961,7 @@
             "CIRCULAR_REFERENCE": "<%=LNG("Dairesel referans.")%>",
             "CANNOT_DEPENDS_ON_ANCESTORS": "<%=LNG("Atalara bağlı olamaz.")%>",
             "INVALID_DATE_FORMAT": "<%=LNG("Eklenen veriler alan formatı için geçersiz.")%>",
-            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED": "<%=LNG("Veriler yüklenirken bir hata oluştu.Bir görev atıldı.")%>",
+            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED": "<%=LNG("Veriler yüklenirken bir hata oluştu. Bir görev atıldı.")%>",
             "CANNOT_CLOSE_TASK_IF_OPEN_ISSUE": "<%=LNG("Açık sorunları olan bir görev kapatılamıyor")%>",
             "TASK_MOVE_INCONSISTENT_LEVEL": "<%=LNG("Farklı derinlikteki görevleri değiştiremezsiniz.")%>",
             "CANNOT_MOVE_TASK": "<%=LNG("İş Adımı taşınamaz.")%>",

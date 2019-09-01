@@ -126,7 +126,7 @@
 
                 start_tarih = jsDateToTurkeyDate(task.start)
                 end_tarih = jsDateToTurkeyDate(task.end)
-
+                Response.Write("Burası Çalıştı")
                 adimID = 0
                 yenikayit = false
                 if isnumeric(id) = true then
@@ -139,7 +139,7 @@
   
                         SQL="update ahtapot_proje_gantt_adimlari set start_tarih"& tip_str &" = '"& start_tarih &"', end_tarih"& tip_str &" = '"& end_tarih &"', proje_id = '" & proje_id & "', name = '" & name & "', progress = '" & progress & "', progressByWorklog = '" & progressByWorklog & "', irelevance = '" & irelevance & "', type = '" & itype & "', typeId = '" & typeId & "', description = '" & description & "', code = '" & code & "', ilevel = '" & ilevel & "', status = '" & status & "', depends = '" & depends & "', start"& tip_str &" = '" & start & "', duration"& tip_str &" = '" & duration & "', iend"& tip_str &" = '" & iend & "', startIsMilestone = '" & startIsMilestone & "', endIsMilestone = '" & endIsMilestone & "', collapsed = '" & collapsed & "', canWrite = '" & canWrite & "', canAdd = '" & canAdd & "', canDelete = '" & canDelete & "', canAddIssue = '" & canAddIssue & "', hasChild = '" & hasChild & "' where id = '"& varmi("id") &"'"
                         set guncelle = baglanti.execute(SQL)
-
+                        
                         SQL="update ucgem_is_listesi set durum = 'false' where GantAdimID = '"& varmi("id") &"' and cop = 'false'"
                         set guncelle = baglanti.execute(SQL)
 
@@ -703,7 +703,6 @@
     oJSON.data("project").Add "zoom", trim(proje("zoom"))
     Response.Write oJSON.JSONoutput
             
-
     Response.End
 
 

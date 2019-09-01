@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<!-- 
+  Visual Studio global web project settings.
+-->
+<VisualWebDeveloper>
+
+  <comReferences>
+    <reference Name="interop.msdaosp" ID="{E0E270C2-C0BE-11D0-8FE4-00A0C90A6341}\1.5\1033"/>
+    <reference Name="interop.msdasc" ID="{2206CEB0-19C1-11D1-89E0-00C04FD7A829}\1.0\0"/>
+    <reference Name="interop.oledberror" ID="{C8B522D5-5CF3-11CE-ADE5-00AA0044773D}\1.0\0"/>
+  </comReferences>
+</VisualWebDeveloper>

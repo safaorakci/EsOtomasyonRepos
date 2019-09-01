@@ -3263,6 +3263,7 @@
                     <th data-class="expand">Başlık</th>
                     <th data-hide="phone,tablet">Tarih</th>
                     <th data-hide="phone,tablet">Tedarikçi</th>
+                    <th data-hide="phone,tablet">Proje</th>
                     <th data-hide="phone,tablet">Toplam Maliyet</th>
                     <th data-hide="phone,tablet">Ekleyen</th>
                     <th data-hide="phone,tablet" style="width: 60px;">Durum</th>
@@ -3341,6 +3342,7 @@
                     <td><%=satinalma("baslik") %></td>
                     <td><%=cdate(satinalma("siparis_tarihi")) %></td>
                     <td><%=satinalma("tedarikci") %></td>
+                    <td><%=satinalma("proje_id") %></td>
                     <td><%=formatnumber(satinalma("toplamtl"),2) %> TL - 
                         <%=formatnumber(satinalma("toplamusd"),2) %> USD - 
                         <%=formatnumber(satinalma("toplameur"),2) %> EUR</td>
