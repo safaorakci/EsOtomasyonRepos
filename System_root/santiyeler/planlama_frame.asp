@@ -293,7 +293,7 @@
     function saveGanttOnServer() {
 
         var prj = ge.saveProject();
-        var planning = "0";
+        var planning = "0"; 
         //console.log(JSON.stringify(prj));
 
         //this is a simulation: save data to the local storage or to the textarea
@@ -493,7 +493,7 @@
     function ajandada_goster() {
 
         
-        if ($("#planning").attr("checked") === "checked") {
+        if ($("#planning").attr("checked") === "checked") { 
              planning = "1";
         }
     }
