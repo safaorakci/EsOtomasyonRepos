@@ -2943,9 +2943,11 @@
                 firma_id = request.Cookies("kullanici")("firma_id")
                 ekleyen_id = request.Cookies("kullanici")("kullanici_id")
                 ekleyen_ip = Request.ServerVariables("Remote_Addr")
+
+
+
     
-                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, talep_edilen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& talep_edilen &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& kcek("id") &"', @mesaj = '"& replace(bildirim, chr(13), "<br>") &"';"
-                set ekle2 = baglanti.execute(SQL)
+               
 
                 NetGSM_SMS kcek("personel_telefon"), bildirim
 

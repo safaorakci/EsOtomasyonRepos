@@ -174,7 +174,7 @@
 
                         if len(gorevliler)>0 then
                             renk = "rgb(52, 152, 219)"
-                            ajanda_gosterim = "1"
+                            ajanda_gosterim = trn(request("planning"))
                             adi = projeCek("proje_adi") & " - " & name
                             aciklama = projeCek("proje_adi") & " - " & name
                             departmanlar = "proje-" & proje_id
@@ -208,6 +208,8 @@
                             set varmi = baglanti.execute(SQL)
                             if varmi.eof then
 
+
+
                                 SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', '"& baslangic_tarihi &"', '"& baslangic_saati &"', '"& bitis_tarihi &"', '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"', '"& guncelleme_tarihi &"', '"& guncelleme_saati &"', '"& guncelleyen &"'); SELECT SCOPE_IDENTITY() id;"
                                 set isEkle = baglanti.execute(SQL)
 
@@ -215,7 +217,7 @@
 
                             else
 
-                                SQL="update ucgem_is_listesi  set durum = 'true',adi = '"& adi &"', aciklama = '"& aciklama &"', gorevliler = '"& gorevliler &"', departmanlar = '"& departmanlar &"', baslangic_tarihi = '"& baslangic_tarihi &"', baslangic_saati = '"& baslangic_saati &"', bitis_tarihi = '"& bitis_tarihi &"', bitis_saati = '"& bitis_saati &"', guncelleme_tarihi = '"& guncelleme_tarihi &"', guncelleme_saati = '"& guncelleme_saati &"', guncelleyen = '"& guncelleyen  &"' where id = '"& varmi("id") &"'"
+                                SQL="update ucgem_is_listesi  set durum = 'true',adi = '"& adi &"', aciklama = '"& aciklama &"', gorevliler = '"& gorevliler &"', departmanlar = '"& departmanlar &"', baslangic_tarihi = '"& baslangic_tarihi &"', baslangic_saati = '"& baslangic_saati &"', bitis_tarihi = '"& bitis_tarihi &"', bitis_saati = '"& bitis_saati &"', guncelleme_tarihi = '"& guncelleme_tarihi &"', guncelleme_saati = '"& guncelleme_saati &"', guncelleyen = '"& guncelleyen  &"', ajanda_gosterim = '"& ajanda_gosterim  &"' where id = '"& varmi("id") &"'"
                                 set guncelle = baglanti.execute(SQL)
 
                                 IsID = varmi("id")

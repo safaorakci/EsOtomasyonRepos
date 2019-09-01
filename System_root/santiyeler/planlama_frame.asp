@@ -160,6 +160,7 @@
     var ret;
 
     $(function () {
+        
         //localStorage.clear();
         var canWrite = true; //this is the default for test purposes
 
@@ -292,7 +293,7 @@
     function saveGanttOnServer() {
 
         var prj = ge.saveProject();
-
+        var planning = "0";
         //console.log(JSON.stringify(prj));
 
         //this is a simulation: save data to the local storage or to the textarea
@@ -317,7 +318,7 @@
 
         $.ajax("/ajax_planlama/", {
             dataType: "json",
-            data: { islem: "kayit", tip: "<%=tip%>", proje_id: "<%=request("proje_id")%>", prj: JSON.stringify(prj) },
+            data: { islem: "kayit", tip: "<%=tip%>", proje_id: "<%=request("proje_id")%>", prj: JSON.stringify(prj), planning: planning },
             type: "POST",
             success: function (response) {
                 //console.log("girdi");
@@ -491,9 +492,9 @@
 
     function ajandada_goster() {
 
-        var planning = "0";
+        
         if ($("#planning").attr("checked") === "checked") {
-            var planning = "1";
+             planning = "1";
         }
     }
 
