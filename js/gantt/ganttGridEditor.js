@@ -34,6 +34,12 @@ function GridEditor(master) {
     this.maxAllowedDate = new Date(new Date().getTime() + 3600000 * 24 * 365 * 30).format();
 }
 
+Date.prototype.addDays = function (n) {
+    var time = this.getTime();
+    var changedDate = new Date(time + (n * 24 * 60 * 60 * 1000));
+    this.setTime(changedDate.getTime());
+    return this;
+};
 
 GridEditor.prototype.fillEmptyLines = function () {
     //console.debug("fillEmptyLines")
@@ -61,13 +67,13 @@ GridEditor.prototype.fillEmptyLines = function () {
 
             master.beginTransaction();
             var lastTask;
-            var start = new Date().getTime();
+            var start = new Date();
+            start.getTime();
             var level = 0;
             if (master.tasks[0]) {
-                start = master.tasks[0].start;
+                //start = master.tasks[0].start;
                 level = master.tasks[0].level + 1;
             }
-
             //fill all empty previouses
             var cnt = 0;
             emptyRow.prevAll(".emptyRow").addBack().each(function () {
@@ -658,6 +664,7 @@ GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
 
         taskEditor.find("#startIsMilestone,#endIsMilestone").click(function () {
             var inp = $(this);
+            alert(123123);
             resynchDates(inp, taskEditor.find("[name=start]"), taskEditor.find("[name=startIsMilestone]"), taskEditor.find("[name=duration]"), taskEditor.find("[name=end]"), taskEditor.find("[name=endIsMilestone]"));
         });
 
