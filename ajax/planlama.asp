@@ -129,7 +129,6 @@
                 start_tarih = jsDateToTurkeyDate(task.start)
                 end_tarih = jsDateToTurkeyDate(task.end)
 
-                Response.Write("Burası Çalıştı")
                 adimID = 0
                 yenikayit = false
                 if isnumeric(id) = true then

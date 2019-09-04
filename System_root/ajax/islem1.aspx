@@ -1464,6 +1464,8 @@
                                       $(".sinirlama_yeri").hide();
                                       $("#sinirlama_varmi").removeAttr("checkeds");
                                       is_ekle_yeni_takvim_calistir();
+                                      $("#yeni_is_baslangic_tarihi").datepicker('setDate', new Date());
+                                      $("#yeni_is_bitis_tarihi").datepicker('setDate', new Date());
                                   })
                             </script>
                         </div>
@@ -1495,7 +1497,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <input type="text" id="yeni_is_baslangic_tarihi" name="yeni_is_baslangic_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%Response.Write(DateTime.Today.ToShortDateString()); %>" />
+                                            <input type="text" id="yeni_is_baslangic_tarihi" name="yeni_is_baslangic_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%Response.Write(DateTime.Today.ToShortTimeString());%>" />
                                         </div>
                                     </div>
                                 </div>
