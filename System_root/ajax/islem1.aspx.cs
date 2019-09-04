@@ -3219,10 +3219,9 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
         //ayarlar.cmd.CommandText = "select id, personel_ad + ' ' + personel_soyad as personel_ad_soyad from ucgem_firma_kullanici_listesi where firma_id = @firma_id and durum = 'true' and cop = 'false';";
-
-        //Bilal TAŞ Yapılan
-        ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <= '"+ baslangic_tarihi +"'  AND  bitis_tarihi >= '"+ bitis_tarihi+ "' OR(baslangic_tarihi >= '" + baslangic_tarihi + "' AND  bitis_tarihi <= '" + bitis_tarihi + "'))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
         
+        ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <= '" + baslangic_tarihi + "'  AND  bitis_tarihi >= '" + bitis_tarihi + "' OR(baslangic_tarihi >= '" + baslangic_tarihi + "' AND  bitis_tarihi <= '" + bitis_tarihi + "'))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
+
         ayarlar.cmd.Parameters.Add("@firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
         DataSet ds = new DataSet();
@@ -3237,7 +3236,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         }
         yeni_is_gorevliler.DataBind();
 
-        yeni_is_gorevliler.CssClass = "select2";
+        //yeni_is_gorevliler.CssClass = "select2";
         yeni_is_gorevliler.Attributes.Add("multiple", "multiple");
 
         ayarlar.baglan();
@@ -3356,14 +3355,31 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-
-        //Bilal TAŞ Yapılan
-        ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <= '" + baslangic_tarihi + "'  AND  bitis_tarihi >= '" + bitis_tarihi + "' OR(baslangic_tarihi >= '" + baslangic_tarihi + "' AND  bitis_tarihi <= '" + bitis_tarihi + "'))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
+        
+        ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <=  CONVERT(date, '" + baslangic_tarihi + "', 103)   AND  bitis_tarihi >= CONVERT(date, '" + bitis_tarihi + "', 103)  OR(baslangic_tarihi >= CONVERT(date, '" + baslangic_tarihi + "', 103) AND  bitis_tarihi <= CONVERT(date, '" + bitis_tarihi + "', 103)))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
 
         ayarlar.cmd.Parameters.Add("@firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
         DataSet ds = new DataSet();
         sda.Fill(ds);
+
+        string etiket = "";
+        string etiket_id = "";
+
+        try
+        {
+            etiket = Request.Form["etiket"].ToString();
+            etiket_id = Request.Form["etiket_id"].ToString();
+        }
+        catch (Exception)
+        {
+
+        }
+
+        if (etiket == "personel")
+        {
+            yeni_is_gorevliler.SelectedValue = etiket_id;
+        }
 
         //yeni_is_gorevliler.DataSource = null;
         yeni_is_gorevliler.DataSource = ds.Tables[0];
@@ -3372,8 +3388,26 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
        
         yeni_is_gorevliler.DataBind();
 
+        yeni_is_gorevliler.Attributes.Remove("multiple");
+        yeni_is_gorevliler.CssClass = "";
+
         //yeni_is_gorevliler.CssClass = "select2";
-        //yeni_is_gorevliler.Attributes.Add("multiple", "multiple");
+        yeni_is_gorevliler.Attributes.Add("multiple", "multiple");
+
+
+        ayarlar.baglan();
+        ayarlar.cmd.Parameters.Clear();
+        ayarlar.cmd.CommandText = "select id, adi from ucgem_bildirim_cesitleri";
+        SqlDataAdapter sda_bildirim = new SqlDataAdapter(ayarlar.cmd);
+        DataSet ds_bildirim = new DataSet();
+        sda_bildirim.Fill(ds_bildirim);
+
+        yeni_is_kontrol_bildirim.DataSource = ds_bildirim.Tables[0];
+        yeni_is_kontrol_bildirim.DataTextField = "adi";
+        yeni_is_kontrol_bildirim.DataValueField = "id";
+        yeni_is_kontrol_bildirim.DataBind();
+
+        
 
         ayarlar.cnn.Close();
     }
