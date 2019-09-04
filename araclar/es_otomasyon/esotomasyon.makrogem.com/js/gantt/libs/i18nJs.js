@@ -182,7 +182,6 @@ var i18n = {
     NEW_FILTER_NAME: "yeni filtrenin adı",
   SAVE: "Kaydet",
   DELETE: "Sil",
-    HINT_SKIP: "Anladım, bu ipucunu kapat.",
 
     COMBO_NO_VALUES: "uygun değer yok ...?",
 
