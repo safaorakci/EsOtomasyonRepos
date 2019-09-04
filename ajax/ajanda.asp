@@ -13,8 +13,8 @@
         bitis = left(trn(request("end")),10)
         kelime = trn(request("kelime"))
 
-        baslangic = cdate(right(baslangic, 2) & "." & mid(baslangic, 6,2) & "." & left(baslangic, 4))
-        bitis = cdate(right(bitis, 2) & "." & mid(bitis, 6,2) & "." & left(bitis, 4))
+        baslangic = cdate(left(baslangic, 4) & "-" & mid(baslangic, 6,2) & "-" & right(baslangic, 2))
+        bitis = cdate(left(bitis, 4) & "-" & mid(bitis, 6,2) & "-" & right(bitis, 2))
 
         if trn(request("gunluk"))="true"  then
             ' baslangic = cdate(date)
