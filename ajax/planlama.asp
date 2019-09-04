@@ -61,6 +61,8 @@
 
     proje_id = trn(request("proje_id"))
     tip = trn(request("tip"))
+    start_date = ""
+    end_date = ""
 
 
 
@@ -82,7 +84,7 @@
         ters_str = ""
     end if
 
-
+    
     if trn(request("islem"))="kayit" then
           
 
@@ -92,7 +94,7 @@
                 id =  task.id
                 name = task.name
                 progress = task.progress
-                progressByWorklog = task.progressByWorklog
+                progressByWorklog = "False"
                 irelevance = 0 ' task.relevance
                 itype = "" ' task.type
                 typeId = "" ' task.typeId
@@ -126,6 +128,7 @@
 
                 start_tarih = jsDateToTurkeyDate(task.start)
                 end_tarih = jsDateToTurkeyDate(task.end)
+
                 Response.Write("Burası Çalıştı")
                 adimID = 0
                 yenikayit = false
@@ -139,6 +142,9 @@
   
                         SQL="update ahtapot_proje_gantt_adimlari set start_tarih"& tip_str &" = '"& start_tarih &"', end_tarih"& tip_str &" = '"& end_tarih &"', proje_id = '" & proje_id & "', name = '" & name & "', progress = '" & progress & "', progressByWorklog = '" & progressByWorklog & "', irelevance = '" & irelevance & "', type = '" & itype & "', typeId = '" & typeId & "', description = '" & description & "', code = '" & code & "', ilevel = '" & ilevel & "', status = '" & status & "', depends = '" & depends & "', start"& tip_str &" = '" & start & "', duration"& tip_str &" = '" & duration & "', iend"& tip_str &" = '" & iend & "', startIsMilestone = '" & startIsMilestone & "', endIsMilestone = '" & endIsMilestone & "', collapsed = '" & collapsed & "', canWrite = '" & canWrite & "', canAdd = '" & canAdd & "', canDelete = '" & canDelete & "', canAddIssue = '" & canAddIssue & "', hasChild = '" & hasChild & "' where id = '"& varmi("id") &"'"
                         set guncelle = baglanti.execute(SQL)
+                        Response.Write(SQL)
+
+
                         
                         SQL="update ucgem_is_listesi set durum = 'false' where GantAdimID = '"& varmi("id") &"' and cop = 'false'"
                         set guncelle = baglanti.execute(SQL)
@@ -611,6 +617,8 @@
                 .Add "start", cdbl(adim("start" & tip_str))
                 .Add "duration", cint(adim("duration" & tip_str))
                 .Add "end", cdbl(adim("iend" & tip_str))
+                start_tarih = jsDateToTurkeyDate(cdbl(adim("start" & tip_str)))
+                end_tarih = jsDateToTurkeyDate(cdbl(adim("iend" & tip_str)))
                 .Add "start_golge", cdbl(adim("start" & ters_str))
                 .Add "duration_golge", cint(adim("duration" & ters_str))
                 .Add "end_golge", cdbl(adim("iend" & ters_str))
@@ -625,6 +633,7 @@
                 .Add "assigs", oJSON.Collection()
                 SQL="select * from ahtapot_gantt_adim_kaynaklari where adimID = '"& adim("id") &"'"
                 set kaynak = baglanti.execute(SQL)
+
                 k = 0
                 do while not kaynak.eof
                     With .item("assigs")
@@ -649,12 +658,17 @@
     oJSON.data("project").Add "deletedTaskIds", oJSON.Collection()
 
 
+ 
+
     SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= '"& start_tarih &"'  AND  bitis_tarihi >= '"& end_tarih &"' OR (baslangic_tarihi >= '"& start_tarih &"' AND  bitis_tarihi <= '"& end_tarih &"'))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
-    
     set kaynak = baglanti.execute(SQL)
+
+
+    if trn(request("islem"))="DateTimeChanged" then
+        start_date =request("StartDate")
+        end_date =request("EndDate")
+    end if
     
-
-
 
     oJSON.data("project").Add "resources", oJSON.Collection()
             xx = 0

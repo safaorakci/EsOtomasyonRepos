@@ -9,7 +9,7 @@
 
         is_id = trn(request("is_id"))
 
-        SQL="select  ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, ISNULL(isler.GantAdimID,0) AS GantAdimIDs, (select isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + ', ' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select ',' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ISNULL(STUFF(((select ',' + bildirim.adi from ucgem_bildirim_cesitleri bildirim where (SELECT COUNT(value) FROM STRING_SPLIT(REPLACE(isler.kontrol_bildirim, 'null', ''), ',') WHERE value =  bildirim.id ) > 0 for xml path(''))), 1, 1, ''), 'Yok') as kontrol_bildirim2, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.id = '"& is_id &"'"
+        SQL=" EXEC getIsKodu '"& is_id &"'"
         set detay = baglanti.execute(SQL)
 
 %>
