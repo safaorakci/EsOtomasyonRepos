@@ -3145,6 +3145,11 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
     {
         string baslangic_tarihi = "";
         string bitis_tarihi = "";
+
+        string etiket = "";
+        string etiket_id = "";
+
+        
         baslangic_tarihi = Request.Form["yeni_is_baslangic_tarihi"];
         bitis_tarihi = Request.Form["yeni_is_bitis_tarihi"];
         
@@ -3203,8 +3208,20 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         }
 
-        string etiket = "";
-        string etiket_id = "";
+        try
+        {
+            etiket = Request.Form["etiket"].ToString();
+            etiket_id = Request.Form["etiket_id"].ToString();
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+        if (etiket == "personel")
+        {
+            yeni_is_gorevliler.SelectedValue = etiket_id;
+        }
 
         try
         {
@@ -3363,23 +3380,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         DataSet ds = new DataSet();
         sda.Fill(ds);
 
-        string etiket = "";
-        string etiket_id = "";
-
-        try
-        {
-            etiket = Request.Form["etiket"].ToString();
-            etiket_id = Request.Form["etiket_id"].ToString();
-        }
-        catch (Exception)
-        {
-
-        }
-
-        if (etiket == "personel")
-        {
-            yeni_is_gorevliler.SelectedValue = etiket_id;
-        }
+       
 
         //yeni_is_gorevliler.DataSource = null;
         yeni_is_gorevliler.DataSource = ds.Tables[0];
@@ -3391,7 +3392,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         yeni_is_gorevliler.Attributes.Remove("multiple");
         yeni_is_gorevliler.CssClass = "";
 
-        //yeni_is_gorevliler.CssClass = "select2";
+        yeni_is_gorevliler.CssClass = "select2";
         yeni_is_gorevliler.Attributes.Add("multiple", "multiple");
 
 
