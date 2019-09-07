@@ -3253,7 +3253,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         }
         yeni_is_gorevliler.DataBind();
 
-        //yeni_is_gorevliler.CssClass = "select2";
+        yeni_is_gorevliler.CssClass = "select2";
         yeni_is_gorevliler.Attributes.Add("multiple", "multiple");
 
         ayarlar.baglan();
