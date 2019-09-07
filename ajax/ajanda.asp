@@ -34,6 +34,8 @@
         else
             SQL="select baslangic, bitis, baslangic_saati, bitis_saati, olay.id, tamamlandi, STRING_ESCAPE(title, 'json') as title, allDay, color from ahtapot_ajanda_olay_listesi olay left join etiketler etiket on (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value =  etiket.sorgu ) > 0 where  olay.etiket = '"& etiket &"' "& gunluk_str &" and olay.etiket_id = '"& etiket_id &"' and olay.cop = 'false'"& kelime_str &" and ((olay.baslangic between '"& cdate(baslangic) &"' and '"& cdate(bitis) &"' or olay.bitis between '"& cdate(baslangic) &"' and '"& cdate(bitis) &"') or NOT (olay.baslangic >= '"& baslangic &"' OR olay.bitis <=  '"& bitis &"')) group by baslangic, bitis, baslangic_saati, bitis_saati, olay.id, tamamlandi, title, allDay, color order by olay.baslangic asc"
         end if
+    Response.Write(SQL)
+
         set olay = baglanti.execute(SQL)
 
         i = 0
