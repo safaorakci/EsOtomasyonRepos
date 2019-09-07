@@ -327,7 +327,7 @@
                 end if
 
                 if yenikayit then
-                    SQL="SET NOCOUNT ON; insert into ahtapot_proje_gantt_adimlari(start_tarih"& tip_str &", end_tarih"& tip_str &", start_tarih"& ters_str &", end_tarih"& ters_str &", cop, proje_id , name , progress , progressByWorklog , irelevance , type , typeId , description , code , ilevel , status , depends , start"& tip_str &" , duration"& tip_str &", iend"& tip_str &" , start"& ters_str &" , duration"& ters_str &", iend"& ters_str &" , startIsMilestone , endIsMilestone , collapsed , canWrite , canAdd , canDelete , canAddIssue , hasChild) values('"& start_tarih &"', '"& end_tarih &"', '"& start_tarih &"', '"& end_tarih &"', 'false', '" & proje_id & "', '" & name & "', '" & progress & "', '" & progressByWorklog & "', '" & irelevance & "', '" & itype & "', '" & typeId & "', '" & description & "', '" & code & "', '" & ilevel & "', '" & status & "', '" & depends & "', '" & start & "', '" & duration & "', '" & iend & "', '" & start & "', '" & duration & "', '" & iend & "', '" & startIsMilestone & "', '" & endIsMilestone & "', '" & collapsed & "', '" & canWrite & "', '" & canAdd & "', '" & canDelete & "', '" & canAddIssue & "', '" & hasChild & "'); SELECT SCOPE_IDENTITY() id;"
+                    SQL="SET NOCOUNT ON; insert into ahtapot_proje_gantt_adimlari(start_tarih"& tip_str &", end_tarih"& tip_str &", start_tarih"& ters_str &", end_tarih"& ters_str &", cop, proje_id , name , progress , progressByWorklog , irelevance , type , typeId , description , code , ilevel , status , depends , start"& tip_str &" , duration"& tip_str &", iend"& tip_str &" , start"& ters_str &" , duration"& ters_str &", iend"& ters_str &" , startIsMilestone , endIsMilestone , collapsed , canWrite , canAdd , canDelete , canAddIssue , hasChild) values(CONVERT(date,'"& start_tarih &"',103), CONVERT(date,'"& end_tarih &"',103), CONVERT(date,'"& start_tarih &"',103),CONVERT(date,'"& end_tarih &"',103), 'false', '" & proje_id & "', '" & name & "', '" & progress & "', '" & progressByWorklog & "', '" & irelevance & "', '" & itype & "', '" & typeId & "', '" & description & "', '" & code & "', '" & ilevel & "', '" & status & "', '" & depends & "', '" & start & "', '" & duration & "', '" & iend & "', '" & start & "', '" & duration & "', '" & iend & "', '" & startIsMilestone & "', '" & endIsMilestone & "', '" & collapsed & "', '" & canWrite & "', '" & canAdd & "', '" & canDelete & "', '" & canAddIssue & "', '" & hasChild & "'); SELECT SCOPE_IDENTITY() id;"
                     set ekle = baglanti.execute(SQL)
 
                     adimID = ekle(0)
@@ -616,8 +616,6 @@
                 .Add "start", cdbl(adim("start" & tip_str))
                 .Add "duration", cint(adim("duration" & tip_str))
                 .Add "end", cdbl(adim("iend" & tip_str))
-                start_tarih = jsDateToTurkeyDate(cdbl(adim("start" & tip_str)))
-                end_tarih = jsDateToTurkeyDate(cdbl(adim("iend" & tip_str)))
                 .Add "start_golge", cdbl(adim("start" & ters_str))
                 .Add "duration_golge", cint(adim("duration" & ters_str))
                 .Add "end_golge", cdbl(adim("iend" & ters_str))
@@ -657,17 +655,19 @@
     oJSON.data("project").Add "deletedTaskIds", oJSON.Collection()
 
 
- 
+    
 
     SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= '"& start_tarih &"'  AND  bitis_tarihi >= '"& end_tarih &"' OR (baslangic_tarihi >= '"& start_tarih &"' AND  bitis_tarihi <= '"& end_tarih &"'))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
     set kaynak = baglanti.execute(SQL)
 
 
-    if trn(request("islem"))="DateTimeChanged" then
-        start_date =request("StartDate")
-        end_date =request("EndDate")
+
+     if trn(request("islem"))="DateTimeChanged" then
+        start_date = start_tarih
+        end_date = end_tarih
+        SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= '"& start_tarih &"'  AND  bitis_tarihi >= '"& end_tarih &"' OR (baslangic_tarihi >= '"& start_tarih &"' AND  bitis_tarihi <= '"& end_tarih &"'))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
+        set kaynak = baglanti.execute(SQL)
     end if
-    
 
     oJSON.data("project").Add "resources", oJSON.Collection()
             xx = 0
