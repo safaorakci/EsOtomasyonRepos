@@ -76,8 +76,14 @@
             <div class="card">
                 <div class="card-header">
                     <h5>Parça / Envanter Listesi</h5>
+
                     <input type="button" style="float: right;" class="btn btn-primary" onclick="ModalParcaEkle();" value="Parça Ekle" />
                     <input type="button" style="float: right; margin-right:15px;" class="btn btn-info" onclick="ModalParcaArama();" value="Arama Yap" />
+                    
+                    <div style="float:right" class="col-md-2">
+
+                    <input type="button" style="float:right; margin-left:45px" class="btn btn-warning" onclick="ModalExcellUpload();" value="Excell Upload">
+                    </div>
                 </div>
                 <div class="card-block">
                     <div class="row">

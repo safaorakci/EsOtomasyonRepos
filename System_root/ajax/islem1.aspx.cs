@@ -3402,6 +3402,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         DataSet ds_bildirim = new DataSet();
         sda_bildirim.Fill(ds_bildirim);
 
+        yeni_is_kontrol_bildirim.Visible = true;
         yeni_is_kontrol_bildirim.DataSource = ds_bildirim.Tables[0];
         yeni_is_kontrol_bildirim.DataTextField = "adi";
         yeni_is_kontrol_bildirim.DataValueField = "id";

@@ -2102,7 +2102,7 @@
                         <form autocomplete="off" id="dosya_yukleme_form">
                             <h5 style="font-size: 15px;">Bordro Ekle</h5>
                             <br>
-                            <input class="form-control required" required type="file" id="bordro_dosya_yolu" tip="kucuk" yol="dosya_deposu/<%=etiket %>/" />
+                            <input class="form-control required" required type="file" id="bordro_dosya_yolu" tip="kucuk" yol="dosya_deposu/1/" />
 
                             <br>
                             Dönem:<br>
