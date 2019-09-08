@@ -551,8 +551,14 @@ function popUp(URL, yukseklik, genislik) {
     eval("page" + id + " = window.open(URL, '" + id + "', 'location=no,directories=0,titlebar=0,toolbar=0,scrollbars=1,statusbar=0,menubar=0,resizable=0,width=" + genislik + ",height=" + yukseklik + ",left = 300,top = 100');");
 }
 
+$(document).on("click", "#btnUploadKaydet" , function () {
+    mesaj_ver("Envanter Kaydı", "İşlem Başarılı", "success");
+    sayfagetir('/parcalar/', 'jsid=4559');
+    $("button.close[data-dismiss=modal]").trigger("click");
+    return false;
+});
 
-function upload(id) {
+function upload(id, folderName) {
     var formData = new FormData();
     var totalFiles = document.getElementById(id).files.length;
 
@@ -560,10 +566,8 @@ function upload(id) {
         var file = document.getElementById(id).files[i];
         console.log(file);
         formData.append("FileUpload", file);
+        formData.append("folderName", folderName);
     }
-
-
-
 
     $.ajax({
         type: 'post',
@@ -573,17 +577,20 @@ function upload(id) {
         contentType: false,
         processData: false,
         success: function (response) {
-            alert('succes!!');
+            if (response.status) {
+                mesaj_ver("Dosya Yükleme", "İşlem Başarılı", "success");
+            }
         },
         error: function (error) {
-            mesaj_ver("Dosya Yükleme", "İşlem Başarılı", "success");
+            mesaj_ver("Uyarı", "Hata Oluştu", "danger");
         }
     });
 }
 
 $(document).on("change", "input[type=file]", function () {
     var id = $(this).attr("id");
-    upload(id);
+    var folderName = $(this).attr("folder");
+    upload(id, folderName);
 });
 
 function fileyap() {

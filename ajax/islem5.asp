@@ -3080,12 +3080,12 @@ works properly when clicked or hovered */
     <div class="row mb-2">
         <label class="col-sm-12 col-form-label">Excell Dosyası :</label>
         <div class="col-sm-12">
-            <input class="form-control required" required type="file" id="FileUpload" tip="kucuk" yol="upload/upload/ExcellFile/" />
+            <input class="form-control required" required type="file" id="FileUpload" tip="kucuk" folder="envanter" />
         </div>
     </div>
 
     <div class="modal-footer">
-        <input type="button" onclick="upload();" class="btn btn-success btn-sm" value="Kaydet" />
+        <input type="button" onclick="upload();" class="btn btn-success btn-sm" value="Kaydet" id="btnUploadKaydet" />
     </div>
 </form>
 

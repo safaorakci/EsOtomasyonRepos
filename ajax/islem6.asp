@@ -2458,7 +2458,7 @@
                         
                     end if
 
-                    SQL="SELECT * FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY parca.id ) AS RowNum, parca.*, kat.kategori_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad as adsoyad, isnull((select sum(ipl.adet) from is_parca_listesi ipl where ipl.ParcaId =parca.id and ipl.cop = 'false' ),0) kullanilan from parca_listesi parca join tanimlama_kategori_listesi kat on kat.id = parca.kategori join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id where parca.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and parca.cop = 'false' "& arama_str &" ) AS RowConstrainedResult WHERE RowNum >= "& cdbl(nereden) &" AND RowNum < "& ( cdbl(nereden) + kacadet )  &" ORDER BY RowNum"
+                    SQL="SELECT * FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY parca.id desc ) AS RowNum, parca.*, kat.kategori_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad as adsoyad, isnull((select sum(ipl.adet) from is_parca_listesi ipl where ipl.ParcaId =parca.id and ipl.cop = 'false' ),0) kullanilan from parca_listesi parca join tanimlama_kategori_listesi kat on kat.id = parca.kategori join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id where parca.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and parca.cop = 'false' "& arama_str &" ) AS RowConstrainedResult WHERE RowNum >= "& cdbl(nereden) &" AND RowNum < "& ( cdbl(nereden) + kacadet )  &" ORDER BY RowNum"
                     set parca = baglanti.execute(SQL)
 
 
