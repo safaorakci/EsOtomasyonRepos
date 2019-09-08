@@ -8247,8 +8247,6 @@ function yeni_talep_fisi_ekle() {
 
     var data = "islem=talep_fisleri&islem2=ekle";
 
-
-
     data += "&baslik=" + baslik;
     data += "&oncelik=" + oncelik;
     data += "&talep_edilen=" + talep_edilen;
@@ -8259,6 +8257,7 @@ function yeni_talep_fisi_ekle() {
     if ($("#talepfisform input:not(input[type=button])").valid("valid")) {
         $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
             mesaj_ver("Talep Fişleri", "Kayıt Başarıyla Eklendi", "success");
+            $(".close").click();
         });
     }
 }

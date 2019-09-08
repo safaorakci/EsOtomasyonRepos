@@ -2943,14 +2943,11 @@
                 firma_id = request.Cookies("kullanici")("firma_id")
                 ekleyen_id = request.Cookies("kullanici")("kullanici_id")
                 ekleyen_ip = Request.ServerVariables("Remote_Addr")
-
-
-
-    
                
 
+            if trn(request("bildirim")) = "SMS" then
                 NetGSM_SMS kcek("personel_telefon"), bildirim
-
+            end if
 
             kcek.movenext
             loop
@@ -3096,7 +3093,7 @@
                     </td>
                     <% elseif trim(talepler("durum"))="Onaylandı" then %>
                     <td style="text-align: center;">
-                        <span class="label label-success">Onaylandı</span>
+                        <span class="label label-success">Onaylandi</span>
                     </td>
                     <% end if %>
                     <td style="width: 120px;">
@@ -3310,7 +3307,7 @@
                         SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id  where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' "& sorgu_str &" order by satinalma.id desc"
 
                     else
-                        SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id  where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
+                        SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
                     end if
                     set satinalma = baglanti.execute(SQL)
                     if satinalma.eof then
@@ -3328,21 +3325,21 @@
                     <td style="text-align: center;"><%=s %></td>
                     <% if trim(satinalma("oncelik"))="Düşük" then %>
                     <td style="text-align: center;">
-                            <span class="label label-warning" style="font-size:11px">Düşük</span>
+                        <span class="label label-warning" style="font-size: 11px">Düşük</span>
                     </td>
                     <% elseif trim(satinalma("oncelik"))="Yüksek" then %>
                     <td style="text-align: center;">
-                            <span class="label label-danger" style="font-size:11px">Yüksek</span>
+                        <span class="label label-danger" style="font-size: 11px">Yüksek</span>
                     </td>
                     <% elseif trim(satinalma("oncelik"))="Normal" then %>
                     <td style="text-align: center;">
-                            <span class="label label-info" style="font-size:11px">Normal</span>
+                        <span class="label label-info" style="font-size: 11px">Normal</span>
                     </td>
                     <% end if %>
                     <td><%=satinalma("baslik") %></td>
                     <td><%=cdate(satinalma("siparis_tarihi")) %></td>
                     <td><%=satinalma("tedarikci") %></td>
-                    <td><%=satinalma("proje_id") %></td>
+                    <td><%=satinalma("proje") %></td>
                     <td><%=formatnumber(satinalma("toplamtl"),2) %> TL - 
                         <%=formatnumber(satinalma("toplamusd"),2) %> USD - 
                         <%=formatnumber(satinalma("toplameur"),2) %> EUR</td>
@@ -3350,19 +3347,19 @@
                         <%=cdate(satinalma("ekleme_tarihi")) %></td>
                     <% if trim(satinalma("durum"))="Sipariş Edildi" then %>
                     <td style="text-align: center;">
-                        <span class="label label-info" style="font-size:11px">Sipariş Edildi</span>
+                        <span class="label label-info" style="font-size: 11px">Sipariş Edildi</span>
                     </td>
                     <% elseif trim(satinalma("durum"))="İptal Edildi" then %>
                     <td style="text-align: center;">
-                        <span class="label label-danger" style="font-size:11px">İptal Edildi</span>
+                        <span class="label label-danger" style="font-size: 11px">İptal Edildi</span>
                     </td>
                     <% elseif trim(satinalma("durum"))="Tamamlandı" then %>
                     <td style="text-align: center;">
-                        <span class="label label-success" style="font-size:11px">Tamamlandı</span>
+                        <span class="label label-success" style="font-size: 11px">Tamamlandı</span>
                     </td>
                     <% else %>
                     <td style="text-align: center;">
-                        <span class="label label-warning" style="font-size:11px">Onay Bekliyor</span>
+                        <span class="label label-warning" style="font-size: 11px">Onay Bekliyor</span>
                     </td>
                     <% end if %>
 
