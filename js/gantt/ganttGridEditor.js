@@ -556,6 +556,54 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 
 };
 
+function DateChanged(StartDateTime,EndDateTime) {
+
+    alert("Tarih Değişti");
+    //<%=request(DateTimeChanged)%>
+    data = "islem=DateTimeChanged";
+    data += "&StartDateTime=" + StartDateTime;
+    data += "&EndDateTime=" + EndDateTime;
+    console.log(data);
+
+
+    $.ajax("/ajax_planlama/", {
+        dataType: "json",
+        data: { islem: "DateTimeChanged",prj: JSON.stringify(data)},
+        type: "POST",
+        success: function (response) {
+            console.log("girdi");
+            if (response.ok) {
+                if (response.project) {
+                    
+                }
+            } else {
+                var errMsg = "Hata Oluştu\n";
+                if (response.message) {
+                    errMsg = errMsg + response.message + "\n";
+                }
+
+                if (response.errorMessages.length) {
+                    errMsg += response.errorMessages.join("\n");
+                }
+                alert(errMsg);
+            }
+        }
+
+    });
+    
+    //$("#talep_listesi").loadHTML({ url: "/ajax_planlama/?jsid=4559", data: data }, function () {
+    //$.getJSON("/ajax_planlama/?jsid=4559", { data: data }, function (response) {
+    //    console.log(data);
+    //    if (response.ok) {
+    //        if (!response.project.canWrite)
+    //            //$(".ganttButtonBar button.requireWrite").attr("disabled", "true");
+            
+    //    } else {
+    //        alert("Hata");
+    //    }
+    //});
+}
+
 GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
 
 
@@ -644,6 +692,7 @@ GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
         //bind dateField on dates, duration
         taskEditor.find("#start,#end,#duration").click(function () {
             var input = $(this);
+            DateChanged($("#start").val(), $("#end").val());
             if (input.is("[entrytype=DATE]")) {
                 input.dateField({
                     inputField: input,

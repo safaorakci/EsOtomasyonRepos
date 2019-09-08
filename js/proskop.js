@@ -552,179 +552,217 @@ function popUp(URL, yukseklik, genislik) {
 }
 
 
+function upload(id) {
+    var formData = new FormData();
+    var totalFiles = document.getElementById(id).files.length;
+
+    for (var i = 0; i < totalFiles; i++) {
+        var file = document.getElementById(id).files[i];
+        console.log(file);
+        formData.append("FileUpload", file);
+    }
+
+
+
+
+    $.ajax({
+        type: 'post',
+        url: '/upload.ashx',
+        data: formData,
+        dataType: 'json',
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            alert('succes!!');
+        },
+        error: function (error) {
+            mesaj_ver("Dosya Yükleme", "İşlem Başarılı", "success");
+        }
+    });
+}
+
+$(document).on("change", "input[type=file]", function () {
+    var id = $(this).attr("id");
+    upload(id);
+});
+
 function fileyap() {
 
-    $("input:file").addClass("fileupload");
+    //$("input:file").addClass("fileupload");
 
-    $('input:file:not(input[yapildi=true])').each(function (o) {
+    //$('input:file:not(input[yapildi=true])').each(function (o) {
 
-        var d = new Date();
-        var i = parseInt(o) + parseInt(d.getSeconds());
-        var attrs = $(this)[0].attributes;
-        var nesne = '<input type="file"  iid="' + i + '" id="uploadsrc' + i + '" ';
-        var nesne1 = '<input type="hidden" resimurl="' + i + '" ';
-        var mevcutresim = "";
-        var resimvar = "false";
-        for (var r = 0; r < attrs.length; r++) {
-            if (attrs[r].nodeName != "name" && attrs[r].nodeName != "id" && attrs[r].nodeName != "sutun" && attrs[r].nodeName != "value") {
-                nesne = nesne + attrs[r].nodeName + '="' + attrs[r].nodeValue + '" ';
-            } else {
-                if (attrs[r].nodeName == "value") {
-                    mevcutresim = attrs[r].nodeValue;
-                    resimvar = "true";
-                }
-                nesne1 = nesne1 + attrs[r].nodeName + '="' + attrs[r].nodeValue + '" ';
-            }
-        }
+    //    var d = new Date();
+    //    var i = parseInt(o) + parseInt(d.getSeconds());
+    //    var attrs = $(this)[0].attributes;
+    //    var nesne = '<input type="file"  iid="' + i + '" id="uploadsrc' + i + '" ';
+    //    var nesne1 = '<input type="hidden" resimurl="' + i + '" ';
+    //    var mevcutresim = "";
+    //    var resimvar = "false";
+    //    for (var r = 0; r < attrs.length; r++) {
+    //        if (attrs[r].nodeName != "name" && attrs[r].nodeName != "id" && attrs[r].nodeName != "sutun" && attrs[r].nodeName != "value") {
+    //            nesne = nesne + attrs[r].nodeName + '="' + attrs[r].nodeValue + '" ';
+    //        } else {
+    //            if (attrs[r].nodeName == "value") {
+    //                mevcutresim = attrs[r].nodeValue;
+    //                resimvar = "true";
+    //            }
+    //            nesne1 = nesne1 + attrs[r].nodeName + '="' + attrs[r].nodeValue + '" ';
+    //        }
+    //    }
 
-        if (resimvar == "false") {
-            if ($(this).attr("tip") == "kucuk") {
-                mevcutresim = "/img/kucukboy.png";
-            } else if ($(this).attr("tip") == "orta") {
-                mevcutresim = "/img/ortaboy.png";
-            } else if ($(this).attr("tip") == "buyuk") {
-                mevcutresim = "/img/buyukboy.png";
-            } else {
-                mevcutresim = "/img/ortaboy.png";
-            }
-        }
-
-
-        nesne = nesne + "/>";
-        nesne1 = nesne1 + "/>";
+    //    if (resimvar == "false") {
+    //        if ($(this).attr("tip") == "kucuk") {
+    //            mevcutresim = "/img/kucukboy.png";
+    //        } else if ($(this).attr("tip") == "orta") {
+    //            mevcutresim = "/img/ortaboy.png";
+    //        } else if ($(this).attr("tip") == "buyuk") {
+    //            mevcutresim = "/img/buyukboy.png";
+    //        } else {
+    //            mevcutresim = "/img/ortaboy.png";
+    //        }
+    //    }
 
 
-        if ($(this).attr("tip") == "kucuk") {
-
-            $('<div id="upload' + i + '"><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="width:28px; height:28px; border:solid 1px #dddddd; margin-right:1px; background-color:White; float:left;"><img id="uploadresim' + i + '" tip="' + $(this).attr("tip") + '" style="width:28px; height:28px;"" class="resim" src="' + mevcutresim + '" /></div></td><td>' + nesne + nesne1 + '</td></tr></table></div>').insertBefore(this);
-            $(this).remove();
-
-        } else if ($(this).attr("tip") == "orta") {
-
-            $('<div id="upload' + i + '"><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="width:143px; height:104px; border:solid 1px #dddddd; margin-bottom:1px; background-color:White; float:left;"><img id="uploadresim' + i + '" tip="' + $(this).attr("tip") + '" style="width:143px; height:104px;"" class="resim" src="' + mevcutresim + '" /></div></td></tr><tr><td>' + nesne + nesne1 + '</td></tr></table></div>').insertBefore(this);
-            $(this).remove();
-
-        } else if ($(this).attr("tip") == "buyuk") {
-
-            $('<div id="upload' + i + '"><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="width:181px; height:130px; border:solid 1px #dddddd; margin-bottom:1px; background-color:White; float:left;"><img id="uploadresim' + i + '" tip="' + $(this).attr("tip") + '" style="width:178px; height:130px;"" class="resim" src="' + mevcutresim + '" /></div></td></tr><tr><td>' + nesne + nesne1 + '</td></tr></table></div>').insertBefore(this);
-            $(this).remove();
-
-        } else {
-
-            $('<div id="upload' + i + '"><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="width:143px; height:104px; border:solid 1px #dddddd; margin-bottom:1px; background-color:White; float:left;"><img id="uploadresim' + i + '" tip="' + $(this).attr("tip") + '" style="width:143px; height:104px;"" class="resim" src="' + mevcutresim + '" /></div></td></tr><tr><td>' + nesne + nesne1 + '</td></tr></table></div>').insertBefore(this);
-            $(this).remove();
-
-        }
-    });
-    $('input:file:not(input[yapildi=true])').filestyle();
+    //    nesne = nesne + "/>";
+    //    nesne1 = nesne1 + "/>";
 
 
+    //    if ($(this).attr("tip") == "kucuk") {
 
-    $('input:file:not(input[yapildi=true])').each(function (i) {
+    //        $('<div id="upload' + i + '"><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="width:28px; height:28px; border:solid 1px #dddddd; margin-right:1px; background-color:White; float:left;"><img id="uploadresim' + i + '" tip="' + $(this).attr("tip") + '" style="width:28px; height:28px;"" class="resim" src="' + mevcutresim + '" /></div></td><td>' + nesne + nesne1 + '</td></tr></table></div>').insertBefore(this);
+    //        $(this).remove();
 
-        $(this).attr("yapildi", "true");
-        if ($.browser.mozilla) {
+    //    } else if ($(this).attr("tip") == "orta") {
 
-            $(this).css("width", "150px");
-            $(this).css("margin-left", "40px");
-        }
+    //        $('<div id="upload' + i + '"><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="width:143px; height:104px; border:solid 1px #dddddd; margin-bottom:1px; background-color:White; float:left;"><img id="uploadresim' + i + '" tip="' + $(this).attr("tip") + '" style="width:143px; height:104px;"" class="resim" src="' + mevcutresim + '" /></div></td></tr><tr><td>' + nesne + nesne1 + '</td></tr></table></div>').insertBefore(this);
+    //        $(this).remove();
 
+    //    } else if ($(this).attr("tip") == "buyuk") {
 
-        $(this).fileupload({
-            uploadTemplateId: null,
-            downloadTemplateId: null,
-            uploadTemplate: null,
-            downloadTemplate: null,
-            url: '/upload1.asp',
-            dataType: 'json',
-            formData: { yol: $(this).attr("yol") }
+    //        $('<div id="upload' + i + '"><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="width:181px; height:130px; border:solid 1px #dddddd; margin-bottom:1px; background-color:White; float:left;"><img id="uploadresim' + i + '" tip="' + $(this).attr("tip") + '" style="width:178px; height:130px;"" class="resim" src="' + mevcutresim + '" /></div></td></tr><tr><td>' + nesne + nesne1 + '</td></tr></table></div>').insertBefore(this);
+    //        $(this).remove();
 
-        });
+    //    } else {
 
-        $(this)
-            //  .bind('fileuploadadd', function (e, data) { alert("1"); })
-            // .bind('fileuploadsubmit', function (e, data) { alert("2"); })
-            //  .bind('fileuploadsend', function (e, data) { alert("3"); })
-            .bind('fileuploaddone', function (e, data) {
+    //        $('<div id="upload' + i + '"><table border="0" cellspacing="0" cellpadding="0"><tr><td><div style="width:143px; height:104px; border:solid 1px #dddddd; margin-bottom:1px; background-color:White; float:left;"><img id="uploadresim' + i + '" tip="' + $(this).attr("tip") + '" style="width:143px; height:104px;"" class="resim" src="' + mevcutresim + '" /></div></td></tr><tr><td>' + nesne + nesne1 + '</td></tr></table></div>').insertBefore(this);
+    //        $(this).remove();
 
-                // $("/imgid" + $(this).attr("iid")).remove();
-                $(".loadlar" + $(this).attr("iid")).remove();
-
-                //burdan
-
-                var url;
-                $.each(data.result, function (i) {
-                    url = data.result[i].url;
-                });
-                //burdan		
-
-                if ($("#uploadresim" + $(this).attr("iid")).attr("tip") == "buyuk") {
-                    $("#uploadresim" + $(this).attr("iid")).attr("src", url);
-                } else {
-                    $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/done.png");
-                }
-                $("input[resimurl=" + $(this).attr("iid") + "]").val(url);
-
-            })
-            .bind('fileuploadfail', function (e, data) {
-                //notify_e("Uyarı", "Hata oluştu.");
-                mesaj_ver("Uyarı", "Hata Oluştu", "danger");
-            })
-            // .bind('fileuploadalways', function (e, data) { alert("6"); })
-            // .bind('fileuploadprogress', function (e, data) { alert("7"); })
-            // .bind('fileuploadprogressall', function (e, data) { alert("8"); })
-            .bind('fileuploadstart', function (e) {
-
-                if ($(this).attr("tip") == "kucuk") {
-                    $('<div class="loadlar' + $(this).attr("iid") + '" style=" position:absolute; margin-left:5px; margin-top:7px;" ><img id="/imgid' + $(this).attr("iid") + '" src="/img/loader_green.gif" /></div>').insertBefore("#uploadresim" + $(this).attr("iid"));
-                    $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/duzarkaplan.png")
-                } else if ($(this).attr("tip") == "orta") {
-                    $('<div class="loadlar' + $(this).attr("iid") + '" style=" position:absolute; margin-left:63px; margin-top:50px;" ><img src="/img/loader_green.gif" /></div>').insertBefore("#uploadresim" + $(this).attr("iid"));
-                    $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/duzarkaplan.png")
-                } else if ($(this).attr("tip") == "buyuk") {
-                    $('<div class="loadlar' + $(this).attr("iid") + '" style=" position:absolute; margin-left:85px; margin-top:57px;" ><img src="/img/loader_green.gif" /></div>').insertBefore("#uploadresim" + $(this).attr("iid"));
-                    $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/duzarkaplan.png")
-                } else {
-                    $('<div class="loadlar' + $(this).attr("iid") + '" style=" position:absolute; margin-left:63px; margin-top:50px;" ><img src="/img/loader_green.gif" /></div>').insertBefore("#uploadresim" + $(this).attr("iid"));
-                    $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/duzarkaplan.png")
-                }
-            })
-
-
-            .bind('fileuploadstop', function (e, data) {
-                if ($.browser.msie) {
-                    throw new Error('This is not an error. This is just to abort javascript');
-                }
-            })
-
-
-        // buralardan oldu
-
-
-        //
-        //  .bind('fileuploadchange', function (e, data) { alert("11"); })
-        // .bind('fileuploadpaste', function (e, data) { alert("12"); })
-        // .bind('fileuploaddrop', function (e, data) { alert("13"); })
-        // .bind('fileuploaddragover', function (e, data) { alert("14"); })
-        //.bind('fileuploaddestroy', function (e, data) { alert("15"); })
-        //.bind('fileuploaddestroyed', function (e, data) { alert("16"); })
-
-
-    });
+    //    }
+    //});
+    //$('input:file:not(input[yapildi=true])').filestyle();
 
 
 
-    $('input:file:not(input[yapildi=true])').each(function () {
+    //$('input:file:not(input[yapildi=true])').each(function (i) {
 
-        var that = this;
-        $.getJSON(this.action, function (result) {
-            if (result && result.length) {
-                $(that).fileupload('option', 'done')
-                    .call(that, null, { result: result });
+    //    $(this).attr("yapildi", "true");
+    //    if ($.browser.mozilla) {
 
-            }
-        });
-    });
+    //        $(this).css("width", "150px");
+    //        $(this).css("margin-left", "40px");
+    //    }
+
+        
+    //    //$(this).fileupload({
+
+            
+
+
+    //    //    uploadtemplateıd: null,
+    //    //    downloadtemplateıd: null,
+    //    //    uploadtemplate: null,
+    //    //    downloadtemplate: null,
+    //    //    url: '/upload.ashx',
+    //    //    datatype: 'json',
+    //    //    formdata: { yol: $(this).attr("yol") }
+
+    //    //});
+
+    //    $(this)
+    //        //  .bind('fileuploadadd', function (e, data) { alert("1"); })
+    //        // .bind('fileuploadsubmit', function (e, data) { alert("2"); })
+    //        //  .bind('fileuploadsend', function (e, data) { alert("3"); })
+    //        .bind('fileuploaddone', function (e, data) {
+
+    //            // $("/imgid" + $(this).attr("iid")).remove();
+    //            $(".loadlar" + $(this).attr("iid")).remove();
+
+    //            //burdan
+
+    //            var url;
+    //            $.each(data.result, function (i) {
+    //                url = data.result[i].url;
+    //            });
+    //            //burdan		
+
+    //            if ($("#uploadresim" + $(this).attr("iid")).attr("tip") == "buyuk") {
+    //                $("#uploadresim" + $(this).attr("iid")).attr("src", url);
+    //            } else {
+    //                $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/done.png");
+    //            }
+    //            $("input[resimurl=" + $(this).attr("iid") + "]").val(url);
+
+    //        })
+    //        .bind('fileuploadfail', function (e, data) {
+    //            //notify_e("Uyarı", "Hata oluştu.");
+    //            mesaj_ver("Uyarı", "Hata Oluştu", "danger");
+    //        })
+    //        // .bind('fileuploadalways', function (e, data) { alert("6"); })
+    //        // .bind('fileuploadprogress', function (e, data) { alert("7"); })
+    //        // .bind('fileuploadprogressall', function (e, data) { alert("8"); })
+    //        .bind('fileuploadstart', function (e) {
+
+    //            if ($(this).attr("tip") == "kucuk") {
+    //                $('<div class="loadlar' + $(this).attr("iid") + '" style=" position:absolute; margin-left:5px; margin-top:7px;" ><img id="/imgid' + $(this).attr("iid") + '" src="/img/loader_green.gif" /></div>').insertBefore("#uploadresim" + $(this).attr("iid"));
+    //                $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/duzarkaplan.png")
+    //            } else if ($(this).attr("tip") == "orta") {
+    //                $('<div class="loadlar' + $(this).attr("iid") + '" style=" position:absolute; margin-left:63px; margin-top:50px;" ><img src="/img/loader_green.gif" /></div>').insertBefore("#uploadresim" + $(this).attr("iid"));
+    //                $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/duzarkaplan.png")
+    //            } else if ($(this).attr("tip") == "buyuk") {
+    //                $('<div class="loadlar' + $(this).attr("iid") + '" style=" position:absolute; margin-left:85px; margin-top:57px;" ><img src="/img/loader_green.gif" /></div>').insertBefore("#uploadresim" + $(this).attr("iid"));
+    //                $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/duzarkaplan.png")
+    //            } else {
+    //                $('<div class="loadlar' + $(this).attr("iid") + '" style=" position:absolute; margin-left:63px; margin-top:50px;" ><img src="/img/loader_green.gif" /></div>').insertBefore("#uploadresim" + $(this).attr("iid"));
+    //                $("#uploadresim" + $(this).attr("iid")).attr("src", "/img/duzarkaplan.png")
+    //            }
+    //        })
+
+
+    //        .bind('fileuploadstop', function (e, data) {
+    //            if ($.browser.msie) {
+    //                throw new Error('This is not an error. This is just to abort javascript');
+    //            }
+    //        })
+
+
+    //    // buralardan oldu
+
+
+    //    //
+    //    //  .bind('fileuploadchange', function (e, data) { alert("11"); })
+    //    // .bind('fileuploadpaste', function (e, data) { alert("12"); })
+    //    // .bind('fileuploaddrop', function (e, data) { alert("13"); })
+    //    // .bind('fileuploaddragover', function (e, data) { alert("14"); })
+    //    //.bind('fileuploaddestroy', function (e, data) { alert("15"); })
+    //    //.bind('fileuploaddestroyed', function (e, data) { alert("16"); })
+
+
+    //});
+
+
+
+    //$('input:file:not(input[yapildi=true])').each(function () {
+
+    //    var that = this;
+    //    $.getJSON(this.action, function (result) {
+    //        if (result && result.length) {
+    //            $(that).fileupload('option', 'done')
+    //                .call(that, null, { result: result });
+
+    //        }
+    //    });
+    //});
 
 
 

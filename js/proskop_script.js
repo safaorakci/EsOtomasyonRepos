@@ -4035,6 +4035,17 @@ function ModalParcaArama() {
 
 }
 
+function ModalExcellUpload() {
+
+    var data = "islem=ModalExcellUpload";
+    data = encodeURI(data);
+    $("#modal_butonum").click();
+    $("#modal_div").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+        sayfa_yuklenince();
+    });
+
+}
+
 function ModalSatinalmaArama() {
 
     var data = "islem=ModalSatinalmaArama";

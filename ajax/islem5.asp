@@ -1344,10 +1344,13 @@ works properly when clicked or hovered */
             if not control.eof then
                Response.Clear()
 %>
-<script>
+<script type="text/javascript">
             $(function (){
-                mesaj_ver("İkinci İş", "İkinci İşi Başlatamazsınız", "danger");
+                mesaj_ver("İkinci İş", "Aynı Anda İkinci İşi Başlatamazsınız", "danger");
                 timer.stop();
+                $('.startButton').show();
+                $('.pauseButton').hide();
+                $('.stopButton').hide();
             });
 </script>
 <%
@@ -1484,7 +1487,7 @@ works properly when clicked or hovered */
     saniye = DateDiff("s",fromDate,toDate) 
 %>
 <input type="hidden" id="sonacikkayit<%=is_id %>" baslangic_tarihi="<%=cdate(baslangic_tarihi) %>" baslangic_saati="<%=baslangic_saati %>" />
-<script>
+<script type="text/javascript">
         $(function (){
 
             timer.start({precision: 'seconds', startValues: {seconds: <%=saniye %>}});
@@ -3062,6 +3065,30 @@ works properly when clicked or hovered */
         <input type="button" onclick="Modaldan_parca_ara();" class="btn btn-primary" value="Arama Yap" />
     </div>
 </form>
+
+<% elseif trn(request("islem"))="ModalExcellUpload" then %>
+
+<div class="modal-header">
+    Excell Upload
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form id="koftiform"></form>
+<form autocomplete="off" id="yeni_parca_giris_upload" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+
+    <div class="row mb-2">
+        <label class="col-sm-12 col-form-label">Excell Dosyası :</label>
+        <div class="col-sm-12">
+            <input class="form-control required" required type="file" id="FileUpload" tip="kucuk" yol="upload/upload/ExcellFile/" />
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <input type="button" onclick="upload();" class="btn btn-success btn-sm" value="Kaydet" />
+    </div>
+</form>
+
 <% elseif trn(request("islem"))="ModalSatinalmaArama" then 
 
 %>
