@@ -7,6 +7,8 @@ using System.Configuration;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using Newtonsoft.Json;
+using Ahtapot.App_Code.ayarlar;
+using System.Data;
 
 public class upload : IHttpHandler
 {
@@ -103,17 +105,73 @@ public class upload : IHttpHandler
             using (OleDbConnection excelConnection = new OleDbConnection(excelConnString))
             {
 
-                using (OleDbCommand cmd = new OleDbCommand(@"Select 0, '',marka, parca_adi, 3, aciklama, birim_maliyet, birim_pb, miktar, minumum_miktar, barcode, 'true', 
-                                                            'false', '" + firmaKodu + "', " + firmaID + ", " + userID + ", '" + userIP + "', '" + DateTime.Now.ToString() + "', '00:00:00.8466667' from [Sheet1$]", excelConnection))
+                using (OleDbCommand cmd = new OleDbCommand(@"Select * from [Sheet1$]", excelConnection))
                 {
                     excelConnection.Open();
+                    ayarlar.baglan();
+                    ayarlar.cmd.Parameters.Clear();
+                    ayarlar.cmd.CommandText = "select id, miktar  from [dbo].[parca_listesi] where parca_kodu=@kodu";
+                    SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+                    DataTable dt = new DataTable();
+                    string kodu = "";
                     using (OleDbDataReader dReader = cmd.ExecuteReader())
                     {
-                        using (SqlBulkCopy sqlBulk = new SqlBulkCopy(strConnection))
+                        while (dReader.Read())
                         {
-                            sqlBulk.DestinationTableName = "[dbo].[parca_listesi]";
-                            sqlBulk.WriteToServer(dReader);
+                            ayarlar.cmd.CommandText = "select id, miktar  from [dbo].[parca_listesi] where parca_kodu=@kodu";
+                            kodu = dReader["kodu"].ToString();
+                            ayarlar.cmd.Parameters.Clear();
+                            dt.Clear();
+                            ayarlar.cmd.Parameters.Add("@kodu", SqlDbType.NVarChar).Value = kodu;
+                            sda.Fill(dt);
+                            if (dt.Rows.Count > 0)
+                            {
+                                ayarlar.baglan();
+                                ayarlar.cmd.Parameters.Clear();
+                                ayarlar.cmd.CommandText = "update [dbo].[parca_listesi] set miktar=@miktar where id=@id";
+                                ayarlar.cmd.Parameters.Add("@miktar", SqlDbType.Int).Value = Convert.ToInt32(dReader["miktar"]);
+                                ayarlar.cmd.Parameters.Add("@id", SqlDbType.Int).Value = Convert.ToInt32(dt.Rows[0]["id"]);
+                                ayarlar.cmd.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                ayarlar.baglan();
+                                ayarlar.cmd.Parameters.Clear();
+                                ayarlar.cmd.CommandText = "insert into [dbo].[parca_listesi] " +
+                                    "(parca_kodu, marka, parca_adi, kategori, aciklama, birim_maliyet, birim_pb, birim, miktar, kdv, minumum_miktar, barcode, " +
+                                    "durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) " +
+                                    "values " +
+                                    "(@parca_kodu,@marka,@parca_adi,3,@aciklama,@birim_maliyet,@birim_pb,@birim,@miktar,@kdv,@minumum_miktar,@barcode,'true'," +
+                                    "'false',@firma_kodu,@firma_id,@ekleyen_id,@ekleyen_ip,@ekleme_tarihi,@ekleme_saati)";
+                                ayarlar.cmd.Parameters.Add("@parca_kodu", SqlDbType.NVarChar).Value = kodu;
+                                ayarlar.cmd.Parameters.Add("@marka", SqlDbType.NVarChar).Value = dReader["marka"].ToString();
+                                ayarlar.cmd.Parameters.Add("@parca_adi", SqlDbType.NVarChar).Value = dReader["parca_adi"].ToString();
+                                ayarlar.cmd.Parameters.Add("@aciklama", SqlDbType.NVarChar).Value = dReader["aciklama"].ToString();
+                                ayarlar.cmd.Parameters.Add("@birim_maliyet", SqlDbType.Decimal).Value = Convert.ToDecimal(dReader["birim_maliyet"]);
+                                ayarlar.cmd.Parameters.Add("@birim_pb", SqlDbType.NVarChar).Value = dReader["birim_pb"].ToString();
+                                ayarlar.cmd.Parameters.Add("@birim", SqlDbType.NVarChar).Value = dReader["birim"].ToString();
+                                ayarlar.cmd.Parameters.Add("@miktar", SqlDbType.Int).Value = Convert.ToInt32(dReader["miktar"]);
+                                ayarlar.cmd.Parameters.Add("@kdv", SqlDbType.NVarChar).Value = dReader["kdv"].ToString();
+                                ayarlar.cmd.Parameters.Add("@minumum_miktar", SqlDbType.Int).Value = Convert.ToInt32(dReader["minumum_miktar"]);
+                                ayarlar.cmd.Parameters.Add("@barcode", SqlDbType.NVarChar).Value = dReader["barcode"].ToString(); ;
+                                ayarlar.cmd.Parameters.Add("@firma_kodu", SqlDbType.NVarChar).Value = firmaKodu;
+                                ayarlar.cmd.Parameters.Add("@firma_id", SqlDbType.Int).Value = Convert.ToInt32(firmaID);
+                                ayarlar.cmd.Parameters.Add("@ekleyen_id", SqlDbType.Int).Value = Convert.ToInt32(userID);
+                                ayarlar.cmd.Parameters.Add("@ekleyen_ip", SqlDbType.NVarChar).Value = userIP;
+                                ayarlar.cmd.Parameters.Add("@ekleme_tarihi", SqlDbType.DateTime).Value = DateTime.Now.ToString("yyyy-MM-dd");
+                                ayarlar.cmd.Parameters.Add("@ekleme_saati", SqlDbType.Time).Value = DateTime.Now.ToString("HH:mm:ss");
+                                ayarlar.cmd.ExecuteNonQuery();
+                            }
                         }
+
+
+
+
+                        //using (SqlBulkCopy sqlBulk = new SqlBulkCopy(strConnection))
+                        //{
+                        //    sqlBulk.DestinationTableName = "[dbo].[parca_listesi]";
+                        //    sqlBulk.WriteToServer(dReader);
+                        //}
                     }
                 }
             }

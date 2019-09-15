@@ -420,6 +420,13 @@
     </div>
 
     <div class="row">
+        <label class="col-sm-12 col-form-label">Kodu :</label>
+        <div class="col-sm-12">
+            <input type="text" id="kodu" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row">
         <label class="col-sm-12 col-form-label">Marka :</label>
         <div class="col-sm-12">
             <input type="text" id="marka" class="form-control" />
@@ -3011,6 +3018,13 @@ works properly when clicked or hovered */
 </div>
 <form id="koftiform"></form>
 <form autocomplete="off" id="yeni_parca_giris_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+
+    <div class="row">
+        <label class="col-sm-12 col-form-label">Kodu :</label>
+        <div class="col-sm-12">
+            <input type="text" id="kodu" class="form-control" />
+        </div>
+    </div>
 
     <div class="row">
         <label class="col-sm-12 col-form-label">Marka :</label>

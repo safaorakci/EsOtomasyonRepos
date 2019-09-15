@@ -75,8 +75,8 @@ public partial class login : System.Web.UI.Page
                 ayarlar.cmd.CommandText = "insert into ucgem_firma_kullanici_giris_listesi(user_id, islem_tipi, islem_tarihi, islem_saati, islem_ip, islemid) values(@user_id, @islem_tipi, @islem_tarihi, @islem_saati, @islem_ip, @islemid)";
                 ayarlar.cmd.Parameters.Add("user_id", kayitlar["id"]);
                 ayarlar.cmd.Parameters.Add("islem_tipi", "login");
-                ayarlar.cmd.Parameters.Add("islem_tarihi", DateTime.Today.ToShortDateString());
-                ayarlar.cmd.Parameters.Add("islem_saati", DateTime.Today.ToShortTimeString());
+                ayarlar.cmd.Parameters.Add("islem_tarihi", DateTime.Now.ToString("yyyy-MM-dd"));
+                ayarlar.cmd.Parameters.Add("islem_saati", DateTime.Now.ToString("HH:mm:ss"));
                 ayarlar.cmd.Parameters.Add("islem_ip", HttpContext.Current.Request.ServerVariables["Remote_Addr"]);
                 ayarlar.cmd.Parameters.Add("islemid", Guid.NewGuid().ToString());
                 ayarlar.cmd.ExecuteNonQuery();
