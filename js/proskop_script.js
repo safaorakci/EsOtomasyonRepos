@@ -4076,6 +4076,7 @@ function Modaldan_parca_ara() {
     var kategori = $("#kategori").val();
     var aciklama = $("#aciklama").val();
     var barcode = $("#barcode").val();
+    var kodu = $("#kodu").val();
 
     var data = "islem=parca_listesi&islem2=arama";
     data += "&marka=" + marka;
@@ -4083,6 +4084,7 @@ function Modaldan_parca_ara() {
     data += "&kategori=" + kategori;
     data += "&aciklama=" + aciklama;
     data += "&barcode=" + barcode;
+    data += "&kodu=" + kodu;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
 

@@ -2342,6 +2342,7 @@
             miktar = trn(request("miktar"))
             minumum_miktar = trn(request("minumum_miktar"))
             barcode = trn(request("barcode"))
+            kodu = trn(request("kodu"))
 
 
             durum = "true"
@@ -2358,7 +2359,7 @@
             minumum_miktar = NoktalamaDegis(minumum_miktar)
 
 
-            SQL="insert into parca_listesi(parca_resmi, marka, parca_adi, kategori, aciklama, birim_maliyet, birim_pb, miktar, minumum_miktar, barcode, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& parca_resmi &"', '"& marka &"', '"& parca_adi &"', '"& kategori &"', '"& aciklama &"', '"& birim_maliyet &"', '"& birim_pb &"', '"& miktar &"', '"& minumum_miktar &"', '"& barcode &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+            SQL="insert into parca_listesi(parca_kodu, parca_resmi, marka, parca_adi, kategori, aciklama, birim_maliyet, birim_pb, miktar, minumum_miktar, barcode, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& kodu &"', '"& parca_resmi &"', '"& marka &"', '"& parca_adi &"', '"& kategori &"', '"& aciklama &"', '"& birim_maliyet &"', '"& birim_pb &"', '"& miktar &"', '"& minumum_miktar &"', '"& barcode &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
 
@@ -2376,9 +2377,9 @@
             miktar = trn(request("miktar"))
             minumum_miktar = trn(request("minumum_miktar"))
             barcode = trn(request("barcode"))
+            kodu = trn(request("kodu"))
 
-
-            SQL="update parca_listesi set parca_resmi = '"& parca_resmi &"', marka = '"& marka &"', parca_adi = '"& parca_adi &"', kategori = '"& kategori &"', aciklama = '"& aciklama &"', birim_maliyet = '"& birim_maliyet &"', birim_pb = '"& birim_pb &"', miktar = '"& miktar &"', minumum_miktar = '"& minumum_miktar &"', barcode = '"& barcode &"' where id = '"& kayit_id &"'"
+            SQL="update parca_listesi set parca_kodu = '"& kodu &", parca_resmi = '"& parca_resmi &"', marka = '"& marka &"', parca_adi = '"& parca_adi &"', kategori = '"& kategori &"', aciklama = '"& aciklama &"', birim_maliyet = '"& birim_maliyet &"', birim_pb = '"& birim_pb &"', miktar = '"& miktar &"', minumum_miktar = '"& minumum_miktar &"', barcode = '"& barcode &"' where id = '"& kayit_id &"'"
             set guncelle = baglanti.execute(SQL)
 
 
@@ -2402,6 +2403,7 @@
             <thead>
                 <tr>
                     <th data-hide="phone,tablet">ID</th>
+                    <th data-hide="phone,tablet">Kodu</th>
                     <th data-class="expand">Parça Adı</th>
                     <th data-hide="phone,tablet">Kategori</th>
                     <th data-hide="phone,tablet">Miktar</th>
@@ -2435,6 +2437,11 @@
                         kategori = trn(request("kategori"))
                         aciklama = trn(request("aciklama"))
                         barcode = trn(request("barcode"))
+                        kodu = trn(request("kodu"))
+
+                        if len(kodu)>1 then
+                            arama_str = arama_str & " and (parca.parca_kodu collate French_CI_AI like '%"& kodu &"%')"
+                        end if
 
                         if len(marka)>1 then
                             arama_str = arama_str & " and (parca.marka collate French_CI_AI like '%"& marka &"%')"
@@ -2494,6 +2501,7 @@
                 %>
                 <tr>
                     <td style="text-align: center;"><%=p %></td>
+                    <td><%=parca("parca_kodu") %></td>
                     <td><%=parca("parca_adi") %></td>
                     <td><%=parca("kategori_adi") %></td>
                     <td><%=parca("miktar") %></td>
