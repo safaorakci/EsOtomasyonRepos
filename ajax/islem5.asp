@@ -1368,7 +1368,7 @@ works properly when clicked or hovered */
 
 
 
-            SQL="insert into ucgem_is_calisma_listesi(TamamlanmaID, is_id, baslangic, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& TamamlanmaID &"', '"& is_id &"', getdate(), '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+            SQL="insert into ucgem_is_calisma_listesi(TamamlanmaID, is_id, baslangic, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& TamamlanmaID &"', '"& is_id &"', getdate(), '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 104), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
 

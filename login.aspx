@@ -29,6 +29,7 @@
         input.error {
             border: #ff5370 1px solid;
         }
+
         .error {
             color: #ff5370;
         }
@@ -43,27 +44,30 @@
         </div>
     </div>
     <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="signin-card card-block auth-body mr-auto ml-auto">
+                    <div class="signin-card card-block auth-body mr-auto ml-auto" id="userbody">
 
                         <form method="post" onsubmit="login_kontrol(); return false;" id="login-form" class="smart-form client-form" novalidate="novalidate">
                             <div class="text-center">
                                 <div class="row">
-                                    <div class="col-md-12"><img src="/images/esotomasyon_logo.png" style="    height: 60px; margin-top: 15px;" /></div>
+                                    <div class="col-md-12">
+                                        <img src="/images/esotomasyon_logo.png" style="height: 60px; margin-top: 15px;" />
+                                    </div>
                                 </div>
-                                
+
                             </div>
-                            <div class="auth-box" style="text-align: left;">
-                                <p class="text-inverse b-b-default text-left p-b-5">Proskop'a hoş geldiniz, e-posta ve parolanız ile güvenli giriş yapabilirsiniz.</p>
+                            <div class="auth-box" id="loginone" style="text-align: left;">
+                                <p class="text-inverse b-b-default text-left p-b-5">Hoş geldiniz, e-posta ve parolanız ile güvenli giriş yapabilirsiniz.</p>
                                 <div class="input-group">
-                                    <input type="email" id="email" name="email" class="form-control" placeholder="E-Posta Adresi">
+                                    <input type="email" id="email" name="email" class="form-control">
+                                    <input id="adsoyad" style="text-align:center; display:none" readonly class="form-control"/>
                                 </div>
                                 <div class="input-group">
                                     <input type="password" name="password" id="password" class="form-control" placeholder="Parola">
                                 </div>
-                                <div class="input-group" style="display:none;">
+                                <div class="input-group" style="display: none;">
                                     <select name="dil_secenek" class="form-control" id="dil_secenek">
                                         <option value="turkce">Türkçe</option>
                                         <option value="ingilizce">English</option>
@@ -79,7 +83,7 @@
                                                 <span class="text-inverse">Oturum açık kalsın</span>
                                             </label>
                                         </div>
-                                        <div class="forgot-phone text-right f-right" style="display:none;">
+                                        <div class="forgot-phone text-right f-right" style="display: none;">
                                             <a href="javascript:void(0);" class="text-right f-w-600 text-inverse">Parolanızı mı unuttunuz?</a>
                                         </div>
                                     </div>
@@ -88,17 +92,16 @@
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">GİRİŞ</button>
                                     </div>
+                                    <div class="col-md-12">
+                                        <button type="button" id="DesktopLogin" onclick="user_list();" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Masaüstü GİRİŞ</button>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="text-center">
-                                <div class="row">
-                                    <div class="col-md-12"><img style="margin-left:15px;" src="/images/proskop_buyuk.png" alt="Proskop"></div>
-                                </div>
-                                
                             </div>
                         </form>
-                        <div class="col-md-12" style="display:none;">
+                        <div class="row bg-light p-3" id="logincard" style="display:none; overflow-y:scroll; height:650px; margin-right:auto; margin-left:auto; width:1010px">
+
+                        </div>
+                        <div class="col-md-12" style="display: none;">
                             <p class="text-inverse m-t-25 text-center" style="color: white;">Yeni bir hesap mı açmak istiyorsunuz? <a href="javascript:void(0);">Buraya tıklayın!</a></p>
                         </div>
                     </div>
@@ -160,7 +163,7 @@
                 if ($("#remember").attr("checked") == "checked") {
                     remember = "true";
                 }
-                $.ajax({    
+                $.ajax({
                     type: "POST",
                     url: "<%=ResolveUrl("login.aspx/LoginControl") %>",
                     data: "{'email':'" + $("#email").val() + "', 'password':'" + $("#password").val() + "', 'dil_secenek':'" + $("#dil_secenek").val() + "', 'remember':'" + remember + "'}",
@@ -185,5 +188,26 @@
     <script src="/files/bower_components/pnotify/js/pnotify.js"></script>
     <script src="/files/bower_components/pnotify/js/pnotify.mobile.js"></script>
     <script src="/files/bower_components/pnotify/js/pnotify.buttons.js"></script>
+
+    <script type="text/javascript">
+        $("#DesktopLogin").click(function () {
+            $("#loginone").hide();
+            $("#logincard").show();
+            $("#userbody").removeClass("auth-body");
+        });
+    </script>
+
+    <script type="text/javascript">
+        function userLogin(id) {
+            $("#loginone").show();
+            $("#logincard").hide();
+            $("#userbody").addClass("auth-body");
+            $("#email").val($("#useremail" + id).val());
+            $("#email").hide(); //isteğe bağlı
+            $("#adsoyad").show();
+            $("#adsoyad").val($("#AdSoyad" + id).text());
+
+        }
+    </script>
 </body>
 </html>

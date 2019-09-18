@@ -2312,7 +2312,7 @@
         ekleme_saati = time
 
 
-        SQL="insert into ucgem_personel_bordro_listesi(personel_id, donem, aciklama, dosya_yolu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& personel_id &"', '"& donem &"', '"& aciklama &"', '"& dosya_yolu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+        SQL="insert into ucgem_personel_bordro_listesi(personel_id, donem, aciklama, dosya_yolu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& personel_id &"', '"& donem &"', '"& aciklama &"', '"& dosya_yolu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 104), '"& ekleme_saati &"')"
         set ekle = baglanti.execute(SQL)
 
     elseif trn(request("islem"))="bordro_sil" then
@@ -2818,6 +2818,30 @@
             <input type="button" onclick="gruba_parca_kayit('<%=grup_id %>');" class="btn btn-primary" value="<%=LNG("Güncelle")%>" />
         </div>
     </form>
+
+    <%
+        elseif trn(request("islem"))="user_list" then
+
+        SQL="select * from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'"
+        set user_list = baglanti.execute(SQL)
+        
+        do while not user_list.eof
+     %>
+
+                               
+                                <div id="usercardcount<%=user_list("id") %>" onclick="userLogin(<%=user_list("id")%>);" class="card ml-2 mr-2" style="width: 14rem; height:18rem">
+                                <img src="<%=user_list("personel_resim") %>"" class="card-img-top" alt="..." style="width:224px; height:240px" >
+                                <div class="card-body">
+                                    <input id="useremail<%=user_list("id") %>" type="hidden" value="<%=user_list("personel_eposta") %>"/>
+                                    <h6 id="AdSoyad<%=user_list("id") %>" class="card-title text-dark"><%=user_list("personel_ad") %>&nbsp;<%=user_list("personel_soyad") %></h6>
+                                </div>
+                            </div>
+                    
+    <%
+        user_list.movenext
+        loop
+    %>
+
 
     <%
 
@@ -3336,15 +3360,15 @@
                     <td style="text-align: center;"><%=s %></td>
                     <% if trim(satinalma("oncelik"))="Düşük" then %>
                     <td style="text-align: center;">
-                            <span class="label label-warning" style="font-size:11px">Düşük</span>
+                        <span class="label label-warning" style="font-size: 11px">Düşük</span>
                     </td>
                     <% elseif trim(satinalma("oncelik"))="Yüksek" then %>
                     <td style="text-align: center;">
-                            <span class="label label-danger" style="font-size:11px">Yüksek</span>
+                        <span class="label label-danger" style="font-size: 11px">Yüksek</span>
                     </td>
                     <% elseif trim(satinalma("oncelik"))="Normal" then %>
                     <td style="text-align: center;">
-                            <span class="label label-info" style="font-size:11px">Normal</span>
+                        <span class="label label-info" style="font-size: 11px">Normal</span>
                     </td>
                     <% end if %>
                     <td><%=satinalma("baslik") %></td>
@@ -3358,19 +3382,19 @@
                         <%=cdate(satinalma("ekleme_tarihi")) %></td>
                     <% if trim(satinalma("durum"))="Sipariş Edildi" then %>
                     <td style="text-align: center;">
-                        <span class="label label-info" style="font-size:11px">Sipariş Edildi</span>
+                        <span class="label label-info" style="font-size: 11px">Sipariş Edildi</span>
                     </td>
                     <% elseif trim(satinalma("durum"))="İptal Edildi" then %>
                     <td style="text-align: center;">
-                        <span class="label label-danger" style="font-size:11px">İptal Edildi</span>
+                        <span class="label label-danger" style="font-size: 11px">İptal Edildi</span>
                     </td>
                     <% elseif trim(satinalma("durum"))="Tamamlandı" then %>
                     <td style="text-align: center;">
-                        <span class="label label-success" style="font-size:11px">Tamamlandı</span>
+                        <span class="label label-success" style="font-size: 11px">Tamamlandı</span>
                     </td>
                     <% else %>
                     <td style="text-align: center;">
-                        <span class="label label-warning" style="font-size:11px">Onay Bekliyor</span>
+                        <span class="label label-warning" style="font-size: 11px">Onay Bekliyor</span>
                     </td>
                     <% end if %>
 

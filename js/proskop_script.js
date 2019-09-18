@@ -1667,9 +1667,9 @@ function IzinliPersonelKontrol() {
     data += "&yeni_is_bitis_tarihi=" + yeni_is_bitis_tarihi;
 
 
-    $("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/personel_izin_kontrol", data: data }, function () {
-        mesaj_ver("İşler", "sorgu çalıştı ", "success");
-    });
+    //$("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/personel_izin_kontrol", data: data }, function () {
+    //    mesaj_ver("İşler", "sorgu çalıştı ", "success");
+    //});
 }
 
 function dis_ekle_yeni_takvim_calistir() {
@@ -8183,6 +8183,13 @@ function talep_fisleri_getir() {
         datatableyap();
     });
 
+}
+
+function user_list() {
+    var data = "islem=user_list";
+    $("#logincard").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        datatableyap();
+    });
 }
 
 

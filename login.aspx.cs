@@ -108,4 +108,10 @@ public partial class login : System.Web.UI.Page
 
         return kontrol_donus;
     }
+    public void UserList()
+    {
+        ayarlar.baglan();
+        ayarlar.cmd.Parameters.Clear();
+        ayarlar.cmd.CommandText = "select * from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'";
+    }
 }
