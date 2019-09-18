@@ -2359,8 +2359,10 @@
             minumum_miktar = NoktalamaDegis(minumum_miktar)
 
 
-            SQL="insert into parca_listesi(parca_kodu, parca_resmi, marka, parca_adi, kategori, aciklama, birim_maliyet, birim_pb, miktar, minumum_miktar, barcode, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& kodu &"', '"& parca_resmi &"', '"& marka &"', '"& parca_adi &"', '"& kategori &"', '"& aciklama &"', '"& birim_maliyet &"', '"& birim_pb &"', '"& miktar &"', '"& minumum_miktar &"', '"& barcode &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+            SQL="insert into parca_listesi(parca_kodu, parca_resmi, marka, parca_adi, kategori, aciklama, birim_maliyet, birim_pb, miktar, minumum_miktar, barcode, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& kodu &"', '"& parca_resmi &"', '"& marka &"', '"& parca_adi &"', '"& kategori &"', '"& aciklama &"', '"& birim_maliyet &"', '"& birim_pb &"', '"& miktar &"', '"& minumum_miktar &"', '"& barcode &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
+
+        
 
 
         elseif trn(request("islem2"))="guncelle" then
@@ -2954,9 +2956,10 @@
             ekleme_tarihi = date
             ekleme_saati = time
 
-            SQL="insert into talep_fisleri(baslik, oncelik, aciklama, dosya, durum, cop, firma_kodu, firma_id, ekleyen_id, talep_edilen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', '"& oncelik &"', '"& aciklama &"', '"& dosya &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& talep_edilen &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+        
+            SQL="insert into talep_fisleri(baslik, oncelik, aciklama, dosya, durum, cop, firma_kodu, firma_id, ekleyen_id, talep_edilen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', '"& oncelik &"', '"& aciklama &"', '"& dosya &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& talep_edilen &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
-
+        
             SQL="select * from ucgem_firma_kullanici_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and cop = 'false' and durum = 'true' and isnull(yonetici_yetkisi, 'false')='true'"
             set kcek = baglanti.execute(SQL)
 
@@ -2975,14 +2978,11 @@
                 firma_id = request.Cookies("kullanici")("firma_id")
                 ekleyen_id = request.Cookies("kullanici")("kullanici_id")
                 ekleyen_ip = Request.ServerVariables("Remote_Addr")
-
-
-
-    
                
 
+            if trn(request("bildirim")) = "SMS" then
                 NetGSM_SMS kcek("personel_telefon"), bildirim
-
+            end if
 
             kcek.movenext
             loop
@@ -2998,7 +2998,9 @@
             silen_tarihi = date
             silen_saati = time
 
-            SQL="update talep_fisleri set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silen_tarihi = '"& silen_tarihi &"', silen_saati = '"& silen_saati &"' where id = '"& kayit_id &"'"
+        
+
+            SQL="update talep_fisleri set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silen_tarihi = CONVERT(date, '"& silen_tarihi &"', 103), silen_saati = '"& silen_saati &"' where id = '"& kayit_id &"'"
             set sil = baglanti.execute(SQL)
 
 
@@ -3126,9 +3128,9 @@
                     <td style="text-align: center;">
                         <span class="label label-danger">Reddedildi</span>
                     </td>
-                    <% elseif trim(talepler("durum"))="Onaylandı" then %>
+                    <% elseif trim(talepler("durum"))="Onaylandi" then %>
                     <td style="text-align: center;">
-                        <span class="label label-success">Onaylandı</span>
+                        <span class="label label-success">Onaylandi</span>
                     </td>
                     <% end if %>
                     <td style="width: 120px;">
@@ -3342,7 +3344,7 @@
                         SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id  where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' "& sorgu_str &" order by satinalma.id desc"
 
                     else
-                        SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id  where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
+                        SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
                     end if
                     set satinalma = baglanti.execute(SQL)
                     if satinalma.eof then
@@ -3372,9 +3374,19 @@
                     </td>
                     <% end if %>
                     <td><%=satinalma("baslik") %></td>
-                    <td><%=cdate(satinalma("siparis_tarihi")) %></td>
-                    <td><%=satinalma("tedarikci") %></td>
-                    <td><%=satinalma("proje_id") %></td>
+                    <td><%=cdate(satinalma("siparis_tarihi"))%></td>
+
+                    <%if trim(satinalma("tedarikci_id")) = "0" then%>
+                        <td><span class="label label-info" style="font-size: 11px">Bilinmiyor</span></td>
+                    <%else%>
+                        <td><%=satinalma("tedarikci")%></td>
+                    <%end if %>
+
+                    <%if trim(satinalma("proje_id")) = "0" then%>
+                        <td><span class="label label-info" style="font-size: 11px">Bilinmiyor</span></td>
+                    <%else%>
+                        <td><%=satinalma("proje")%></td>
+                    <%end if %>
                     <td><%=formatnumber(satinalma("toplamtl"),2) %> TL - 
                         <%=formatnumber(satinalma("toplamusd"),2) %> USD - 
                         <%=formatnumber(satinalma("toplameur"),2) %> EUR</td>
