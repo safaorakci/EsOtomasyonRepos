@@ -1012,7 +1012,7 @@
                         ekleme_tarihi = date
                         ekleme_saati = time
 
-                        SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', '"& olay_tarihi &"', '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                        SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', CONVERT(date, '"& olay_tarihi &"', 103), '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                         set olay_ekle = baglanti.execute(SQL)
 
                         SQL="update ucgem_proje_listesi set guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& etiket_id &"'"
@@ -1025,7 +1025,7 @@
 
             if trim(olay_tipi) <> "rutin" then
 
-                SQL="SET NOCOUNT ON; insert into ahtapot_ajanda_olay_listesi(ana_kayit_id, kisiler, baslangic_saati, bitis_saati, etiket, etiket_id, title, allDay, baslangic, bitis, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('0', '"& kisiler &"', '"& baslangic_saati &"', '"& bitis_saati &"', '" & etiket & "', '" & trn(request("etiket_id")) & "', '" & title & "', '" & allDay & "', '" & baslangic_tarihi & "', '"& bitis_tarihi &"', '" & url & "', '" & color & "', '" & description & "', '" & etiketler & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', getdate(), getdate()); SELECT SCOPE_IDENTITY() id;"
+                SQL="SET NOCOUNT ON; insert into ahtapot_ajanda_olay_listesi(ana_kayit_id, kisiler, baslangic_saati, bitis_saati, etiket, etiket_id, title, allDay, baslangic, bitis, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('0', '"& kisiler &"', '"& baslangic_saati &"', '"& bitis_saati &"', '" & etiket & "', '" & trn(request("etiket_id")) & "', '" & title & "', '" & allDay & "', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), '" & url & "', '" & color & "', '" & description & "', '" & etiketler & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', getdate(), getdate()); SELECT SCOPE_IDENTITY() id;"
                 set ekle = baglanti.execute(SQL)
 
                 ana_kayit_id = ekle(0)
@@ -1038,7 +1038,7 @@
                     if isnumeric(kisi_id)=true then
                         if cdbl(kisi_id)>0 then
                             etiket_id = kisi_id
-                            SQL="SET NOCOUNT ON; insert into ahtapot_ajanda_olay_listesi(ana_kayit_id, kisiler, baslangic_saati, bitis_saati, etiket, etiket_id, title, allDay, baslangic, bitis, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& ana_kayit_id &"', '"& kisiler &"', '"& baslangic_saati &"', '"& bitis_saati &"', '" & etiket & "', '" & etiket_id & "', '" & title & "', '" & allDay & "', '" & baslangic_tarihi & "', '"& bitis_tarihi &"', '" & url & "', '" & color & "', '" & description & "', '" & etiketler & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', getdate(), getdate()); SELECT SCOPE_IDENTITY() id;"
+                            SQL="SET NOCOUNT ON; insert into ahtapot_ajanda_olay_listesi(ana_kayit_id, kisiler, baslangic_saati, bitis_saati, etiket, etiket_id, title, allDay, baslangic, bitis, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& ana_kayit_id &"', '"& kisiler &"', '"& baslangic_saati &"', '"& bitis_saati &"', '" & etiket & "', '" & etiket_id & "', '" & title & "', '" & allDay & "', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), '" & url & "', '" & color & "', '" & description & "', '" & etiketler & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', getdate(), getdate()); SELECT SCOPE_IDENTITY() id;"
                             set ekle = baglanti.execute(SQL)
                         end if
                     end if
@@ -3665,9 +3665,11 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
 
                     <%
 
-                                        SQL="Exec [dbo].[TaseronProjeIsYukuCetveli] @taseron_id = '"& firma_id &"',  @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @gosterim_tipi = '"& gosterim_tipi &"';"
+                                        SQL="Exec [dbo].[TaseronProjeIsYukuCetveli] @taseron_id = '"& firma_id &"',  @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = CONVERT(date, '"& dongu_baslangic &"', 103), @bitis = CONVERT(date, '"& dongu_bitis &"', 103), @gosterim_tipi = '"& gosterim_tipi &"';"
                                         set cetvel = baglanti.execute(sql)
 
+                                        
+                                        
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
                                         Dim taseron_rapor_gun_toplam2()

@@ -5,7 +5,7 @@
     Response.CodePage = 65001
 
     Response.Clear()
-%>[<%
+%> <%
 
         etiket = trn(request("etiket"))
         etiket_id = trn(request("etiket_id"))
@@ -75,10 +75,9 @@
                 checkbox = ""' "<input type='checkbox'/>"
             end if
 
-            %>{"id": "<%=olay("id") %>","durum": "<%=olay("tamamlandi") %>","title": "<%=checkbox & Replace(trim(olay("title")), "\n", " ") %>","allDay": <%=lcase(olay("allDay")) %>,"start": "<%=year(cdate(olay("baslangic"))) %>-<%=ay %>-<%=gun & " " & baslangic_saati %>","end": "<%=year(cdate(olay("bitis"))) %>-<%=ay2 %>-<%=gun2 & " " & bitis_saati %>","url": "","color": "<%=olay("color") %>","description": "<%=Replace(trim(olay("title")), "\n", " ") %>"}
+            %>
+                {"id": "<%=olay("id") %>","durum": "<%=olay("tamamlandi") %>","title": "<%=checkbox & Replace(trim(olay("title")), "\n", " ") %>","allDay": <%=lcase(olay("allDay")) %>,"start": "<%=year(cdate(olay("baslangic"))) %>-<%=ay %>-<%=gun & " " & baslangic_saati %>","end": "<%=year(cdate(olay("bitis"))) %>-<%=ay2 %>-<%=gun2 & " " & bitis_saati %>","url": "","color": "<%=olay("color") %>","description": "<%=Replace(trim(olay("title")), "\n", " ") %>"}
 <%
-
-
     olay.movenext
     loop
-%>]
+%>

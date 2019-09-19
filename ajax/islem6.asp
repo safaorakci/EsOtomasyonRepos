@@ -3098,7 +3098,7 @@
                 %>
                 <tr>
                     <td style="text-align: center; width: 25px;"><%=t %></td>
-                    <% if trim(talepler("oncelik"))="Düşük" then %>
+                    <% if trim(talepler("oncelik"))="Düsük" then %>
                     <td style="text-align: center;">
                         <span class="label label-warning ">Düşük</span>
                     </td>

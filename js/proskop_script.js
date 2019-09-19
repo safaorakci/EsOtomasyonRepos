@@ -4160,6 +4160,7 @@ function yeni_parca_ekle() {
     var miktar = $("#miktar").val();
     var minumum_miktar = $("#minumum_miktar").val();
     var barcode = $("#barcode").val();
+    var kodu = $("#kodu").val();
 
     var data = "islem=parca_listesi&islem2=ekle";
     data += "&parca_resmi=" + parca_resmi;
@@ -4172,9 +4173,11 @@ function yeni_parca_ekle() {
     data += "&miktar=" + miktar;
     data += "&minumum_miktar=" + minumum_miktar;
     data += "&barcode=" + barcode;
+    data += "&kodu=" + kodu;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         mesaj_ver("Parçalar", "Kayıt Başarıyla Eklendi", "success");
+        $(".close").click();
     });
 
 }
