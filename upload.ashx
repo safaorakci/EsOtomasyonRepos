@@ -48,7 +48,8 @@ public class upload : IHttpHandler
             var responseData = new
             {
                 status = true,
-                statusText = "Dosya Yükleme İşlemi Başarılı"
+                statusText = "Dosya Yükleme İşlemi Başarılı",
+                fileFullPath = filePath
             };
 
             context.Response.Write(JsonConvert.SerializeObject(responseData));

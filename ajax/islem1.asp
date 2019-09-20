@@ -3982,7 +3982,7 @@
                     <form autocomplete="off" id="dosya_yukleme_form">
                         <h5 style="font-size: 15px;"><%=LNG("Dosya Ekle")%></h5>
                         <br>
-                        <input class="form-control required" required type="file" id="depo_dosya_yolu" tip="kucuk" yol="dosya_deposu/<%=etiket %>/" />
+                        <input class="form-control required" required type="file" id="depo_dosya_yolu" tip="kucuk" folder="Personel" />
                         <br>
                         <%=LNG("Dosya Adı:")%><br>
                         <input name="depo_dosya_adi" type="text" id="depo_dosya_adi" required class="form-control required" style="max-width: 300px;" /><br>
@@ -4965,7 +4965,7 @@
         personel_yillik_izin_hakedis = trn(request("personel_yillik_izin_hakedis"))
         parmak_id = trn(request("parmak_id"))
 
-        SQL="update ucgem_firma_kullanici_listesi set parmak_id = '"& parmak_id &"', personel_yillik_izin_hakedis = '"& personel_yillik_izin_hakedis &"', yonetici_yetkisi = '"& yonetici_yetkisi &"', personel_yillik_izin = '"& personel_yillik_izin &"', personel_saatlik_maliyet = '"& personel_saatlik_maliyet &"', personel_maliyet_pb = '"& personel_maliyet_pb &"', personel_resim = '"& personel_resim &"', personel_ad = '"& personel_ad &"', personel_soyad = '"& personel_soyad &"', personel_dtarih = '"& personel_dtarih &"', personel_cinsiyet = '"& personel_cinsiyet &"', personel_eposta = '"& personel_eposta &"', personel_telefon = '"& personel_telefon &"', departmanlar = '"& departmanlar &"', gorevler = '"& gorevler &"', personel_parola = '"& personel_parola &"', tcno = '"& personel_tcno &"' where id = '"& personel_id &"' and firma_id = '"& request.Cookies("kullanici")("firma_id") &"'; EXEC MailGonderBildirim @personel_id = '"+ personel_id +"', @mesaj = 'Proskop Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://www.esflw.com>http://www.esflw.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : " + personel_parola + "<br><br>';"
+        SQL="update ucgem_firma_kullanici_listesi set parmak_id = '"& parmak_id &"', personel_yillik_izin_hakedis = CONVERT(date, '"& personel_yillik_izin_hakedis &"', 103), yonetici_yetkisi = '"& yonetici_yetkisi &"', personel_yillik_izin = '"& personel_yillik_izin &"', personel_saatlik_maliyet = '"& personel_saatlik_maliyet &"', personel_maliyet_pb = '"& personel_maliyet_pb &"', personel_resim = '"& personel_resim &"', personel_ad = '"& personel_ad &"', personel_soyad = '"& personel_soyad &"', personel_dtarih = CONVERT(date, '"& personel_dtarih &"', 103), personel_cinsiyet = '"& personel_cinsiyet &"', personel_eposta = '"& personel_eposta &"', personel_telefon = '"& personel_telefon &"', departmanlar = '"& departmanlar &"', gorevler = '"& gorevler &"', personel_parola = '"& personel_parola &"', tcno = '"& personel_tcno &"' where id = '"& personel_id &"' and firma_id = '"& request.Cookies("kullanici")("firma_id") &"'; EXEC MailGonderBildirim @personel_id = '"+ personel_id +"', @mesaj = 'Proskop Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://www.esflw.com>http://www.esflw.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : " + personel_parola + "<br><br>';"
         set guncelle = baglanti.execute(SQL)
 
 

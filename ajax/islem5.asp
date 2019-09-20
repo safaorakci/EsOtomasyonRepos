@@ -1951,7 +1951,7 @@ works properly when clicked or hovered */
                         toplanti_saati = toplanti_saati
 
                         tarih = toplanti_tarihi
-                        SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                        SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                         set ekle = baglanti.execute(SQL)
 
 
@@ -3316,7 +3316,7 @@ works properly when clicked or hovered */
             Response.End
         end if
 
-        SQL="select * from tanimlama_yasakli_izin_gunleri where ('"& baslangic_tarihi &"' between baslangic_tarihi and bitis_tarihi) or  ('"& bitis_tarihi &"' between baslangic_tarihi and bitis_tarihi)"
+        SQL="select * from tanimlama_yasakli_izin_gunleri where (CONVERT(date, '"& baslangic_tarihi &"', 103) between baslangic_tarihi and bitis_tarihi) or  (CONVERT(date, '"& bitis_tarihi &"', 103) between baslangic_tarihi and bitis_tarihi)"
         set cek = baglanti.execute(SQL)
         if not cek.eof then
             Response.Clear()

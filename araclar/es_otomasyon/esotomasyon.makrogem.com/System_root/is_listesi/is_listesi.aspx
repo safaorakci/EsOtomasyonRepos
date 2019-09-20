@@ -145,7 +145,7 @@
 
                     }
                 </style>
-                <div class="btn btn-warning btn-lg btn-block" style="padding: 3px 16px; -webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size:13px;">
+<%--                <div class="btn btn-warning btn-lg btn-block" style="padding: 3px 16px; -webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size:13px;">
                     <div style="height:28px; width:100%; margin-left:auto; margin-right:auto;">
                     <div onclick="is_listesi_gosterge('departman_tumu');" style="    float: left; padding-top: 8px; padding-right: 10px; width:30%;"><i class="fa fa-institution"></i>&nbsp;&nbsp;<% Response.Write(LNG("Etiketler :")); %> </div><div id="yerlesim_item" style="float:left; width:70%;"><div>
                         <asp:listbox id="sayac_departman" runat="server"></asp:listbox></div>
@@ -207,7 +207,7 @@
                             });
                         </script>
                     </div></div>
-                </div>
+                </div>--%>
             </div>
 
         </div>

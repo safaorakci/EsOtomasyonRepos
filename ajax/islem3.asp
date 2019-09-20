@@ -1594,7 +1594,7 @@
 
     elseif trn(request("islem"))="rapor_pdf_gonder" then
 
-   Set Pdf = Server.CreateObject("Persits.Pdf")
+        Set Pdf = Server.CreateObject("Persits.Pdf")
         Set Doc = Pdf.CreateDocument
 
     
@@ -1811,15 +1811,11 @@
         elseif trn(request("islem2"))="bordro_gonder" then
 
         
-            proje_id = trn(request("proje_id"))
-            tip = trn(request("tip"))
-            firma_id = Request.Cookies("kullanici")("firma_id")
-            kullanici_id = Request.Cookies("kullanici")("kullanici_id")
-
             dosya_yolu = trn(request("dosya_yolu"))
 
-            
             sName = server.MapPath(dosya_yolu)
+
+            Response.Write(dosya_yolu)
 
 
         end if

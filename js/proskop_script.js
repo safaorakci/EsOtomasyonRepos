@@ -3955,7 +3955,7 @@ function proje_dosyalari_getir(proje_id, nesne) {
 
 function bordro_kaydet(personel_id) {
 
-    var bordro_dosya_yolu = $("#bordro_dosya_yolu").val();
+    var bordro_dosya_yolu = $("#bordro_dosya_yolu").attr("filePath");
     var bordro_donem = $("#bordro_donem").val();
     var bordro_aciklama = $("#bordro_aciklama").val();
 
