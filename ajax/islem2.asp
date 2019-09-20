@@ -3665,9 +3665,11 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
 
                     <%
 
-                                        SQL="Exec [dbo].[TaseronProjeIsYukuCetveli] @taseron_id = '"& firma_id &"',  @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @gosterim_tipi = '"& gosterim_tipi &"';"
+                                        SQL="Exec [dbo].[TaseronProjeIsYukuCetveli] @taseron_id = '"& firma_id &"',  @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = CONVERT(date, '"& dongu_baslangic &"', 103), @bitis = CONVERT(date, '"& dongu_bitis &"', 103), @gosterim_tipi = '"& gosterim_tipi &"';"
                                         set cetvel = baglanti.execute(sql)
 
+                                        
+                                        
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
                                         Dim taseron_rapor_gun_toplam2()
