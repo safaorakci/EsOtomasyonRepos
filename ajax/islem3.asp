@@ -1815,8 +1815,6 @@
 
             sName = server.MapPath(dosya_yolu)
 
-            Response.Write(dosya_yolu)
-
 
         end if
         
@@ -1896,7 +1894,8 @@
         konu = trn(request("konu"))
         maill = trn(request("mesaj"))
         mail_antet = ""
-        gonderici = "uygulama@proskop.com"
+        'gonderici = "uygulama@proskop.com"
+        gonderici = "proskop@makrogem.com.tr"
 
         dosya_ismi = "belge.pdf"
 
@@ -1905,11 +1904,12 @@
         
 
 		Set Mail = Server.CreateObject("Persits.MailSender")
-		Mail.Host = "mail.makrogem.com"                                         ' E-Posta sunucu adresi
-        Mail.Port = 587
-        Mail.TLS = false
+		'Mail.Host = "mail.makrogem.com.tr"                                     ' E-Posta sunucu adresi
+		Mail.Host = "smtp.yandex.com.tr"                                        ' E-Posta sunucu adresi
+        Mail.Port = 465
+        Mail.TLS = true
 		Mail.Username = gonderici                                               ' Gönderim adresi
-		Mail.Password = "445566"                                                ' Gönderen hesabın şifresi
+		Mail.Password = "Proskop123."                                                ' Gönderen hesabın şifresi
 		Mail.From = gonderici                                                   ' E-Postayı gönderen adres
 		Mail.FromName = Mail.EncodeHeader("Es Otomasyon", "UTF-8")              ' E-Posta gönderen isim
 		Mail.AddAddress e_posta                                                 ' Alıcı e-posta adresi

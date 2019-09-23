@@ -94,7 +94,7 @@ public partial class System_root_is_listesi_is_listesi : System.Web.UI.Page
         }
 
 
-        sayac_departman.CssClass = "select2";
+        //sayac_departman.CssClass = "select2";
         
         /*
        ayarlar.baglan();
@@ -111,7 +111,7 @@ public partial class System_root_is_listesi_is_listesi : System.Web.UI.Page
         itemss.Text = "Seçiniz";
         itemss.Value = "0";
         itemss.Selected = true;
-        sayac_departman.Items.Add(itemss);
+        //sayac_departman.Items.Add(itemss);
 
         foreach (DataRow drow in ds_benler.Tables[2].Rows)
         {
@@ -120,11 +120,11 @@ public partial class System_root_is_listesi_is_listesi : System.Web.UI.Page
             item.Value = drow["tip"].ToString() + drow["id"].ToString();
             item.Attributes.Add("OptionGroup", drow["grup"].ToString());
             item.Attributes.Add("tip", drow["tip"].ToString());
-            sayac_departman.Items.Add(item);
+            //sayac_departman.Items.Add(item);
         }
 
 
-        sayac_departman.Attributes.Add("onchange", "departman_degistim_sayac_getir();");
+        //sayac_departman.Attributes.Add("onchange", "departman_degistim_sayac_getir();");
 
         bana_verilen_baslanmamis.Text = bana_verilen_baslanmamis_int.ToString();
         bana_verilen_devameden.Text = bana_verilen_devameden_int.ToString();
