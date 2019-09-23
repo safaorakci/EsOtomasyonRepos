@@ -2769,13 +2769,12 @@ works properly when clicked or hovered */
                          SQL="select * from satinalma_siparis_listesi where id = '"& ParcaId &"' "
                          set siparisVarmi = baglanti.execute(SQL)
 
-                         if siparisVarmi("id")=null then
+                         if not IsNull(siparisVarmi("id")) then
                                SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& 123 &"', '"& ParcaId &"', '"& toplamFiyatTL &"', '"& birim_pb &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                set satinalmaSiparisListesi = baglanti.execute(SQL)
 
                                SQL = "insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& proje &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                set satinalmaListesi = baglanti.execute(SQL)
-                        Response.Write(1)
                          else
                                SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where id = '"& siparisVarmi("id") &"'"
                                set siparisGuncelle = baglanti.execute(SQL)
@@ -2822,7 +2821,6 @@ works properly when clicked or hovered */
                    toplamFiyatTL = birimFiyati * eksikParca
 
                    if eksikParca > 0 then
-
                          SQL="select * from satinalma_siparis_listesi where id = '"& ParcaId &"'"
                          set siparisVarmi = baglanti.execute(SQL)
 

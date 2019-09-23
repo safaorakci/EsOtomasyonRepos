@@ -2866,6 +2866,7 @@
                 <th style="width: 45px;">Id</th>
                 <th>Parça</th>
                 <th>Marka</th>
+                <th>Açıklama</th>
             </tr>
         </thead>
         <tbody>
@@ -2887,6 +2888,7 @@
                 <td style="padding: 1px!important; width: 30px;"><%=p %></td>
                 <td style="padding: 1px!important;"><%=parca("parca_adi") %></td>
                 <td style="padding: 1px!important;"><%=parca("marka") %></td>
+                <td style="padding: 1px!important;"><%=parca("aciklama") %></td>
             </tr>
             <% 
                 parca.movenext
@@ -3345,6 +3347,7 @@
 
                     else
                         SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
+                    Response.Write(SQL)
                     end if
                     set satinalma = baglanti.execute(SQL)
                     if satinalma.eof then

@@ -43,7 +43,7 @@
     </style>
     <section id="widget-grid">
         <div class="row">
-            <div class="col-xs-12 col-sm-4 ">
+            <div class="col-xs-12 col-sm-6">
                 <button onclick="is_listesi_gosterge('benim_tum');" type="button" class="btn btn-primary btn-lg btn-block" style="-webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size:13px;"><i class="fa fa-child"></i>&nbsp;&nbsp;<% Response.Write(LNG("Bana Verilen İşler")); %></button>
                 <div class="well well-sm well-light" style="padding: 0; background-color: white; -webkit-border-bottom-right-radius: 15px; -webkit-border-bottom-left-radius: 15px; -moz-border-radius-bottomright: 15px; -moz-border-radius-bottomleft: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;">
                     <div class="row" style="margin: 0;">
@@ -82,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 ">
+            <div class="col-xs-12 col-sm-6">
                 <button type="button" onclick="is_listesi_gosterge('baskasi_tumu');" class="btn btn-danger btn-lg btn-block" style="-webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size:12px;">
                     <i class="fa fa-group"></i>&nbsp;&nbsp;<% Response.Write(LNG("Başkalarına Verdiğim İşler")); %></button>
                 <div class="well well-sm well-light" style="padding: 0; background-color: white; -webkit-border-bottom-right-radius: 15px; -webkit-border-bottom-left-radius: 15px; -moz-border-radius-bottomright: 15px; -moz-border-radius-bottomleft: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;">
@@ -122,7 +122,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 ">
+            <div class="col-xs-12 col-sm-4" style="display:none">
                 <style>
                     #s2id_sayac_departman {
                         text-align: left !important;

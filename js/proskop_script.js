@@ -5668,7 +5668,7 @@ function icerden_ajanda_calistir(etiket, etiket_id) {
             button.prop('disabled', false);
         }
         return false;
-    };
+    }
 
     function Question(question, url) {
         $.facebox('<p>' + question + '</p><button id="yes">Yes</button><button onclick="$.facebox.close();">No</button>');
@@ -5676,7 +5676,7 @@ function icerden_ajanda_calistir(etiket, etiket_id) {
             Save(url, $('#facebox .content'));
         });
         return false;
-    };
+    }
 
     function Save(url, id) {
         var button = id.find('button');
@@ -5703,8 +5703,7 @@ function icerden_ajanda_calistir(etiket, etiket_id) {
                 });
             }
         });
-    };
-
+    }
 }
 
 function ajanda_olay_durum_guncelle_button(olay_id, durum) {

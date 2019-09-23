@@ -1245,27 +1245,43 @@
                                                 <ItemTemplate>
                                         <tr class="details-control-tr" id="<%# DataBinder.Eval(Container.DataItem, "id") %>" role="row">
                                             <td class=" details-control" data-order="<%# DataBinder.Eval(Container.DataItem, "guncelleme_tarihi_order") %>"><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "id") %></span></td>
+
                                             <td class="sorting_1"><div class="tablo_is_adi"><%# DataBinder.Eval(Container.DataItem, "adi") %></div>
                                                 <span style="float:right; margin-top:-30px; text-align:right;">İş Kodu :<br /><strong><%# DataBinder.Eval(Container.DataItem, "is_kodu") %></strong></span>
                                             </td>
+
                                             <td class="tablo_gorevliler <%# DataBinder.Eval(Container.DataItem, "tablo_gorevliler") %>"><div>
                                                 <div class="project-members"><asp:Repeater ID="gorevli_repeater" runat="server"><ItemTemplate><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "adi") %></span><a rel="tooltip"  data-toggle="tooltip" data-html="true" data-original-title="<img src='<%# DataBinder.Eval(Container.DataItem, "resim") %>' alt='<%# DataBinder.Eval(Container.DataItem, "adi") %>' class='online' style='width:75px;'><br><%# DataBinder.Eval(Container.DataItem, "adi") %>" data-placement="top"  href="javascript:void(0)"><img src="<%# DataBinder.Eval(Container.DataItem, "resim") %>" class="online"></a>&nbsp;</ItemTemplate></asp:Repeater></div></div>
                                             </td>
+
                                             <td class="tablo_etiketler <%# DataBinder.Eval(Container.DataItem, "tablo_etiketler") %>"><div><%# DataBinder.Eval(Container.DataItem, "departman_isimleri") %>&nbsp;<%# DataBinder.Eval(Container.DataItem, "hidden_etiketler") %></div></td>
+
                                             <td class="tablo_tamamlanma <%# DataBinder.Eval(Container.DataItem, "tablo_tamamlanma") %>" data-order="<%# DataBinder.Eval(Container.DataItem, "tamamlanma_orani") %>">
                                                 <div><div ID="is_chart<%# DataBinder.Eval(Container.DataItem, "id") %>" class="progress progress-xs" data-progressbar-value="<%# DataBinder.Eval(Container.DataItem, "tamamlanma_orani") %>"><div class="progress-bar"></div></div><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "tamamlanma_orani") %></span></div>
                                             </td>
+
                                             <td class="tablo_baslangic <%# DataBinder.Eval(Container.DataItem, "tablo_baslangic") %>" data-order="<%# DataBinder.Eval(Container.DataItem, "baslangic_tarihi_order") %>"><div><%# DataBinder.Eval(Container.DataItem, "baslangic_tarihi") %><br /><%# DataBinder.Eval(Container.DataItem, "baslangic_saati") %><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "baslangic_tarihi") %></span>
                                                 </div><div class="lineer_yeni"><lineer renk="<%# DataBinder.Eval(Container.DataItem, "renk") %>" baslangic_tarihi="<%# DataBinder.Eval(Container.DataItem, "baslangic_tarihi") %>" baslangic_saati="<%# DataBinder.Eval(Container.DataItem, "baslangic_saati") %>" bitis_tarihi="<%# DataBinder.Eval(Container.DataItem, "bitis_tarihi") %>" bitis_saati="<%# DataBinder.Eval(Container.DataItem, "bitis_saati") %>" id="<%# DataBinder.Eval(Container.DataItem, "id") %>" adi="<%# DataBinder.Eval(Container.DataItem, "adi") %>" etiketler="<%# DataBinder.Eval(Container.DataItem, "departman_isimleri") %>" ekleyen="<%# DataBinder.Eval(Container.DataItem, "ekleyen_adsoyad") %>" ></lineer></div></td>
+
                                             <td class="tablo_bitis <%# DataBinder.Eval(Container.DataItem, "tablo_bitis") %>" data-order="<%# DataBinder.Eval(Container.DataItem, "bitis_tarihi_order") %>"><div><%# DataBinder.Eval(Container.DataItem, "bitis_tarihi") %><br /><%# DataBinder.Eval(Container.DataItem, "bitis_saati") %><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "bitis_tarihi") %></span></div></td>
+
                                             <td class="tablo_guncelleme <%# DataBinder.Eval(Container.DataItem, "tablo_guncelleme") %>" data-order="<%# DataBinder.Eval(Container.DataItem, "guncelleme_tarihi_order") %>"><div><%# DataBinder.Eval(Container.DataItem, "guncelleyen") %><br /><%# DataBinder.Eval(Container.DataItem, "guncelleme_tarihi") %>&nbsp;<%# DataBinder.Eval(Container.DataItem, "guncelleme_saati") %><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "guncelleyen") %></span></div></td>
-                                            <td class="label-<%# DataBinder.Eval(Container.DataItem, "oncelik_class") %> tablo_oncelik <%# DataBinder.Eval(Container.DataItem, "tablo_oncelik") %>"><div><span class="label label-<%# DataBinder.Eval(Container.DataItem, "oncelik_class") %> arkaplansiz"><%# DataBinder.Eval(Container.DataItem, "oncelik") %></span><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "oncelik") %></span></div></td>
+
+                                            <td class="label-<%# DataBinder.Eval(Container.DataItem, "oncelik_class") %> tablo_oncelik <%# DataBinder.Eval(Container.DataItem, "tablo_oncelik") %>">
+                                                <div>
+                                                    <span class="label label-<%# DataBinder.Eval(Container.DataItem, "oncelik_class") %> arkaplansiz"><%# DataBinder.Eval(Container.DataItem, "oncelik") %></span>
+                                                    <span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "oncelik") %></span>
+                                                </div>
+
+                                            </td>
+
                                             <td class="tablo_ekleyen <%# DataBinder.Eval(Container.DataItem, "tablo_ekleyen") %>" data-order="<%# DataBinder.Eval(Container.DataItem, "ekleme_tarihi_order") %>"><div><%# DataBinder.Eval(Container.DataItem, "ekleyen_adsoyad") %><br /><strong><%# DataBinder.Eval(Container.DataItem, "ekleme_tarihi") %><br /><%# DataBinder.Eval(Container.DataItem, "ekleme_saati") %></strong><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "ekleyen_adsoyad") %></span></div></td>
-                                            <td class="label-<%# DataBinder.Eval(Container.DataItem, "is_durum_class") %> tablo_durum <%# DataBinder.Eval(Container.DataItem, "tablo_durum") %>"><div>
+
+                                            <td class="label-<%# DataBinder.Eval(Container.DataItem, "is_durum_class") %> tablo_durum <%# DataBinder.Eval(Container.DataItem, "tablo_durum") %>">
+                                                <div>
                                                 <span class="label label-<%# DataBinder.Eval(Container.DataItem, "is_durum_class") %> arkaplansiz"><%# DataBinder.Eval(Container.DataItem, "is_durum") %></span>
-                                                <asp:Panel ID="bitis_tarih_yeri" runat="server">
-                                                <span class="label bg-color-darken"><%# DataBinder.Eval(Container.DataItem, "tamamlanma_tarihi") %></span><br /><span class="label bg-color-darken arkaplansiz"><%# DataBinder.Eval(Container.DataItem, "tamamlanma_saati") %></span>
-                                                    </asp:Panel><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "is_durum") %></span></div>
+                                                    <span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "is_durum") %></span>
+                                                </div>
                                             </td>
                                         </tr>
                                         </ItemTemplate>
@@ -1470,7 +1486,7 @@
                             </script>
                         </div>
 
-                <div class="row">
+                <div class="row" style="display:none">
                  <div class="col-sm-12">
                                 <label class="col-form-label"><% Response.Write(LNG("İş Tipi")); %></label>
                                  

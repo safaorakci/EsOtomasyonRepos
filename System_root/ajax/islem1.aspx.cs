@@ -1121,6 +1121,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
     public void is_listesi()
     {
         string durum = Request.Form["durum"].ToString();
+        Response.Write("Request Sonucu : " + Request.Form["durum"].ToString());
         string sql_str = "";
         string tum_sql_str = "";
         string gdurum_str = "";
@@ -1588,27 +1589,27 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             }
 
 
-            if (item["is_durum"].ToString() == "İPTAL")
+            if (item["is_durum"].ToString() == "IPTAL")
             {
                 yeniis.is_durum = "İPTAL";
                 yeniis.is_durum_class = "inverse";
             }
-            else if (item["is_durum"].ToString() == "GECİKTİ")
+            else if (item["is_durum"].ToString() == "GECIKTI")
             {
                 yeniis.is_durum = "GECİKTİ";
                 yeniis.is_durum_class = "danger";
             }
-            else if (item["is_durum"].ToString() == "BEKLİYOR")
+            else if (item["is_durum"].ToString() == "BEKLIYOR")
             {
                 yeniis.is_durum = "BEKLİYOR";
                 yeniis.is_durum_class = "warning";
             }
-            else if (item["is_durum"].ToString() == "DEVAM EDİYOR")
+            else if (item["is_durum"].ToString() == "DEVAM EDIYOR")
             {
                 yeniis.is_durum = "DEVAM EDİYOR";
                 yeniis.is_durum_class = "info";
             }
-            else if (item["is_durum"].ToString() == "BİTTİ")
+            else if (item["is_durum"].ToString() == "BITTI")
             {
                 yeniis.is_durum = "BİTTİ";
                 yeniis.is_durum_class = "success";
@@ -2621,7 +2622,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                             DataRow Personel = PersonelBilgileriGetir(gorevliID);
                             adi = UIHelper.trn(adi);
-                            if (Personel["PushUserKey"].ToString().Length > 10)
+                            if (true) //Personel["PushUserKey"].ToString().Length > 10
                             {
 
                                 string yeni_adi = adi.ToString();
@@ -2636,7 +2637,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
-                                ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = @user_id, @mesaj = @bildirim;";
+                                ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate());";
                                 ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.");
                                 ayarlar.cmd.Parameters.Add("tip", "is_listesi");
                                 ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + is_id + "');");

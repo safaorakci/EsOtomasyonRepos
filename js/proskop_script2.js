@@ -926,7 +926,16 @@ function parcalar_autocomplete_calistir2() {
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
-            return $("<li>").append("<a>" + item.parcaadi + " - " + item.marka + "</a>").appendTo(ul);
+            if (item.parcaadi === undefined && item.marka === undefined && item.aciklama === undefined) {
+                return $("<li style='display:none'>").append("<a></a>").appendTo(ul);
+            }
+            else {
+                return $("<li>").append("<a>" + item.parcaadi + " - " + item.marka + " - " + item.aciklama + "</a>").appendTo(ul);
+                //var parcaBilgi = "Parça adı girilmedi";
+                //var markaBilgi = "Marka girilmedi";
+                //var aciklamaBilgi = "Açıklama girilmedi";
+                //return $("<li>").append("<a>" + item.parcaadi === "" ? parcaBilgi : item.parcaadi + " - " + item.marka === "" ? markaBilgi : item.marka + " - " + item.aciklama === "" ? aciklamaBilgi : item.aciklama + "</a>").appendTo(ul);
+            }
         };
     });
 
