@@ -1780,12 +1780,12 @@
             firma_id = Request.Cookies("kullanici")("firma_id")
             ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
 
-            SQL="delete from ucgem_personel_mesai_girisleri where personel_id = '"& personel_id &"' and giris_tipi = '"& giris_tipi &"' and tarih = '"& tarih &"'"
+            SQL="delete from ucgem_personel_mesai_girisleri where personel_id = '"& personel_id &"' and giris_tipi = '"& giris_tipi &"' and tarih = CONVERT(date, '"& tarih &"', 103)"
             set sil = baglanti.execute(SQL)
 
             if trim(durum)="Onaylandı" then
 
-                SQL="insert into ucgem_personel_mesai_girisleri(personel_id, cihazID, giris_tipi, tarih, saat, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& personel_id &"', '"& cihazID &"', '"& giris_tipi &"', '"& tarih &"', '"& saat &"', '"& ekleme_zamani &"', '"& durum &"', '"& cop &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"')"
+                SQL="insert into ucgem_personel_mesai_girisleri(personel_id, cihazID, giris_tipi, tarih, saat, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& personel_id &"', '"& cihazID &"', '"& giris_tipi &"', CONVERT(date, '"& tarih &"', 103), '"& saat &"', '"& ekleme_zamani &"', '"& durum &"', '"& cop &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"')"
                 set ekle = baglanti.execute(SQL)
 
             end if

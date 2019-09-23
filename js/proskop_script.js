@@ -3507,7 +3507,7 @@ function depo_dosya_yukle(etiket, kayit_id) {
 
     if ($("#dosya_yukleme_form input[type=text],textarea").valid("valid")) {
 
-        var depo_dosya_yolu = $("#depo_dosya_yolu").val();
+        var depo_dosya_yolu = $("#depo_dosya_yolu").attr("filepath");
         var depo_dosya_adi = $("#depo_dosya_adi").val();
 
         var data = "islem=depo_dosyalari_getir&islem2=ekle";

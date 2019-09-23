@@ -62,7 +62,7 @@
             tarih = trn(request("giris_cikis_tarihi"))
             kayit_id = trn(request("kayit_id"))
 
-            SQL="update ucgem_personel_mesai_girisleri set giris_tipi = '"& giris_tipi &"', saat = '"& saat &"', tarih = '"& tarih &"', ekleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"', ekleme_tarihi = getdate(), ekleme_saati = getdate(), ekleme_zamani = getdate() where id = '"& kayit_id &"'"
+            SQL="update ucgem_personel_mesai_girisleri set giris_tipi = '"& giris_tipi &"', saat = '"& saat &"', tarih = CONVERT(date, '"& tarih &"', 103), ekleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"', ekleme_tarihi = getdate(), ekleme_saati = getdate(), ekleme_zamani = getdate() where id = '"& kayit_id &"'"
             set guncelle = baglanti.execute(SQL)
             
 
@@ -1871,7 +1871,7 @@
                     </style>
 
                     <%
-                        dongu_baslangic = tarihcek("baslangic")
+                        dongu_baslangic = cdate(tarihcek("baslangic"))
                         dongu_bitis = cdate(tarihcek("bitis"))
 
                         
@@ -1932,7 +1932,7 @@
                                         SQL="EXEC dbo.ProjeAdamSaatCetveli @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"';"
                                         set cetvel = baglanti.execute(sql)
 
-                               
+                                        
 
 
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
@@ -3665,7 +3665,7 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
 
                     <%
 
-                                        SQL="Exec [dbo].[TaseronProjeIsYukuCetveli] @taseron_id = '"& firma_id &"',  @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = CONVERT(date, '"& dongu_baslangic &"', 103), @bitis = CONVERT(date, '"& dongu_bitis &"', 103), @gosterim_tipi = '"& gosterim_tipi &"';"
+                                        SQL="Exec [dbo].[TaseronProjeIsYukuCetveli] @taseron_id = '"& firma_id &"',  @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @gosterim_tipi = '"& gosterim_tipi &"';"
                                         set cetvel = baglanti.execute(sql)
 
                                         

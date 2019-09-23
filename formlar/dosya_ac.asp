@@ -23,11 +23,11 @@
 
                 dosya_tipi = split(dosya("depo_dosya_yolu"), ".")(ubound(split(dosya("depo_dosya_yolu"), ".")))
                 if trim(dosya_tipi)="doc" or trim(dosya_tipi)="docx" or trim(dosya_tipi)="xls" or trim(dosya_tipi)="xlsx" or trim(dosya_tipi)="ppt" or trim(dosya_tipi)="pptx" then
-                    Response.redirect "https://view.officeapps.live.com/op/view.aspx?src=http%3A%2F%2Fuygulama.proskop.com"& replace(dosya("depo_dosya_yolu"), "/", "%2F")
+                    Response.redirect "https://view.officeapps.live.com/op/view.aspx?src=http%3A%2F%2Fhttp://esotomasyon.makrogem.com.tr"& replace(dosya("depo_dosya_yolu"), "/", "%2F")
                 elseif trim(dosya_tipi)="pdf" then
-                    Response.Redirect "http://uygulama.proskop.com" & dosya("depo_dosya_yolu")
+                    Response.Redirect "http://esotomasyon.makrogem.com.tr" & dosya("depo_dosya_yolu")
                 elseif trim(dosya_tipi)="jpg" or trim(dosya_tipi)="jpeg" or trim(dosya_tipi)="gif" or trim(dosya_tipi)="png" then
-                    Response.Redirect "http://uygulama.proskop.com" & dosya("depo_dosya_yolu")
+                    Response.Redirect "http://esotomasyon.makrogem.com.tr" & dosya("depo_dosya_yolu")
                 else
                     ParcaParcaDosyaIndir server.MapPath(dosya("depo_dosya_yolu")), dosya("depo_dosya_adi") & "." & split(dosya("depo_dosya_yolu"), ".")(ubound(split(dosya("depo_dosya_yolu"), ".")))
                 end if
