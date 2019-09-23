@@ -3626,7 +3626,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string kullanici_hid = SessionManager.CurrentUser.firma_hid + "." + kull_id;
 
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "update ucgem_firma_kullanici_listesi set kullanici_hid = @kullanici_hid where id = @kullanici_id;EXEC MailGonderBildirim @personel_id = @kullanici_id, @mesaj = 'Proskop Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://www.esflw.com>http://www.esflw.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : " + personel_parola + "<br><br>'; ";
+            ayarlar.cmd.CommandText = "update ucgem_firma_kullanici_listesi set kullanici_hid = @kullanici_hid where id = @kullanici_id;EXEC MailGonderBildirim @personel_id = @kullanici_id, @mesaj = 'EsOtomasyon Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://www.esflw.com>http://www.esflw.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : " + personel_parola + "<br><br>'; ";
             ayarlar.cmd.Parameters.Add("kullanici_hid", kullanici_hid);
             ayarlar.cmd.Parameters.Add("kullanici_id", kull_id);
             ayarlar.cmd.ExecuteNonQuery();
@@ -3634,7 +3634,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
             if (personel_telefon.Length > 5)
             {
-                ayarlar.NetGSM_SMS(personel_telefon, "Proskop Hesap Bilgileriniz; \n Sistem Giriş Url : http://www.esflw.com \n E-Posta : " + personel_eposta + "\n Parola : " + personel_parola);
+                ayarlar.NetGSM_SMS(personel_telefon, "EsOtomasyon Hesap Bilgileriniz; \n Sistem Giriş Url : http://www.esflw.com \n E-Posta : " + personel_eposta + "\n Parola : " + personel_parola);
             }
 
         }
@@ -3711,10 +3711,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             ayarlar.cmd.Parameters.Add("ekleyen_ip", Request.ServerVariables["Remote_Addr"]);
             int proje_id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
 
-
-
             string proje_kodu = "ESP" + DateTime.Now.Year.ToString().Substring(0, 2) + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + "000" + proje_id.ToString();
-
 
             ayarlar.cmd.Parameters.Clear();
             ayarlar.cmd.CommandText = "update ucgem_proje_listesi set proje_kodu = @proje_kodu where id = @proje_id;";

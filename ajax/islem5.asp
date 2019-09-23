@@ -1368,7 +1368,7 @@ works properly when clicked or hovered */
 
 
 
-            SQL="insert into ucgem_is_calisma_listesi(TamamlanmaID, is_id, baslangic, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& TamamlanmaID &"', '"& is_id &"', getdate(), '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+            SQL="insert into ucgem_is_calisma_listesi(TamamlanmaID, is_id, baslangic, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& TamamlanmaID &"', '"& is_id &"', getdate(), '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 104), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
 
@@ -1951,7 +1951,7 @@ works properly when clicked or hovered */
                         toplanti_saati = toplanti_saati
 
                         tarih = toplanti_tarihi
-                        SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                        SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                         set ekle = baglanti.execute(SQL)
 
 
@@ -1970,7 +1970,7 @@ works properly when clicked or hovered */
                             toplanti_saati = toplanti_saati
 
                             tarih = toplanti_tarihi
-                            SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                            SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                             set ekle = baglanti.execute(SQL)
 
                         end if
@@ -2002,7 +2002,7 @@ works properly when clicked or hovered */
                             toplanti_saati = toplanti_saati
 
                             tarih = toplanti_tarihi
-                            SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                            SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                             set ekle = baglanti.execute(SQL)
 
                             girdimi = true
@@ -2034,7 +2034,7 @@ works properly when clicked or hovered */
                                 toplanti_saati = toplanti_saati
 
                                 tarih = toplanti_tarihi
-                                SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                                SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                 set ekle = baglanti.execute(SQL)
 
                                 girdimi = true
@@ -2062,7 +2062,7 @@ works properly when clicked or hovered */
                                         toplanti_saati = toplanti_saati
 
                                         tarih = toplanti_tarihi
-                                        SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                                        SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                         set ekle = baglanti.execute(SQL)
 
                                     end if
@@ -2081,7 +2081,7 @@ works properly when clicked or hovered */
                                         toplanti_saati = toplanti_saati
 
                                         tarih = toplanti_tarihi
-                                        SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                                        SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                         set ekle = baglanti.execute(SQL)
 
                                     end if
@@ -2112,7 +2112,7 @@ works properly when clicked or hovered */
                                             toplanti_saati = toplanti_saati
 
                                             tarih = toplanti_tarihi
-                                            SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                                            SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                             set ekle = baglanti.execute(SQL)
 
                                         end if
@@ -2137,7 +2137,7 @@ works properly when clicked or hovered */
                                             toplanti_saati = toplanti_saati
 
                                             tarih = toplanti_tarihi
-                                            SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& tarih &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                                            SQL="insert into proje_bakim_kayitlari(proje_id, tarih, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', CONVERT(date, '"& tarih &"', 103), '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                             set ekle = baglanti.execute(SQL)
 
                                         end if
@@ -2710,7 +2710,7 @@ works properly when clicked or hovered */
             ekleme_tarihi = date
             ekleme_saati = time
 
-            SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) select 1, '"& IsID &"', parca.id, '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"' from parca_listesi parca join parca_grup_listesi grup on dbo.iceriyormu(grup.parcalar, parca.id)=1 where grup.id = '"& AgacId &"'"
+            SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) select 1, '"& IsID &"', parca.id, '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"' from parca_listesi parca join parca_grup_listesi grup on dbo.iceriyormu(grup.parcalar, parca.id)=1 where grup.id = '"& AgacId &"'"
             set ekle = baglanti.execute(SQL)
 
         elseif trn(request("islem2"))="guncelle" then
@@ -2741,14 +2741,18 @@ works properly when clicked or hovered */
             ekleme_saati = time
             oncelik = "Normal"
             satinalmaDurum = "Onay Bekliyor"
-            baslik = "12345"
+            baslik = "Eksik Parça"
+            tedarikci = "0"
+            proje = "0"
 
             SQL="select * from is_parca_listesi where ParcaID = '"& ParcaId &"' and IsID = '"& IsID &"'"
             set varmi = baglanti.execute(SQL)
             if varmi.eof then
 
-                SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& Adet &"', '"& IsID &"', '"& ParcaId &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& Adet &"', '"& IsID &"', '"& ParcaId &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                 set ekle = baglanti.execute(SQL)
+
+    
 
                 SQL = "select * from parca_listesi where id = '"& ParcaId &"'"
                 set parcalar = baglanti.execute(SQL)
@@ -2765,22 +2769,16 @@ works properly when clicked or hovered */
                          SQL="select * from satinalma_siparis_listesi where id = '"& ParcaId &"' "
                          set siparisVarmi = baglanti.execute(SQL)
 
-    
-
-                         if siparisVarmi.eof then
-    Response.Write("1")
-                               SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& 123 &"', '"& ParcaId &"', '"& toplamFiyatTL &"', '"& birim_pb &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                         if siparisVarmi("id")=null then
+                               SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& 123 &"', '"& ParcaId &"', '"& toplamFiyatTL &"', '"& birim_pb &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                set satinalmaSiparisListesi = baglanti.execute(SQL)
-    Response.Write("2")
 
-                               SQL = "insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', '"& ekleme_tarihi &"', '"& oncelik &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                               SQL = "insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& proje &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                set satinalmaListesi = baglanti.execute(SQL)
-    Response.Write("3")
+                        Response.Write(1)
                          else
-    Response.Write("4")
                                SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where id = '"& siparisVarmi("id") &"'"
                                set siparisGuncelle = baglanti.execute(SQL)
-    Response.Write("5")
                          end if
                         
                     end if
@@ -2829,7 +2827,7 @@ works properly when clicked or hovered */
                          set siparisVarmi = baglanti.execute(SQL)
 
                          if siparisVarmi.eof then
-                               SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& 123 &"', '"& ParcaId &"', '"& toplamFiyatTL &"', '"& birim_pb &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                               SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& 123 &"', '"& ParcaId &"', '"& toplamFiyatTL &"', '"& birim_pb &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                set satinalmaSiparisListesi = baglanti.execute(SQL)
                          else
                                SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where id = '"& siparisVarmi("id") &"'"
@@ -3318,7 +3316,7 @@ works properly when clicked or hovered */
             Response.End
         end if
 
-        SQL="select * from tanimlama_yasakli_izin_gunleri where ('"& baslangic_tarihi &"' between baslangic_tarihi and bitis_tarihi) or  ('"& bitis_tarihi &"' between baslangic_tarihi and bitis_tarihi)"
+        SQL="select * from tanimlama_yasakli_izin_gunleri where (CONVERT(date, '"& baslangic_tarihi &"', 103) between baslangic_tarihi and bitis_tarihi) or  (CONVERT(date, '"& bitis_tarihi &"', 103) between baslangic_tarihi and bitis_tarihi)"
         set cek = baglanti.execute(SQL)
         if not cek.eof then
             Response.Clear()

@@ -1667,9 +1667,9 @@ function IzinliPersonelKontrol() {
     data += "&yeni_is_bitis_tarihi=" + yeni_is_bitis_tarihi;
 
 
-    $("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/personel_izin_kontrol", data: data }, function () {
-        mesaj_ver("İşler", "sorgu çalıştı ", "success");
-    });
+    //$("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/personel_izin_kontrol", data: data }, function () {
+    //    mesaj_ver("İşler", "sorgu çalıştı ", "success");
+    //});
 }
 
 function dis_ekle_yeni_takvim_calistir() {
@@ -3955,7 +3955,7 @@ function proje_dosyalari_getir(proje_id, nesne) {
 
 function bordro_kaydet(personel_id) {
 
-    var bordro_dosya_yolu = $("#bordro_dosya_yolu").val();
+    var bordro_dosya_yolu = $("#bordro_dosya_yolu").attr("filePath");
     var bordro_donem = $("#bordro_donem").val();
     var bordro_aciklama = $("#bordro_aciklama").val();
 
@@ -4160,6 +4160,7 @@ function yeni_parca_ekle() {
     var miktar = $("#miktar").val();
     var minumum_miktar = $("#minumum_miktar").val();
     var barcode = $("#barcode").val();
+    var kodu = $("#kodu").val();
 
     var data = "islem=parca_listesi&islem2=ekle";
     data += "&parca_resmi=" + parca_resmi;
@@ -4172,9 +4173,11 @@ function yeni_parca_ekle() {
     data += "&miktar=" + miktar;
     data += "&minumum_miktar=" + minumum_miktar;
     data += "&barcode=" + barcode;
+    data += "&kodu=" + kodu;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         mesaj_ver("Parçalar", "Kayıt Başarıyla Eklendi", "success");
+        $(".close").click();
     });
 
 }
@@ -8185,6 +8188,13 @@ function talep_fisleri_getir() {
 
 }
 
+function user_list() {
+    var data = "islem=user_list";
+    $("#logincard").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        datatableyap();
+    });
+}
+
 
 function talep_fisi_sil(kayit_id) {
 
@@ -8260,8 +8270,6 @@ function yeni_talep_fisi_ekle() {
 
     var data = "islem=talep_fisleri&islem2=ekle";
 
-
-
     data += "&baslik=" + baslik;
     data += "&oncelik=" + oncelik;
     data += "&talep_edilen=" + talep_edilen;
@@ -8272,6 +8280,7 @@ function yeni_talep_fisi_ekle() {
     if ($("#talepfisform input:not(input[type=button])").valid("valid")) {
         $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
             mesaj_ver("Talep Fişleri", "Kayıt Başarıyla Eklendi", "success");
+            $(".close").click();
         });
     }
 }

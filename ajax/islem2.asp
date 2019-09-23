@@ -52,7 +52,7 @@
             firma_id = Request.Cookies("kullanici")("firma_id")
             ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
             
-            SQL="insert into ucgem_personel_mesai_girisleri(tarih, saat, personel_id, cihazID, giris_tipi, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& tarih &"', '"& saat &"', '" & personel_id & "', '" & cihazID & "', '" & giris_tipi & "', getdate(), '" & durum & "', '" & cop & "', getdate(), getdate(), '" & ekleyen_ip & "', '"& firma_id &"', '"& ekleyen_id &"')"
+            SQL="insert into ucgem_personel_mesai_girisleri(tarih, saat, personel_id, cihazID, giris_tipi, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values(CONVERT(date, '"& tarih &"', 103), '"& saat &"', '" & personel_id & "', '" & cihazID & "', '" & giris_tipi & "', getdate(), '" & durum & "', '" & cop & "', getdate(), getdate(), '" & ekleyen_ip & "', '"& firma_id &"', '"& ekleyen_id &"')"
             set ekle = baglanti.execute(SQL)
 
         elseif trn(request("islem2"))="guncelle" then
@@ -296,7 +296,7 @@
         tarih1 = "01.01." & yil
         tarih2 = "31.12." & yil
 
-        SQL="DECLARE @Date1 DATE = '"& tarih1 &"', @Date2 DATE = '"& tarih2 &"', @personel_id int = '"& personel_id &"'; SELECT DATEADD(DAY, number, @Date1) AS gun, CASE WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 1 THEN kullanici.gun1 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 2 THEN kullanici.gun2 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 3 THEN kullanici.gun3 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 4 THEN kullanici.gun4 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 5 THEN kullanici.gun5 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 6 THEN kullanici.gun6 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 7 THEN kullanici.gun7 END AS varmi, ( SELECT TOP 1 mesai3.giris_tipi FROM ucgem_personel_mesai_girisleri mesai3 WHERE mesai3.tarih = DATEADD(DAY, number, @Date1) AND mesai3.cop = 'false' AND mesai3.personel_id = kullanici.id AND mesai3.giris_tipi = 2 ) AS giris_tipi, ISNULL( ( SELECT TOP 1 ISNULL( CASE WHEN mesai1.giris_tipi = 1 THEN DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai1.tarih) + CONVERT( DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai1.tarih) = 1 THEN kullanici.gun1_saat1 WHEN DATEPART(dw, mesai1.tarih) = 2 THEN kullanici.gun2_saat1 WHEN DATEPART(dw, mesai1.tarih) = 3 THEN kullanici.gun3_saat1 WHEN DATEPART(dw, mesai1.tarih) = 4 THEN kullanici.gun4_saat1 WHEN DATEPART(dw, mesai1.tarih) = 5 THEN kullanici.gun5_saat1 WHEN DATEPART(dw, mesai1.tarih) = 6 THEN kullanici.gun6_saat1 WHEN DATEPART(dw, mesai1.tarih) = 7 THEN kullanici.gun7_saat1 END, '00:00' ) ) ), CONVERT(DATETIME, mesai1.tarih) + CONVERT(DATETIME, mesai1.saat) ) END, '999' ) FROM ucgem_personel_mesai_girisleri mesai1 WHERE mesai1.tarih = DATEADD(DAY, number, @Date1) AND mesai1.cop = 'false' AND mesai1.personel_id = kullanici.id AND mesai1.giris_tipi = 1 ), '999' ) AS fark, ISNULL( ( SELECT top 1 ISNULL( CASE WHEN mesai2.giris_tipi = 0 THEN DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai2.tarih) + CONVERT( DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai2.tarih) = 1 THEN kullanici.gun1_saat2 WHEN DATEPART(dw, mesai2.tarih) = 2 THEN kullanici.gun2_saat2 WHEN DATEPART(dw, mesai2.tarih) = 3 THEN kullanici.gun3_saat2 WHEN DATEPART(dw, mesai2.tarih) = 4 THEN kullanici.gun4_saat2 WHEN DATEPART(dw, mesai2.tarih) = 5 THEN kullanici.gun5_saat2 WHEN DATEPART(dw, mesai2.tarih) = 6 THEN kullanici.gun6_saat2 WHEN DATEPART(dw, mesai2.tarih) = 7 THEN kullanici.gun7_saat2 END, '00:00' ) ) ), CONVERT(DATETIME, mesai2.tarih) + CONVERT(DATETIME, mesai2.saat) ) END, '999' ) FROM ucgem_personel_mesai_girisleri mesai2 WHERE mesai2.tarih = DATEADD(DAY, number, @Date1) AND mesai2.cop = 'false' AND mesai2.personel_id = kullanici.id AND mesai2.giris_tipi = 0 ), '999' ) AS fark2 FROM master..spt_values JOIN dbo.ucgem_firma_kullanici_listesi kullanici ON kullanici.id = @personel_id WHERE type = 'P' AND DATEADD(DAY, number, @Date1) <= @Date2;"
+        SQL="DECLARE @Date1 DATE = CONVERT(date, '"& tarih1 &"', 103), @Date2 DATE = CONVERT(date, '"& tarih2 &"', 103), @personel_id int = '"& personel_id &"'; SELECT DATEADD(DAY, number, @Date1) AS gun, CASE WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 1 THEN kullanici.gun1 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 2 THEN kullanici.gun2 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 3 THEN kullanici.gun3 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 4 THEN kullanici.gun4 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 5 THEN kullanici.gun5 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 6 THEN kullanici.gun6 WHEN DATEPART(dw, DATEADD(DAY, number, @Date1)) = 7 THEN kullanici.gun7 END AS varmi, ( SELECT TOP 1 mesai3.giris_tipi FROM ucgem_personel_mesai_girisleri mesai3 WHERE mesai3.tarih = DATEADD(DAY, number, @Date1) AND mesai3.cop = 'false' AND mesai3.personel_id = kullanici.id AND mesai3.giris_tipi = 2 ) AS giris_tipi, ISNULL( ( SELECT TOP 1 ISNULL( CASE WHEN mesai1.giris_tipi = 1 THEN DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai1.tarih) + CONVERT( DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai1.tarih) = 1 THEN kullanici.gun1_saat1 WHEN DATEPART(dw, mesai1.tarih) = 2 THEN kullanici.gun2_saat1 WHEN DATEPART(dw, mesai1.tarih) = 3 THEN kullanici.gun3_saat1 WHEN DATEPART(dw, mesai1.tarih) = 4 THEN kullanici.gun4_saat1 WHEN DATEPART(dw, mesai1.tarih) = 5 THEN kullanici.gun5_saat1 WHEN DATEPART(dw, mesai1.tarih) = 6 THEN kullanici.gun6_saat1 WHEN DATEPART(dw, mesai1.tarih) = 7 THEN kullanici.gun7_saat1 END, '00:00' ) ) ), CONVERT(DATETIME, mesai1.tarih) + CONVERT(DATETIME, mesai1.saat) ) END, '999' ) FROM ucgem_personel_mesai_girisleri mesai1 WHERE mesai1.tarih = DATEADD(DAY, number, @Date1) AND mesai1.cop = 'false' AND mesai1.personel_id = kullanici.id AND mesai1.giris_tipi = 1 ), '999' ) AS fark, ISNULL( ( SELECT top 1 ISNULL( CASE WHEN mesai2.giris_tipi = 0 THEN DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai2.tarih) + CONVERT( DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai2.tarih) = 1 THEN kullanici.gun1_saat2 WHEN DATEPART(dw, mesai2.tarih) = 2 THEN kullanici.gun2_saat2 WHEN DATEPART(dw, mesai2.tarih) = 3 THEN kullanici.gun3_saat2 WHEN DATEPART(dw, mesai2.tarih) = 4 THEN kullanici.gun4_saat2 WHEN DATEPART(dw, mesai2.tarih) = 5 THEN kullanici.gun5_saat2 WHEN DATEPART(dw, mesai2.tarih) = 6 THEN kullanici.gun6_saat2 WHEN DATEPART(dw, mesai2.tarih) = 7 THEN kullanici.gun7_saat2 END, '00:00' ) ) ), CONVERT(DATETIME, mesai2.tarih) + CONVERT(DATETIME, mesai2.saat) ) END, '999' ) FROM ucgem_personel_mesai_girisleri mesai2 WHERE mesai2.tarih = DATEADD(DAY, number, @Date1) AND mesai2.cop = 'false' AND mesai2.personel_id = kullanici.id AND mesai2.giris_tipi = 0 ), '999' ) AS fark2 FROM master..spt_values JOIN dbo.ucgem_firma_kullanici_listesi kullanici ON kullanici.id = @personel_id WHERE type = 'P' AND DATEADD(DAY, number, @Date1) <= @Date2;"
         set cek = baglanti.execute(SQL)
 %>
 <style>
@@ -635,7 +635,7 @@
         taseron_saatlik_maliyet = trim(replace(replace(replace(trn(request("taseron_saatlik_maliyet")),".",""),",","."),"TL",""))
         taseron_maliyet_pb = trn(request("taseron_maliyet_pb"))
 
-        SQL="update ucgem_firma_listesi set firma_adi = '"& firma_adi &"', taseron_saatlik_maliyet = '"& taseron_saatlik_maliyet &"', taseron_maliyet_pb = '"& taseron_maliyet_pb &"', firma_logo = '" & firma_logo & "', firma_yetkili = '" & firma_yetkili & "', firma_telefon = '" & firma_telefon & "', firma_mail = '" & firma_mail & "', firma_supervisor_id = '" & firma_supervisor_id & "' where id = '"& firma_id &"'"
+        SQL="update ucgem_firma_listesi set firma_adi = '"& firma_adi &"', taseron_saatlik_maliyet = CAST('"& taseron_saatlik_maliyet &"' AS DECIMAL(18, 4)) , taseron_maliyet_pb = '"& taseron_maliyet_pb &"', firma_logo = '" & firma_logo & "', firma_yetkili = '" & firma_yetkili & "', firma_telefon = '" & firma_telefon & "', firma_mail = '" & firma_mail & "', firma_supervisor_id = '" & firma_supervisor_id & "' where id = '"& firma_id &"'"
         set guncelle = baglanti.execute(SQL)
 
     elseif trn(request("islem"))="cari_detay_tabela_getir" then
@@ -1012,7 +1012,7 @@
                         ekleme_tarihi = date
                         ekleme_saati = time
 
-                        SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', '"& olay_tarihi &"', '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                        SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', CONVERT(date, '"& olay_tarihi &"', 103), '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                         set olay_ekle = baglanti.execute(SQL)
 
                         SQL="update ucgem_proje_listesi set guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& etiket_id &"'"
@@ -1025,7 +1025,7 @@
 
             if trim(olay_tipi) <> "rutin" then
 
-                SQL="SET NOCOUNT ON; insert into ahtapot_ajanda_olay_listesi(ana_kayit_id, kisiler, baslangic_saati, bitis_saati, etiket, etiket_id, title, allDay, baslangic, bitis, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('0', '"& kisiler &"', '"& baslangic_saati &"', '"& bitis_saati &"', '" & etiket & "', '" & trn(request("etiket_id")) & "', '" & title & "', '" & allDay & "', '" & baslangic_tarihi & "', '"& bitis_tarihi &"', '" & url & "', '" & color & "', '" & description & "', '" & etiketler & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', getdate(), getdate()); SELECT SCOPE_IDENTITY() id;"
+                SQL="SET NOCOUNT ON; insert into ahtapot_ajanda_olay_listesi(ana_kayit_id, kisiler, baslangic_saati, bitis_saati, etiket, etiket_id, title, allDay, baslangic, bitis, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('0', '"& kisiler &"', '"& baslangic_saati &"', '"& bitis_saati &"', '" & etiket & "', '" & trn(request("etiket_id")) & "', '" & title & "', '" & allDay & "', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), '" & url & "', '" & color & "', '" & description & "', '" & etiketler & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', getdate(), getdate()); SELECT SCOPE_IDENTITY() id;"
                 set ekle = baglanti.execute(SQL)
 
                 ana_kayit_id = ekle(0)
@@ -1038,7 +1038,7 @@
                     if isnumeric(kisi_id)=true then
                         if cdbl(kisi_id)>0 then
                             etiket_id = kisi_id
-                            SQL="SET NOCOUNT ON; insert into ahtapot_ajanda_olay_listesi(ana_kayit_id, kisiler, baslangic_saati, bitis_saati, etiket, etiket_id, title, allDay, baslangic, bitis, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& ana_kayit_id &"', '"& kisiler &"', '"& baslangic_saati &"', '"& bitis_saati &"', '" & etiket & "', '" & etiket_id & "', '" & title & "', '" & allDay & "', '" & baslangic_tarihi & "', '"& bitis_tarihi &"', '" & url & "', '" & color & "', '" & description & "', '" & etiketler & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', getdate(), getdate()); SELECT SCOPE_IDENTITY() id;"
+                            SQL="SET NOCOUNT ON; insert into ahtapot_ajanda_olay_listesi(ana_kayit_id, kisiler, baslangic_saati, bitis_saati, etiket, etiket_id, title, allDay, baslangic, bitis, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& ana_kayit_id &"', '"& kisiler &"', '"& baslangic_saati &"', '"& bitis_saati &"', '" & etiket & "', '" & etiket_id & "', '" & title & "', '" & allDay & "', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), '" & url & "', '" & color & "', '" & description & "', '" & etiketler & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', getdate(), getdate()); SELECT SCOPE_IDENTITY() id;"
                             set ekle = baglanti.execute(SQL)
                         end if
                     end if
@@ -2155,7 +2155,7 @@
 
             ongorulen_tutar = NoktalamaDegis(ongorulen_tutar)
 
-            SQL="insert into ahtapot_proje_butce_listesi(proje_id, butce_hesabi_adi, ongorulen_tutar, parabirimi, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& butce_hesabi_adi &"', '"& ongorulen_tutar &"', '"& parabirimi &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"');"
+            SQL="insert into ahtapot_proje_butce_listesi(proje_id, butce_hesabi_adi, ongorulen_tutar, parabirimi, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& butce_hesabi_adi &"', '"& ongorulen_tutar &"', '"& parabirimi &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"');"
             set ekle = baglanti.execute(SQL)
 
             SQL="update ucgem_proje_listesi set guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& proje_id &"'"
@@ -2177,7 +2177,7 @@
             ekleme_tarihi = date
             ekleme_saati = time
 
-            SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', '"& olay_tarihi &"', '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+            SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', CONVERT(date, '"& olay_tarihi &"', 103), '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set olay_ekle = baglanti.execute(SQL)
 
 
@@ -3665,9 +3665,11 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
 
                     <%
 
-                                        SQL="Exec [dbo].[TaseronProjeIsYukuCetveli] @taseron_id = '"& firma_id &"',  @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @gosterim_tipi = '"& gosterim_tipi &"';"
+                                        SQL="Exec [dbo].[TaseronProjeIsYukuCetveli] @taseron_id = '"& firma_id &"',  @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = CONVERT(date, '"& dongu_baslangic &"', 103), @bitis = CONVERT(date, '"& dongu_bitis &"', 103), @gosterim_tipi = '"& gosterim_tipi &"';"
                                         set cetvel = baglanti.execute(sql)
 
+                                        
+                                        
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
                                         Dim taseron_rapor_gun_toplam2()

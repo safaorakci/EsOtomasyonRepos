@@ -488,7 +488,7 @@ function mesaj_ver(title, mesaj, durum) {
         });
     }
     */
-    
+
 }
 
 function sayfa_yuklenince() {
@@ -499,11 +499,11 @@ function sayfa_yuklenince() {
     //pageSetUp();
 
     $(".takvimyap").datepicker({
-      
+
     }).mask("99.99.9999");
 
     $(".timepicker").mask("99:99");
-    
+
     if ($("input[type=file]").lenght > 0) {
         fileyap();
     }
@@ -525,7 +525,7 @@ function sayfa_yuklenince() {
         });
     });
     $('.tabsyap').tabs();
-    
+
 
     $(':input').each(function () {
         $(this).attr('autocomplete', 'new-password');
@@ -551,7 +551,7 @@ function popUp(URL, yukseklik, genislik) {
     eval("page" + id + " = window.open(URL, '" + id + "', 'location=no,directories=0,titlebar=0,toolbar=0,scrollbars=1,statusbar=0,menubar=0,resizable=0,width=" + genislik + ",height=" + yukseklik + ",left = 300,top = 100');");
 }
 
-$(document).on("click", "#btnUploadKaydet" , function () {
+$(document).on("click", "#btnUploadKaydet", function () {
     mesaj_ver("Envanter Kaydı", "İşlem Başarılı", "success");
     sayfagetir('/parcalar/', 'jsid=4559');
     $("button.close[data-dismiss=modal]").trigger("click");
@@ -579,6 +579,10 @@ function upload(id, folderName) {
         success: function (response) {
             if (response.status) {
                 mesaj_ver("Dosya Yükleme", "İşlem Başarılı", "success");
+                var htmlControl = $("#" + id);
+                $(htmlControl).attr("filePath", "/"+response.fileFullPath);
+                console.log($(htmlControl).attr("filePath"));
+                
             }
         },
         error: function (error) {
@@ -670,10 +674,10 @@ function fileyap() {
     //        $(this).css("margin-left", "40px");
     //    }
 
-        
+
     //    //$(this).fileupload({
 
-            
+
 
 
     //    //    uploadtemplateıd: null,

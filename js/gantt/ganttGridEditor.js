@@ -558,7 +558,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 
 function DateChanged(StartDateTime,EndDateTime) {
 
-    alert("Tarih Değişti");
+    //alert("Tarih Değişti");
     //<%=request(DateTimeChanged)%>
     data = "islem=DateTimeChanged";
     data += "&StartDateTime=" + StartDateTime;

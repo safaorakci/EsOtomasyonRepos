@@ -507,7 +507,7 @@
                         ekleme_tarihi = date
                         ekleme_saati = time
 
-                        SQL="insert into ahtapot_gantt_adim_kaynaklari(toplam_sure, gunluk_sure, toplam_gun, adimID, kaynak_tipi, kaynak_id, roleId, effort, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& toplam_sure &"', '"& gunluk_sure &"', '"& toplam_gun &"', '"& adimID &"', '"& kaynak_tipi &"', '"& kaynak_id &"', '"& roleId &"', '"& effort &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                        SQL="insert into ahtapot_gantt_adim_kaynaklari(toplam_sure, gunluk_sure, toplam_gun, adimID, kaynak_tipi, kaynak_id, roleId, effort, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& toplam_sure &"', '"& gunluk_sure &"', '"& toplam_gun &"', '"& adimID &"', '"& kaynak_tipi &"', '"& kaynak_id &"', '"& roleId &"', '"& effort &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                         set ekle = baglanti.execute(SQL)
 
                     next
@@ -548,10 +548,10 @@
             ekleme_tarihi = date
             ekleme_saati = time
 
-            SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', '"& olay_tarihi &"', '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+            SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', CONVERT(date, '"& olay_tarihi &"', 103), '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set olay_ekle = baglanti.execute(SQL)
             
-
+    
     end if
 
     SQL="select * from ucgem_proje_listesi where id = '" & proje_id &"'"
@@ -656,7 +656,7 @@
 
     
 
-    SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= '"& start_tarih &"'  AND  bitis_tarihi >= '"& end_tarih &"' OR (baslangic_tarihi >= '"& start_tarih &"' AND  bitis_tarihi <= '"& end_tarih &"'))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
+    SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= CONVERT(date, '"& start_tarih &"', 103)  AND  bitis_tarihi >= CONVERT(date, '"& end_tarih &"', 103) OR (baslangic_tarihi >= CONVERT(date, '"& start_tarih &"', 103) AND  bitis_tarihi <= CONVERT(date, '"& end_tarih &"', 103)))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
     set kaynak = baglanti.execute(SQL)
 
 
@@ -664,7 +664,7 @@
      if trn(request("islem"))="DateTimeChanged" then
         start_date = start_tarih
         end_date = end_tarih
-        SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= '"& start_tarih &"'  AND  bitis_tarihi >= '"& end_tarih &"' OR (baslangic_tarihi >= '"& start_tarih &"' AND  bitis_tarihi <= '"& end_tarih &"'))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
+        SQL="SELECT * FROM gantt_kaynaklar gantt WHERE NOT EXISTS ( SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE gantt.id = izin.personel_id AND ( baslangic_tarihi <= CONVERT(date, '"& start_tarih &"', 103)  AND  bitis_tarihi >= CONVERT(date, '"& end_tarih &"', 103) OR (baslangic_tarihi >= CONVERT(date, '"& start_tarih &"', 103) AND  bitis_tarihi <= CONVERT(date, '"& end_tarih &"', 103)))) AND gantt.firma_id =  '"& Request.Cookies("kullanici")("firma_id") &"'"
         set kaynak = baglanti.execute(SQL)
     end if
 

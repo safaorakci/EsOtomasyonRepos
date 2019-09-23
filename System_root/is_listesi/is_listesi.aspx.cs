@@ -45,19 +45,19 @@ public partial class System_root_is_listesi_is_listesi : System.Web.UI.Page
 
             foreach (DataRow item in ds_benler.Tables[0].Rows)
             {
-                if (item["is_durum"].ToString() == "GECİKTİ")
+                if (item["is_durum"].ToString() == "GECIKTI")
                 {
                     bana_verilen_geciken_int = Convert.ToInt32(item["sayi"]);
                 }
-                else if (item["is_durum"].ToString() == "BEKLİYOR")
+                else if (item["is_durum"].ToString() == "BEKLIYOR")
                 {
                     bana_verilen_baslanmamis_int = Convert.ToInt32(item["sayi"]);
                 }
-                else if (item["is_durum"].ToString() == "DEVAM EDİYOR")
+                else if (item["is_durum"].ToString() == "DEVAM EDIYOR")
                 {
                     bana_verilen_devameden_int = Convert.ToInt32(item["sayi"]);
                 }
-                else if (item["is_durum"].ToString() == "BİTTİ")
+                else if (item["is_durum"].ToString() == "BITTI")
                 {
                     bana_verilen_tamamlanan_int = Convert.ToInt32(item["sayi"]);
                 }
@@ -77,19 +77,19 @@ public partial class System_root_is_listesi_is_listesi : System.Web.UI.Page
 
             foreach (DataRow item in ds_benler.Tables[1].Rows)
             {
-                if (item["is_durum"].ToString() == "GECİKTİ")
+                if (item["is_durum"].ToString() == "GECIKTI")
                 {
                     baskasina_geciken_int = Convert.ToInt32(item["sayi"]);
                 }
-                else if (item["is_durum"].ToString() == "BEKLİYOR")
+                else if (item["is_durum"].ToString() == "BEKLIYOR")
                 {
                     baskasina_baslanmamis_int = Convert.ToInt32(item["sayi"]);
                 }
-                else if (item["is_durum"].ToString() == "DEVAM EDİYOR")
+                else if (item["is_durum"].ToString() == "DEVAM EDIYOR")
                 {
                     baskasina_devameden_int = Convert.ToInt32(item["sayi"]);
                 }
-                else if (item["is_durum"].ToString() == "BİTTİ")
+                else if (item["is_durum"].ToString() == "BITTI")
                 {
                     baskasina_tamamlanan_int = Convert.ToInt32(item["sayi"]);
                 }
