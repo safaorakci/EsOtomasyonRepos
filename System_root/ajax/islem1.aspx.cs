@@ -415,7 +415,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         ListItem l1 = new ListItem();
         l1.Text = "Rutin";
         l1.Value = "Rutin";
-        if (iss["is_tipi"].ToString()=="Rutin" || iss["is_tipi"].ToString()=="")
+        if (iss["is_tipi"].ToString() == "Rutin" || iss["is_tipi"].ToString() == "")
         {
             l1.Selected = true;
         }
@@ -1391,9 +1391,9 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 {
                     sql_str2 += " and isler.ekleme_tarihi <= '" + bitis_tarihi + "'";
                 }
-                if (parcalar.Length>0)
+                if (parcalar.Length > 0)
                 {
-                    sql_str2 += " and isler.id in (select IsID from is_parca_listesi where ParcaId = '"+ parcalar +"' and cop = 'false')";
+                    sql_str2 += " and isler.id in (select IsID from is_parca_listesi where ParcaId = '" + parcalar + "' and cop = 'false')";
                 }
                 if (departmanlar != "0")
                 {
@@ -2491,12 +2491,12 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
     }
 
     [WebMethod(EnableSession = true)]
-    
+
     public static string YeniIsEkle(string adi, string aciklama, string gorevliler, string departmanlar, string oncelik, string kontrol_bildirim, string baslangic_tarihi, string baslangic_saati, string bitis_tarihi, string bitis_saati, string renk, string ajanda_gosterim, string gunluk_sure, string toplam_sure, string toplam_gun, int sinirlama_varmi, string is_tipi)
     {
         //Start_date = baslangic_tarihi;
         //End_date = bitis_tarihi;
-        
+
         string durum = "true";
         try
         {
@@ -3141,7 +3141,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         is_ara_button.Text = LNG("Arama Yap");
         ayarlar.cnn.Close();
     }
-    
+
     public void yeni_is_ekle()
     {
         string baslangic_tarihi = "";
@@ -3150,10 +3150,10 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         string etiket = "";
         string etiket_id = "";
 
-        
+
         baslangic_tarihi = Request.Form["yeni_is_baslangic_tarihi"];
         bitis_tarihi = Request.Form["yeni_is_bitis_tarihi"];
-        
+
         yeni_is_adi.TextMode = TextBoxMode.MultiLine;
         yeni_is_adi.Focus();
 
@@ -3162,7 +3162,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         string proje_id = "";
         string departman_id = "";
-        
+
         string bakimvarmi = "false";
         string bakimId = "";
         string Tum = "";
@@ -3202,7 +3202,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         {
             bakimvarmi = Request.Form["bakimvarmi"].ToString();
             bakimId = Request.Form["bakimId"].ToString();
-            
+
         }
         catch (Exception)
         {
@@ -3237,7 +3237,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
         //ayarlar.cmd.CommandText = "select id, personel_ad + ' ' + personel_soyad as personel_ad_soyad from ucgem_firma_kullanici_listesi where firma_id = @firma_id and durum = 'true' and cop = 'false';";
-        
+
         ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <= '" + baslangic_tarihi + "'  AND  bitis_tarihi >= '" + bitis_tarihi + "' OR(baslangic_tarihi >= '" + baslangic_tarihi + "' AND  bitis_tarihi <= '" + bitis_tarihi + "'))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
 
         ayarlar.cmd.Parameters.Add("@firma_id", SessionManager.CurrentUser.firma_id);
@@ -3343,9 +3343,9 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         yeni_is_ekle_button.UseSubmitBehavior = false;
         if (bakimvarmi == "true")
         {
-            yeni_is_ekle_button.OnClientClick = "yeni_is_kaydet(this); bakim_kaydini_onayla('" + etiket_id + "', '" + bakimId + "', '"+ Tum +"'); return false;";
+            yeni_is_ekle_button.OnClientClick = "yeni_is_kaydet(this); bakim_kaydini_onayla('" + etiket_id + "', '" + bakimId + "', '" + Tum + "'); return false;";
         }
-        else if (TalepVarmi=="true")
+        else if (TalepVarmi == "true")
         {
             ayarlar.cmd.Parameters.Clear();
             ayarlar.cmd.CommandText = "select baslik + ' ' + aciklama as talep from talep_fisleri where id = @Id;";
@@ -3353,7 +3353,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
             yeni_is_adi.Text = ayarlar.cmd.ExecuteScalar().ToString();
 
-            yeni_is_ekle_button.OnClientClick = "yeni_is_kaydet(this); talep_fisi_onay('"+ TalepId +"', 'Onaylandı'); return false;";
+            yeni_is_ekle_button.OnClientClick = "yeni_is_kaydet(this); talep_fisi_onay('" + TalepId + "', 'Onaylandı'); return false;";
         }
         else
         {
@@ -3373,7 +3373,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-        
+
         ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <=  CONVERT(date, '" + baslangic_tarihi + "', 103)   AND  bitis_tarihi >= CONVERT(date, '" + bitis_tarihi + "', 103)  OR(baslangic_tarihi >= CONVERT(date, '" + baslangic_tarihi + "', 103) AND  bitis_tarihi <= CONVERT(date, '" + bitis_tarihi + "', 103)))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
 
         ayarlar.cmd.Parameters.Add("@firma_id", SessionManager.CurrentUser.firma_id);
@@ -3381,13 +3381,13 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         DataSet ds = new DataSet();
         sda.Fill(ds);
 
-       
+
 
         //yeni_is_gorevliler.DataSource = null;
         yeni_is_gorevliler.DataSource = ds.Tables[0];
         yeni_is_gorevliler.DataTextField = "personel_ad_soyad";
         yeni_is_gorevliler.DataValueField = "id";
-       
+
         yeni_is_gorevliler.DataBind();
 
         yeni_is_gorevliler.Attributes.Remove("multiple");
@@ -3410,7 +3410,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         yeni_is_kontrol_bildirim.DataValueField = "id";
         yeni_is_kontrol_bildirim.DataBind();
 
-        
+
 
         ayarlar.cnn.Close();
     }
@@ -3668,7 +3668,8 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string personel_resim = UIHelper.trn(Request.Form["personel_resim"].ToString());
             string personel_ad = UIHelper.trn(Request.Form["personel_ad"].ToString());
             string personel_soyad = UIHelper.trn(Request.Form["personel_soyad"].ToString());
-            string personel_dtarih = UIHelper.trn(Request.Form["personel_dtarih"].ToString());
+            DateTime date = Convert.ToDateTime(UIHelper.trn(Request.Form["personel_dtarih"]));
+            DateTime personel_dtarih = Convert.ToDateTime(date.ToLongDateString());
             string personel_cinsiyet = UIHelper.trn(Request.Form["personel_cinsiyet"].ToString());
             string personel_eposta = UIHelper.trn(Request.Form["personel_eposta"].ToString());
             string personel_telefon = UIHelper.trn(Request.Form["personel_telefon"].ToString());
@@ -3677,44 +3678,52 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string personel_parola = UIHelper.trn(Request.Form["personel_parola"].ToString());
             string personel_tcno = UIHelper.trn(Request.Form["personel_tcno"].ToString());
 
-            ayarlar.baglan();
-            ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "SET NOCOUNT ON;  insert into ucgem_firma_kullanici_listesi(yetki_kodu, firma_kodu, firma_id, firma_hid, personel_eposta, personel_parola, maili_varmi, personel_cinsiyet, personel_ad, personel_soyad, personel_telefon, personel_dtarih, personel_resim, ekleyen_yetki_kodu, ekleyen_firma_kodu, ekleyen_firma_id, departmanlar, gorevler, durum, cop, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, tcno) values(@yetki_kodu, @firma_kodu, @firma_id, @firma_hid, @personel_eposta, @personel_parola, @maili_varmi, @personel_cinsiyet, @personel_ad, @personel_soyad, @personel_telefon, @personel_dtarih, @personel_resim, @ekleyen_yetki_kodu, @ekleyen_firma_kodu, @ekleyen_firma_id, @departmanlar, @gorevler, @durum, @cop, @ekleyen_id, @ekleyen_ip, @ekleme_tarihi, @ekleme_saati, @tcno); SELECT SCOPE_IDENTITY() id; ";
-            ayarlar.cmd.Parameters.Add("tcno", personel_tcno);
-            ayarlar.cmd.Parameters.Add("yetki_kodu", "ALL");
-            ayarlar.cmd.Parameters.Add("firma_hid", SessionManager.CurrentUser.firma_hid);
-            ayarlar.cmd.Parameters.Add("personel_eposta", personel_eposta);
-            ayarlar.cmd.Parameters.Add("personel_parola", personel_parola);
-            ayarlar.cmd.Parameters.Add("maili_varmi", "false");
-            ayarlar.cmd.Parameters.Add("personel_cinsiyet", personel_cinsiyet);
-            ayarlar.cmd.Parameters.Add("personel_ad", personel_ad);
-            ayarlar.cmd.Parameters.Add("personel_soyad", personel_soyad);
-            ayarlar.cmd.Parameters.Add("personel_telefon", personel_telefon);
-            ayarlar.cmd.Parameters.Add("personel_dtarih", personel_dtarih);
-            ayarlar.cmd.Parameters.Add("personel_resim", personel_resim);
-            ayarlar.cmd.Parameters.Add("ekleyen_yetki_kodu", "ALL");
-            ayarlar.cmd.Parameters.Add("ekleyen_firma_kodu", SessionManager.CurrentUser.firma_kodu);
-            ayarlar.cmd.Parameters.Add("ekleyen_firma_id", SessionManager.CurrentUser.firma_id);
-            ayarlar.cmd.Parameters.Add("departmanlar", departmanlar);
-            ayarlar.cmd.Parameters.Add("gorevler", gorevler);
-            ayarlar.cmd.Parameters.Add("durum", "true");
-            ayarlar.cmd.Parameters.Add("cop", "false");
-            ayarlar.cmd.Parameters.Add("firma_kodu", SessionManager.CurrentUser.firma_kodu);
-            ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
-            ayarlar.cmd.Parameters.Add("ekleyen_id", SessionManager.CurrentUser.ekleyen_id);
-            ayarlar.cmd.Parameters.Add("ekleyen_ip", Request.ServerVariables["Remote_Addr"]);
-            ayarlar.cmd.Parameters.Add("ekleme_tarihi", DateTime.Now);
-            ayarlar.cmd.Parameters.Add("ekleme_saati", DateTime.Now);
-            int kull_id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+            try
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "SET NOCOUNT ON;  insert into ucgem_firma_kullanici_listesi(yetki_kodu, firma_kodu, firma_id, firma_hid, personel_eposta, personel_parola, maili_varmi, personel_cinsiyet, personel_ad, personel_soyad, personel_telefon, personel_dtarih, personel_resim, ekleyen_yetki_kodu, ekleyen_firma_kodu, ekleyen_firma_id, departmanlar, gorevler, durum, cop, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, tcno) values(@yetki_kodu, @firma_kodu, @firma_id, @firma_hid, @personel_eposta, @personel_parola, @maili_varmi, @personel_cinsiyet, @personel_ad, @personel_soyad, @personel_telefon, CONVERT(date, '" + personel_dtarih + "', 103), @personel_resim, @ekleyen_yetki_kodu, @ekleyen_firma_kodu, @ekleyen_firma_id, @departmanlar, @gorevler, @durum, @cop, @ekleyen_id, @ekleyen_ip, CONVERT(date, '" + DateTime.Now + "', 103), CONVERT(time, '" + DateTime.Now.TimeOfDay + "', 103), @tcno); SELECT SCOPE_IDENTITY() id; ";
+                ayarlar.cmd.Parameters.Add("tcno", personel_tcno);
+                ayarlar.cmd.Parameters.Add("yetki_kodu", "ALL");
+                ayarlar.cmd.Parameters.Add("firma_hid", SessionManager.CurrentUser.firma_hid);
+                ayarlar.cmd.Parameters.Add("personel_eposta", personel_eposta);
+                ayarlar.cmd.Parameters.Add("personel_parola", personel_parola);
+                ayarlar.cmd.Parameters.Add("maili_varmi", "false");
+                ayarlar.cmd.Parameters.Add("personel_cinsiyet", personel_cinsiyet);
+                ayarlar.cmd.Parameters.Add("personel_ad", personel_ad);
+                ayarlar.cmd.Parameters.Add("personel_soyad", personel_soyad);
+                ayarlar.cmd.Parameters.Add("personel_telefon", personel_telefon);
+                ayarlar.cmd.Parameters.Add("personel_dtarih", personel_dtarih);
+                ayarlar.cmd.Parameters.Add("personel_resim", personel_resim);
+                ayarlar.cmd.Parameters.Add("ekleyen_yetki_kodu", "ALL");
+                ayarlar.cmd.Parameters.Add("ekleyen_firma_kodu", SessionManager.CurrentUser.firma_kodu);
+                ayarlar.cmd.Parameters.Add("ekleyen_firma_id", SessionManager.CurrentUser.firma_id);
+                ayarlar.cmd.Parameters.Add("departmanlar", departmanlar);
+                ayarlar.cmd.Parameters.Add("gorevler", gorevler);
+                ayarlar.cmd.Parameters.Add("durum", "true");
+                ayarlar.cmd.Parameters.Add("cop", "false");
+                ayarlar.cmd.Parameters.Add("firma_kodu", SessionManager.CurrentUser.firma_kodu);
+                ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
+                ayarlar.cmd.Parameters.Add("ekleyen_id", SessionManager.CurrentUser.ekleyen_id);
+                ayarlar.cmd.Parameters.Add("ekleyen_ip", Request.ServerVariables["Remote_Addr"]);
+                ayarlar.cmd.Parameters.Add("ekleme_tarihi", DateTime.UtcNow);
+                ayarlar.cmd.Parameters.Add("ekleme_saati", DateTime.Now.TimeOfDay);
+                int kull_id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+                //int kull_id = 30;
 
 
-            string kullanici_hid = SessionManager.CurrentUser.firma_hid + "." + kull_id;
+                string kullanici_hid = SessionManager.CurrentUser.firma_hid + "." + kull_id;
 
-            ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "update ucgem_firma_kullanici_listesi set kullanici_hid = @kullanici_hid where id = @kullanici_id;EXEC MailGonderBildirim @personel_id = @kullanici_id, @mesaj = 'Proskop Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://www.esflw.com>http://www.esflw.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : " + personel_parola + "<br><br>'; ";
-            ayarlar.cmd.Parameters.Add("kullanici_hid", kullanici_hid);
-            ayarlar.cmd.Parameters.Add("kullanici_id", kull_id);
-            ayarlar.cmd.ExecuteNonQuery();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "update ucgem_firma_kullanici_listesi set kullanici_hid = @kullanici_hid where id = @kullanici_id";
+                ayarlar.cmd.Parameters.Add("kullanici_hid", kullanici_hid);
+                ayarlar.cmd.Parameters.Add("kullanici_id", kull_id);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
 
 
             if (personel_telefon.Length > 5)
