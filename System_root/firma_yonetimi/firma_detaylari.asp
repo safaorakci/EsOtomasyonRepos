@@ -134,21 +134,21 @@
                     <li style="display:none" class="nav-link_yeni"><a onclick="musteri_raporlarini_getir('<%=firma_id %>', this, this);" style="-webkit-border-top-right-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-bottomright: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" href="#raporlar" class="icon icon-tools"><span><%=LNG("Raporlar")%></span></a></li>
                     <% end if %>
         <% else %>
-                    <li class="nav-link_yeni"><a style="-webkit-border-top-left-radius: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-topleft: 10px; -moz-border-radius-bottomleft: 10px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;" href="#musteri_bilgileri" onclick="musteri_bilgilerini_getir('<%=firma_id %>', this);" class="icon icon-home"><span><%=LNG("Müşteri")%></span></a></li>
+                    <li class="nav-link_yeni" style="display:none"><a style="-webkit-border-top-left-radius: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-topleft: 10px; -moz-border-radius-bottomleft: 10px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;" href="#musteri_bilgileri" onclick="musteri_bilgilerini_getir('<%=firma_id %>', this);" class="icon icon-home"><span><%=LNG("Müşteri")%></span></a></li>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",113,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#cari_hareketler" onclick="musteri_cari_hareketleri_getir('<%=firma_id %>', this);" class="icon icon-box"><span><%=LNG("Cari Hareketler")%></span></a></li>
+                    <li class="nav-link_yeni" style="display:none"><a href="#cari_hareketler" onclick="musteri_cari_hareketleri_getir('<%=firma_id %>', this);" class="icon icon-box"><span><%=LNG("Cari Hareketler")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",114,")>0 then %>                    
-                    <li class="nav-link_yeni"><a href="#dosyalar" onclick="musteri_dosyalari_getir('<%=firma_id %>', this);" class="icon icon-upload"><span><%=LNG("Dosyalar")%></span></a></li>
+                    <li class="nav-link_yeni" style="display:none"><a href="#dosyalar" onclick="musteri_dosyalari_getir('<%=firma_id %>', this);" class="icon icon-upload"><span><%=LNG("Dosyalar")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",115,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#ajanda" onclick="musteri_ajanda_getir('<%=firma_id %>', this);" class="icon icon-tools"><span><%=LNG("Ajanda")%></span></a></li>
+                    <li class="nav-link_yeni" style="display:none"><a href="#ajanda" onclick="musteri_ajanda_getir('<%=firma_id %>', this);" class="icon icon-tools"><span><%=LNG("Ajanda")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",116,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#is_listesi_panel" onclick="musteri_is_listesi_getir('<%=firma_id %>', this);" class="icon icon-home"><span><%=LNG("İş Listesi")%></span></a></li>
+                    <li class="nav-link_yeni" style="display:none"><a href="#is_listesi_panel" onclick="musteri_is_listesi_getir('<%=firma_id %>', this);" class="icon icon-home"><span><%=LNG("İş Listesi")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",117,")>0 then %>
-                    <li class="nav-link_yeni"><a onclick="musteri_raporlarini_getir('<%=personel_id %>', this, this);" style="-webkit-border-top-right-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-bottomright: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" href="#raporlar" class="icon icon-tools"><span><%=LNG("Raporlar")%></span></a></li>
+                    <li class="nav-link_yeni" style="display:none"><a onclick="musteri_raporlarini_getir('<%=personel_id %>', this, this);" style="-webkit-border-top-right-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-bottomright: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" href="#raporlar" class="icon icon-tools"><span><%=LNG("Raporlar")%></span></a></li>
                     <% end if %>
         <% end if %>
                 </ul>

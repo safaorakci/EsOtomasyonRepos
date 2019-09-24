@@ -3171,6 +3171,7 @@
             tedarikci_id = trn(request("tedarikci_id"))
             alttoplam = trn(request("alttoplam"))
             aciklama = trn(request("aciklama"))
+            proje_id = trn(request("proje_id"))
 
             toplamtl = trn(request("toplamtl"))
             toplamusd = trn(request("toplamusd"))
@@ -3188,7 +3189,7 @@
             ekleme_saati = time
 
 
-            SQL="SET NOCOUNT ON; insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, aciklama, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, toplamtl, toplamusd, toplameur) values('"& baslik &"', CONVERT(date, '"& siparis_tarihi &"', 103), '"& oncelik &"', '"& tedarikci_id &"', '"& aciklama &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& toplamtl &"', '"& toplamusd &"', '"& toplameur &"'); SELECT SCOPE_IDENTITY() id;"
+            SQL="SET NOCOUNT ON; insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, aciklama, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, toplamtl, toplamusd, toplameur) values('"& baslik &"', CONVERT(date, '"& siparis_tarihi &"', 103), '"& oncelik &"', '"& tedarikci_id &"', '"& proje_id &"', '"& aciklama &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& toplamtl &"', '"& toplamusd &"', '"& toplameur &"'); SELECT SCOPE_IDENTITY() id;"
             set ekle = baglanti.execute(SQL)
 
             SatinalmaId = ekle(0)
@@ -3211,7 +3212,7 @@
                     ekleme_tarihi = date
                     ekleme_saati = time
 
-                    SQL="insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& SatinalmaId &"', '"& parcaId &"', '"& maliyet &"', '"& pb &"', '"& adet &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                    SQL="insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& SatinalmaId &"', '"& parcaId &"', '"& maliyet &"', '"& pb &"', '"& adet &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                     set ekle = baglanti.execute(SQL)
 
                 end if
@@ -3347,7 +3348,7 @@
 
                     else
                         SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
-                    Response.Write(SQL)
+                    
                     end if
                     set satinalma = baglanti.execute(SQL)
                     if satinalma.eof then
@@ -3380,13 +3381,13 @@
                     <td><%=cdate(satinalma("siparis_tarihi"))%></td>
 
                     <%if trim(satinalma("tedarikci_id")) = "0" then%>
-                        <td><span class="label label-info" style="font-size: 11px">Bilinmiyor</span></td>
+                        <td><span style="font-size: 12px; font-weight:bold">Belirtilmedi</span></td>
                     <%else%>
                         <td><%=satinalma("tedarikci")%></td>
                     <%end if %>
 
                     <%if trim(satinalma("proje_id")) = "0" then%>
-                        <td><span class="label label-info" style="font-size: 11px">Bilinmiyor</span></td>
+                        <td><span style="font-size: 12px; font-weight:bold">Belirtilmedi</span></td>
                     <%else%>
                         <td><%=satinalma("proje")%></td>
                     <%end if %>
