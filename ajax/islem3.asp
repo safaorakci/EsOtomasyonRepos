@@ -1906,7 +1906,7 @@
 		Set Mail = Server.CreateObject("Persits.MailSender")
 		'Mail.Host = "mail.makrogem.com.tr"                                     ' E-Posta sunucu adresi
 		Mail.Host = "smtp.yandex.com.tr"                                        ' E-Posta sunucu adresi
-        Mail.Port = 465
+        Mail.Port = 587
         Mail.TLS = true
 		Mail.Username = gonderici                                               ' Gönderim adresi
 		Mail.Password = "Proskop123."                                                ' Gönderen hesabın şifresi
