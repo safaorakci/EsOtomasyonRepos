@@ -4205,6 +4205,10 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                                 <i class="icon-prepend fa fa-user"></i>
                             </span>
                             <input type="text" id="yineleme_baslangic" name="yineleme_baslangic" class="form-control takvimyap required" required />
+                            <script>
+                                $("#yineleme_baslangic").val(new Date().toLocaleDateString());
+                                $("#yineleme_bitis").val(new Date().toLocaleDateString());
+                            </script>
                         </div>
                     </div>
 

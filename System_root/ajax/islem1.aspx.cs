@@ -1848,7 +1848,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         {
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@proje_id, @olay, @olay_tarihi, @olay_saati, @departman_id, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, @ekleme_tarihi, @ekleme_saati); update ucgem_proje_listesi set guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen_id = @guncelleyen_id where id = @proje_id;";
+            ayarlar.cmd.CommandText = "insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@proje_id, @olay, CONVERT(date, @olay_tarihi,103), @olay_saati, @departman_id, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, @ekleme_tarihi, @ekleme_saati); update ucgem_proje_listesi set guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen_id = @guncelleyen_id where id = @proje_id;";
             ayarlar.cmd.Parameters.Add("guncelleyen_id", SessionManager.CurrentUser.ekleyen_id);
             ayarlar.cmd.Parameters.Add("proje_id", proje_id);
             ayarlar.cmd.Parameters.Add("olay", UIHelper.trn(olay));
