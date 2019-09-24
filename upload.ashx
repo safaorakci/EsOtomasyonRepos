@@ -42,7 +42,7 @@ public class upload : IHttpHandler
                 str.CopyTo(output);
             }
 
-            if (fileExt == ".xls" || fileExt == ".xlsx")
+            if ((fileExt == ".xls" || fileExt == ".xlsx") && context.Request.Files["FileUpload"].FileName.Substring(0, 5) == "_Stok")
                 ExcellToDataBase(HttpContext.Current.Server.MapPath(filePath), firmaKodu, firmaID, userID, userIP);
 
             var responseData = new
