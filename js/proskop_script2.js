@@ -1165,6 +1165,8 @@ function SatinalmaSiparisGuncelle(kayit_id) {
     data = encodeURI(data);
     if ($("#satinalmasiparisi input:not(input[type=button])").valid("valid")) {
         $("#satinalma_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+            datatableyap();
+            $(".close").click();
             mesaj_ver("Satınalma Talepleri", "Kayıt Başarıyla Güncellendi", "success");
         });
     }
@@ -1230,6 +1232,8 @@ function satinalma_kayitduzenle(kayit_id) {
     $("#modal_butonum3").click();
     $("#modal_div3").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         sayfa_yuklenince();
+        datatableyap();
+        $(".close").click();
     });
 
 
