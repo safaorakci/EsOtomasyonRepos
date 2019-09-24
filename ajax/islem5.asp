@@ -2189,11 +2189,11 @@ works properly when clicked or hovered */
                         end if
 
                         if isdate(baslangic_tarihi)=true and isdate(bitis_tarihi)=true then
-                            sorgu_str = " and bakim.tarih between '"& cdate(baslangic_tarihi) &"' and '"& cdate(bitis_tarihi) &"'"
+                            sorgu_str = " and bakim.tarih between CONVERT(date, '"& cdate(baslangic_tarihi) &"', 103) and CONVERT(date, '"& cdate(bitis_tarihi) &"',103)"
                         elseif isdate(baslangic_tarihi)=true then
-                            sorgu_str = " and bakim.tarih >= '"& cdate(baslangic_tarihi) &"'"
+                            sorgu_str = " and bakim.tarih >= CONVERT(date,'"& cdate(baslangic_tarihi) &"',103)"
                         elseif isdate(bitis_tarihi)=true then
-                            sorgu_str = " and bakim.tarih <= '"& cdate(bitis_tarihi) &"'"
+                            sorgu_str = " and bakim.tarih <= CONVERT(date,'"& cdate(bitis_tarihi) &"',103)"
                         end if
 
                         if not trim(bakim_durum)="0" then
