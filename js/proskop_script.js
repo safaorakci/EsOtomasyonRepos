@@ -828,7 +828,7 @@ function personel_listesi() {
 
 function personel_ekle() {
 
-    var personel_resim = $("#personel_resim").val();
+    var personel_resim = $("#personel_resim").attr("filePath");
     var personel_ad = $("#personel_ad").val();
     var personel_soyad = $("#personel_soyad").val();
     var personel_dtarih = $("#personel_dtarih").val();
@@ -2047,7 +2047,7 @@ function firma_bilgilerimi_guncelle() {
 
     if ($("#sirket_bilgileri_form input:not(input[type=button])").valid("valid")) {
 
-        var firma_logo = $("#firma_logo").val();
+        var firma_logo = $("#firma_logo").attr("filePath");
         var firma_adi = $("#firma_adi").val();
         var firma_yetkili = $("#firma_yetkili").val();
         var firma_sehir = $("#firma_sehir").val();
@@ -4604,7 +4604,7 @@ function kendi_personel_bilgilerini_guncelle() {
 
     if ($("#personel_guncelleme_form input[type=text],textarea").valid("valid")) {
 
-        var personel_resim = $("#personel_resim").val();
+        var personel_resim = $("#personel_resim").attr("filePath");
         var personel_ad = $("#personel_ad").val();
         var personel_soyad = $("#personel_soyad").val();
         var personel_dtarih = $("#personel_dtarih").val();
@@ -4639,7 +4639,7 @@ function personel_bilgilerini_guncelle(personel_id) {
 
     if ($("#personel_guncelleme_form input[type=text],textarea").valid("valid")) {
 
-        var personel_resim = $("#personel_resim").val();
+        var personel_resim = $("#personel_resim").attr("filePath");
         var personel_ad = $("#personel_ad").val();
         var personel_soyad = $("#personel_soyad").val();
         var personel_dtarih = $("#personel_dtarih").val();
@@ -4990,7 +4990,7 @@ function firma_listesi(yetki_kodu) {
 
 function yeni_firma_ekle(yetki_kodu) {
 
-    var firma_logo = $("#firma_logo").val();
+    var firma_logo = $("#firma_logo").attr("filePath");
     var firma_adi = $("#firma_adi").val();
     var firma_yetkili = $("#firma_yetkili").val();
     var firma_telefon = $("#firma_telefon").val();
@@ -5023,7 +5023,7 @@ function yeni_firma_ekle(yetki_kodu) {
 
 function firma_ekle(yetki_kodu) {
 
-    var firma_logo = $("#firma_logo").val();
+    var firma_logo = $("#firma_logo").attr("filePath");
     var firma_adi = $("#firma_adi").val();
     var firma_yetkili = $("#firma_yetkili").val();
     var firma_telefon = $("#firma_telefon").val();
@@ -6609,7 +6609,7 @@ function cari_hareket_tahsilat_ekle(cari_id, tip, yer) {
 
 function firma_bilgilerini_guncelle(firma_id) {
     if ($("#musteri_guncelleme_form input:not(input[type=button])").valid("valid")) {
-        var firma_logo = $("#firma_logo").val();
+        var firma_logo = $("#firma_logo").attr("filePath");
         var firma_adi = $("#firma_adi").val();
         var firma_yetkili = $("#firma_yetkili").val();
         var firma_telefon = $("#firma_telefon").val();

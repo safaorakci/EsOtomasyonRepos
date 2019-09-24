@@ -3237,6 +3237,10 @@ works properly when clicked or hovered */
         <label class="col-sm-6 col-form-label"></label>
         <div class="col-sm-6">
             <input type="text" name="baslangic_tarihi" id="baslangic_tarihi" class="form-control takvimyap" />
+            <script>
+                 $("#baslangic_tarihi").val(new Date().toLocaleDateString());
+                 $("#bitis_tarihi").val(new Date().toLocaleDateString());
+            </script>
         </div>
         <div class="col-sm-6">
             <input type="text" name="bitis_tarihi" id="bitis_tarihi" class="form-control takvimyap" />
