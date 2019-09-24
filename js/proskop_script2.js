@@ -1176,6 +1176,7 @@ function SatinalmaSiparisKaydet() {
     var siparis_tarihi = $("#siparis_tarihi").val();
     var oncelik = $("#satinalma_oncelik").val();
     var tedarikci_id = $("#satinalma_tedarikci_id").val();
+    var proje_id = $("#satinalma_proje_id").val();
     var alttoplam = $("#satinalma_alttoplam").val();
     var aciklama = $("#satinalma_aciklama").val();
     var durum = $("#satinalma_durum").val();
@@ -1189,6 +1190,7 @@ function SatinalmaSiparisKaydet() {
     data += "&siparis_tarihi=" + siparis_tarihi;
     data += "&oncelik=" + oncelik;
     data += "&tedarikci_id=" + tedarikci_id;
+    data += "&proje_id=" + proje_id;
     data += "&alttoplam=" + alttoplam;
     data += "&aciklama=" + aciklama;
     data += "&toplamtl=" + toplamtl;
@@ -1212,6 +1214,8 @@ function SatinalmaSiparisKaydet() {
 
     if ($("#satinalmasiparisi input:not(input[type=button])").valid("valid")) {
         $("#satinalma_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+            datatableyap();
+            $(".close").click();
             mesaj_ver("Satınalma Talepleri", "Kayıt Başarıyla Eklendi", "success");
         });
     }

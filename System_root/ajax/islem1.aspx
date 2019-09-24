@@ -1001,6 +1001,12 @@
                             <i class="icon-prepend fa fa-calendar"></i>
                         </span>
                         <asp:TextBox ID="olay_tarihi" class="takvimyap form-control" runat="server"></asp:TextBox>
+                             <script>
+                                var dt = new Date();
+                                var time = dt.getHours() + ":" + dt.getMinutes();
+                                $("#olay_saati").val(time);
+                                $("#olay_tarihi").val(new Date().toLocaleDateString());
+                            </script>
                     </div>
                 </div>
             </div>

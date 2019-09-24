@@ -2986,14 +2986,7 @@
 
                                 <div id="dosya_listesi409">
                                     <form autocomplete="off" method="post" id="form1" class="smart-form validateform">
-
-
-
-
-
-
                                         <div id="dosya_listesi_panel">
-
                                             <div id="dosya_yok_panel">
                                             </div>
                                             <table class="table table-bordered">
@@ -3011,21 +3004,11 @@
                                                     <tr>
                                                         <td colspan="6" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
                                                     </tr>
-
-
-
                                                 </tbody>
                                             </table>
-
-
                                         </div>
-
-
-
                                     </form>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -3985,6 +3968,7 @@
                         <input class="form-control required" required type="file" id="depo_dosya_yolu" tip="kucuk" folder="Personel" />
                         <br>
                         <%=LNG("Dosya Adı:")%><br>
+                        <img src="/img/loader_green.gif" />
                         <input name="depo_dosya_adi" type="text" id="depo_dosya_adi" required class="form-control required" style="max-width: 300px;" /><br>
                         <br>
                         <input type="button" class="btn btn-primary btn-mini" onclick="depo_dosya_yukle('<%=etiket%>', '<%=kayit_id%>');" value="<%=LNG("Dosya Yükle")%>" />
