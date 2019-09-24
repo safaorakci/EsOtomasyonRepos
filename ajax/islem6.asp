@@ -3244,7 +3244,7 @@
             ekleme_saati = time
 
 
-            SQL="update satinalma_listesi set durum = '"& durum &"', baslik = '"& baslik &"', siparis_tarihi = '"& siparis_tarihi &"', oncelik = '"& oncelik &"', tedarikci_id = '"& tedarikci_id &"', aciklama = '"& aciklama &"', toplamtl = '"& toplamtl &"', toplamusd = '"& toplamusd &"', toplameur = '"& toplameur &"' where id = '"& kayit_id &"'"
+            SQL="update satinalma_listesi set durum = '"& durum &"', baslik = '"& baslik &"', siparis_tarihi = CONVERT(date, '"& siparis_tarihi &"', 103), oncelik = '"& oncelik &"', tedarikci_id = '"& tedarikci_id &"', aciklama = '"& aciklama &"', toplamtl = '"& toplamtl &"', toplamusd = '"& toplamusd &"', toplameur = '"& toplameur &"' where id = '"& kayit_id &"'"
             set guncelle = baglanti.execute(SQL)
 
             SatinalmaId = kayit_id
@@ -3270,7 +3270,7 @@
                     ekleme_tarihi = date
                     ekleme_saati = time
 
-                    SQL="insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& SatinalmaId &"', '"& parcaId &"', '"& maliyet &"', '"& pb &"', '"& adet &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+                    SQL="insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& SatinalmaId &"', '"& parcaId &"', '"& maliyet &"', '"& pb &"', '"& adet &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                     set ekle = baglanti.execute(SQL)
 
                 end if

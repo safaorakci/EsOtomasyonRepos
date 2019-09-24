@@ -122,7 +122,7 @@
                                 <span class="sr-only"><%=LNG("İşlemler")%></span>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_duzenle('<%=personel_id %>', '<%=giris("idd") %>');"><%=LNG("Kaydı Düzenle")%></a>
+                                <!--<a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_duzenle('<%=personel_id %>', '<%=giris("idd") %>');"><%=LNG("Kaydı Düzenle")%></a>-->
                                 <a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_sil('<%=personel_id %>', '<%=giris("idd") %>');"><%=LNG("Kaydı Sil")%></a>
                             </div>
                         </div>
