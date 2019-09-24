@@ -1895,7 +1895,7 @@
         maill = trn(request("mesaj"))
         mail_antet = ""
         'gonderici = "uygulama@proskop.com"
-        gonderici = "proskop@makrogem.com.tr"
+        gonderici = "esotomasyon@makrogem.com.tr"
 
         dosya_ismi = "belge.pdf"
 
@@ -1909,7 +1909,7 @@
         Mail.Port = 587
         Mail.TLS = true
 		Mail.Username = gonderici                                               ' Gönderim adresi
-		Mail.Password = "Proskop123."                                                ' Gönderen hesabın şifresi
+		Mail.Password = "EsOtomasyon123."                                                ' Gönderen hesabın şifresi
 		Mail.From = gonderici                                                   ' E-Postayı gönderen adres
 		Mail.FromName = Mail.EncodeHeader("Es Otomasyon", "UTF-8")              ' E-Posta gönderen isim
 		Mail.AddAddress e_posta                                                 ' Alıcı e-posta adresi
