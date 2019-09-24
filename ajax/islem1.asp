@@ -2886,7 +2886,7 @@
                         <div class="row">
                             <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Firma Logo")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
-                                <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" yol="firma_logo/" class="form-control" />
+                                <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" yol="firma_logo/" class="form-control" Folder="Musteri"/>
                             </div>
                         </div>
                     </div>

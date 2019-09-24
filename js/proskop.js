@@ -580,7 +580,8 @@ function upload(id, folderName) {
             if (response.status) {
                 mesaj_ver("Dosya Yükleme", "İşlem Başarılı", "success");
                 var htmlControl = $("#" + id);
-                $(htmlControl).attr("filePath", "/"+response.fileFullPath);
+                $(htmlControl).attr("filePath", "/" + response.fileFullPath);
+                $(htmlControl).attr("value", "/" + response.fileFullPath);
                 console.log($(htmlControl).attr("filePath"));
                 
             }
