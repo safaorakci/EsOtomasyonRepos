@@ -1286,6 +1286,7 @@ function UretimSablonuKayit() {
         $("#uretim_sablonlari").loadHTML({ url: "/ajax_request6/", data: data }, function () {
 
             mesaj_ver("Üretim Şablonları", "Kayıt Başarıyla Eklendi", "success");
+            $(".close").click();
 
             var icons = {
                 header: "zmdi zmdi-chevron-down",
@@ -1374,6 +1375,9 @@ function proje_sablon_kopyalama_baslat(nesne, proje_id) {
         mesaj_ver("Proje Planlama", "Kayıt Başarıyla Eklendi", "success");
         $(".close").click();
     });
+    console.log($("a[href=#planlama_tab]"));
+    var projeID = $("#planlamaTab").attr("projeID");
+    proje_planlama_getir(projeID, 'planlama', $("#planlamaTab"));
 }
 
 function ProjeBakimKaydiSil(ProjeID, BakimID, Tum) {

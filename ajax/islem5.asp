@@ -1581,6 +1581,7 @@ works properly when clicked or hovered */
 
             SQL="select isnull(count(id),0) from ahtapot_proje_gantt_adimlari where proje_id = '"& hedef_proje_id &"'"
             set kactanecek = baglanti.execute(SQL)
+    Response.Write(SQL)
 
             kactane = kactanecek(0)
 
@@ -2742,12 +2743,7 @@ works properly when clicked or hovered */
             oncelik = "Normal"
             satinalmaDurum = "Onay Bekliyor"
             baslik = "Eksik Parça"
-            tedarikci = "0"
-            proje = "0"
 
-
-    Response.Write("ParçaID : " & ParcaId&" - ")
-    Response.Write("IsID : " & IsID&" - ")
             SQL="select * from is_parca_listesi where ParcaID = '"& ParcaId &"' and IsID = '"& IsID &"'"
             set varmi = baglanti.execute(SQL)
             if varmi.eof then
@@ -2764,35 +2760,64 @@ works properly when clicked or hovered */
 
                 projeID= isListesi("ProjeID")
 
+                
                 miktar = parcalar("miktar") - parcalar("minumum_miktar")
                 if miktar < AdetSayisi then
                    eksikParca = AdetSayisi - miktar
-                   birimFiyat = parcalar("birim_maliyet")
-                   birim_pb = parcalar("birim_pb")
-                   toplamFiyatTL = CDbl(birimFiyati * eksikParca)
-    Response.Write(CDbl(birimFiyati) * CDbl(eksikParca))
-    Response.Write(CDbl(birimFiyati * eksikParca))
+                   
+                   birimFiyat = CDbl(parcalar("birim_maliyet"))
+
+                   birim = parcalar("birim_pb")
+                   toplamTL = "0.00"
+                   toplamEUR = "0.00"
+                   toplamUSD = "0.00"
+                   if parcalar("birim_pb") = "TL" then
+                      birim = "TL"
+                      toplamTL = CDbl(birimFiyat * eksikParca)
+                         
+                   end if
+                   if parcalar("birim_pb") = "USD" then
+                      birim = "USD"
+                      toplamUSD = CDbl(birimFiyat * eksikParca)
+                     
+                   end if
+                   if parcalar("birim_pb") = "EUR" then
+                      birim = "EUR"
+                      toplamEUR = CDbl(birim_Fiyat * eksikParca)
+                   end if
+
+                  
 
                    if eksikParca > 0 then
-    Response.Write("eksikparca > 0")
-
                          SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"'"
                          set siparisVarmi = baglanti.execute(SQL)
 
                          if siparisVarmi.eof then
-    Response.Write("siparis yok")
-
-                                SQL = "SET NOCOUNT ON;  insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
-                               set satinalmaListesi = baglanti.execute(SQL)
+                            SQL = "SET NOCOUNT ON;  insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
+                            set satinalmaListesi = baglanti.execute(SQL)
 
                             satinalmaId = satinalmaListesi(0)
 
-                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& ParcaId &"', '"& toplamFiyatTL &"', '"& birim_pb &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
-                               set satinalmaSiparisListesi = baglanti.execute(SQL)
+                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+                            set satinalmaSiparisListesi = baglanti.execute(SQL)
                          else
-    Response.Write("siparis var")
                                SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where parcaId = '"& siparisVarmi("parcaId") &"'"
                                set siparisGuncelle = baglanti.execute(SQL)
+
+                               if parcalar("birim_pb") = "TL" then
+                                  SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
+                                  set updated = baglanti.execute(SQL)
+                               end if
+
+                               if parcalar("birim_pb") = "USD" then
+                                  SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
+                                  set updated = baglanti.execute(SQL)
+                               end if
+                               
+                               if parcalar("birim_pb") = "EUR" then
+                                  SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
+                                  set updated = baglanti.execute(SQL)
+                               end if
                          end if
                         
                     end if
@@ -2808,7 +2833,6 @@ works properly when clicked or hovered */
                     end if
                         
                 else
-     Response.Write("eksikparca < 0")
                     sonuc = parcalar("miktar") - AdetSayisi
                     if sonuc < parcalar("minumum_miktar") then
                         sonuc = parcalar("minumum_miktar")
@@ -2822,8 +2846,6 @@ works properly when clicked or hovered */
                 end if
                 
             else
-
-    Response.Write("İş ID : " &IsID)
 
                 SQL="update is_parca_listesi set Adet = Adet + '"& AdetSayisi &"' where id = '"& varmi("id") &"'"
                 set guncelle = baglanti.execute(SQL)
@@ -2839,31 +2861,58 @@ works properly when clicked or hovered */
                 miktar = parcalar("miktar") - parcalar("minumum_miktar")
                 if miktar < AdetSayisi then
                    eksikParca = AdetSayisi - miktar
-                   birimFiyat = parcalar("birim_maliyet")
-                   birim_pb = parcalar("birim_pb")
-                   toplamFiyatTL = birimFiyati * eksikParca
+                   
+                   birimFiyat = CDbl(parcalar("birim_maliyet"))
+
+                   birim = parcalar("birim_pb")
+                   toplamTL = "0.00"
+                   toplamEUR = "0.00"
+                   toplamUSD = "0.00"
+                   if parcalar("birim_pb") = "TL" then
+                      birim = "TL"
+                      toplamTL = CDbl(birimFiyat * eksikParca)
+                         
+                   end if
+                   if parcalar("birim_pb") = "USD" then
+                      birim = "USD"
+                      toplamUSD = CDbl(birimFiyat * eksikParca)
+                     
+                   end if
+                   if parcalar("birim_pb") = "EUR" then
+                      birim = "EUR"
+                      toplamEUR = CDbl(birim_Fiyat * eksikParca)
+                   end if
 
                          if eksikParca > 0 then
-    Response.Write("eksikparca > 0")
 
                          SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"'"
                          set siparisVarmi = baglanti.execute(SQL)
 
                          if siparisVarmi.eof then
-    Response.Write("siparis yok")
-
-                            SQL = "SET NOCOUNT ON;  insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& toplamFiyatTL &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
+                            SQL = "SET NOCOUNT ON;  insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
                                set satinalmaListesi = baglanti.execute(SQL)
 
                             satinalmaId = satinalmaListesi(0)
 
-                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& ParcaId &"', '"& toplamFiyatTL &"', '"& birim_pb &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                                set satinalmaSiparisListesi = baglanti.execute(SQL)
                          else
-    Response.Write("siparis var : " & " - ")
                                SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where parcaId = '"& siparisVarmi("parcaId") &"'"
                                set siparisGuncelle = baglanti.execute(SQL)
-    Response.Write("siparişi güncelledi")
+                               if parcalar("birim_pb") = "TL" then
+                                  SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
+                                  set updated = baglanti.execute(SQL)
+                               end if
+
+                               if parcalar("birim_pb") = "USD" then
+                                  SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
+                                  set updated = baglanti.execute(SQL)
+                               end if
+                               
+                               if parcalar("birim_pb") = "EUR" then
+                                  SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
+                                  set updated = baglanti.execute(SQL)
+                               end if
                          end if
                         
                     end if

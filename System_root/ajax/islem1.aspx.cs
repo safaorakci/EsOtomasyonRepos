@@ -1121,7 +1121,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
     public void is_listesi()
     {
         string durum = Request.Form["durum"].ToString();
-        Response.Write("Request Sonucu : " + Request.Form["durum"].ToString());
         string sql_str = "";
         string tum_sql_str = "";
         string gdurum_str = "";

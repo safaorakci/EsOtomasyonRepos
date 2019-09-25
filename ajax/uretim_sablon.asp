@@ -66,6 +66,13 @@
     proje_id = trn(request("proje_id"))
     tip = trn(request("tip"))
 
+    Function IIf(bClause, sTrue, sFalse)
+    If CBool(bClause) Then
+        IIf = sTrue
+    Else 
+        IIf = sFalse
+    End If
+    End Function
 
     Function DYPB(pVal)
       If pVal Then
@@ -137,8 +144,9 @@
                         yenikayit = true
                     else
 
+                    progressByWorklog = IIf(progressByWorklog = "Yanlis", 0, 1)
   
-                        SQL="update ahtapot_sablon_gantt_adimlari set start_tarih"& tip_str &" = '"& start_tarih &"', end_tarih"& tip_str &" = '"& end_tarih &"', proje_id = '" & proje_id & "', name = '" & name & "', progress = '" & progress & "', progressByWorklog = '" & progressByWorklog & "', irelevance = '" & irelevance & "', type = '" & itype & "', typeId = '" & typeId & "', description = '" & description & "', code = '" & code & "', ilevel = '" & ilevel & "', status = '" & status & "', depends = '" & depends & "', start"& tip_str &" = '" & start & "', duration"& tip_str &" = '" & duration & "', iend"& tip_str &" = '" & iend & "', startIsMilestone = '" & startIsMilestone & "', endIsMilestone = '" & endIsMilestone & "', collapsed = '" & collapsed & "', canWrite = '" & canWrite & "', canAdd = '" & canAdd & "', canDelete = '" & canDelete & "', canAddIssue = '" & canAddIssue & "', hasChild = '" & hasChild & "' where id = '"& varmi("id") &"'"
+                        SQL="update ahtapot_sablon_gantt_adimlari set start_tarih"& tip_str &" = CONVERT(date, '"& start_tarih &"', 103), end_tarih"& tip_str &" = CONVERT(date, '"& end_tarih &"', 103), proje_id = '" & proje_id & "', name = '" & name & "', progress = '" & progress & "', progressByWorklog = '" & progressByWorklog & "', irelevance = '" & irelevance & "', type = '" & itype & "', typeId = '" & typeId & "', description = '" & description & "', code = '" & code & "', ilevel = '" & ilevel & "', status = '" & status & "', depends = '" & depends & "', start"& tip_str &" = '" & start & "', duration"& tip_str &" = '" & duration & "', iend"& tip_str &" = '" & iend & "', startIsMilestone = '" & startIsMilestone & "', endIsMilestone = '" & endIsMilestone & "', collapsed = '" & collapsed & "', canWrite = '" & canWrite & "', canAdd = '" & canAdd & "', canDelete = '" & canDelete & "', canAddIssue = '" & canAddIssue & "', hasChild = '" & hasChild & "' where id = '"& varmi("id") &"'"
                         set guncelle = baglanti.execute(SQL)
 
                         SQL="update ucgem_is_listesi set durum = 'false' where GantAdimID = '"& varmi("id") &"' and cop = 'false'"
@@ -319,7 +327,11 @@
                 end if
 
                 if yenikayit then
-                    SQL="SET NOCOUNT ON; insert into ahtapot_sablon_gantt_adimlari(start_tarih"& tip_str &", end_tarih"& tip_str &", start_tarih"& ters_str &", end_tarih"& ters_str &", cop, proje_id , name , progress , progressByWorklog , irelevance , type , typeId , description , code , ilevel , status , depends , start"& tip_str &" , duration"& tip_str &", iend"& tip_str &" , start"& ters_str &" , duration"& ters_str &", iend"& ters_str &" , startIsMilestone , endIsMilestone , collapsed , canWrite , canAdd , canDelete , canAddIssue , hasChild) values('"& start_tarih &"', '"& end_tarih &"', '"& start_tarih &"', '"& end_tarih &"', 'false', '" & proje_id & "', '" & name & "', '" & progress & "', '" & progressByWorklog & "', '" & irelevance & "', '" & itype & "', '" & typeId & "', '" & description & "', '" & code & "', '" & ilevel & "', '" & status & "', '" & depends & "', '" & start & "', '" & duration & "', '" & iend & "', '" & start & "', '" & duration & "', '" & iend & "', '" & startIsMilestone & "', '" & endIsMilestone & "', '" & collapsed & "', '" & canWrite & "', '" & canAdd & "', '" & canDelete & "', '" & canAddIssue & "', '" & hasChild & "'); SELECT SCOPE_IDENTITY() id;"
+
+                    progressByWorklog = IIf(progressByWorklog = "Yanlis", 0, 1)
+
+                    SQL="SET NOCOUNT ON; insert into ahtapot_sablon_gantt_adimlari(start_tarih"& tip_str &", end_tarih"& tip_str &", start_tarih"& ters_str &", end_tarih"& ters_str &", cop, proje_id , name , progress , progressByWorklog , irelevance , type , typeId , description , code , ilevel , status , depends , start"& tip_str &" , duration"& tip_str &", iend"& tip_str &" , start"& ters_str &" , duration"& ters_str &", iend"& ters_str &" , startIsMilestone , endIsMilestone , collapsed , canWrite , canAdd , canDelete , canAddIssue , hasChild) values(CONVERT(date, '"& start_tarih &"', 103), CONVERT(date, '"& end_tarih &"', 103), CONVERT(date, '"& start_tarih &"', 103), CONVERT(date, '"& end_tarih &"', 103), 'false', '" & proje_id & "', '" & name & "', '" & progress & "', '" & progressByWorklog & "', '" & irelevance & "', '" & itype & "', '" & typeId & "', '" & description & "', '" & code & "', '" & ilevel & "', '" & status & "', '" & depends & "', '" & start & "', '" & duration & "', '" & iend & "', '" & start & "', '" & duration & "', '" & iend & "', '" & startIsMilestone & "', '" & endIsMilestone & "', '" & collapsed & "', '" & canWrite & "', '" & canAdd & "', '" & canDelete & "', '" & canAddIssue & "', '" & hasChild & "'); SELECT SCOPE_IDENTITY() id;"
+    Response.Write(SQL)
                     set ekle = baglanti.execute(SQL)
 
                     adimID = ekle(0)

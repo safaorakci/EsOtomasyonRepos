@@ -87,7 +87,7 @@
                 <ul>
                     <li class="nav-link_yeni"><a tabindex="-1" style="-webkit-border-top-left-radius: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-topleft: 10px; -moz-border-radius-bottomleft: 10px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;" href="#olaylar_tab" onclick="onbellekten_proje_olaylar_getir('<%=proje_id %>','<%=departman_id %>', this);" class="tabbuton icon icon-home"><span><%=LNG("Detay")%></span></a></li>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",89,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#planlama_tab" onclick="onbellekten_proje_planlama_getir('<%=proje_id %>', 'planlama', this);" class="tabbuton icon icon-box"><span><%=LNG("Planlama")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#planlama_tab" id="planlamaTab" onclick="onbellekten_proje_planlama_getir('<%=proje_id %>', 'planlama', this);" class="tabbuton icon icon-box" projeID="<%=proje_id %>"><span><%=LNG("Planlama")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",90,")>0 then %>
                     <li class="nav-link_yeni"><a href="#uygulama_tab" onclick="onbellekten_proje_planlama_getir('<%=proje_id %>', 'uygulama', this);" class="tabbuton icon icon-display"><span><%=LNG("Uygulama")%></span></a></li>

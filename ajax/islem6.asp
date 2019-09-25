@@ -3324,7 +3324,7 @@
 
                         if len(siparis_tarihi)>5 then
                             if isdate(siparis_tarihi)=true then
-                                sorgu_str = sorgu_str & " and (satinalma.siparis_tarihi  = '"& siparis_tarihi &"')"
+                                sorgu_str = sorgu_str & " and (satinalma.siparis_tarihi  = CONVERT(date, '"& siparis_tarihi &"', 103))"
                             end if
                         end if
 
@@ -3345,7 +3345,6 @@
                         end if
 
                         SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id  where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' "& sorgu_str &" order by satinalma.id desc"
-
                     else
                         SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
                     
@@ -3389,7 +3388,7 @@
                     <%if trim(satinalma("proje_id")) = "0" then%>
                         <td><span style="font-size: 12px; font-weight:bold">Belirtilmedi</span></td>
                     <%else%>
-                        <td><%=satinalma("proje")%></td>
+                        <td><%=satinalma("proje_id")%></td>
                     <%end if %>
                     <td><%=formatnumber(satinalma("toplamtl"),2) %> TL - 
                         <%=formatnumber(satinalma("toplamusd"),2) %> USD - 
@@ -4062,7 +4061,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             ekleme_tarihi = date
             ekleme_saati = time
 
-            SQL="insert into uretim_sablonlari(sablon_adi, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& sablon_adi &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
+            SQL="insert into uretim_sablonlari(sablon_adi, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& sablon_adi &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
 

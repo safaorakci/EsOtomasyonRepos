@@ -1025,7 +1025,7 @@
 
             
             </div>
-        <div class="row modal-footer" style="padding:20px">
+        <div class="modal-footer" style="padding:20px">
                 <asp:Button runat="server" class="btn btn-primary"  ID="olay_kayit_buton"></asp:Button>
         </div>
 

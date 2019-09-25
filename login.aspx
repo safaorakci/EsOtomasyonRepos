@@ -61,7 +61,7 @@
                             <div class="auth-box" id="loginone" style="text-align: left;">
                                 <p class="text-inverse b-b-default text-left p-b-5">Hoş geldiniz, e-posta ve parolanız ile güvenli giriş yapabilirsiniz.</p>
                                 <div class="input-group">
-                                    <input type="email" id="email" name="email" class="form-control">
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="E-Posta">
                                     <input id="adsoyad" style="text-align:center; display:none" readonly class="form-control"/>
                                 </div>
                                 <div class="input-group">

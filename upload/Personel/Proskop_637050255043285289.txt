@@ -1,0 +1,20 @@
+{
+ "Flights": [
+ {
+ "DepartureAirportCode": "AYT",
+ "DepartureAirportName": "Antalya Airport",
+ "DepartureCityName": "Antalya",
+ "ArrivalAirportCode": "AMS",
+ "ArrivalAirportName": "Amsterdam Airport Schiphol",
+ "ArrivalCityName": "Amsterdam",
+ "FlightNumber": "020",
+ "DepartureDate": "2016-04-09T10:00:00",
+ "ArriveDate": "2016-04-09T13:30:00",
+ "AirlineCode": "CAI",
+ "AirlineName": "Corendon Airlines",
+ },
+ .
+ .
+ .
+ ]
+}
