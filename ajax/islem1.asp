@@ -3966,9 +3966,9 @@
                         <h5 style="font-size: 15px;"><%=LNG("Dosya Ekle")%></h5>
                         <br>
                         <input class="form-control required" required type="file" id="depo_dosya_yolu" tip="kucuk" folder="Personel" />
+                        <img src="/img/loader_green.gif" id="fileLoading" style="display:none"/>
                         <br>
                         <%=LNG("Dosya Adı:")%><br>
-                        <img src="/img/loader_green.gif" />
                         <input name="depo_dosya_adi" type="text" id="depo_dosya_adi" required class="form-control required" style="max-width: 300px;" /><br>
                         <br>
                         <input type="button" class="btn btn-primary btn-mini" onclick="depo_dosya_yukle('<%=etiket%>', '<%=kayit_id%>');" value="<%=LNG("Dosya Yükle")%>" />

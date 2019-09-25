@@ -583,11 +583,16 @@ function upload(id, folderName) {
                 $(htmlControl).attr("filePath", "/" + response.fileFullPath);
                 $(htmlControl).attr("value", "/" + response.fileFullPath);
                 console.log($(htmlControl).attr("filePath"));
-                
+                $("#fileLoading").hide();
             }
+        },
+        beforeSend: function () {
+            // setting a timeout
+            $("#fileLoading").show();
         },
         error: function (error) {
             mesaj_ver("Uyarı", "Hata Oluştu", "danger");
+            $("#fileLoading").hide();
         }
     });
 }
