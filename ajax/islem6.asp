@@ -2103,7 +2103,7 @@
                             <h5 style="font-size: 15px;">Bordro Ekle</h5>
                             <br>
                             <input class="form-control required" required type="file" id="bordro_dosya_yolu" tip="kucuk" folder="Bordro" />
-
+                            <img src="/img/loader_green.gif" id="fileLoading" style="display:none"/>
                             <br>
                             Dönem:<br>
                             <select name="bordro_donem" class="select2" id="bordro_donem">

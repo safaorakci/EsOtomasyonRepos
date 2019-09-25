@@ -2967,6 +2967,7 @@
                                                 <input class="file fileupload" placeholder="<%=LNG("Yeni Dosya Yükle")%>" style="display: inline; color: rgb(102, 102, 102); font-size: 11px; width: 142px; height: 25px;">
                                                 <div class="filebtn" style="width: 190px; height: 30px; background: url(/img/addFiles.png) right center no-repeat; display: inline; position: absolute; margin-left: -152px; margin-top: 1px;">
                                                     <input type="file" iid="48" id="uploadsrc48" tip="kucuk" yol="dosya_deposu/" style="height: 30px; position: absolute; width: 170px; margin-left: 5px; display: inline; cursor: pointer; opacity: 0;" class="fileupload" yapildi="true">
+                                                    <img src="/img/loader_green.gif" id="fileLoading" style="display:none"/>
                                                 </div>
                                                 <input type="hidden" resimurl="48" name="dosya_yolu409" id="dosya_yolu409" value="/img/kucukboy.png"></td>
                                         </tr>
