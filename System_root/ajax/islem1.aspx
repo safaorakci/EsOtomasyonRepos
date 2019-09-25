@@ -1226,7 +1226,7 @@
                                             <th sira="11" data-hide="phone" class="tablo85 bordersizis sortyeri sorting tablo_durum <% if (!gorunum.tablo_durum) { Response.Write(" gosterme "); } %>"><% Response.Write(LNG("Durum")); %></th>
                                         </tr>
                                        
-                                        <tr id="ikinumara" class="once_kapali ustteki" style="display:nones;">
+                                        <tr id="ikinumara" class="once_kapali ustteki" style="display:none;">
                                             <th sira="1" data-hide="phone" class="sortyeri2 details-control sorting_disabled" style="width: 30px; text-align:center;">ID</th>
                                             <th sira="2" data-class="expand" class="sortyeri2 sorting_asc"><% Response.Write(LNG("Yapılacak İş")); %></th>
                                             <th sira="3" data-hide="phone" class="desktop tablo85 sortyeri2 sorting tablo_gorevliler  <% if (!gorunum.tablo_gorevliler) { Response.Write(" gosterme "); } %>"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i><% Response.Write(LNG("Görevliler")); %></th>
@@ -1971,6 +1971,7 @@
                             <div class="col-md-3">
                             <h4><% Response.Write(LNG("Dosya Ekle")); %></h4><br />
                                 <asp:FileUpload ID="dosya_ekleme" runat="server"></asp:FileUpload>
+                                <img src="/img/loader_green.gif" id="fileLoading" style="display:none"/>
                             <br />
                                 <% Response.Write(LNG("Dosya Adı:")); %><br />
                                 <asp:TextBox ID="dosya_adi" runat="server"></asp:TextBox><br />

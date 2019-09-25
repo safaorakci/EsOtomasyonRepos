@@ -924,11 +924,11 @@
 
             if isdate(baslangic_tarihi)=true and isdate(bitis_tarihi)=true then
                 'tarih_str = " AND (('"& baslangic_tarihi &"' BETWEEN olay.baslangic AND olay.bitis) OR ('"& bitis_tarihi &"' BETWEEN olay.baslangic AND olay.bitis))"
-                tarih_str = " and ((olay.baslangic BETWEEN '"& baslangic_tarihi &"' AND '"& bitis_tarihi &"')  OR (olay.bitis BETWEEN '"& baslangic_tarihi &"' AND '"& bitis_tarihi &"'))"
+                tarih_str = " and ((olay.baslangic BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103))  OR (olay.bitis BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103)))"
             elseif isdate(baslangic_tarihi)=true then
-                tarih_str = " AND olay.baslangic<='"& baslangic_tarihi &"'"
+                tarih_str = " AND olay.baslangic<=CONVERT(DATETIME,'"& baslangic_tarihi &"',103)"
             elseif isdate(bitis_tarihi)=true then
-                tarih_str = " AND olay.bitis>='"& bitis_tarihi &"'"
+                tarih_str = " AND olay.bitis>=CONVERT(DATETIME,'"& bitis_tarihi &"',103)"
             end if
 
 
@@ -946,7 +946,7 @@
                 proje_str = " AND (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-"& yeni_is_yuku_proje_id &"') > 0"
             end if
 
-            SQL="SELECT departman.departman_adi, dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0"& kullanici_str2 &  tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' ) ) AS gosterge_sayisi, ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0"& kullanici_str2 & tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' ) ) AS gosterge_sayisi2 FROM dbo.ucgem_firma_kullanici_listesi kullanici JOIN dbo.tanimlama_departman_listesi departman ON departman.firma_id = kullanici.firma_id "& etiket_str2 &" AND departman.cop = 'false' AND departman.durum = 'true' WHERE kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& kullanici_str &" AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.etiket = 'personel' AND olay.etiket_id = kullanici.id AND (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0"& tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' ) ) > 0 GROUP BY departman.departman_adi, departman.id;"
+            SQL="SELECT departman.departman_adi, dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic ,103) + CONVERT(DATETIME, olay.baslangic_saati, 103), CONVERT(DATETIME, olay.bitis,103) + CONVERT(DATETIME, olay.bitis_saati,103) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0"& kullanici_str2 &  tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' ) ) AS gosterge_sayisi, ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic ,103) + CONVERT(DATETIME, olay.baslangic_saati, 103), CONVERT(DATETIME, olay.bitis,103) + CONVERT(DATETIME, olay.bitis_saati,103) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0"& kullanici_str2 & tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' ) ) AS gosterge_sayisi2 FROM dbo.ucgem_firma_kullanici_listesi kullanici JOIN dbo.tanimlama_departman_listesi departman ON departman.firma_id = kullanici.firma_id "& etiket_str2 &" AND departman.cop = 'false' AND departman.durum = 'true' WHERE kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& kullanici_str &" AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic ,103) + CONVERT(DATETIME, olay.baslangic_saati, 103), CONVERT(DATETIME, olay.bitis,103) + CONVERT(DATETIME, olay.bitis_saati,103) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.etiket = 'personel' AND olay.etiket_id = kullanici.id AND (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0"& tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' ) ) > 0 GROUP BY departman.departman_adi, departman.id;"
             set sayilar = baglanti.execute(SQL)
 
         %>
@@ -1035,12 +1035,12 @@
         <%
 
                                     if isdate(baslangic_tarihi)=true and isdate(bitis_tarihi)=true then
-                                        tarih_str = " AND (('"& baslangic_tarihi &"' BETWEEN olay.baslangic AND olay.bitis) OR ('"& bitis_tarihi &"' BETWEEN olay.baslangic AND olay.bitis))"
-                                        tarih_str = " and ((olay.baslangic BETWEEN '"& baslangic_tarihi &"' AND '"& bitis_tarihi &"')  OR (olay.bitis BETWEEN '"& baslangic_tarihi &"' AND '"& bitis_tarihi &"'))"
+                                        tarih_str = " AND ((CONVERT(DATETIME,'"& baslangic_tarihi &"',103) BETWEEN olay.baslangic AND olay.bitis) OR (CONVERT(DATETIME,'"& bitis_tarihi &"',103) BETWEEN olay.baslangic AND olay.bitis))"
+                                        tarih_str = " and ((olay.baslangic BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103))  OR (olay.bitis BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103)))"
                                     elseif isdate(baslangic_tarihi)=true then
-                                        tarih_str = " AND olay.baslangic<='"& baslangic_tarihi &"'"
+                                        tarih_str = " AND olay.baslangic<=CONVERT(DATETIME,'"& baslangic_tarihi &"',103)"
                                     elseif isdate(bitis_tarihi)=true then
-                                        tarih_str = " AND olay.bitis>='"& bitis_tarihi &"'"
+                                        tarih_str = " AND olay.bitis>=CONVERT(DATETIME,'"& bitis_tarihi &"',103)"
                                     end if
 
                                     if not trim(rapor_personel_id)="0" then
@@ -1058,7 +1058,7 @@
 
                                   
 
-                                    SQL="SELECT proje.proje_adi, dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &" ) ) AS gosterge_sayisi, ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &" ) ) AS gosterge_sayisi2 FROM dbo.ucgem_proje_listesi proje where proje.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& proje_str  &" AND proje.cop = 'false' AND proje.durum = 'true' AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &" ) ) > 0 GROUP BY proje.proje_adi, proje.id;"
+                                    SQL="SELECT proje.proje_adi, dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic,103) + CONVERT(DATETIME, olay.baslangic_saati,103), CONVERT(DATETIME, olay.bitis,103) + CONVERT(DATETIME, olay.bitis_saati,103) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &" ) ) AS gosterge_sayisi, ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic,103) + CONVERT(DATETIME, olay.baslangic_saati,103), CONVERT(DATETIME, olay.bitis,103) + CONVERT(DATETIME, olay.bitis_saati,103) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &" ) ) AS gosterge_sayisi2 FROM dbo.ucgem_proje_listesi proje where proje.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& proje_str  &" AND proje.cop = 'false' AND proje.durum = 'true' AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic,103) + CONVERT(DATETIME, olay.baslangic_saati,103), CONVERT(DATETIME, olay.bitis,103) + CONVERT(DATETIME, olay.bitis_saati,103) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &" ) ) > 0 GROUP BY proje.proje_adi, proje.id;"
                                     set sayilar = baglanti.execute(SQL)
 
         %>
@@ -1147,12 +1147,12 @@
         <%
 
         if isdate(baslangic_tarihi)=true and isdate(bitis_tarihi)=true then
-            tarih_str = " AND (('"& baslangic_tarihi &"' BETWEEN iss.baslangic_tarihi AND iss.bitis_tarihi) OR ('"& bitis_tarihi &"' BETWEEN iss.baslangic_tarihi AND iss.bitis_tarihi))"
-            tarih_str = " and ((iss.baslangic_tarihi BETWEEN '"& baslangic_tarihi &"' AND '"& bitis_tarihi &"')  OR (iss.bitis_tarihi BETWEEN '"& baslangic_tarihi &"' AND '"& bitis_tarihi &"'))"
+            tarih_str = " AND ((CONVERT(DATETIME,'"& baslangic_tarihi &"',103) BETWEEN iss.baslangic_tarihi AND iss.bitis_tarihi) OR (CONVERT(DATETIME,'"& bitis_tarihi &"',103) BETWEEN iss.baslangic_tarihi AND iss.bitis_tarihi))"
+            tarih_str = " and ((iss.baslangic_tarihi BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103))  OR (iss.bitis_tarihi BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103)))"
         elseif isdate(baslangic_tarihi)=true then
-            tarih_str = " AND iss.baslangic_tarihi<='"& baslangic_tarihi &"'"
+            tarih_str = " AND iss.baslangic_tarihi<=CONVERT(DATETIME,'"& baslangic_tarihi &"',103)"
         elseif isdate(bitis_tarihi)=true then
-            tarih_str = " AND iss.bitis_tarihi>='"& bitis_tarihi &"'"
+            tarih_str = " AND iss.bitis_tarihi>=CONVERT(DATETIME,'"& bitis_tarihi &"',103)"
         end if
 
         if not trim(rapor_personel_id)="0" then
@@ -1170,7 +1170,7 @@
 
 
       SQL="SELECT ROW_NUMBER() OVER (ORDER BY proje.id ASC) AS rowid, 0 AS santiye_sayi, proje.id, proje.proje_adi, ( SELECT COUNT(iss.id) FROM ucgem_is_listesi iss JOIN dbo.ucgem_is_gorevli_durumlari durum ON durum.is_id = iss.id "& kullanici_str &" WHERE iss.durum = 'true' AND iss.cop = 'false' AND (SELECT COUNT(value) FROM STRING_SPLIT(iss.departmanlar, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(10), proje.id)) > 0 "& tarih_str & etiket_str &" ) AS gosterge_sayisi, ( SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false' AND firma_id = proje.firma_id ) AS tum_sayi FROM dbo.ucgem_proje_listesi proje WHERE proje.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& proje_str &" AND proje.durum = 'true' AND proje.cop = 'false' AND ( SELECT COUNT(iss.id) FROM ucgem_is_listesi iss JOIN dbo.ucgem_is_gorevli_durumlari durum ON durum.is_id = iss.id "& kullanici_str &" WHERE iss.durum = 'true' AND iss.cop = 'false' AND (SELECT COUNT(value) FROM STRING_SPLIT(iss.departmanlar, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(10), proje.id)) > 0 "& tarih_str & etiket_str &" ) > 0 GROUP BY proje.id, proje.proje_adi, proje.firma_id ORDER BY proje.proje_adi ASC;"
-        set sayilar = baglanti.execute(SQL)
+            set sayilar = baglanti.execute(SQL)
 
         %>
 
@@ -1252,12 +1252,12 @@
 <%
 
         if isdate(baslangic_tarihi)=true and isdate(bitis_tarihi)=true then
-            tarih_str = " AND (('"& baslangic_tarihi &"' BETWEEN iss.baslangic_tarihi AND iss.bitis_tarihi) OR ('"& bitis_tarihi &"' BETWEEN iss.baslangic_tarihi AND iss.bitis_tarihi))"
-            tarih_str = " and ((iss.baslangic_tarihi BETWEEN '"& baslangic_tarihi &"' AND '"& bitis_tarihi &"')  OR (iss.bitis_tarihi BETWEEN '"& baslangic_tarihi &"' AND '"& bitis_tarihi &"'))"
+            tarih_str = " AND ((CONVERT(DATETIME,'"& baslangic_tarihi &"',103) BETWEEN iss.baslangic_tarihi AND iss.bitis_tarihi) OR (CONVERT(DATETIME,'"& bitis_tarihi &"',103) BETWEEN iss.baslangic_tarihi AND iss.bitis_tarihi))"
+            tarih_str = " and ((iss.baslangic_tarihi BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103))  OR (iss.bitis_tarihi BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103)))"
         elseif isdate(baslangic_tarihi)=true then
-            tarih_str = " AND iss.baslangic_tarihi<='"& baslangic_tarihi &"'"
+            tarih_str = " AND iss.baslangic_tarihi<=CONVERT(DATETIME,'"& baslangic_tarihi &"',103)"
         elseif isdate(bitis_tarihi)=true then
-            tarih_str = " AND iss.bitis_tarihi>='"& bitis_tarihi &"'"
+            tarih_str = " AND iss.bitis_tarihi>=CONVERT(DATETIME,'"& bitis_tarihi &"',103)"
         end if
 
         if not trim(rapor_personel_id)="0" then

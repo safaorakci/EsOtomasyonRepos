@@ -406,6 +406,7 @@
                                 <h4><%=LNG("Dosya Ekle")%></h4>
                                 <br />
                                 <input type="file" value="/img/kucukboy.png" tip="kucuk" yol="dosya_deposu/" style="height: 31px!important;" id="dosya_yolu<%=is_id %>" />
+                                <img src="/img/loader_green.gif" id="fileLoading" style="display:none"/>
                                 <br />
                                 <%=LNG("Dosya Adı:")%><br />
                                 <input type="text" id="dosya_adi<%=is_id %>" />

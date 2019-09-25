@@ -939,6 +939,7 @@ function is_tablo_islemler(durum) {
         if ($("body").width() < 500) {
 
         } else {
+            console.log($("#tablo_customize").val());
             var eldeki_sayi = $("body").width() - ($(".card").width() + ($("#tablo_customize").val().length * 107) + 600);
             if (eldeki_sayi < 200) {
                 eldeki_sayi = 200;
