@@ -137,6 +137,7 @@ function kayit_sil(tablo, id, baslik, mesaj, fonksiyon) {
         });
 
     $("button.confirm").focus();
+    
 
 }
 
@@ -4631,7 +4632,7 @@ function kendi_personel_bilgilerini_guncelle() {
         })
     }
 
-
+    
 
 }
 
@@ -4682,6 +4683,7 @@ function personel_bilgilerini_guncelle(personel_id) {
             mesaj_ver("Personel Detayları", "Kayıt Başarıyla Güncellendi", "success");
         })
     }
+    
 }
 
 
@@ -6634,6 +6636,7 @@ function firma_bilgilerini_guncelle(firma_id) {
             mesaj_ver("Müşteri Bilgileri", "Kayıt Başarıyla Güncellendi", "success");
         });
     }
+    
 }
 
 
