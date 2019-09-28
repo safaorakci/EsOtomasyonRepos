@@ -1123,7 +1123,7 @@ $(document).ready(function () {
 
 });
 
-function SatinalmaSiparisGuncelle(kayit_id) {
+function SatinalmaSiparisGuncelle(kayit_id, is_id) {
 
     var baslik = $("#satinalma_baslik").val();
     var siparis_tarihi = $("#siparis_tarihi").val();
@@ -1140,6 +1140,7 @@ function SatinalmaSiparisGuncelle(kayit_id) {
 
     var data = "islem=satinalma_siparisleri&islem2=guncelle";
     data += "&kayit_id=" + kayit_id;
+    data += "&is_id=" + is_id;
     data += "&baslik=" + baslik;
     data += "&siparis_tarihi=" + siparis_tarihi;
     data += "&oncelik=" + oncelik;
@@ -1225,9 +1226,12 @@ function SatinalmaSiparisKaydet() {
 }
 
 
-function satinalma_kayitduzenle(kayit_id) {
+function satinalma_kayitduzenle(kayit_id, is_id, parca_id) {
 
-    var data = "islem=satinalma_kayitduzenle&kayit_id=" + kayit_id;
+    var data = "islem=satinalma_kayitduzenle";
+    data += "&kayit_id=" + kayit_id;
+    data += "&is_id=" + is_id;
+    data += "&parca_id=" + parca_id;
     data = encodeURI(data);
     $("#modal_butonum3").click();
     $("#modal_div3").loadHTML({ url: "/ajax_request6/", data: data }, function () {

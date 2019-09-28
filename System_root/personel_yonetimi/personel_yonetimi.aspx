@@ -97,7 +97,7 @@
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Personel Resim")); %></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom:15px;">
-                                <input type="file" value="/img/buyukboy.png" id="personel_resim" tip="buyuk" yol="personel_resim/" class="form-control" />
+                                <input type="file" value="/img/buyukboy.png" id="personel_resim" tip="buyuk" yol="personel_resim/" class="form-control" folder="PersonelResim"/>
                             </div>
                         </div>
 

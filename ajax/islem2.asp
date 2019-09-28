@@ -115,7 +115,7 @@
                     <% if cdbl(giris("fark"))<0 then %><%=cdbl(giris("fark"))*-1 %>&nbsp;<%=LNG("Dakika Erken")%><% elseif cdbl(giris("fark"))=0 then %><%=LNG("Zamanında")%><% else %><%=cdbl(giris("fark")) %>&nbsp;<%=LNG("Dakika Geç")%><% end if %></span></td>
                 <% end if %>
                 <td>
-                    <div style="width:120px;">
+                    <div style="width: 120px;">
                         <div class="btn-group dropdown-split-primary">
                             <button type="button" class="btn btn-mini btn-primary"><i class="icofont icofont-exchange"></i><%=LNG("İşlemler")%></button>
                             <button type="button" class="btn btn-primary btn-mini dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -305,7 +305,7 @@
     }
 
     .reserve-list tr td {
-        min-width:30px!important;
+        min-width: 30px !important;
     }
 </style>
 <div class="dt-responsive table-responsive">
@@ -680,13 +680,13 @@
                     </div>
                     <div class="row align-items-center" style="padding: 0; padding-top: 15px;">
                         <div class="col-4" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("borclu_tl"),0) %> TL</h5>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("borclu_tl"),0) %> TL</h5>
                         </div>
                         <div class="col-4 notify-cont" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("borclu_usd"),0) %> $</h5>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("borclu_usd"),0) %> $</h5>
                         </div>
                         <div class="col-4 notify-cont" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("borclu_eur"),0) %> €</h5>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("borclu_eur"),0) %> €</h5>
                         </div>
                     </div>
                 </div>
@@ -713,13 +713,13 @@
                     </div>
                     <div class="row align-items-center" style="padding: 0; padding-top: 15px;">
                         <div class="col-4" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("alacakli_tl"),0) %> TL</h5>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("alacakli_tl"),0) %> TL</h5>
                         </div>
                         <div class="col-4 notify-cont" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("alacakli_usd"),0) %> $</h5>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("alacakli_usd"),0) %> $</h5>
                         </div>
                         <div class="col-4 notify-cont" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("alacakli_eur"),0) %> €</h5>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("alacakli_eur"),0) %> €</h5>
                         </div>
                     </div>
                 </div>
@@ -746,13 +746,14 @@
                     </div>
                     <div class="row align-items-center" style="padding: 0; padding-top: 15px;">
                         <div class="col-4" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("bakiye_tl"),0) %> TL</h5>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("bakiye_tl"),0) %> TL</h5>
                         </div>
                         <div class="col-4 notify-cont" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("bakiye_usd"),0) %> $</h5>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("bakiye_usd"),0) %> $</h5>
                         </div>
                         <div class="col-4 notify-cont" style="padding: 0;">
-                            <h5 style="font-size: 13px; font-weight:normal;"><%=formatnumber(tabela("bakiye_eur"),0) %> €</h4>
+                            <h5 style="font-size: 13px; font-weight: normal;"><%=formatnumber(tabela("bakiye_eur"),0) %>
+                            €</h4>
                         </div>
                     </div>
                 </div>
@@ -1478,25 +1479,25 @@
          
                 SQL="update ahtapot_ajanda_olay_listesi set baslangic = '"& baslangic &"', bitis = '"& bitis &"', baslangic_saati = '"& baslangic_saati &"', bitis_saati = '"& bitis_saati &"', ekleyen_id = '"& ekleyen_id &"', ekleyen_ip = '"& ekleyen_ip &"' where case when isnull(ana_kayit_id,0) = 0 then id else ana_kayit_id end = '"& ana_kayit_id &"'"
                 set guncelle = baglanti.execute(SQL)
-                %>
-            <script>
+%>
+<script>
                 $(function (){
                     mesaj_ver("Ajanda", "Kayıt Başarıyla Güncelleme", "success");
                     $('#calendar').fullCalendar('refetchEvents');
                     $('#calendar_gunluk').fullCalendar('refetchEvents');
                 });
-            </script>
-            <%
+</script>
+<%
                         else
-            %>
-            <script>
+%>
+<script>
                 $(function (){
                     mesaj_ver("<%=LNG("Ajanda")%>", "<%=LNG("Ortak Görevli Olduğunuz İşlerde Güncelleme İşlemini İş Listesinden Yapınız.")%>", "danger");
                           $('#calendar').fullCalendar('refetchEvents');
                     $('#calendar_gunluk').fullCalendar('refetchEvents');
                 });
-            </script>
-            <%
+</script>
+<%
            end if
          
         elseif trn(request("islem2"))="guncelle" then
@@ -1643,13 +1644,13 @@
         set olay = baglanti.execute(SQL)
 
         if not olay.eof then
-    %>
-    <script>
+%>
+<script>
         $(function (){
             manuel_isi_bitir('<%=olay("id") %>', 100, '<%=olay("IsID") %>');
         });
-    </script>
-    <%
+</script>
+<%
         end if
 
 
@@ -1761,7 +1762,7 @@
                             text-align: center;
                             margin-left: auto;
                             margin-right: auto;
-                        } 
+                        }
 
                         .ikincisi td {
                             background-color: #f8f5f5;
@@ -1967,7 +1968,8 @@
                                         <td class="gosterge_td alt_td "><%=DakikadanSaatYap(cetvel("kaynak_toplam_saat")) %></td>
                                         <td class=" gosterge_td alt_td sagcizgi"><%=cetvel("kaynak_toplam_maliyet") %> TL</td>
                                         <% end if %>
-                                        <td class="alt_td <% if day(cetvel("tarih"))=1 then %> alt_td2 <% end if %> <% if cdate(cetvel("tarih"))=cdate(date) then %> sarialan <% end if %> "><% if cdbl(cetvel("maliyet_tutari"))=0 then %>-<% else %><%=cetvel("saat") %><br /><%=cetvel("maliyet_tutari") %> TL<% end if %></td>
+                                        <td class="alt_td <% if day(cetvel("tarih"))=1 then %> alt_td2 <% end if %> <% if cdate(cetvel("tarih"))=cdate(date) then %> sarialan <% end if %> "><% if cdbl(cetvel("maliyet_tutari"))=0 then %>-<% else %><%=cetvel("saat") %><br />
+                                            <%=cetvel("maliyet_tutari") %> TL<% end if %></td>
                                         <%  
                                                 gun_toplam(gunsayi) = cdbl(gun_toplam(gunsayi)) + cdbl(cetvel("maliyet_tutari"))
                                                 gunsayi = gunsayi + 1
@@ -2117,14 +2119,14 @@
             <div class="row">
                 <div id="proje_gelir_yeri" class="col-lg-12">
                     <h5><%=LNG("Proje Gelirleri")%>
-                        <button id="edit-btn" type="button" style="margin-bottom:10px;" onclick="proje_gelir_ekle('<%=proje_id %>');" class="btn btn-round btn-mini btn-success waves-effect waves-light f-right"><i class="icofont icofont-edit"></i><%=LNG("Gelir Ekle")%></button></h5>
+                        <button id="edit-btn" type="button" style="margin-bottom: 10px;" onclick="proje_gelir_ekle('<%=proje_id %>');" class="btn btn-round btn-mini btn-success waves-effect waves-light f-right"><i class="icofont icofont-edit"></i><%=LNG("Gelir Ekle")%></button></h5>
                     <div id="proje_gelir_listesi">
                         <script>
                             $(function (){
                                 proje_gelir_getir2('<%=proje_id %>');
                             });
                         </script>
-                        
+
                     </div>
                 </div>
             </div>
@@ -2133,7 +2135,7 @@
 
 
 
-<%
+    <%
      elseif trn(request("islem"))="proje_butce_listesi_getir" then
 
         proje_id = trn(request("proje_id"))
@@ -2375,15 +2377,15 @@
 
         end if
     %>
-    <div class="col-lg-12 col-xl-4">
-        <h5 style="font-size:15px; line-height:35px;"><%=LNG("Bütçe Hesapları")%>
-        <button id="edit-btn" style="margin-top:0;" type="button" onclick="proje_butce_hesabi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Bütçe Hesabı Ekle")%></button></h5>
+    <div class="col-lg-12 col-xl-4" style="display: none">
+        <h5 style="font-size: 15px; line-height: 35px;"><%=LNG("Bütçe Hesapları")%>
+            <button id="edit-btn" style="margin-top: 0;" type="button" onclick="proje_butce_hesabi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Bütçe Hesabı Ekle")%></button></h5>
         <div>
             <%
                 sql="SELECT ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'TL'),0) AS gerceklesen_tl, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'USD'),0) AS gerceklesen_usd, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'EUR'),0) AS gerceklesen_eur, * FROM ahtapot_proje_butce_listesi butce WHERE butce.proje_id = '"& proje_id &"' AND butce.cop = 'false';"
                 set butce = baglanti.execute(SQL)
             %>
-            
+
             <div class="dt-responsive table-responsive">
                 <table id="new-cons" class="<% if butce.eof then %>kayityok<% end if %> table table-striped table-bordered table-hover" width="100%">
                     <thead>
@@ -2417,14 +2419,14 @@
                         <tr>
                             <td><%=butce("butce_hesabi_adi") %></td>
                             <td style="text-align: center;">
-                                <label class="label label-primary" style="font-size:12px;"><%=FormatNumber(butce("ongorulen_tutar"),2) %>&nbsp;<%=butce("parabirimi") %></label>
+                                <label class="label label-primary" style="font-size: 12px;"><%=FormatNumber(butce("ongorulen_tutar"),2) %>&nbsp;<%=butce("parabirimi") %></label>
                                 <br />
-                                <label class="label label-danger" style="font-size:12px;"><%=FormatNumber(kalan_tutar,2) %>&nbsp;<%=butce("parabirimi") %></label>
+                                <label class="label label-danger" style="font-size: 12px;"><%=FormatNumber(kalan_tutar,2) %>&nbsp;<%=butce("parabirimi") %></label>
                             </td>
-                            <td style="text-align: center; line-height:5px;">
-                                <label class="label label-warning" style="font-size:12px;"><%=FormatNumber(butce("gerceklesen_tl"),2) %>&nbsp;TL</label><br />
-                                <label class="label label-info" style="font-size:12px;"><%=FormatNumber(butce("gerceklesen_usd"),2) %>&nbsp;USD</label><br />
-                                <label class="label label-success" style="font-size:12px;"><%=FormatNumber(butce("gerceklesen_eur"),2) %>&nbsp;EUR</label>
+                            <td style="text-align: center; line-height: 5px;">
+                                <label class="label label-warning" style="font-size: 12px;"><%=FormatNumber(butce("gerceklesen_tl"),2) %>&nbsp;TL</label><br />
+                                <label class="label label-info" style="font-size: 12px;"><%=FormatNumber(butce("gerceklesen_usd"),2) %>&nbsp;USD</label><br />
+                                <label class="label label-success" style="font-size: 12px;"><%=FormatNumber(butce("gerceklesen_eur"),2) %>&nbsp;EUR</label>
                             </td>
                             <td>
                                 <div>
@@ -2452,10 +2454,9 @@
         </div>
     </div>
 
-
-
-    <div class="col-lg-12 col-xl-8">
-        <h5 style="font-size:15px; line-height:35px;"><%=LNG("Proje Giderleri")%><button id="edit-btn" style="margin-top:-5px;" type="button" onclick="yeni_satinalma_kaydi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Yeni Satın Alma Ekle")%></button></h5>
+    <div class="col-lg-12 col-xl-8" style="display: none">
+        <h5 style="font-size: 15px; line-height: 35px;"><%=LNG("Proje Giderleri")%>
+            <button id="edit-btn" style="margin-top: -5px;" type="button" onclick="yeni_satinalma_kaydi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Yeni Satın Alma Ekle")%></button></h5>
         <div>
             <%
                 SQL="select butce.butce_hesabi_adi, satinalma.* from ahtapot_proje_satinalma_listesi satinalma join ahtapot_proje_butce_listesi butce on butce.id = satinalma.butce_hesabi where satinalma.proje_id = '"& proje_id &"' and satinalma.cop = 'false'"
@@ -2476,11 +2477,11 @@
                     <tbody>
                         <%
                             if satis.eof then   
-                            %>
-                            <tr>
-                                <td colspan="6" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
-                            </tr>
-                            <%
+                        %>
+                        <tr>
+                            <td colspan="6" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
+                        </tr>
+                        <%
                             end if
                             do while not satis.eof
                         %>
@@ -2489,13 +2490,13 @@
                             <td><%=satis("butce_hesabi_adi") %></td>
                             <td style="width: 120px;">
                                 <% if trim(satis("satinalma_durum"))="Planlandı" then %>
-                                <span class="label label-primary" style="font-size:12px;"><%=LNG("PLANLANDI")%></span>
+                                <span class="label label-primary" style="font-size: 12px;"><%=LNG("PLANLANDI")%></span>
                                 <% elseif trim(satis("satinalma_durum"))="Alındı" then %>
-                                <span class="label label-info" style="font-size:12px;"><%=LNG("ALINDI")%></span>
+                                <span class="label label-info" style="font-size: 12px;"><%=LNG("ALINDI")%></span>
                                 <% elseif trim(satis("satinalma_durum"))="Sipariş Verildi" then %>
-                                <span class="label label-warning" style="font-size:12px;"><%=LNG("SİPARİŞ VERİLDİ")%></span>
+                                <span class="label label-warning" style="font-size: 12px;"><%=LNG("SİPARİŞ VERİLDİ")%></span>
                                 <% elseif trim(satis("satinalma_durum"))="Ödendi" then %>
-                                <span class="label label-success" style="font-size:12px;"><%=LNG("ÖDENDİ")%></span>
+                                <span class="label label-success" style="font-size: 12px;"><%=LNG("ÖDENDİ")%></span>
                                 <% end if %>
                             </td>
                             <td style="text-align: center;"><%=formatnumber(satis("ongorulen_tutar"),2) %>&nbsp;<%=satis("ongorulen_pb") %></td>
@@ -2503,7 +2504,7 @@
                             <td class="dropdown">
                                 <button type="button" class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
                                 <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);"  onclick="proje_satinalma_kayit_duzenle('<%=proje_id %>', '<%=satis("id") %>');"><i class="icofont icofont-edit"></i><%=LNG("Düzenle")%></a>
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="proje_satinalma_kayit_duzenle('<%=proje_id %>', '<%=satis("id") %>');"><i class="icofont icofont-edit"></i><%=LNG("Düzenle")%></a>
                                     <a class="dropdown-item" href="javascript:void(0);" onclick="proje_satinalma_kayit_sil('<%=proje_id %>', '<%=satis("id") %>');"><i class="icofont icofont-ui-delete"></i><%=LNG("Sil")%></a>
                                 </div>
                             </td>
@@ -2517,6 +2518,74 @@
             </div>
         </div>
     </div>
+
+    <div class="col-lg-12 col-xl-12">
+        <h5 style="font-size: 15px; line-height: 35px;"><%=LNG("Proje Giderleri")%>
+            <button id="edit-btn" style="margin-top: -5px;" type="button" onclick="yeni_satinalma_kaydi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Yeni Satın Alma Ekle")%></button></h5>
+        <div>
+            <%
+                SQL="select baslik, sum(toplamtl) as toplamtl from satinalma_listesi where proje_id = '"& proje_id &"' group by baslik"
+                set satinalmaformu = baglanti.execute(SQL)
+
+                SQL = "select * from satinalma_listesi where proje_id = '"& proje_id &"'"
+                set sapariskontrol = baglanti.execute(SQL)
+
+                SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& sapariskontrol("id") &"'"
+                set siparisparca = baglanti.execute(SQL)
+
+                SQL = "select id, IsID, ParcaId, (Adet - (select adet from satinalma_siparis_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"')) as KullanilanParcalar, (select adet from satinalma_siparis_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"') as SiparisVerilenParcalar from is_parca_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"'"
+                set sondurum = baglanti.execute(SQL)
+            %>
+            <div class="dt-responsive table-responsive">
+                <table id="new-cons2" class="<% if satinalmaformu.eof then %>kayityok<% end if %> table table-striped table-bordered table-hover" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Detay</th>
+                            <th><%=LNG("Satınalma Formları")%></th>
+                            <th><%=LNG("Toplam Maliyet")%></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            if satinalmaformu.eof then   
+                        %>
+                        <tr>
+                            <td colspan="6" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
+                        </tr>
+                        <%
+                            end if
+                            do while not satinalmaformu.eof
+                        %>
+                        <tr>
+                            <td>
+                                <button class="btn-link" id="btn-detay" style="cursor:pointer"><i class="fa fa-plus"></i></button>
+                            </td>
+                            <td style="font-size:14px"><%=satinalmaformu("baslik") %></td>
+                            <td style="font-size:14px"><%=formatnumber(satinalmaformu("toplamtl"),2) %> TL</td>
+                        </tr>
+                        <tr id="parcadetay" style="display: none">
+                            <td colspan="3" class="text-center" style="font-size:18px; font-weight:bold">
+                                <div class="row" style="margin-left:0px; margin-right:0px">
+                                    <p class="col-lg-5" style="margin-right:20px; margin-top:15px">Sipariş Edilen Parça Sayısı : <%=sondurum("SiparisVerilenParcalar") %></p> 
+                                    <p class="col-lg-5" style="margin-left:20px; margin-top:15px">Kullanılan Parça Sayısı : <%=sondurum("KullanilanParcalar") %></p>
+                                </div>
+                            </td>
+                        </tr>
+                        <%
+                            satinalmaformu.movenext
+                            loop
+                        %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("#btn-detay").click(function () {
+            $("#parcadetay").slideToggle();
+        });
+    </script>
 
     <script>
         $(function () {
@@ -2566,9 +2635,9 @@
     %>
     <div class="modal-header">
         <%=LNG("Bütçe Hesabı Ekle")%>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <form id="koftiform"></form>
     <form autocomplete="off" id="butce_hesabi_ekleme_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
@@ -2607,7 +2676,7 @@
             <input type="button" onclick="proje_butce_hesabi_kaydet(this, '<%=proje_id %>');" class="btn btn-primary" value="<%=LNG("Ekle")%>" />
         </div>
     </form>
-     <script>
+    <script>
         $(function (){
             $('.paraonly:not(.yapilan)').addClass("yapilan").maskMoney({ thousands: '.', decimal: ',', allowZero: true, suffix: '' });
         });
@@ -2624,9 +2693,9 @@
     %>
     <div class="modal-header">
         <%=LNG("Bütçe Hesabı Düzenle")%>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <form id="koftiform"></form>
     <form autocomplete="off" id="butce_hesabi_ekleme_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
@@ -2701,64 +2770,64 @@
     <input type="hidden" id="gantt_proje_id" value="<%=proje_id %>" />
     <input type="hidden" id="gantt_tip" value="<%=tip %>" />
     <div style="margin-right: 4%; margin-top: 15px;">
-        <div style="text-align: right; padding-top:15px;">
-            
-                <a class="btn btn-labeled btn-success btn-mini" href="javascript:void(0);" onclick="rapor_pdf_indir('gantt_liste');" style=" margin-top:-27px;"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-warning btn-mini" href="javascript:void(0);" onclick="rapor_pdf_yazdir('gantt_liste');" style=" margin-top:-27px;"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-primary btn-mini" href="javascript:void(0);" onclick="rapor_pdf_gonder('gantt_liste');" style=" margin-top:-27px;"><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
-            
+        <div style="text-align: right; padding-top: 15px;">
+
+            <a class="btn btn-labeled btn-success btn-mini" href="javascript:void(0);" onclick="rapor_pdf_indir('gantt_liste');" style="margin-top: -27px;"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-warning btn-mini" href="javascript:void(0);" onclick="rapor_pdf_yazdir('gantt_liste');" style="margin-top: -27px;"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-primary btn-mini" href="javascript:void(0);" onclick="rapor_pdf_gonder('gantt_liste');" style="margin-top: -27px;"><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
+
         </div>
     </div>
     <div style="margin: 4%; margin-top: 10px;">
         <div class="dt-responsive table-responsive">
-        <table class="table" style="font-size: 14px;">
-            <tbody>
-                <%
+            <table class="table" style="font-size: 14px;">
+                <tbody>
+                    <%
                     SQL="select * from ahtapot_proje_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false'"
                     set adim = baglanti.execute(SQL)
                     do while not adim.eof
-                %>
-                <tr class="ictenustunegelince">
-                    <td></td>
-                    <% if cdbl(adim("ilevel"))=0 then %>
-                    <td colspan="6" style="padding-left: <%=cint(adim("ilevel"))*20%>px!important; font-weight: bold;"><i class="fa fa-sort-desc"></i>&nbsp&nbsp&nbsp;<%=ucase(adim("name")) %></td>
-                    <% elseif cdbl(adim("ilevel"))=1 then %>
-                    <td style="padding-left: <%=cint(adim("ilevel"))*30%>px!important; font-weight: bold;"><i class="fa fa-sort-desc"></i>&nbsp&nbsp&nbsp<%=adim("name") %></td>
-                    <td><strong><%=LNG("Süre")%></strong></td>
-                    <td style="width: 150px; padding-right: 30px!important;">
-                        <div>
-                            <div id="is_chart<%=adim("id") %>" class="progress progress-xs" data-progressbar-value="<%=adim("progress") %>">
-                                <div class="progress-bar"></div>
+                    %>
+                    <tr class="ictenustunegelince">
+                        <td></td>
+                        <% if cdbl(adim("ilevel"))=0 then %>
+                        <td colspan="6" style="padding-left: <%=cint(adim("ilevel"))*20%>px!important; font-weight: bold;"><i class="fa fa-sort-desc"></i>&nbsp&nbsp&nbsp;<%=ucase(adim("name")) %></td>
+                        <% elseif cdbl(adim("ilevel"))=1 then %>
+                        <td style="padding-left: <%=cint(adim("ilevel"))*30%>px!important; font-weight: bold;"><i class="fa fa-sort-desc"></i>&nbsp&nbsp&nbsp<%=adim("name") %></td>
+                        <td><strong><%=LNG("Süre")%></strong></td>
+                        <td style="width: 150px; padding-right: 30px!important;">
+                            <div>
+                                <div id="is_chart<%=adim("id") %>" class="progress progress-xs" data-progressbar-value="<%=adim("progress") %>">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <span class="hiddenspan"><%=adim("progress") %></span>
                             </div>
-                            <span class="hiddenspan"><%=adim("progress") %></span>
-                        </div>
-                    </td>
-                    <td><strong><%=LNG("Başlangıç")%></strong></td>
-                    <td><strong><%=LNG("Bitiş")%></strong></td>
+                        </td>
+                        <td><strong><%=LNG("Başlangıç")%></strong></td>
+                        <td><strong><%=LNG("Bitiş")%></strong></td>
 
-                    <td style="text-align: right;"><strong><%=LNG("Görevli Kaynaklar")%></strong></td>
-                    <% elseif cdbl(adim("ilevel"))=2 then %>
-                    <td style="padding-left: <%=cint(adim("ilevel"))*30%>px!important;"><%=adim("name") %></td>
-                    <td><%=adim("duration" & tip_str) %> <%=LNG("gün")%></td>
-                    <td style="width: 150px; padding-right: 30px!important;">
-                        <div>
-                            <div id="is_chart<%=adim("id") %>" class="progress progress-xs" data-progressbar-value="<%=adim("progress") %>">
-                                <div class="progress-bar"></div>
+                        <td style="text-align: right;"><strong><%=LNG("Görevli Kaynaklar")%></strong></td>
+                        <% elseif cdbl(adim("ilevel"))=2 then %>
+                        <td style="padding-left: <%=cint(adim("ilevel"))*30%>px!important;"><%=adim("name") %></td>
+                        <td><%=adim("duration" & tip_str) %> <%=LNG("gün")%></td>
+                        <td style="width: 150px; padding-right: 30px!important;">
+                            <div>
+                                <div id="is_chart<%=adim("id") %>" class="progress progress-xs" data-progressbar-value="<%=adim("progress") %>">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <span class="hiddenspan"><%=adim("progress") %></span>
                             </div>
-                            <span class="hiddenspan"><%=adim("progress") %></span>
-                        </div>
-                    </td>
-                    <td><%=cdate(adim("start_tarih" & tip_str)) %></td>
-                    <td><%=cdate(adim("end_tarih" & tip_str)) %></td>
+                        </td>
+                        <td><%=cdate(adim("start_tarih" & tip_str)) %></td>
+                        <td><%=cdate(adim("end_tarih" & tip_str)) %></td>
 
-                    <td style="text-align: right;">Salih ŞAHİN, Safa ORAKÇI</td>
-                    <% end if %>
-                </tr>
-                <%
+                        <td style="text-align: right;">Salih ŞAHİN, Safa ORAKÇI</td>
+                        <% end if %>
+                    </tr>
+                    <%
                     adim.movenext
                     loop
-                %>
-            </tbody>
-        </table>
-            </div>
+                    %>
+                </tbody>
+            </table>
+        </div>
     </div>
     <% 
         
@@ -2916,12 +2985,12 @@
                 </div>
             </div>
         </div>
-        
-        <div class="modal-footer" style="justify-content:space-between!important;">
 
-            <input type="button" onclick="manuel_isi_bitir2('<%=TamamlanmaID%>', '<%=tamamlanma_orani%>', '<%=IsID %>');" class="btn btn-sm btn-danger" value="<%=LNG("Ajanda Kaydı Oluşturma")%>!" style="float:left;" />
+        <div class="modal-footer" style="justify-content: space-between!important;">
 
-            <input type="button" onclick="is_ilerleme_ajanda_senkronizasyon_kaydet(this, '<%=IsID %>', '<%=TamamlanmaID%>', '<%=tamamlanma_orani%>', '<%=onceki_oran%>');" class="btn btn-sm btn-success" value="<%=LNG("Ajanda'ya Ekle")%>" style="float:right;" />
+            <input type="button" onclick="manuel_isi_bitir2('<%=TamamlanmaID%>', '<%=tamamlanma_orani%>', '<%=IsID %>');" class="btn btn-sm btn-danger" value="<%=LNG("Ajanda Kaydı Oluşturma")%>!" style="float: left;" />
+
+            <input type="button" onclick="is_ilerleme_ajanda_senkronizasyon_kaydet(this, '<%=IsID %>', '<%=TamamlanmaID%>', '<%=tamamlanma_orani%>', '<%=onceki_oran%>');" class="btn btn-sm btn-success" value="<%=LNG("Ajanda'ya Ekle")%>" style="float: right;" />
 
         </div>
     </form>
@@ -3088,13 +3157,13 @@
                 </div>
             </div>
         </div>
-        
-        <div class="modal-footer" style="justify-content:space-between!important;">
+
+        <div class="modal-footer" style="justify-content: space-between!important;">
 
 
             <!--<input type="button" onclick="manuel_isi_bitir2('<%=TamamlanmaID%>', '<%=tamamlanma_orani%>', '<%=IsID %>');" class="btn btn-sm btn-danger" value="<%=LNG("Ajanda Kaydı Oluşturma")%>!" style="float:left;" />-->
 
-            <input type="button" onclick="is_ilerleme_ajanda_senkronizasyon_kaydet(this, '<%=IsID %>', '<%=TamamlanmaID%>', '<%=tamamlanma_orani%>', '<%=onceki_oran%>');" class="btn btn-sm btn-success" value="<%=LNG("Ajanda'ya Ekle")%>" style="float:right;" />
+            <input type="button" onclick="is_ilerleme_ajanda_senkronizasyon_kaydet(this, '<%=IsID %>', '<%=TamamlanmaID%>', '<%=tamamlanma_orani%>', '<%=onceki_oran%>');" class="btn btn-sm btn-success" value="<%=LNG("Ajanda'ya Ekle")%>" style="float: right;" />
 
         </div>
     </form>
@@ -3160,7 +3229,7 @@
     %>
     <style>
         .taskin {
-            background-color:#fb8f8f!important;
+            background-color: #fb8f8f !important;
         }
     </style>
     <div>
@@ -3244,7 +3313,7 @@
                                 toplam_sayi = cdbl(toplam_sayi) + cdbl(cetvel("kaynak_toplam_dakika"))
                             end if
                         %>
-                        <td style="width: 150px;" class="ust_td2 headcol"><a href="javascript:void(0);" onclick="KaynakIsYukuDetayGoster('<%=cetvel("tip") %>', '<%=cetvel("id") %>');" style="color:white;"><i class="fa fa-plus-square"></i>&nbsp;&nbsp;<%=cetvel("kaynak") %></a></td>
+                        <td style="width: 150px;" class="ust_td2 headcol"><a href="javascript:void(0);" onclick="KaynakIsYukuDetayGoster('<%=cetvel("tip") %>', '<%=cetvel("id") %>');" style="color: white;"><i class="fa fa-plus-square"></i>&nbsp;&nbsp;<%=cetvel("kaynak") %></a></td>
                         <td class="gosterge_td alt_td ">
                             <% if trim(gosterim_tipi)="0" then %>
                             <%=cetvel("kaynak_toplam_sayi") %>
@@ -3257,13 +3326,13 @@
                             <% if trim(gosterim_tipi)="0" then %>
                             <% if cdbl(cetvel("sayi"))=0 then %>-<% else %>
                             <!--<a href="javascript:void(0);" onclick="aiyda('<%=cetvel("id") %>','<%=cdate(cetvel("tarih")) %>');">-->
-                                <%=cetvel("sayi") %>
+                            <%=cetvel("sayi") %>
                             <!--</a>-->
                             <% end if %>
                             <% elseif trim(gosterim_tipi)="1" then %>
                             <% if trim(cetvel("saat2"))="00:00" then %>-<% else %>
                             <!--<a href="javascript:void(0);" onclick="aiyda('<%=cetvel("id") %>','<%=cetvel("tarih") %>');">-->
-                                <%=cetvel("saat2") %>
+                            <%=cetvel("saat2") %>
                             <!--</a>-->
                             <% end if %>
                             <% end if %>
@@ -3334,7 +3403,7 @@
             </table>
         </div>
 
-        <div id="tablediv2" style="display:none;"></div>
+        <div id="tablediv2" style="display: none;"></div>
     </div>
     <%
 
@@ -3382,7 +3451,7 @@
 
                         <% for x = dongu_baslangic to dongu_bitis 
                             tarihler = tarihler & "'"& cdate(x) &"',"
-                            %>
+                        %>
                         <th class="alt_th" style="<% if day(x)=1 then %> border-left: solid 3px white; <% end if %>">
                             <div class="guncizelge"><%=day(x) %></div>
                         </th>
@@ -3520,87 +3589,87 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
             </table>
         </div>
 
-        
-                        <script type="text/javascript">
-                            var data = [
-                                ['<%=LNG("Maliyetler")%>', <%=maliyetler%>]
-                            ];
 
-                            var update = function (obj, cel, val) {
-                                // Get the cell position x, y
-                                var id = $(cel).prop('id').split('-');
-                                // If the related series does not exists create a new one
-                                if (!chart.series[id[1]]) {
-                                    // Create a new series row
-                                    var row = [];
-                                    for (i = 1; i < data[id[1]].length; i++) {
-                                        row.push(parseFloat(data[id[1]][i]));
-                                    }
-                                    // Append new series to the chart
-                                    chart.addSeries({ name: data[id[1]][0], data: row });
-                                } else {
-                                    // Update the value from the chart
-                                    chart.series[id[1]].data[id[0] - 1].update({ y: parseFloat(val) });
-                                }
-                            }
+        <script type="text/javascript">
+            var data = [
+                ['<%=LNG("Maliyetler")%>', <%=maliyetler %>]
+            ];
 
-
+            var update = function (obj, cel, val) {
+                // Get the cell position x, y
+                var id = $(cel).prop('id').split('-');
+                // If the related series does not exists create a new one
+                if (!chart.series[id[1]]) {
+                    // Create a new series row
+                    var row = [];
+                    for (i = 1; i < data[id[1]].length; i++) {
+                        row.push(parseFloat(data[id[1]][i]));
+                    }
+                    // Append new series to the chart
+                    chart.addSeries({ name: data[id[1]][0], data: row });
+                } else {
+                    // Update the value from the chart
+                    chart.series[id[1]].data[id[0] - 1].update({ y: parseFloat(val) });
+                }
+            }
 
 
-                            // Kepp it global
-                            var chart = null;
 
-                            $(function () {
-                             
 
-                                chart = Highcharts.chart('container', {
-                                    chart: {
-                                        type: 'column'
+            // Kepp it global
+            var chart = null;
+
+            $(function () {
+
+
+                chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: '<%=proje_adi%>',
+                        x: -20 //center
+                    },
+                    subtitle: {
+                        text: '<%=LNG("Adam Saat Cetveli")%>',
+                        x: -20
+                    },
+                    xAxis: {
+                        categories: [<%=tarihler %>]
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Adam-Saat'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                                        <% if trim(gosterim_tipi) = "0" then %>
+                        valueSuffix: ' adet'
+                        <% else %>
+                    valueSuffix: ' saat'
+                    <% end if %>
                                     },
-                                    title: {
-                                        text: '<%=proje_adi%>',
-                                        x: -20 //center
-                                    },
-                                    subtitle: {
-                                        text: '<%=LNG("Adam Saat Cetveli")%>',
-                                        x: -20
-                                    },
-                                    xAxis: {
-                                        categories: [<%=tarihler%>]
-                                    },
-                                    yAxis: {
-                                        title: {
-                                            text: 'Adam-Saat'
-                                        },
-                                        plotLines: [{
-                                            value: 0,
-                                            width: 1,
-                                            color: '#808080'
-                                        }]
-                                    },
-                                    tooltip: {
-                                        <% if trim(gosterim_tipi)="0" then %>
-                                        valueSuffix: ' adet'
-                                        <% else %>
-                                      valueSuffix: ' saat'
-                                    <% end if %>
-                                    },
-                                    legend: {
-                                        layout: 'vertical',
-                                        align: 'right',
-                                        verticalAlign: 'middle',
-                                        borderWidth: 0
-                                    },
-                                    series: [{
-                                        name: '<%=LNG("İşçilik")%>',
-                                        data: [<%=maliyetler%>]
-                                    }]
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: [{
+                    name: '<%=LNG("İşçilik")%>',
+                    data: [<%=maliyetler %>]
+                }]
                                 });
                             });
 
-                            
-                        </script>
-        
+
+        </script>
+
     </div>
     <%
 
@@ -3654,7 +3723,7 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
 
                         <% for x = dongu_baslangic to dongu_bitis 
                             tarihler = tarihler & "'"& cdate(x) &"',"
-                            %>
+                        %>
                         <th class="alt_th" style="<% if day(x)=1 then %> border-left: solid 3px white; <% end if %>">
                             <div class="guncizelge"><%=day(x) %></div>
                         </th>
@@ -3791,87 +3860,87 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
             </table>
         </div>
 
-        
-                        <script type="text/javascript">
-                            var data = [
-                                ['<%=LNG("Maliyetler")%>', <%=maliyetler%>]
-                            ];
 
-                            var update = function (obj, cel, val) {
-                                // Get the cell position x, y
-                                var id = $(cel).prop('id').split('-');
-                                // If the related series does not exists create a new one
-                                if (!chart.series[id[1]]) {
-                                    // Create a new series row
-                                    var row = [];
-                                    for (i = 1; i < data[id[1]].length; i++) {
-                                        row.push(parseFloat(data[id[1]][i]));
-                                    }
-                                    // Append new series to the chart
-                                    chart.addSeries({ name: data[id[1]][0], data: row });
-                                } else {
-                                    // Update the value from the chart
-                                    chart.series[id[1]].data[id[0] - 1].update({ y: parseFloat(val) });
-                                }
-                            }
+        <script type="text/javascript">
+            var data = [
+                ['<%=LNG("Maliyetler")%>', <%=maliyetler %>]
+            ];
 
-
+            var update = function (obj, cel, val) {
+                // Get the cell position x, y
+                var id = $(cel).prop('id').split('-');
+                // If the related series does not exists create a new one
+                if (!chart.series[id[1]]) {
+                    // Create a new series row
+                    var row = [];
+                    for (i = 1; i < data[id[1]].length; i++) {
+                        row.push(parseFloat(data[id[1]][i]));
+                    }
+                    // Append new series to the chart
+                    chart.addSeries({ name: data[id[1]][0], data: row });
+                } else {
+                    // Update the value from the chart
+                    chart.series[id[1]].data[id[0] - 1].update({ y: parseFloat(val) });
+                }
+            }
 
 
-                            // Kepp it global
-                            var chart = null;
 
-                            $(function () {
-                             
 
-                                chart = Highcharts.chart('container', {
-                                    chart: {
-                                        type: 'column'
+            // Kepp it global
+            var chart = null;
+
+            $(function () {
+
+
+                chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: '<%=proje_adi%>',
+                        x: -20 //center
+                    },
+                    subtitle: {
+                        text: '<%=LNG("Adam Saat Cetveli")%>',
+                        x: -20
+                    },
+                    xAxis: {
+                        categories: [<%=tarihler %>]
+                    },
+                    yAxis: {
+                        title: {
+                            text: '<%=LNG("Adam-Saat")%>'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                                        <% if trim(gosterim_tipi) = "0" then %>
+                        valueSuffix: ' adet'
+                        <% else %>
+                    valueSuffix: ' saat'
+                    <% end if %>
                                     },
-                                    title: {
-                                        text: '<%=proje_adi%>',
-                                        x: -20 //center
-                                    },
-                                    subtitle: {
-                                        text: '<%=LNG("Adam Saat Cetveli")%>',
-                                        x: -20
-                                    },
-                                    xAxis: {
-                                        categories: [<%=tarihler%>]
-                                    },
-                                    yAxis: {
-                                        title: {
-                                            text: '<%=LNG("Adam-Saat")%>'
-                                        },
-                                        plotLines: [{
-                                            value: 0,
-                                            width: 1,
-                                            color: '#808080'
-                                        }]
-                                    },
-                                    tooltip: {
-                                        <% if trim(gosterim_tipi)="0" then %>
-                                        valueSuffix: ' adet'
-                                        <% else %>
-                                      valueSuffix: ' saat'
-                                    <% end if %>
-                                    },
-                                    legend: {
-                                        layout: 'vertical',
-                                        align: 'right',
-                                        verticalAlign: 'middle',
-                                        borderWidth: 0
-                                    },
-                                    series: [{
-                                        name: '<%=LNG("İşçilik")%>',
-                                        data: [<%=maliyetler%>]
-                                    }]
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: [{
+                    name: '<%=LNG("İşçilik")%>',
+                    data: [<%=maliyetler %>]
+                }]
                                 });
                             });
 
-                            
-                        </script>
-        
+
+        </script>
+
     </div>
     <%
 
@@ -3911,8 +3980,8 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
 
                 <style>
                     .yetki_tablos tbody tr td {
-                        height:20px!important;
-                        padding:0!important;
+                        height: 20px !important;
+                        padding: 0 !important;
                     }
                 </style>
             </div>
@@ -4015,9 +4084,9 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
         end if
 
     %>
-    
 
-  <div class="card">
+
+    <div class="card">
 
         <div class="card-block">
             <div class="view-info">
@@ -4028,10 +4097,10 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
                         <%=LNG("Dönem")%><br />
                         <select name="rapor_is_yuku_donem" class="select2" onchange="proje_rapor_adam_saat_gosterim_tarih_sectim('<%=personel_id %>');" id="rapor_is_yuku_donem">
                             <% for x = 1 to 12 %>
-                                <option value="<%=x & "-" & year(date)-1 %>"><%=monthname(x) & " " & year(date)-1 %> </option>
+                            <option value="<%=x & "-" & year(date)-1 %>"><%=monthname(x) & " " & year(date)-1 %> </option>
                             <% next %>
                             <% for x = 1 to month(date) %>
-                                <option <% if trim(x & "-" & year(date))=trim(ay & "-" & yil) then %> selected="selected" <% end if %> value="<%=x & "-" & year(date) %>"><%=monthname(x) & " " & year(date) %> </option>
+                            <option <% if trim(x & "-" & year(date))=trim(ay & "-" & yil) then %> selected="selected" <% end if %> value="<%=x & "-" & year(date) %>"><%=monthname(x) & " " & year(date) %> </option>
                             <% next %>
                         </select>
                     </div>
@@ -4182,7 +4251,7 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
                         dongu_bitis = cdate(AyinSonGunu(dongu_baslangic) & "." & ay & "." & yil)
 
                         %>
-                        
+
                         <div id="container"></div>
                         <div class="tablediv" style="width: 100%; margin-top: 15px; overflow: auto;">
                             <div id="tablediv">
@@ -4230,13 +4299,13 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
                                             <% for x = dongu_baslangic to dongu_bitis 
                                                 tarihler = tarihler & "'"& cdate(x) &"',"
 
-                                                %>
+                                            %>
                                             <th class="alt_th" style="<% if day(x)=1 then %> border-left: solid 3px white; <% end if %>">
                                                 <div class="guncizelge"><%=day(x) %></div>
                                             </th>
                                             <% next 
                                                 tarihler = left(tarihler, len(tarihler)-1)
-                                                %>
+                                            %>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody">
@@ -4329,11 +4398,11 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
                                 </table>
                             </div>
                         </div>
-                
-                        
+
+
                         <script type="text/javascript">
                             var data = [
-                                ['Maliyetler', <%=maliyetler%>]
+                                ['Maliyetler', <%=maliyetler %>]
                             ];
 
                             var update = function (obj, cel, val) {
@@ -4361,7 +4430,7 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
                             var chart = null;
 
                             $(function () {
-                             
+
 
                                 chart = Highcharts.chart('container', {
                                     chart: {
@@ -4376,7 +4445,7 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
                                         x: -20
                                     },
                                     xAxis: {
-                                        categories: [<%=tarihler%>]
+                                        categories: [<%=tarihler %>]
                                     },
                                     yAxis: {
                                         title: {
@@ -4392,19 +4461,19 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
                                         <% if gosterim_tipi = "0" then %>
                                         valueSuffix: ' TL'
                                         <% else %>
-                                      valueSuffix: ' <%=LNG("saat")%>'
+                                    valueSuffix: ' <%=LNG("saat")%>'
                                     <% end if %>
                                     },
-                                    legend: {
-                                        layout: 'vertical',
-                                        align: 'right',
-                                        verticalAlign: 'middle',
-                                        borderWidth: 0
-                                    },
-                                    series: [{
-                                        name: '<%=LNG("İşçilik")%>',
-                                        data: [<%=maliyetler%>]
-                                    }]
+                                legend: {
+                                    layout: 'vertical',
+                                    align: 'right',
+                                    verticalAlign: 'middle',
+                                    borderWidth: 0
+                                },
+                                series: [{
+                                    name: '<%=LNG("İşçilik")%>',
+                                    data: [<%=maliyetler %>]
+                                }]
                                 });
                             });
                         </script>
@@ -4417,13 +4486,13 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
     <% 
 
     elseif trn(request("islem"))="isyuku_timeline_calistir" then
-%>
+    %>
     <style>
         .vis-labelset .vis-label {
             padding-top: 0 !important;
         }
     </style>
-<div id="visualization"></div>
+    <div id="visualization"></div>
     <script>
 
         $(function (){
@@ -4557,8 +4626,8 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
 
          });
     </script>
-<%
+    <%
 
 
     end if
-%>
+    %>
