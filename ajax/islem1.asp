@@ -2886,7 +2886,7 @@
                         <div class="row">
                             <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Firma Logo")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
-                                <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" folder="FirmaLogo" yol="firma_logo/" class="form-control" />
+                                <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" filePath="<%=firma("firma_logo") %>" folder="FirmaLogo" yol="firma_logo/" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -3325,7 +3325,7 @@
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Personel Resim")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
-                                <input type="file" value="<%=personel("personel_resim") %>" id="personel_resim" tip="buyuk" folder="PersonelResim" class="form-control" />
+                                <input type="file" value="<%=personel("personel_resim") %>" id="personel_resim" filepath="<%=personel("personel_resim") %>" tip="buyuk" folder="PersonelResim" class="form-control" />
                             </div>
                         </div>
                     </div>
