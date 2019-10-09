@@ -1002,10 +1002,10 @@
                         </span>
                         <asp:TextBox ID="olay_tarihi" class="takvimyap form-control" runat="server"></asp:TextBox>
                              <script>
-                                var dt = new Date();
-                                var time = dt.getHours() + ":" + dt.getMinutes();
-                                $("#olay_saati").val(time);
-                                $("#olay_tarihi").val(new Date().toLocaleDateString());
+                                 var dt = new Date();
+                                 var time = dt.getHours() + ":" + dt.getMinutes();
+                                 $("#olay_saati").val(time);
+                                 $("#olay_tarihi").val(new Date().toLocaleDateString());
                             </script>
                     </div>
                 </div>
@@ -1519,7 +1519,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <input type="text" id="yeni_is_baslangic_tarihi" name="yeni_is_baslangic_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%Response.Write(DateTime.Today.ToShortTimeString());%>" />
+                                            <input type="text" id="yeni_is_baslangic_tarihi" name="yeni_is_baslangic_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%DateTime.Today.ToShortTimeString();%>" />
                                         </div>
                                     </div>
                                 </div>
@@ -1554,7 +1554,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <input type="text" id="yeni_is_bitis_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" name="yeni_is_bitis_tarihi" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%Response.Write(DateTime.Today.ToShortDateString()); %>" />
+                                            <input type="text" id="yeni_is_bitis_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" name="yeni_is_bitis_tarihi" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%DateTime.Today.ToShortDateString(); %>" />
                                         </div>
                                     </div>
                                 </div>
@@ -1632,9 +1632,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
                      <%--       <div class="row">
                                 <div class="col-sm-4" style="padding:0;">
                                     <label class="col-sm-12 col-form-label">İşe Başlama</label>
@@ -1705,21 +1702,12 @@
 
 
                             </div>--%>
-
-                  
-
                         </div>
-
-                      
-
                     </div>
                 </div>
                 <div class="modal-footer">
                     <asp:Button runat="server" class="btn btn-primary"  ID="yeni_is_ekle_button"></asp:Button>
-
                 </div>
-
-
     </asp:panel>
     <asp:panel class="row" id="is_detay_panel" style="padding: 10px;" runat="server">
         <style>

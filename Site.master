@@ -329,7 +329,7 @@
                                 <li class="">
                                     <a href="javascript:void(0);" onclick="sayfagetir('/parcalar/','jsid=4559');">
                                         <span class="pcoded-micon"><i class="ti-pencil-alt"></i><b>N</b></span>
-                                        <span class="pcoded-mtext"><% Response.Write(LNG("Parçalar / Envanter")); %></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Stok Listesi")); %></span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>

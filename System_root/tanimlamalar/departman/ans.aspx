@@ -107,7 +107,7 @@
 
                     </form>
                     <div class="row modal-footer" style="margin-top: 20px;">
-                        <input type="button" class="btn btn-primary" onclick="departman_ekle();" value="<% Response.Write(LNG("Proje Durum Ekle")); %>" />
+                        <input type="button" class="btn btn-primary" onclick="departman_ekle();" value="<% Response.Write(LNG("Departman Ekle")); %>" />
                     </div>
                 </div>
             </div>

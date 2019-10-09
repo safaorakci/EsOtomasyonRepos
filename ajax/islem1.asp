@@ -3421,7 +3421,7 @@
                         </div>
 
 
-                          <div class="row">
+                          <div class="row" style="display:none">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yönetici Yetkisi")%></label>
                             <div class="col-sm-12 col-lg-12">
                                 <select id="yonetici_yetkisi" name="yonetici_yetkisi" class="select2">
@@ -3470,7 +3470,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="display:none">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Departman")%></label>
                             <div class="col-sm-12 col-lg-12">
                                 <select name="departmanlar" id="departmanlar" class="select2" multiple="multiple">

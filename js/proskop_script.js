@@ -6648,8 +6648,14 @@ function BakimdanIsEmriOlustur(projeId, bakimId, Tum) {
     data += "&bakimvarmi=true";
     data += "&bakimId=" + bakimId;
     data += "&Tum=" + Tum;
-    data += "&yeni_is_baslangic_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate(); // Ay +1, 0 dan basladıgı icin
-    data += "&yeni_is_bitis_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
+    if (d.getMonth < 10) {
+        data += "&yeni_is_baslangic_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
+        data += "&yeni_is_bitis_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
+    }
+    else {
+        data += "&yeni_is_baslangic_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        data += "&yeni_is_bitis_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+    }
     console.log(data);
     data = encodeURI(data);
     $("#modal_butonum").click();
@@ -6663,8 +6669,14 @@ function TalebiIseDonustur(TalepId) {
     var data = "islem=yeni_is_ekle";
     data += "&TalepId=" + TalepId;
     data += "&TalepVarmi=true";
-    data += "&yeni_is_baslangic_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate(); // Ay +1, 0 dan basladıgı icin
-    data += "&yeni_is_bitis_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
+    if (d.getMonth < 10) {
+        data += "&yeni_is_baslangic_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
+        data += "&yeni_is_bitis_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
+    }
+    else {
+        data += "&yeni_is_baslangic_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        data += "&yeni_is_bitis_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+    }
 
     data = encodeURI(data);
     $("#modal_butonum").click();
@@ -6699,8 +6711,16 @@ function yeni_is_ekle(proje_id, departman_id) {
     var data = "islem=yeni_is_ekle";
     data += "&proje_id=" + proje_id;
     data += "&departman_id=" + departman_id;
-    data += "&yeni_is_baslangic_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate(); // Ay +1, 0 dan basladıgı icin
-    data += "&yeni_is_bitis_tarihi=" + d.getFullYear() + "-0" + (d.getMonth() + 1) + "-" + d.getDate();
+    if (d.getMonth < 10) {
+        console.log("1");
+        data += "&yeni_is_baslangic_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        data += "&yeni_is_bitis_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+    }
+    else {
+        console.log("2");
+        data += "&yeni_is_baslangic_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        data += "&yeni_is_bitis_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+    }
     console.log(data);
     data = encodeURI(data);
     $("#modal_butonum").click();

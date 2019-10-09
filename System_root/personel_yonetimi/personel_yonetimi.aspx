@@ -182,7 +182,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="display:none">
                             <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Departman")); %></label>
                             <div class="col-sm-12 col-lg-12">
                                 <asp:dropdownlist ID="departmanlar" runat="server"></asp:dropdownlist>
