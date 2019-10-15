@@ -34,7 +34,7 @@
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Personel Resim")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
-                                <input type="file" value="<%=personel("personel_resim") %>" id="personel_resim" tip="buyuk" yol="personel_resim/" class="form-control" folder="Personel"/>
+                                <input type="file" value="<%=personel("personel_resim") %>" id="personel_resim" tip="buyuk" yol="personel_resim/" class="form-control" />
                             </div>
                         </div>
                     </div>
