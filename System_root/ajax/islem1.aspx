@@ -15,7 +15,7 @@
                         <div class="row">
                             <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Firma :")); %></label>
                             <div class="col-sm-10">
-                                <asp:dropdownlist ID="firma_id" class="form-control select2" runat="server"></asp:dropdownlist>
+                                <asp:dropdownlist ID="firma_id" class="select2" runat="server"></asp:dropdownlist>
                             </div>
                             <div class="col-sm-2">
                                 <a href="javascript:void(0);" onclick="javascript:$('.close').click();sayfagetir('/firma_yonetimi/','jsid=4559');"><i class="fa fa-plus-square"></i> <% Response.Write(LNG("Yeni")); %></a>

@@ -3219,6 +3219,7 @@ works properly when clicked or hovered */
         <label class="col-sm-12 col-form-label">Excell Dosyası :</label>
         <div class="col-sm-12">
             <input class="form-control required" required type="file" id="FileUpload" tip="kucuk" folder="envanter" />
+            <img src="../img/loader_green.gif" style="display:none" id="fileLoading"/>
         </div>
     </div>
 
