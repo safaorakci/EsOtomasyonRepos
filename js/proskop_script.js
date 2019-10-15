@@ -6708,19 +6708,29 @@ function etiketli_yeni_is_ekle(etiket, etiket_id) {
 
 function yeni_is_ekle(proje_id, departman_id) {
     var d = new Date();
+    var day = "";
+    var month = "";
+    var year = d.getFullYear();
     var data = "islem=yeni_is_ekle";
     data += "&proje_id=" + proje_id;
     data += "&departman_id=" + departman_id;
-    if (d.getMonth < 10) {
-        console.log("1");
-        data += "&yeni_is_baslangic_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
-        data += "&yeni_is_bitis_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+
+    if (d.getDate < 10) {
+        day = "0" + d.getDate();
     }
     else {
-        console.log("2");
-        data += "&yeni_is_baslangic_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
-        data += "&yeni_is_bitis_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        day = d.getDate();
     }
+    if (d.getMonth < 10) {
+        month = "0" + (d.getMonth() + 1);
+    }
+    else {
+        month = (d.getMonth() + 1);
+    }
+
+    data += "&yeni_is_baslangic_tarihi=" + day + "-" + month + "-" + year;
+    data += "&yeni_is_bitis_tarihi=" + day + "-" + month + "-" + year;
+
     console.log(data);
     data = encodeURI(data);
     $("#modal_butonum").click();
