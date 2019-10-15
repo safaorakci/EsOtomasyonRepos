@@ -106,7 +106,20 @@ public class upload : IHttpHandler
             using (OleDbConnection excelConnection = new OleDbConnection(excelConnString))
             {
 
-                using (OleDbCommand cmd = new OleDbCommand(@"Select * from [Sheet1$]", excelConnection))
+                using (OleDbCommand cmd = new OleDbCommand(@"
+                    Select 
+                    IIF(kodu is null, '', kodu) as kodu,
+                    IIF(marka is null, '', marka) as marka,
+                    IIF(parca_adi is null, '', parca_adi) as parca_adi,
+                    IIF(aciklama is null, '', aciklama) as aciklama,
+                    IIF(birim is null, '', birim) as birim,
+                    IIF(birim_maliyet is null, 0.00, birim_maliyet) as birim_maliyet,
+                    IIF(birim_pb is null, '', birim_pb) as birim_pb,
+                    IIF(miktar is null, 0, miktar) as miktar,
+                    IIF(minumum_miktar is null, 0, minumum_miktar) as minumum_miktar,
+                    IIF(kdv is null, 0, kdv) as kdv,
+                    IIF(barcode is null, '', barcode) as barcode
+                    from [Sheet1$]", excelConnection))
                 {
                     excelConnection.Open();
                     ayarlar.baglan();
@@ -119,8 +132,11 @@ public class upload : IHttpHandler
                     {
                         while (dReader.Read())
                         {
-                            ayarlar.cmd.CommandText = "select id, miktar  from [dbo].[parca_listesi] where parca_kodu=@kodu";
                             kodu = dReader["kodu"].ToString();
+                            if (kodu == "")
+                                break;
+
+                            ayarlar.cmd.CommandText = "select id, miktar  from [dbo].[parca_listesi] where parca_kodu=@kodu";
                             ayarlar.cmd.Parameters.Clear();
                             dt.Clear();
                             ayarlar.cmd.Parameters.Add("@kodu", SqlDbType.NVarChar).Value = kodu;
@@ -166,6 +182,7 @@ public class upload : IHttpHandler
                                 ayarlar.cmd.ExecuteNonQuery();
                             }
                         }
+
 
 
 
