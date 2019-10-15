@@ -41,6 +41,7 @@
                 &nbsp;&nbsp;
                 <a class="btn btn-labeled btn-primary btn-mini" href="javascript:void(0);" style="margin-top: -27px;">
                     <span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%>
+                    <!--<span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%>-->
                 </a>
             </div>
         </div>
