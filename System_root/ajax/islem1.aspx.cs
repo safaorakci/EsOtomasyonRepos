@@ -3738,7 +3738,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
             if (personel_telefon.Length > 5)
             {
-                ayarlar.NetGSM_SMS(personel_telefon, "Proskop Hesap Bilgileriniz; \n Sistem Giriş Url : http://www.esflw.com \n E-Posta : " + personel_eposta + "\n Parola : " + personel_parola);
+                ayarlar.NetGSM_SMS(personel_telefon, "Esflw Hesap Bilgileriniz; \n Sistem Giriş Url : http://otomasyon.esflw.com \n E-Posta : " + personel_eposta + "\n Parola : " + personel_parola);
             }
 
         }
