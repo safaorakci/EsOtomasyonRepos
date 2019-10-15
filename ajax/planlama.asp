@@ -279,7 +279,7 @@
                                                 ekleyen_id = request.Cookies("kullanici")("kullanici_id")
                                                 ekleyen_ip = Request.ServerVariables("Remote_Addr")
     
-                                                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& gorevli_id &"', @mesaj = '"& bildirim &"';"
+                                                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); "
                                                 set ekle2 = baglanti.execute(SQL)
 
                                                 SQL="select personel_ad + '' + personel_soyad as personel_adsoyad, * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"';"

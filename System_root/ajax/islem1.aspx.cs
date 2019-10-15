@@ -1120,538 +1120,545 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
     public void is_listesi()
     {
-        string durum = Request.Form["durum"].ToString();
-        string sql_str = "";
-        string tum_sql_str = "";
-        string gdurum_str = "";
+        try
+        {
+            string durum = Request.Form["durum"].ToString();
+            string sql_str = "";
+            string tum_sql_str = "";
+            string gdurum_str = "";
 
-        if (durum == "iptal")
-        {
-            sql_str = " and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'İPTAL'";
-        }
-        else if (durum == "geciken")
-        {
-            sql_str = " and isler.durum = 'true' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ'";
-        }
-        else if (durum == "bekleyen")
-        {
-            sql_str = " and isler.durum = 'true' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR'";
-        }
-        else if (durum == "devameden")
-        {
-            sql_str = @" and isler.durum = 'true' and 
+            if (durum == "iptal")
+            {
+                sql_str = " and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'İPTAL'";
+            }
+            else if (durum == "geciken")
+            {
+                sql_str = " and isler.durum = 'true' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ'";
+            }
+            else if (durum == "bekleyen")
+            {
+                sql_str = " and isler.durum = 'true' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR'";
+            }
+            else if (durum == "devameden")
+            {
+                sql_str = @" and isler.durum = 'true' and 
                         case 
                         when ISNULL(isler.tamamlanma_orani,0)< 100
                             then 'DEVAM EDİYOR'
                         end = 'DEVAM EDİYOR'";
-        }
-        else if (durum == "biten")
-        {
-            sql_str = " and isler.durum = 'true' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0) < 100 then 'DEVAM EDİYOR' end = 'BİTTİ'";
-        }
-        else if (durum == "tum")
-        {
-            sql_str = " and ISNULL(isler.tamamlanma_orani,0) < 100 ";
-            tum_sql_str = "left JOIN ucgem_is_gorevli_durumlari gdurum with(nolock) ON gdurum.is_id = isler.id AND gdurum.gorevli_id = @kullanici_id";
-            gdurum_str = " AND ISNULL( gdurum.tamamlanma_orani,0) < CASE WHEN ISNULL(gdurum.id,0) != 0 THEN 100 ELSE 101 end";
-        }
-
-
-        //Response.Write(sql_str);
-
-        isler_is_yok_panel.Visible = false;
-        isler_isvar_panel.Visible = false;
-
-        ayarlar.baglan();
-
-
-
-        ayarlar.cmd.Parameters.Clear();
-        if (SessionManager.CurrentUser.kullanici_id == 270)
-        {
-            ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler, case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.firma_id = @firma_id " + sql_str + " and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-        }
-        else
-        {
-            ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler  etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id " + tum_sql_str + " join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where  isler.firma_id = @firma_id " + sql_str + " and ( ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value =  CONVERT(NVARCHAR(50),@kullanici_id) ) > 0) or isler.ekleyen_id = @kullanici_id or ((SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') WHERE value =  CONVERT(NVARCHAR(50),departman2.id) ) > 0) ) " + gdurum_str + " and isler.cop = 'false' GROUP BY isler.id, isler.renk, isler.departmanlar, isler.durum,isler.tamamlanma_orani,isler.bitis_tarihi,isler.bitis_saati,isler.gorevliler, ekleyen.personel_ad, ekleyen.personel_soyad, isler.adi, isler.aciklama, isler.oncelik, isler.kontrol_bildirim, isler.baslangic_tarihi, isler.baslangic_saati, isler.cop, isler.firma_kodu, isler.firma_id, isler.ekleyen_id, isler.ekleyen_ip, isler.ekleme_tarihi, isler.ekleme_saati, isler.silen_id, isler.silen_ip, isler.silme_tarihi, isler.silme_saati, isler.tamamlanma_tarihi, isler.tamamlanma_saati, isler.guncelleme_tarihi, isler.guncelleme_saati, isler.guncelleyen, isler.ajanda_gosterim, isler.GantAdimID, isler.toplam_sure, isler.gunluk_sure, isler.toplam_gun, isler.sinirlama_varmi, isler.is_tipi order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-
-            // ayarlar.cmd.CommandText = "select * from deneme_tablo";
-
-        }
-
-        string tip = "";
-        try
-        {
-            tip = Request.Form["tip"].ToString();
-        }
-        catch (Exception)
-        {
-
-        }
-
-        if (tip == "departman_tumu")
-        {
-            tip = "";
-        }
-
-        if (tip != "")
-        {
-            if (tip == "benim_tum")
-            {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
             }
-            else if (tip == "benim_baslanmamis")
+            else if (durum == "biten")
             {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR' and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-
+                sql_str = " and isler.durum = 'true' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0) < 100 then 'DEVAM EDİYOR' end = 'BİTTİ'";
             }
-            else if (tip == "benim_devameden")
+            else if (durum == "tum")
             {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'DEVAM EDİYOR' and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-
+                sql_str = " and ISNULL(isler.tamamlanma_orani,0) < 100 ";
+                tum_sql_str = "left JOIN ucgem_is_gorevli_durumlari gdurum with(nolock) ON gdurum.is_id = isler.id AND gdurum.gorevli_id = @kullanici_id";
+                gdurum_str = " AND ISNULL( gdurum.tamamlanma_orani,0) < CASE WHEN ISNULL(gdurum.id,0) != 0 THEN 100 ELSE 101 end";
             }
-            else if (tip == "benim_gecikmis")
+
+
+            //Response.Write(sql_str);
+
+            isler_is_yok_panel.Visible = false;
+            isler_isvar_panel.Visible = false;
+
+            ayarlar.baglan();
+
+
+
+            ayarlar.cmd.Parameters.Clear();
+            if (SessionManager.CurrentUser.kullanici_id == 270)
             {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ' and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-
-            }
-            else if (tip == "benim_tamamlanan")
-            {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BİTTİ' and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-            }
-            else if (tip == "baskasi_tumu")
-            {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-            }
-            else if (tip == "baskasi_baslanmamis")
-            {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where  isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-            }
-            else if (tip == "baskasi_devameden")
-            {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where  isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'DEVAM EDİYOR' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-            }
-            else if (tip == "baskasi_gecikmis")
-            {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-            }
-            else if (tip == "baskasi_biten")
-            {
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BİTTİ' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-            }
-            else if (tip == "departman_baslanmamis")
-            {
-                string etiket = Request.Form["etiket_tip"].ToString() + "-" + Request.Form["etiket"].ToString();
-
-                if (Request.Form["etiket_tip"].ToString() == "firma")
-                {
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 left join ucgem_proje_listesi proje on proje.proje_firma_id = @proje_firma_id where isler.durum = 'true' and isler.firma_id = @firma_id and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0) and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR' order by(convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
-
-                    ayarlar.cmd.Parameters.Add("proje_firma_id", Request.Form["etiket"].ToString());
-                }
-                else
-                {
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where isler.durum = 'true' and isler.firma_id = @firma_id and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-                }
-
-
-
-                ayarlar.cmd.Parameters.Add("etiket", etiket);
-            }
-            else if (tip == "departman_gecikmis")
-            {
-                string etiket = Request.Form["etiket_tip"] + "-" + Request.Form["etiket"];
-
-                if (Request.Form["etiket_tip"].ToString() == "firma")
-                {
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 left join ucgem_proje_listesi proje on proje.proje_firma_id = @proje_firma_id where isler.durum = 'true' and isler.firma_id = @firma_id and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0) and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ' order by(convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
-
-                    ayarlar.cmd.Parameters.Add("proje_firma_id", Request.Form["etiket"].ToString());
-                }
-                else
-                {
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where  isler.durum = 'true' and isler.firma_id = @firma_id and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-                }
-
-                ayarlar.cmd.Parameters.Add("etiket", etiket);
-
-
-            }
-            else if (tip == "departman_devameden")
-            {
-                string etiket = Request.Form["etiket_tip"].ToString() + "-" + Request.Form["etiket"].ToString();
-                if (Request.Form["etiket_tip"].ToString() == "firma")
-                {
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 left join ucgem_proje_listesi proje on proje.proje_firma_id = @proje_firma_id where isler.durum = 'true' and isler.firma_id = @firma_id and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0) and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'DEVAM EDİYOR' order by(convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
-
-                    ayarlar.cmd.Parameters.Add("proje_firma_id", Request.Form["etiket"].ToString());
-                }
-                else
-                {
-
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where isler.durum = 'true' and isler.firma_id = @firma_id and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'DEVAM EDİYOR' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-                }
-
-                ayarlar.cmd.Parameters.Add("etiket", etiket);
-            }
-            else if (tip == "departman_tamamlanan")
-            {
-                string etiket = Request.Form["etiket_tip"].ToString() + "-" + Request.Form["etiket"].ToString();
-
-                if (Request.Form["etiket_tip"].ToString() == "firma")
-                {
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 left join ucgem_proje_listesi proje on proje.proje_firma_id = @proje_firma_id where isler.durum = 'true' and isler.firma_id = @firma_id and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0) and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BİTTİ' order by(convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
-
-                    ayarlar.cmd.Parameters.Add("proje_firma_id", Request.Form["etiket"].ToString());
-                }
-                else
-                {
-
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where isler.durum = 'true' and isler.firma_id = @firma_id and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BİTTİ' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-                }
-
-                ayarlar.cmd.Parameters.Add("etiket", etiket);
-            }
-            else if (tip == "santiye")
-            {
-                string proje_id = "proje" + "-" + Request.Form["proje_id"].ToString();
-                string departman_id = "departman" + "-" + Request.Form["departman_id"].ToString();
-
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = isler.ekleyen_id  where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =   @proje_id ) > 0 and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =   @departman_id ) > 0)  and isler.cop = 'false' and (case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end != 'BİTTİ' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end ! = 'İPTAL') order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
-
-                ayarlar.cmd.Parameters.Add("proje_id", proje_id);
-                ayarlar.cmd.Parameters.Add("departman_id", departman_id);
-            }
-            else if (tip == "arama")
-            {
-
-                string adi = UIHelper.trn(Request.Form["adi"].ToString());
-                string is_durum = UIHelper.trn(Request.Form["is_durum"].ToString());
-                string gorevliler = UIHelper.trn(Request.Form["gorevliler"].ToString());
-                string firmalar = UIHelper.trn(Request.Form["firmalar"].ToString());
-                string santiyeler = UIHelper.trn(Request.Form["santiyeler"].ToString());
-                string departmanlar = UIHelper.trn(Request.Form["departmanlar"].ToString());
-                string baslangic_tarihi = UIHelper.trn(Request.Form["baslangic_tarihi"].ToString());
-                string bitis_tarihi = UIHelper.trn(Request.Form["bitis_tarihi"].ToString());
-                string is_baslangic_tarihi = UIHelper.trn(Request.Form["is_baslangic_tarihi"].ToString());
-                string is_bitis_tarihi = UIHelper.trn(Request.Form["is_bitis_tarihi"].ToString());
-                string toplantilar = "";
-                string parcalar = "";
-
-                try
-                {
-                    parcalar = UIHelper.trn(Request.Form["parcalar"].ToString());
-                }
-                catch (Exception)
-                {
-
-                }
-
-                try
-                {
-                    toplantilar = UIHelper.trn(Request.Form["toplantilar"].ToString());
-                }
-                catch (Exception)
-                {
-
-
-                }
-
-                string sql_str1 = "";
-                string sql_str2 = "";
-
-                if (adi != "")
-                {
-                    sql_str2 = " and isler.adi like '%" + adi + "%'";
-                }
-
-
-                // burda yapılacak
-                if (is_baslangic_tarihi.Length > 0 && is_bitis_tarihi.Length > 0)
-                {
-                    sql_str2 += " and isler.baslangic_tarihi between '" + is_baslangic_tarihi + "' and '" + is_bitis_tarihi + "' and isler.bitis_tarihi between '" + is_baslangic_tarihi + "' and '" + is_bitis_tarihi + "'";
-                }
-                else if (is_baslangic_tarihi.Length > 0)
-                {
-                    sql_str2 += " and '" + is_baslangic_tarihi + "' between isler.baslangic_tarihi and isler.bitis_tarihi";
-                }
-                else if (is_bitis_tarihi.Length > 0)
-                {
-                    sql_str2 += " and '" + is_bitis_tarihi + "' between isler.baslangic_tarihi and isler.bitis_tarihi";
-                }
-
-
-
-                if (baslangic_tarihi.Length > 0 && bitis_tarihi.Length > 0)
-                {
-                    sql_str2 += " and isler.ekleme_tarihi between '" + baslangic_tarihi + "' and '" + bitis_tarihi + "'";
-                }
-                else if (baslangic_tarihi.Length > 0)
-                {
-                    sql_str2 += " and isler.ekleme_tarihi >= '" + baslangic_tarihi + "'";
-                }
-                else if (bitis_tarihi.Length > 0)
-                {
-                    sql_str2 += " and isler.ekleme_tarihi <= '" + bitis_tarihi + "'";
-                }
-                if (parcalar.Length > 0)
-                {
-                    sql_str2 += " and isler.id in (select IsID from is_parca_listesi where ParcaId = '" + parcalar + "' and cop = 'false')";
-                }
-                if (departmanlar != "0")
-                {
-                    sql_str2 += " and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value = 'departman-" + departmanlar + "') > 0";
-                }
-                if (santiyeler != "0")
-                {
-                    sql_str2 += " and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value = 'proje-" + santiyeler + "') > 0";
-                }
-                if (toplantilar != "")
-                {
-                    sql_str2 += " and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value = 'toplanti-" + toplantilar + "') > 0";
-                }
-                if (gorevliler != "0")
-                {
-                    sql_str2 += " and (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = '" + gorevliler + "') > 0";
-                }
-                if (firmalar != "0")
-                {
-                    sql_str1 = "left join ucgem_proje_listesi proje on proje.proje_firma_id = '" + firmalar + "'";
-
-                    sql_str2 += " and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'firma-" + firmalar + "') > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0)";
-                }
-                if (is_durum == "0")
-                {
-                    sql_str2 += " and isler.durum = 'true'";
-                }
-                else
-                {
-                    sql_str2 += " and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = '" + is_durum + "'";
-                }
-                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id " + sql_str1 + " left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where isler.firma_id = @firma_id " + sql_str2 + " and isler.cop = 'false' and ( ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50),@kullanici_id) ) > 0) or isler.ekleyen_id = @kullanici_id or ((SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') WHERE value = CONVERT(NVARCHAR(50),departman2.id) ) > 0) ) order by (convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
-            }
-        }
-        else
-        {
-            //ayarlar.cmd.Parameters.Add("departmanlar", SessionManager.CurrentUser.departmanlar);
-        }
-
-        ayarlar.cmd.CommandText += "; select '.tablo_' + REPLACE(is_tablo_gorunum, ', ', ', .tablo_') as is_tablo_gorunum, isnull(is_tablo_sayi,10) as is_tablo_sayi from ucgem_firma_kullanici_listesi where id = @kullanici_id;";
-        ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
-        ayarlar.cmd.Parameters.Add("kullanici_id", SessionManager.CurrentUser.kullanici_id);
-        SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
-        DataSet ds = new DataSet();
-        sda.Fill(ds);
-
-
-        DataRow drow_tablo = ds.Tables[1].Rows[0];
-        string style_class = drow_tablo["is_tablo_gorunum"].ToString();
-        string is_tablo_sayi = drow_tablo["is_tablo_sayi"].ToString();
-
-        /*
-        string style_class = ".tablo_gorevliler , .tablo_etiketler , .tablo_baslangic , .tablo_bitis , .tablo_tamamlanma , .tablo_guncelleme , .tablo_ekleyen , .tablo_durum , .tablo_oncelik";
-        string is_tablo_sayi = "100";*/
-
-
-        Response.Write("<div id='yeni_style_yeri'><style> .tablo_gorevliler , .tablo_etiketler, .tablo_baslangic , .tablo_bitis , .tablo_tamamlanma , .tablo_guncelleme , .tablo_ekleyen , .tablo_durum , .tablo_oncelik{ display:none; } " + style_class + "{ display:table-cell!important; } </style><div class='clear'></div></div>");
-
-        tablo_customize.SelectionMode = ListSelectionMode.Multiple;
-        tablo_customize.Attributes.Add("is_tablo_sayi", is_tablo_sayi);
-
-        gorunum gorunum = new gorunum();
-        gorunum.tablo_gorevliler = false;
-        gorunum.tablo_etiketler = false;
-        gorunum.tablo_baslangic = false;
-        gorunum.tablo_bitis = false;
-        gorunum.tablo_tamamlanma = false;
-        gorunum.tablo_guncelleme = false;
-        gorunum.tablo_ekleyen = false;
-        gorunum.tablo_durum = false;
-        gorunum.tablo_oncelik = false;
-
-        bool selected_durum = false;
-        if (style_class.IndexOf("gorevliler") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_gorevliler = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "Görevliler", Value = "gorevliler", Selected = selected_durum });
-        selected_durum = false;
-        if (style_class.IndexOf("etiketler") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_etiketler = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "Etiketler", Value = "etiketler", Selected = selected_durum });
-        selected_durum = false;
-        if (style_class.IndexOf("baslangic") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_baslangic = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "İş Başlangıç", Value = "baslangic", Selected = selected_durum });
-        selected_durum = false;
-        if (style_class.IndexOf("bitis") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_bitis = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "Planlanan Bitiş", Value = "bitis", Selected = selected_durum });
-        selected_durum = false;
-        if (style_class.IndexOf("tamamlanma") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_tamamlanma = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "Tamamlanma Durumu", Value = "tamamlanma", Selected = selected_durum });
-        selected_durum = false;
-        if (style_class.IndexOf("guncelleme") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_guncelleme = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "Güncelleme", Value = "guncelleme", Selected = selected_durum });
-        selected_durum = false;
-        if (style_class.IndexOf("ekleyen") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_ekleyen = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "Ekleyen", Value = "ekleyen", Selected = selected_durum });
-        selected_durum = false;
-        if (style_class.IndexOf("durum") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_durum = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "Durum", Value = "durum", Selected = selected_durum });
-        selected_durum = false;
-        if (style_class.IndexOf("oncelik") > 0)
-        {
-            selected_durum = true;
-            gorunum.tablo_oncelik = true;
-        }
-        tablo_customize.Items.Add(new ListItem() { Text = "Öncelik", Value = "oncelik", Selected = selected_durum });
-        tablo_customize.CssClass = "yapilan";
-
-
-        List<is_gorunum> isler = new List<is_gorunum>();
-
-        if (ds.Tables[0].Rows.Count == 0)
-            isler_is_yok_panel.Visible = true;
-        else
-            isler_isvar_panel.Visible = true;
-
-
-
-
-        foreach (DataRow item in ds.Tables[0].Rows)
-        {
-
-            is_gorunum yeniis = new is_gorunum();
-            yeniis.id = Convert.ToInt32(item["id"]);
-            yeniis.is_kodu = item["is_kodu"].ToString();
-            yeniis.adi = item["adi"].ToString();
-            if (item["aciklama"].ToString().Length > 150)
-                yeniis.aciklama = item["aciklama"].ToString().Substring(0, 150) + "...";
-            else
-                yeniis.aciklama = item["aciklama"].ToString();
-            string hidden_etiketler = item["hidden_etiketler"].ToString().Replace("~", "");
-            yeniis.hidden_etiketler = hidden_etiketler;
-            yeniis.departman_isimleri = item["departman_isimleri"].ToString().Replace("~", "<br>");
-            yeniis.tamamlanma_orani = Convert.ToInt32(item["tamamlanma_orani"].Equals(DBNull.Value) ? 0 : item["tamamlanma_orani"]);
-            yeniis.baslangic_tarihi = Convert.ToDateTime(item["baslangic_tarihi"]).ToShortDateString();
-            yeniis.baslangic_tarihi_order = DateTime.Parse(Convert.ToDateTime(item["baslangic_tarihi"]).ToShortDateString() + " " + item["baslangic_saati"].ToString()).Ticks;
-            yeniis.baslangic_saati = item["baslangic_saati"].ToString().Substring(0, 5);
-            yeniis.bitis_tarihi = Convert.ToDateTime(item["bitis_tarihi"]).ToShortDateString();
-            yeniis.bitis_tarihi_order = DateTime.Parse(Convert.ToDateTime(item["bitis_tarihi"]).ToShortDateString() + " " + item["bitis_saati"].ToString()).Ticks;
-            yeniis.bitis_saati = item["bitis_saati"].ToString().Substring(0, 5);
-            yeniis.oncelik = item["oncelik"].ToString().ToUpper();
-            yeniis.ekleyen_adsoyad = item["ekleyen_adsoyad"].ToString();
-            yeniis.ekleme_tarihi = Convert.ToDateTime(item["ekleme_tarihi"]).ToShortDateString();
-            yeniis.ekleme_tarihi_order = DateTime.Parse(Convert.ToDateTime(item["ekleme_tarihi"]).ToShortDateString() + " " + item["ekleme_saati"].ToString()).Ticks;
-            yeniis.ekleme_saati = item["ekleme_saati"].ToString().Substring(0, 5);
-            yeniis.guncelleme_tarihi = Convert.ToDateTime(item["guncelleme_tarihi"]).ToShortDateString();
-            yeniis.guncelleme_tarihi_order = 999925216000000000 - DateTime.Parse(Convert.ToDateTime(item["guncelleme_tarihi"]).ToShortDateString() + " " + item["guncelleme_saati"].ToString()).Ticks; ;
-            yeniis.guncelleme_saati = item["guncelleme_saati"].ToString().Substring(0, 5);
-            yeniis.guncelleyen = item["guncelleyen"].ToString();
-            yeniis.renk = item["renk"].ToString();
-
-
-            if (item["oncelik"].ToString() == "Normal")
-            {
-                yeniis.oncelik_class = "info";
-            }
-            else if (item["oncelik"].ToString() == "Yüksek")
-            {
-                yeniis.oncelik_class = "danger";
+                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler, case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.firma_id = @firma_id " + sql_str + " and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
             }
             else
             {
-                yeniis.oncelik_class = "warning";
+                ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler  etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id " + tum_sql_str + " join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where  isler.firma_id = @firma_id " + sql_str + " and ( ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value =  CONVERT(NVARCHAR(50),@kullanici_id) ) > 0) or isler.ekleyen_id = @kullanici_id or ((SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') WHERE value =  CONVERT(NVARCHAR(50),departman2.id) ) > 0) ) " + gdurum_str + " and isler.cop = 'false' GROUP BY isler.id, isler.renk, isler.departmanlar, isler.durum,isler.tamamlanma_orani,isler.bitis_tarihi,isler.bitis_saati,isler.gorevliler, ekleyen.personel_ad, ekleyen.personel_soyad, isler.adi, isler.aciklama, isler.oncelik, isler.kontrol_bildirim, isler.baslangic_tarihi, isler.baslangic_saati, isler.cop, isler.firma_kodu, isler.firma_id, isler.ekleyen_id, isler.ekleyen_ip, isler.ekleme_tarihi, isler.ekleme_saati, isler.silen_id, isler.silen_ip, isler.silme_tarihi, isler.silme_saati, isler.tamamlanma_tarihi, isler.tamamlanma_saati, isler.guncelleme_tarihi, isler.guncelleme_saati, isler.guncelleyen, isler.ajanda_gosterim, isler.GantAdimID, isler.toplam_sure, isler.gunluk_sure, isler.toplam_gun, isler.sinirlama_varmi, isler.is_tipi order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+
+                // ayarlar.cmd.CommandText = "select * from deneme_tablo";
+
             }
 
+            string tip = "";
+            try
+            {
+                tip = Request.Form["tip"].ToString();
+            }
+            catch (Exception)
+            {
 
-            if (item["is_durum"].ToString() == "IPTAL")
-            {
-                yeniis.is_durum = "İPTAL";
-                yeniis.is_durum_class = "inverse";
-            }
-            else if (item["is_durum"].ToString() == "GECIKTI")
-            {
-                yeniis.is_durum = "GECİKTİ";
-                yeniis.is_durum_class = "danger";
-            }
-            else if (item["is_durum"].ToString() == "BEKLIYOR")
-            {
-                yeniis.is_durum = "BEKLİYOR";
-                yeniis.is_durum_class = "warning";
-            }
-            else if (item["is_durum"].ToString() == "DEVAM EDIYOR")
-            {
-                yeniis.is_durum = "DEVAM EDİYOR";
-                yeniis.is_durum_class = "info";
-            }
-            else if (item["is_durum"].ToString() == "BITTI")
-            {
-                yeniis.is_durum = "BİTTİ";
-                yeniis.is_durum_class = "success";
-
-                yeniis.tamamlanma_tarihi = Convert.ToDateTime(item["tamamlanma_tarihi"]).ToShortDateString();
-                yeniis.tamamlanma_saati = item["tamamlanma_saati"].ToString().Substring(0, 5);
             }
 
-            List<gorevli> gorevliler = new List<gorevli>();
-
-            foreach (string gorevli in item["gorevli_personeller"].ToString().Split('|'))
+            if (tip == "departman_tumu")
             {
-                if (gorevli.Length > 5)
+                tip = "";
+            }
+
+            if (tip != "")
+            {
+                if (tip == "benim_tum")
                 {
-                    gorevli gorev = new gorevli();
-                    gorev.id = Convert.ToInt32(gorevli.Split('~')[0]);
-                    gorev.adi = gorevli.Split('~')[2];
-                    gorev.resim = gorevli.Split('~')[1];
-                    gorevliler.Add(gorev);
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                }
+                else if (tip == "benim_baslanmamis")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR' and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+
+                }
+                else if (tip == "benim_devameden")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'DEVAM EDİYOR' and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+
+                }
+                else if (tip == "benim_gecikmis")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ' and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+
+                }
+                else if (tip == "benim_tamamlanan")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), @kullanici_id) ) > 0) and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BİTTİ' and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                }
+                else if (tip == "baskasi_tumu")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                }
+                else if (tip == "baskasi_baslanmamis")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where  isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                }
+                else if (tip == "baskasi_devameden")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where  isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'DEVAM EDİYOR' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                }
+                else if (tip == "baskasi_gecikmis")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                }
+                else if (tip == "baskasi_biten")
+                {
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.durum = 'true' and isler.firma_id = @firma_id and isler.ekleyen_id = @kullanici_id and isnull((select top 1 isnull(Replace(metin, 'null', '0'),'0') from dbo.Split(Replace(isler.gorevliler, 'null', '0'), ',') where ISNULL(Metin,'0')!='' + @kullanici_id + ''), '0')>0 and isler.ekleyen_id = @kullanici_id and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BİTTİ' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                }
+                else if (tip == "departman_baslanmamis")
+                {
+                    string etiket = Request.Form["etiket_tip"].ToString() + "-" + Request.Form["etiket"].ToString();
+
+                    if (Request.Form["etiket_tip"].ToString() == "firma")
+                    {
+                        ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 left join ucgem_proje_listesi proje on proje.proje_firma_id = @proje_firma_id where isler.durum = 'true' and isler.firma_id = @firma_id and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0) and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR' order by(convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
+
+                        ayarlar.cmd.Parameters.Add("proje_firma_id", Request.Form["etiket"].ToString());
+                    }
+                    else
+                    {
+                        ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where isler.durum = 'true' and isler.firma_id = @firma_id and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BEKLİYOR' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                    }
+
+
+
+                    ayarlar.cmd.Parameters.Add("etiket", etiket);
+                }
+                else if (tip == "departman_gecikmis")
+                {
+                    string etiket = Request.Form["etiket_tip"] + "-" + Request.Form["etiket"];
+
+                    if (Request.Form["etiket_tip"].ToString() == "firma")
+                    {
+                        ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 left join ucgem_proje_listesi proje on proje.proje_firma_id = @proje_firma_id where isler.durum = 'true' and isler.firma_id = @firma_id and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0) and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ' order by(convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
+
+                        ayarlar.cmd.Parameters.Add("proje_firma_id", Request.Form["etiket"].ToString());
+                    }
+                    else
+                    {
+                        ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where  isler.durum = 'true' and isler.firma_id = @firma_id and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'GECİKTİ' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                    }
+
+                    ayarlar.cmd.Parameters.Add("etiket", etiket);
+
+
+                }
+                else if (tip == "departman_devameden")
+                {
+                    string etiket = Request.Form["etiket_tip"].ToString() + "-" + Request.Form["etiket"].ToString();
+                    if (Request.Form["etiket_tip"].ToString() == "firma")
+                    {
+                        ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 left join ucgem_proje_listesi proje on proje.proje_firma_id = @proje_firma_id where isler.durum = 'true' and isler.firma_id = @firma_id and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0) and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'DEVAM EDİYOR' order by(convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
+
+                        ayarlar.cmd.Parameters.Add("proje_firma_id", Request.Form["etiket"].ToString());
+                    }
+                    else
+                    {
+
+                        ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where isler.durum = 'true' and isler.firma_id = @firma_id and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'DEVAM EDİYOR' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                    }
+
+                    ayarlar.cmd.Parameters.Add("etiket", etiket);
+                }
+                else if (tip == "departman_tamamlanan")
+                {
+                    string etiket = Request.Form["etiket_tip"].ToString() + "-" + Request.Form["etiket"].ToString();
+
+                    if (Request.Form["etiket_tip"].ToString() == "firma")
+                    {
+                        ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 left join ucgem_proje_listesi proje on proje.proje_firma_id = @proje_firma_id where isler.durum = 'true' and isler.firma_id = @firma_id and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0) and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BİTTİ' order by(convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
+
+                        ayarlar.cmd.Parameters.Add("proje_firma_id", Request.Form["etiket"].ToString());
+                    }
+                    else
+                    {
+
+                        ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where isler.durum = 'true' and isler.firma_id = @firma_id and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  @etiket ) > 0 and isler.cop = 'false' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = 'BİTTİ' order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                    }
+
+                    ayarlar.cmd.Parameters.Add("etiket", etiket);
+                }
+                else if (tip == "santiye")
+                {
+                    string proje_id = "proje" + "-" + Request.Form["proje_id"].ToString();
+                    string departman_id = "departman" + "-" + Request.Form["departman_id"].ToString();
+
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 ) AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = isler.ekleyen_id  where isler.durum = 'true' and isler.firma_id = @firma_id and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =   @proje_id ) > 0 and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =   @departman_id ) > 0)  and isler.cop = 'false' and (case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end != 'BİTTİ' and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end ! = 'İPTAL') order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+
+                    ayarlar.cmd.Parameters.Add("proje_id", proje_id);
+                    ayarlar.cmd.Parameters.Add("departman_id", departman_id);
+                }
+                else if (tip == "arama")
+                {
+
+                    string adi = UIHelper.trn(Request.Form["adi"].ToString());
+                    string is_durum = UIHelper.trn(Request.Form["is_durum"].ToString());
+                    string gorevliler = UIHelper.trn(Request.Form["gorevliler"].ToString());
+                    string firmalar = UIHelper.trn(Request.Form["firmalar"].ToString());
+                    string santiyeler = UIHelper.trn(Request.Form["santiyeler"].ToString());
+                    string departmanlar = UIHelper.trn(Request.Form["departmanlar"].ToString());
+                    string baslangic_tarihi = UIHelper.trn(Request.Form["baslangic_tarihi"].ToString());
+                    string bitis_tarihi = UIHelper.trn(Request.Form["bitis_tarihi"].ToString());
+                    string is_baslangic_tarihi = UIHelper.trn(Request.Form["is_baslangic_tarihi"].ToString());
+                    string is_bitis_tarihi = UIHelper.trn(Request.Form["is_bitis_tarihi"].ToString());
+                    string toplantilar = "";
+                    string parcalar = "";
+
+                    try
+                    {
+                        parcalar = UIHelper.trn(Request.Form["parcalar"].ToString());
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+
+                    try
+                    {
+                        toplantilar = UIHelper.trn(Request.Form["toplantilar"].ToString());
+                    }
+                    catch (Exception)
+                    {
+
+
+                    }
+
+                    string sql_str1 = "";
+                    string sql_str2 = "";
+
+                    if (adi != "")
+                    {
+                        sql_str2 = " and isler.adi like '%" + adi + "%'";
+                    }
+
+
+                    // burda yapılacak
+                    if (is_baslangic_tarihi.Length > 0 && is_bitis_tarihi.Length > 0)
+                    {
+                        sql_str2 += " and isler.baslangic_tarihi between '" + is_baslangic_tarihi + "' and '" + is_bitis_tarihi + "' and isler.bitis_tarihi between '" + is_baslangic_tarihi + "' and '" + is_bitis_tarihi + "'";
+                    }
+                    else if (is_baslangic_tarihi.Length > 0)
+                    {
+                        sql_str2 += " and '" + is_baslangic_tarihi + "' between isler.baslangic_tarihi and isler.bitis_tarihi";
+                    }
+                    else if (is_bitis_tarihi.Length > 0)
+                    {
+                        sql_str2 += " and '" + is_bitis_tarihi + "' between isler.baslangic_tarihi and isler.bitis_tarihi";
+                    }
+
+
+
+                    if (baslangic_tarihi.Length > 0 && bitis_tarihi.Length > 0)
+                    {
+                        sql_str2 += " and isler.ekleme_tarihi between '" + baslangic_tarihi + "' and '" + bitis_tarihi + "'";
+                    }
+                    else if (baslangic_tarihi.Length > 0)
+                    {
+                        sql_str2 += " and isler.ekleme_tarihi >= '" + baslangic_tarihi + "'";
+                    }
+                    else if (bitis_tarihi.Length > 0)
+                    {
+                        sql_str2 += " and isler.ekleme_tarihi <= '" + bitis_tarihi + "'";
+                    }
+                    if (parcalar.Length > 0)
+                    {
+                        sql_str2 += " and isler.id in (select IsID from is_parca_listesi where ParcaId = '" + parcalar + "' and cop = 'false')";
+                    }
+                    if (departmanlar != "0")
+                    {
+                        sql_str2 += " and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value = 'departman-" + departmanlar + "') > 0";
+                    }
+                    if (santiyeler != "0")
+                    {
+                        sql_str2 += " and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value = 'proje-" + santiyeler + "') > 0";
+                    }
+                    if (toplantilar != "")
+                    {
+                        sql_str2 += " and (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value = 'toplanti-" + toplantilar + "') > 0";
+                    }
+                    if (gorevliler != "0")
+                    {
+                        sql_str2 += " and (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = '" + gorevliler + "') > 0";
+                    }
+                    if (firmalar != "0")
+                    {
+                        sql_str1 = "left join ucgem_proje_listesi proje on proje.proje_firma_id = '" + firmalar + "'";
+
+                        sql_str2 += " and((SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'firma-" + firmalar + "') > 0 or (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'proje-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0)";
+                    }
+                    if (is_durum == "0")
+                    {
+                        sql_str2 += " and isler.durum = 'true'";
+                    }
+                    else
+                    {
+                        sql_str2 += " and case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end = '" + is_durum + "'";
+                    }
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,2), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id " + sql_str1 + " left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where isler.firma_id = @firma_id " + sql_str2 + " and isler.cop = 'false' and ( ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50),@kullanici_id) ) > 0) or isler.ekleyen_id = @kullanici_id or ((SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') WHERE value = CONVERT(NVARCHAR(50),departman2.id) ) > 0) ) order by (convert(datetime, isler.guncelleme_tarihi) +convert(datetime, isler.guncelleme_saati)) desc;";
                 }
             }
-            yeniis.gorevliler = gorevliler;
-            yeniis.tablo_baslangic = gorunum.tablo_baslangic.Equals(false) ? " gosterme " : "";
-            yeniis.tablo_bitis = gorunum.tablo_bitis.Equals(false) ? " gosterme " : "";
-            yeniis.tablo_durum = gorunum.tablo_durum.Equals(false) ? " gosterme " : "";
-            yeniis.tablo_ekleyen = gorunum.tablo_ekleyen.Equals(false) ? " gosterme " : "";
-            yeniis.tablo_etiketler = gorunum.tablo_etiketler.Equals(false) ? " gosterme " : "";
-            yeniis.tablo_gorevliler = gorunum.tablo_gorevliler.Equals(false) ? " gosterme " : "";
-            yeniis.tablo_guncelleme = gorunum.tablo_guncelleme.Equals(false) ? " gosterme " : "";
-            yeniis.tablo_oncelik = gorunum.tablo_oncelik.Equals(false) ? " gosterme " : "";
-            yeniis.tablo_tamamlanma = gorunum.tablo_tamamlanma.Equals(false) ? " gosterme " : "";
-            isler.Add(yeniis);
+            else
+            {
+                //ayarlar.cmd.Parameters.Add("departmanlar", SessionManager.CurrentUser.departmanlar);
+            }
+
+            ayarlar.cmd.CommandText += "; select '.tablo_' + REPLACE(is_tablo_gorunum, ', ', ', .tablo_') as is_tablo_gorunum, isnull(is_tablo_sayi,10) as is_tablo_sayi from ucgem_firma_kullanici_listesi where id = @kullanici_id;";
+            ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
+            ayarlar.cmd.Parameters.Add("kullanici_id", SessionManager.CurrentUser.kullanici_id);
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            DataSet ds = new DataSet();
+            sda.Fill(ds);
+
+
+            DataRow drow_tablo = ds.Tables[1].Rows[0];
+            string style_class = drow_tablo["is_tablo_gorunum"].ToString();
+            string is_tablo_sayi = drow_tablo["is_tablo_sayi"].ToString();
+
+            /*
+            string style_class = ".tablo_gorevliler , .tablo_etiketler , .tablo_baslangic , .tablo_bitis , .tablo_tamamlanma , .tablo_guncelleme , .tablo_ekleyen , .tablo_durum , .tablo_oncelik";
+            string is_tablo_sayi = "100";*/
+
+
+            Response.Write("<div id='yeni_style_yeri'><style> .tablo_gorevliler , .tablo_etiketler, .tablo_baslangic , .tablo_bitis , .tablo_tamamlanma , .tablo_guncelleme , .tablo_ekleyen , .tablo_durum , .tablo_oncelik{ display:none; } " + style_class + "{ display:table-cell!important; } </style><div class='clear'></div></div>");
+
+            tablo_customize.SelectionMode = ListSelectionMode.Multiple;
+            tablo_customize.Attributes.Add("is_tablo_sayi", is_tablo_sayi);
+
+            gorunum gorunum = new gorunum();
+            gorunum.tablo_gorevliler = false;
+            gorunum.tablo_etiketler = false;
+            gorunum.tablo_baslangic = false;
+            gorunum.tablo_bitis = false;
+            gorunum.tablo_tamamlanma = false;
+            gorunum.tablo_guncelleme = false;
+            gorunum.tablo_ekleyen = false;
+            gorunum.tablo_durum = false;
+            gorunum.tablo_oncelik = false;
+
+            bool selected_durum = false;
+            if (style_class.IndexOf("gorevliler") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_gorevliler = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "Görevliler", Value = "gorevliler", Selected = selected_durum });
+            selected_durum = false;
+            if (style_class.IndexOf("etiketler") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_etiketler = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "Etiketler", Value = "etiketler", Selected = selected_durum });
+            selected_durum = false;
+            if (style_class.IndexOf("baslangic") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_baslangic = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "İş Başlangıç", Value = "baslangic", Selected = selected_durum });
+            selected_durum = false;
+            if (style_class.IndexOf("bitis") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_bitis = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "Planlanan Bitiş", Value = "bitis", Selected = selected_durum });
+            selected_durum = false;
+            if (style_class.IndexOf("tamamlanma") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_tamamlanma = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "Tamamlanma Durumu", Value = "tamamlanma", Selected = selected_durum });
+            selected_durum = false;
+            if (style_class.IndexOf("guncelleme") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_guncelleme = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "Güncelleme", Value = "guncelleme", Selected = selected_durum });
+            selected_durum = false;
+            if (style_class.IndexOf("ekleyen") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_ekleyen = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "Ekleyen", Value = "ekleyen", Selected = selected_durum });
+            selected_durum = false;
+            if (style_class.IndexOf("durum") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_durum = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "Durum", Value = "durum", Selected = selected_durum });
+            selected_durum = false;
+            if (style_class.IndexOf("oncelik") > 0)
+            {
+                selected_durum = true;
+                gorunum.tablo_oncelik = true;
+            }
+            tablo_customize.Items.Add(new ListItem() { Text = "Öncelik", Value = "oncelik", Selected = selected_durum });
+            tablo_customize.CssClass = "yapilan";
+
+
+            List<is_gorunum> isler = new List<is_gorunum>();
+
+            if (ds.Tables[0].Rows.Count == 0)
+                isler_is_yok_panel.Visible = true;
+            else
+                isler_isvar_panel.Visible = true;
+
+
+
+
+            foreach (DataRow item in ds.Tables[0].Rows)
+            {
+
+                is_gorunum yeniis = new is_gorunum();
+                yeniis.id = Convert.ToInt32(item["id"]);
+                yeniis.is_kodu = item["is_kodu"].ToString();
+                yeniis.adi = item["adi"].ToString();
+                if (item["aciklama"].ToString().Length > 150)
+                    yeniis.aciklama = item["aciklama"].ToString().Substring(0, 150) + "...";
+                else
+                    yeniis.aciklama = item["aciklama"].ToString();
+                string hidden_etiketler = item["hidden_etiketler"].ToString().Replace("~", "");
+                yeniis.hidden_etiketler = hidden_etiketler;
+                yeniis.departman_isimleri = item["departman_isimleri"].ToString().Replace("~", "<br>");
+                yeniis.tamamlanma_orani = Convert.ToInt32(item["tamamlanma_orani"].Equals(DBNull.Value) ? 0 : item["tamamlanma_orani"]);
+                yeniis.baslangic_tarihi = Convert.ToDateTime(item["baslangic_tarihi"]).ToShortDateString();
+                yeniis.baslangic_tarihi_order = DateTime.Parse(Convert.ToDateTime(item["baslangic_tarihi"]).ToShortDateString() + " " + item["baslangic_saati"].ToString()).Ticks;
+                yeniis.baslangic_saati = item["baslangic_saati"].ToString().Substring(0, 5);
+                yeniis.bitis_tarihi = Convert.ToDateTime(item["bitis_tarihi"]).ToShortDateString();
+                yeniis.bitis_tarihi_order = DateTime.Parse(Convert.ToDateTime(item["bitis_tarihi"]).ToShortDateString() + " " + item["bitis_saati"].ToString()).Ticks;
+                yeniis.bitis_saati = item["bitis_saati"].ToString().Substring(0, 5);
+                yeniis.oncelik = item["oncelik"].ToString().ToUpper();
+                yeniis.ekleyen_adsoyad = item["ekleyen_adsoyad"].ToString();
+                yeniis.ekleme_tarihi = Convert.ToDateTime(item["ekleme_tarihi"]).ToShortDateString();
+                yeniis.ekleme_tarihi_order = DateTime.Parse(Convert.ToDateTime(item["ekleme_tarihi"]).ToShortDateString() + " " + item["ekleme_saati"].ToString()).Ticks;
+                yeniis.ekleme_saati = item["ekleme_saati"].ToString().Substring(0, 5);
+                yeniis.guncelleme_tarihi = Convert.ToDateTime(item["guncelleme_tarihi"]).ToShortDateString();
+                yeniis.guncelleme_tarihi_order = 999925216000000000 - DateTime.Parse(Convert.ToDateTime(item["guncelleme_tarihi"]).ToShortDateString() + " " + item["guncelleme_saati"].ToString()).Ticks; ;
+                yeniis.guncelleme_saati = item["guncelleme_saati"].ToString().Substring(0, 5);
+                yeniis.guncelleyen = item["guncelleyen"].ToString();
+                yeniis.renk = item["renk"].ToString();
+
+
+                if (item["oncelik"].ToString() == "Normal")
+                {
+                    yeniis.oncelik_class = "info";
+                }
+                else if (item["oncelik"].ToString() == "Yüksek")
+                {
+                    yeniis.oncelik_class = "danger";
+                }
+                else
+                {
+                    yeniis.oncelik_class = "warning";
+                }
+
+
+                if (item["is_durum"].ToString() == "IPTAL")
+                {
+                    yeniis.is_durum = "İPTAL";
+                    yeniis.is_durum_class = "inverse";
+                }
+                else if (item["is_durum"].ToString() == "GECIKTI")
+                {
+                    yeniis.is_durum = "GECİKTİ";
+                    yeniis.is_durum_class = "danger";
+                }
+                else if (item["is_durum"].ToString() == "BEKLIYOR")
+                {
+                    yeniis.is_durum = "BEKLİYOR";
+                    yeniis.is_durum_class = "warning";
+                }
+                else if (item["is_durum"].ToString() == "DEVAM EDIYOR")
+                {
+                    yeniis.is_durum = "DEVAM EDİYOR";
+                    yeniis.is_durum_class = "info";
+                }
+                else if (item["is_durum"].ToString() == "BITTI")
+                {
+                    yeniis.is_durum = "BİTTİ";
+                    yeniis.is_durum_class = "success";
+
+                    yeniis.tamamlanma_tarihi = Convert.ToDateTime(item["tamamlanma_tarihi"]).ToShortDateString();
+                    yeniis.tamamlanma_saati = item["tamamlanma_saati"].ToString().Substring(0, 5);
+                }
+
+                List<gorevli> gorevliler = new List<gorevli>();
+
+                foreach (string gorevli in item["gorevli_personeller"].ToString().Split('|'))
+                {
+                    if (gorevli.Length > 5)
+                    {
+                        gorevli gorev = new gorevli();
+                        gorev.id = Convert.ToInt32(gorevli.Split('~')[0]);
+                        gorev.adi = gorevli.Split('~')[2];
+                        gorev.resim = gorevli.Split('~')[1];
+                        gorevliler.Add(gorev);
+                    }
+                }
+                yeniis.gorevliler = gorevliler;
+                yeniis.tablo_baslangic = gorunum.tablo_baslangic.Equals(false) ? " gosterme " : "";
+                yeniis.tablo_bitis = gorunum.tablo_bitis.Equals(false) ? " gosterme " : "";
+                yeniis.tablo_durum = gorunum.tablo_durum.Equals(false) ? " gosterme " : "";
+                yeniis.tablo_ekleyen = gorunum.tablo_ekleyen.Equals(false) ? " gosterme " : "";
+                yeniis.tablo_etiketler = gorunum.tablo_etiketler.Equals(false) ? " gosterme " : "";
+                yeniis.tablo_gorevliler = gorunum.tablo_gorevliler.Equals(false) ? " gosterme " : "";
+                yeniis.tablo_guncelleme = gorunum.tablo_guncelleme.Equals(false) ? " gosterme " : "";
+                yeniis.tablo_oncelik = gorunum.tablo_oncelik.Equals(false) ? " gosterme " : "";
+                yeniis.tablo_tamamlanma = gorunum.tablo_tamamlanma.Equals(false) ? " gosterme " : "";
+                isler.Add(yeniis);
+            }
+
+            isler_repeater.DataSource = isler;
+            isler_repeater.ItemCreated += isler_repeater_ItemCreated;
+            isler_repeater.DataBind();
+
+            ayarlar.cnn.Close();
         }
-
-        isler_repeater.DataSource = isler;
-        isler_repeater.ItemCreated += isler_repeater_ItemCreated;
-        isler_repeater.DataBind();
-
-        ayarlar.cnn.Close();
+        catch (Exception ex)
+        {
+            throw(ex);
+        }
     }
 
     public class gorunum
@@ -3241,7 +3248,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         ayarlar.cmd.Parameters.Clear();
         //ayarlar.cmd.CommandText = "select id, personel_ad + ' ' + personel_soyad as personel_ad_soyad from ucgem_firma_kullanici_listesi where firma_id = @firma_id and durum = 'true' and cop = 'false';";
 
-        ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <= '" + baslangic_tarihi + "'  AND  bitis_tarihi >= '" + bitis_tarihi + "' OR(baslangic_tarihi >= '" + baslangic_tarihi + "' AND  bitis_tarihi <= '" + bitis_tarihi + "'))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
+        ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <= CONVERT(date, '" + baslangic_tarihi + "', 103)  AND  bitis_tarihi >= CONVERT(date, '" + bitis_tarihi + "', 103) OR (baslangic_tarihi >= CONVERT(date, '" + baslangic_tarihi + "', 103) AND  bitis_tarihi <= CONVERT(date, '" + bitis_tarihi + "', 103)))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
 
         ayarlar.cmd.Parameters.Add("@firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);

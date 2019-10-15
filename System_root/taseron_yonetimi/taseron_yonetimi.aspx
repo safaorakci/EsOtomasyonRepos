@@ -94,7 +94,7 @@
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Firma Logo")); %></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
-                                <input type="file" value="/img/buyukboy.png" id="firma_logo" tip="buyuk" yol="firma_logo/" class="form-control" />
+                                <input type="file" value="/img/buyukboy.png" id="firma_logo" tip="buyuk" yol="firma_logo/" class="form-control" folder="FirmaLogo"/>
                             </div>
                         </div>
 

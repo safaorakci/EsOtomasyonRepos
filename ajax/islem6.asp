@@ -34,7 +34,7 @@
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Personel Resim")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
-                                <input type="file" value="<%=personel("personel_resim") %>" id="personel_resim" tip="buyuk" yol="personel_resim/" class="form-control" />
+                                <input type="file" value="<%=personel("personel_resim") %>" filepath="<%=personel("personel_resim") %>" id="personel_resim" tip="buyuk" folder="PersonelResim" yol="personel_resim/" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -3222,7 +3222,8 @@
         elseif trn(request("islem2"))="guncelle" then
 
             kayit_id = trn(request("kayit_id"))
-
+            is_id = trn(request("is_id"))
+        Response.Write("iş Id : " & is_id)
 
             baslik = trn(request("baslik"))
             siparis_tarihi = trn(request("siparis_tarihi"))
@@ -3249,7 +3250,7 @@
 
             SatinalmaId = kayit_id
 
-            SQL="delete from satinalma_siparis_listesi where SatinalmaId = '"& SatinalmaId &"'"
+            SQL="delete from satinalma_siparis_listesi where IsId = '"& is_id &"'"
             set sil = baglanti.execute(SQL)
 
             for x = 0 to ubound(split(parcalar, "|"))
@@ -3270,7 +3271,7 @@
                     ekleme_tarihi = date
                     ekleme_saati = time
 
-                    SQL="insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& SatinalmaId &"', '"& parcaId &"', '"& maliyet &"', '"& pb &"', '"& adet &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+                    SQL="insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& SatinalmaId &"', '"& is_id &"', '"& parcaId &"', '"& maliyet &"', '"& pb &"', '"& adet &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                     set ekle = baglanti.execute(SQL)
 
                 end if
@@ -3285,7 +3286,6 @@
 
             SQL="update satinalma_listesi set cop = 'true', silen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"', silen_tarihi = getdate(), silen_saati = getdate() where id = '"& kayit_id &"'"
             set sil = baglanti.execute(SQL)
-
 
         end if
 
@@ -3416,17 +3416,13 @@
                     <td class="dropdown" style="width: 10px;">
                         <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
                         <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
-                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('satinalma_formu', '<%=satinalma("id") %>');"><i class="fa fa-download"></i>İndir</a>
-                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('satinalma_formu','<%=satinalma("id") %>');"><i class="fa fa-print"></i>Yazdır</a>
-                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('satinalma_formu','<%=satinalma("id") %>');"><i class="fa fa-send"></i>Gönder</a>
-                            <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitduzenle('<%=satinalma("id") %>');"><i class="icofont icofont-edit"></i>Düzenle</a>
-                            <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitsil('<%=satinalma("id") %>');"><i class="icofont icofont-ui-delete"></i>Sil</a>
-
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('satinalma_formu', '<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="fa fa-download"></i>İndir</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('satinalma_formu','<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="fa fa-print"></i>Yazdır</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('satinalma_formu','<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="fa fa-send"></i>Gönder</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitduzenle('<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="icofont icofont-edit"></i>Düzenle</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitsil('<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="icofont icofont-ui-delete"></i>Sil</a>
                         </div>
                     </td>
-
-
-
                 </tr>
                 <% 
                     satinalma.movenext
@@ -3441,7 +3437,7 @@
     elseif trn(request("islem"))="satinalma_kayitduzenle" then
 
         kayit_id = trn(request("kayit_id"))
-
+        is_id = trn(request("is_id"))
 
         SQL="select * from satinalma_listesi where id = '"& kayit_id &"'"
         set kayit = baglanti.execute(SQL)
@@ -3480,20 +3476,35 @@
 
 
         <div class="row">
-            <label class="col-sm-12 col-form-label">Tedarikçi :</label>
-            <div class="col-sm-12">
+            <label class="col-sm-6 col-form-label">Tedarikçi :</label>
+            <label class="col-sm-6 col-form-label">Proje :</label>
+            <div class="col-sm-6">
                 <select name="satinalma_tedarikci_id" id="satinalma_tedarikci_id" class="select2">
                     <%
                     SQL="select id, firma_adi from ucgem_firma_listesi where ekleyen_firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and cop = 'false' and yetki_kodu = 'TASERON'"
                     set firmacek = baglanti.execute(SQL)
                     do while not firmacek.eof
                     %>
-                    <option <% if trim(firmacek("id"))=trim(kayit("tedarikci_id")) then %> selected="selected" <% end if %> value="<%=firmacek("id") %>"><%=firmacek("firma_adi") %></option>
+                    <option <% if trim(firmacek("id"))=trim(kayit("tedarikci_id")) then %> selected="selected" <% end if %> value="<%=firmacek("id") %>"><%=firmacek("firma_adi") %> </option>
                     <%
                     firmacek.movenext
                     loop
                     %>
                 </select>
+            </div>
+            <div class="col-sm-6">
+                <select name="satinalma_proje_id" id="satinalma_proje_id" class="select2">
+                <%
+                    SQL="select * from ucgem_proje_listesi where durum = 'true' and cop = 'false'"
+                    set proje = baglanti.execute(SQL)
+                    do while not proje.eof
+                %>
+                <option <% if trim(proje("id"))=trim(kayit("proje_id")) then %> selected="selected" <% end if %> value="<%=proje("id") %>"><%=proje("proje_adi") %> </option>
+                <%
+                    proje.movenext
+                    loop
+                %>
+            </select>
             </div>
         </div>
 
@@ -3551,7 +3562,7 @@
                                 </td>
                                 <td style="padding-left: 15px;">
                                     <input type="text" class="form-control adetler required" required onkeyup="satinalmasiparishesapkitap();" name="adet" id="adet<%=i %>" style="height: 38px;" value="<%=siparis("adet") %>" /></td>
-                                <th style="width: 25px; padding-left: 10px;"><a href="javascript:void(0);" onclick="satinalmayenisatirsil('<%=i %>');">
+                                <th style="width: 25px; padding-left: 10px;"><a href="javascript:void(0);" onclick="satinalmayenisatirsil('<%=i %>'); satinalmasiparishesapkitap();">
                                     <img src="/img/abort.png" /></a></th>
                             </tr>
                             <%
@@ -3610,7 +3621,7 @@
 
 
         <div class="modal-footer">
-            <input type="button" class="btn btn-primary" onclick="SatinalmaSiparisGuncelle('<%=kayit("id")%>');" value="Sipariş Güncelle" />
+            <input type="button" class="btn btn-primary" onclick="SatinalmaSiparisGuncelle('<%=kayit("id")%>', '<%=kayit("IsId")%>');" value="Sipariş Güncelle" />
         </div>
 
 
@@ -4016,6 +4027,14 @@ works properly when clicked or hovered */
                 box-shadow: 0px 0px 5px #666666;
             }
         </style>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#satinalma_alttoplamtl").val($("#satinalma_alttoplamtl").val().replace(".", ""));
+                $("#satinalma_alttoplamusd").val($("#satinalma_alttoplamusd").val().replace(".", ""));
+                $("#satinalma_alttoplameur").val($("#satinalma_alttoplameur").val().replace(".", ""));
+            });
+        </script>
         <script src="/js/jquery-ui.js"></script>
 
     </form>

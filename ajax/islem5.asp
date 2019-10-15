@@ -41,6 +41,7 @@
                 &nbsp;&nbsp;
                 <a class="btn btn-labeled btn-primary btn-mini" href="javascript:void(0);" style="margin-top: -27px;">
                     <span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%>
+                    <!--<span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%>-->
                 </a>
             </div>
         </div>
@@ -2756,12 +2757,11 @@ works properly when clicked or hovered */
                 SQL = "select * from parca_listesi where id = '"& ParcaId &"'"
                 set parcalar = baglanti.execute(SQL)
 
-                SQL = "select case when  departmanlar like 'proje%' then SUBSTRING(departmanlar,7, LEN(CHARINDEX(',', departmanlar)-CHARINDEX(',', departmanlar))) else '0' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
+                SQL = "select case when departmanlar like 'proje%' then SUBSTRING(departmanlar,7, LEN(CHARINDEX(',', departmanlar)-CHARINDEX(',', departmanlar))) else '0' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
                 set isListesi = baglanti.execute(SQL)
 
-                projeID= isListesi("ProjeID")
-
-                
+                projeID = isListesi("ProjeID")
+            
                 miktar = parcalar("miktar") - parcalar("minumum_miktar")
                 if miktar < AdetSayisi then
                    eksikParca = AdetSayisi - miktar
@@ -2775,49 +2775,69 @@ works properly when clicked or hovered */
                    if parcalar("birim_pb") = "TL" then
                       birim = "TL"
                       toplamTL = CDbl(birimFiyat * eksikParca)
-                         
                    end if
                    if parcalar("birim_pb") = "USD" then
                       birim = "USD"
                       toplamUSD = CDbl(birimFiyat * eksikParca)
-                     
                    end if
                    if parcalar("birim_pb") = "EUR" then
                       birim = "EUR"
                       toplamEUR = CDbl(birim_Fiyat * eksikParca)
                    end if
 
-                  
-
                    if eksikParca > 0 then
-                         SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"'"
+
+                         SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"' and IsId = '"& IsID &"'"
                          set siparisVarmi = baglanti.execute(SQL)
 
+                         SQL="select * from satinalma_listesi where IsId = '"& IsID &"'"
+                         set siparisFormuVarmi = baglanti.execute(SQL)
+
                          if siparisVarmi.eof then
-                            SQL = "SET NOCOUNT ON;  insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
-                            set satinalmaListesi = baglanti.execute(SQL)
-
-                            satinalmaId = satinalmaListesi(0)
-
-                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
-                            set satinalmaSiparisListesi = baglanti.execute(SQL)
-                         else
-                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where parcaId = '"& siparisVarmi("parcaId") &"'"
-                               set siparisGuncelle = baglanti.execute(SQL)
-
-                               if parcalar("birim_pb") = "TL" then
-                                  SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
-                                  set updated = baglanti.execute(SQL)
+                            if siparisFormuVarmi.eof then
+                                SQL = "SET NOCOUNT ON; insert into satinalma_listesi(IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& IsID &"', '"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
+                                set satinalmaListesi = baglanti.execute(SQL)
+   
+                                satinalmaId = satinalmaListesi(0)
+                            else
+                                if parcalar("birim_pb") = "TL" then
+                                  SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                                  satinalmaId = siparisFormuVarmi("id")
                                end if
 
                                if parcalar("birim_pb") = "USD" then
-                                  SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
-                                  set updated = baglanti.execute(SQL)
+                                  SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                                  satinalmaId = siparisFormuVarmi("id")
                                end if
                                
                                if parcalar("birim_pb") = "EUR" then
-                                  SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
-                                  set updated = baglanti.execute(SQL)
+                                  SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                                  satinalmaId = siparisFormuVarmi("id")
+                               end if
+                            end if
+
+                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+                            set satinalmaSiparisListesi = baglanti.execute(SQL)
+                         else
+                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where parcaId = '"& siparisVarmi("parcaId") &"' and IsId = '"& siparisVarmi("IsId") &"'"
+                               set siparisGuncelle = baglanti.execute(SQL)
+
+                               if parcalar("birim_pb") = "TL" then
+                                  SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                               end if
+
+                               if parcalar("birim_pb") = "USD" then
+                                  SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                               end if
+                               
+                               if parcalar("birim_pb") = "EUR" then
+                                  SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
                                end if
                          end if
                         
@@ -2872,12 +2892,10 @@ works properly when clicked or hovered */
                    if parcalar("birim_pb") = "TL" then
                       birim = "TL"
                       toplamTL = CDbl(birimFiyat * eksikParca)
-                         
                    end if
                    if parcalar("birim_pb") = "USD" then
                       birim = "USD"
                       toplamUSD = CDbl(birimFiyat * eksikParca)
-                     
                    end if
                    if parcalar("birim_pb") = "EUR" then
                       birim = "EUR"
@@ -2886,33 +2904,57 @@ works properly when clicked or hovered */
 
                          if eksikParca > 0 then
 
-                         SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"'"
+                          SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"' and IsId = '"& IsID &"'"
                          set siparisVarmi = baglanti.execute(SQL)
 
+                         SQL="select * from satinalma_listesi where IsId = '"& IsID &"'"
+                         set siparisFormuVarmi = baglanti.execute(SQL)
+
                          if siparisVarmi.eof then
-                            SQL = "SET NOCOUNT ON;  insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
-                               set satinalmaListesi = baglanti.execute(SQL)
-
-                            satinalmaId = satinalmaListesi(0)
-
-                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
-                               set satinalmaSiparisListesi = baglanti.execute(SQL)
-                         else
-                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where parcaId = '"& siparisVarmi("parcaId") &"'"
-                               set siparisGuncelle = baglanti.execute(SQL)
-                               if parcalar("birim_pb") = "TL" then
-                                  SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
-                                  set updated = baglanti.execute(SQL)
+                            if siparisFormuVarmi.eof then
+                                SQL = "SET NOCOUNT ON; insert into satinalma_listesi(IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& IsID &"', '"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
+                                set satinalmaListesi = baglanti.execute(SQL)
+   
+                                satinalmaId = satinalmaListesi(0)
+                            else
+                                if parcalar("birim_pb") = "TL" then
+                                  SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                                  satinalmaId = siparisFormuVarmi("id")
                                end if
 
                                if parcalar("birim_pb") = "USD" then
-                                  SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
-                                  set updated = baglanti.execute(SQL)
+                                  SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                                  satinalmaId = siparisFormuVarmi("id")
                                end if
                                
                                if parcalar("birim_pb") = "EUR" then
-                                  SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where id = '"& siparisVarmi("SatinalmaId") &"'"
-                                  set updated = baglanti.execute(SQL)
+                                  SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                                  satinalmaId = siparisFormuVarmi("id")
+                               end if
+                            end if
+
+                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+                            set satinalmaSiparisListesi = baglanti.execute(SQL)
+                         else
+                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where parcaId = '"& siparisVarmi("parcaId") &"' and IsId = '"& siparisVarmi("IsId") &"'"
+                               set siparisGuncelle = baglanti.execute(SQL)
+
+                               if parcalar("birim_pb") = "TL" then
+                                  SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                               end if
+
+                               if parcalar("birim_pb") = "USD" then
+                                  SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
+                               end if
+                               
+                               if parcalar("birim_pb") = "EUR" then
+                                  SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
+                                  set satinalmaListesi = baglanti.execute(SQL)
                                end if
                          end if
                         
@@ -3178,6 +3220,7 @@ works properly when clicked or hovered */
         <label class="col-sm-12 col-form-label">Excell Dosyası :</label>
         <div class="col-sm-12">
             <input class="form-control required" required type="file" id="FileUpload" tip="kucuk" folder="envanter" />
+            <img src="../img/loader_green.gif" style="display:none" id="fileLoading"/>
         </div>
     </div>
 

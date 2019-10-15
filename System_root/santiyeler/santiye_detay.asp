@@ -93,7 +93,7 @@
                     <li class="nav-link_yeni"><a href="#uygulama_tab" onclick="onbellekten_proje_planlama_getir('<%=proje_id %>', 'uygulama', this);" class="tabbuton icon icon-display"><span><%=LNG("Uygulama")%></span></a></li>
                     <% end if %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",91,")>0 then %>
-                    <li class="nav-link_yeni" style="display:none"><a href="#satinalma_tab" onclick="onbellekten_proje_satinalma_getir('<%=proje_id %>', this);" class="tabbuton icon icon-upload"><span><%=LNG("Maliyet")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#satinalma_tab" onclick="onbellekten_proje_satinalma_getir('<%=proje_id %>', this);" class="tabbuton icon icon-upload"><span><%=LNG("Maliyet")%></span></a></li>
                     <% end if %>
                     <li class="nav-link_yeni" style="display:none;"><a href="#gelir_tab" onclick="onbellekten_proje_gelir_getir('<%=proje_id %>', this); " class="tabbuton icon icon-tools"><span><%=LNG("Gelir")%></span></a></li>               
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",92,")>0 then %>
