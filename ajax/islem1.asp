@@ -2759,11 +2759,11 @@
     <div class="card-header">
         <h5 class="card-header-text"><% if trim(firma("yetki_kodu"))="MUSTERI" then %><%=LNG("Müşteri")%><% else %><%=LNG("Taşeron ")%><% end if %> <%=LNG("Bilgileri")%></h5>
         <% if trim(firma("yetki_kodu"))="MUSTERI" then %>
-                <a href="javascript:void(0);" onclick="sayfagetir('/firma_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float:right; margin-right:10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i> </span>&nbsp;Geri Dön</a>
+        <a href="javascript:void(0);" onclick="sayfagetir('/firma_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
+            <i class="fa fa-history"></i></span>&nbsp;Geri Dön</a>
         <% else %>
-            <a href="javascript:void(0);" onclick="sayfagetir('/taseron_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float:right; margin-right:10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i> </span>&nbsp;Geri Dön</a>
+        <a href="javascript:void(0);" onclick="sayfagetir('/taseron_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
+            <i class="fa fa-history"></i></span>&nbsp;Geri Dön</a>
         <% end if %>
     </div>
     <div class="card-block">
@@ -2882,7 +2882,8 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-12"><br />
+                            <div class="col-sm-12">
+                                <br />
                                 <input type="button" class="btn btn-primary btn-mini" onclick="firma_bilgilerini_guncelle('<%=firma("id")%>');" value="<%=LNG("Müşteri Bilgilerini Güncelle")%>" />
                             </div>
                         </div>
@@ -2893,7 +2894,7 @@
                         <div class="row">
                             <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Firma Logo")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
-                                <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" filePath="<%=firma("firma_logo") %>" folder="FirmaLogo" yol="firma_logo/" class="form-control" />
+                                <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" filepath="<%=firma("firma_logo") %>" folder="FirmaLogo" yol="firma_logo/" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -2974,7 +2975,7 @@
                                                 <input class="file fileupload" placeholder="<%=LNG("Yeni Dosya Yükle")%>" style="display: inline; color: rgb(102, 102, 102); font-size: 11px; width: 142px; height: 25px;">
                                                 <div class="filebtn" style="width: 190px; height: 30px; background: url(/img/addFiles.png) right center no-repeat; display: inline; position: absolute; margin-left: -152px; margin-top: 1px;">
                                                     <input type="file" iid="48" id="uploadsrc48" tip="kucuk" yol="dosya_deposu/" style="height: 30px; position: absolute; width: 170px; margin-left: 5px; display: inline; cursor: pointer; opacity: 0;" class="fileupload" yapildi="true">
-                                                    <img src="/img/loader_green.gif" id="fileLoading" style="display:none"/>
+                                                    <img src="/img/loader_green.gif" id="fileLoading" style="display: none" />
                                                 </div>
                                                 <input type="hidden" resimurl="48" name="dosya_yolu409" id="dosya_yolu409" value="/img/kucukboy.png"></td>
                                         </tr>
@@ -3321,8 +3322,8 @@
 <div class="card">
     <div class="card-header">
         <h5 class="card-header-text"><%=LNG("Personel Bilgileri")%></h5>
-        <a href="javascript:void(0);" onclick="sayfagetir('/personel_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float:right; margin-right:10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i> </span>&nbsp;Geri Dön</a>
+        <a href="javascript:void(0);" onclick="sayfagetir('/personel_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
+            <i class="fa fa-history"></i></span>&nbsp;Geri Dön</a>
     </div>
     <div class="card-block">
         <div class="view-info">
@@ -3383,7 +3384,20 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" class="takvimyap form-control" id="personel_dtarih" required value="<%=cdate(personel("personel_dtarih")) %>" />
+
+                                    <%
+                                        Function formatNumber(value, digits) 
+                                            if digits > len(value) then 
+                                                formatNumber = String(digits-len(value),"0") & value 
+                                            else 
+                                                formatNumber = value 
+                                            end if 
+                                        End Function 
+
+                                    %>
+
+                                    <input type="text" class="takvimyap form-control" id="personel_dtarih" required value="<%=formatNumber(DAY(personel("personel_dtarih")),2)%>.<%=formatNumber(MONTH(personel("personel_dtarih")),2)%>.<%=YEAR(personel("personel_dtarih"))%>" />
+
                                 </div>
                             </div>
                         </div>
@@ -3430,7 +3444,7 @@
                         </div>
 
 
-                          <div class="row" style="display:none">
+                        <div class="row" style="display: none">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yönetici Yetkisi")%></label>
                             <div class="col-sm-12 col-lg-12">
                                 <select id="yonetici_yetkisi" name="yonetici_yetkisi" class="select2">
@@ -3441,9 +3455,9 @@
                             </div>
                         </div>
 
-                        
 
-                          <div class="row">
+
+                        <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Parmak İzi Cihaz Eşleştirme ID")%></label>
                             <div class="col-sm-12 col-lg-12">
                                 <div class="input-group input-group-primary">
@@ -3479,7 +3493,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="display:none">
+                        <div class="row" style="display: none">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Departman")%></label>
                             <div class="col-sm-12 col-lg-12">
                                 <select name="departmanlar" id="departmanlar" class="select2" multiple="multiple">
@@ -3542,7 +3556,7 @@
                             end if
 
                         %>
-                         <div class="row">
+                        <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yıllık İzin Hakediş Tarihi")%></label>
                             <div class="col-sm-9 col-lg-9">
                                 <div class="input-group input-group-primary">
@@ -3834,12 +3848,12 @@
                         set personel = baglanti.execute(SQL)
                     %>
                     <h5 class="card-header-text"><%=LNG("Personel İzin Talepleri")%></h5>
-                    <div style="float:right; margin-top:-15px; font-weight:bold; margin-right:30px;">
-                        Kalan İzin Kullanım Hakkı<span class="label label-info" style=" font-size:13px; padding:3px; text-align:center; "><%=personel("kalan") %> gün</span>
+                    <div style="float: right; margin-top: -15px; font-weight: bold; margin-right: 30px;">
+                        Kalan İzin Kullanım Hakkı<span class="label label-info" style="font-size: 13px; padding: 3px; text-align: center;"><%=personel("kalan") %> gün</span>
                     </div>
                     <br />
                     <br />
-                    <div class="dt-responsive table-responsive" style="padding-bottom:400px;">
+                    <div class="dt-responsive table-responsive" style="padding-bottom: 400px;">
                         <table id="new-cons" class="table table-striped table-bordered table-hover" width="100%">
                             <thead>
                                 <tr>
@@ -3879,8 +3893,8 @@
                                         <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
                                         <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
                                             <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('izin_talep_formu', '<%=personel_id %>','<%=izin("id") %>');"><i class="fa fa-download"></i>İndir</a>
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('izin_talep_formu','<%=personel_id %>','<%=izin("id") %>');"><i class="fa fa-print"></i> Yazdır</a>
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('izin_talep_formu','<%=personel_id %>','<%=izin("id") %>');"><i class="fa fa-send"></i> Gönder</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('izin_talep_formu','<%=personel_id %>','<%=izin("id") %>');"><i class="fa fa-print"></i>Yazdır</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('izin_talep_formu','<%=personel_id %>','<%=izin("id") %>');"><i class="fa fa-send"></i>Gönder</a>
                                             <a class="dropdown-item" href="javascript:void(0);" onclick="personel_izin_talep_onayla('<%=personel_id %>','<%=izin("id") %>', 'Onaylandı');"><i class="icofont icofont-edit"></i>Onayla</a>
                                             <a class="dropdown-item" href="javascript:void(0);" onclick="personel_izin_talep_onayla('<%=personel_id %>','<%=izin("id") %>', 'Reddedildi');"><i class="icofont icofont-ui-delete"></i>Reddet</a>
                                             <a class="dropdown-item" href="javascript:void(0);" onclick="personel_izin_talep_onayla('<%=personel_id %>','<%=izin("id") %>', 'Onay Bekliyor');"><i class="icofont icofont-ui-calendar"></i>Beklet</a>
@@ -3976,7 +3990,7 @@
                         <h5 style="font-size: 15px;"><%=LNG("Dosya Ekle")%></h5>
                         <br>
                         <input class="form-control required" required type="file" id="depo_dosya_yolu" tip="kucuk" folder="Personel" />
-                        <img src="/img/loader_green.gif" id="fileLoading" style="display:none"/>
+                        <img src="/img/loader_green.gif" id="fileLoading" style="display: none" />
                         <br>
                         <%=LNG("Dosya Adı:")%><br>
                         <input name="depo_dosya_adi" type="text" id="depo_dosya_adi" required class="form-control required" style="max-width: 300px;" /><br>
@@ -4230,7 +4244,8 @@
                         dongu_baslangic = cdate("01."& ay &"." & yil)
                         dongu_bitis = cdate(AyinSonGunu(dongu_baslangic) & "." & ay & "." & yil)
 
-                    %><br /><br />
+                    %><br />
+                    <br />
                     <div class="h5" style="font-size: 15px;"><%=LNG("Adam-Saat Cetveli")%></div>
 
                     <div class="tablediv" style="width: 100%; margin-top: 15px; overflow: auto;">
