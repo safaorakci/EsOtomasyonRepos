@@ -2757,7 +2757,14 @@
 %>
 <div class="card">
     <div class="card-header">
-        <h5 class="card-header-text"><% if trim(firma("yetki_kodu"))="MUSTERI" then %><%=LNG("Müşteri")%><% else %><%=LNG("Taşeron")%><% end if %> <%=LNG("Bilgileri")%></h5>
+        <h5 class="card-header-text"><% if trim(firma("yetki_kodu"))="MUSTERI" then %><%=LNG("Müşteri")%><% else %><%=LNG("Taşeron ")%><% end if %> <%=LNG("Bilgileri")%></h5>
+        <% if trim(firma("yetki_kodu"))="MUSTERI" then %>
+                <a href="javascript:void(0);" onclick="sayfagetir('/firma_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float:right; margin-right:10px;"><span class="btn-label" style="color: white;">
+            <i class="fa fa-history"></i> </span>&nbsp;Geri Dön</a>
+        <% else %>
+            <a href="javascript:void(0);" onclick="sayfagetir('/taseron_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float:right; margin-right:10px;"><span class="btn-label" style="color: white;">
+            <i class="fa fa-history"></i> </span>&nbsp;Geri Dön</a>
+        <% end if %>
     </div>
     <div class="card-block">
         <div class="view-info">
@@ -3314,6 +3321,8 @@
 <div class="card">
     <div class="card-header">
         <h5 class="card-header-text"><%=LNG("Personel Bilgileri")%></h5>
+        <a href="javascript:void(0);" onclick="sayfagetir('/personel_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float:right; margin-right:10px;"><span class="btn-label" style="color: white;">
+            <i class="fa fa-history"></i> </span>&nbsp;Geri Dön</a>
     </div>
     <div class="card-block">
         <div class="view-info">
