@@ -75,7 +75,7 @@
         <article class="col-xs-12 ">
             <div class="card">
                 <div class="card-header">
-                    <h5>Parça / Envanter Listesi</h5>
+                    <h5>Stok Listesi</h5>
 
                     <input type="button" style="float: right;" class="btn btn-primary" onclick="ModalParcaEkle();" value="Parça Ekle" />
                     <input type="button" style="float: right; margin-right:15px;" class="btn btn-info" onclick="ModalParcaArama();" value="Arama Yap" />

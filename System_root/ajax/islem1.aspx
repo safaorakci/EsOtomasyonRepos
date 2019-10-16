@@ -15,7 +15,7 @@
                         <div class="row">
                             <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Firma :")); %></label>
                             <div class="col-sm-10">
-                                <asp:dropdownlist ID="firma_id" class="select2" runat="server"></asp:dropdownlist>
+                                <asp:dropdownlist ID="firma_id" class="js-example-basic-multiple" name="states[]" multiple="multiple" runat="server"></asp:dropdownlist>
                             </div>
                             <div class="col-sm-2">
                                 <a href="javascript:void(0);" onclick="javascript:$('.close').click();sayfagetir('/firma_yonetimi/','jsid=4559');"><i class="fa fa-plus-square"></i> <% Response.Write(LNG("Yeni")); %></a>
@@ -25,7 +25,7 @@
                         <div class="row">
                             <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Proje Durum :")); %></label>
                             <div class="col-sm-12">
-                                <asp:dropdownlist ID="santiye_durum_id" class="form-control select2" runat="server"></asp:dropdownlist>
+                                <asp:dropdownlist ID="santiye_durum_id" class="js-example-basic-multiple" name="states[]" multiple="multiple" runat="server"></asp:dropdownlist>
                             </div>
                         </div>
             
@@ -1990,3 +1990,11 @@
         </div>
     </asp:panel>
 </form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.js-example-basic-multiple').select2();
+    });
+</script>

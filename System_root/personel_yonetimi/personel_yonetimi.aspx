@@ -205,7 +205,7 @@
                     </form>
 
                     <div class="row modal-footer" style="margin-top:20px;">
-                            <input type="button" onclick="personel_ekle();" class="btn btn-primary" value="<% Response.Write(LNG("Personel Ekle")); %>" />
+                            <input type="button" id="personel_ekle" onclick="personel_ekle();" class="btn btn-primary" value="<% Response.Write(LNG("Personel Ekle")); %>" />
                     </div>
                 </div>
             </div>

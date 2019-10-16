@@ -840,7 +840,7 @@ function personel_ekle() {
     var gorevler = $("#gorevler").val();
     var personel_parola = $("#personel_parola").val();
     var personel_tcno = $("#personel_tcno").val();
-
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=personeller&islem2=ekle";
     data += "&personel_resim=" + encodeURIComponent(personel_resim);
@@ -862,6 +862,9 @@ function personel_ekle() {
                 $("#personel_listesi").loadHTML({ url: "islem1", data: data }, function () {
                     datatableyap();
                     mesaj_ver("Personeller", "Kayıt Başarıyla Eklendi", "success");
+
+                    $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+                    $(".yetmislik").trigger("change");
                 });
             } else {
                 mesaj_ver("Personeller", "Girdiğiniz Bilgilerle daha önce personel tanımlanmış. Lütfen Kontrol Ediniz.", "danger");
