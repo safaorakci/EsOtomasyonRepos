@@ -3563,7 +3563,19 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" class="validate[required] takvimyap form-control" id="personel_yillik_izin_hakedis" name="personel_yillik_izin_hakedis" required value="<%=personel_yillik_izin_hakedis %>" />
+
+                                    <%
+                                        Function formatNumber(value, digits) 
+                                            if digits > len(value) then 
+                                                formatNumber = String(digits-len(value),"0") & value 
+                                            else 
+                                                formatNumber = value 
+                                            end if 
+                                        End Function 
+                                    %>
+
+                                    <input type="text" class="validate[required] takvimyap form-control" id="personel_yillik_izin_hakedis" name="personel_yillik_izin_hakedis" required value="<%=formatNumber(DAY(personel("personel_yillik_izin_hakedis")),2)%>.<%=formatNumber(MONTH(personel("personel_yillik_izin_hakedis")),2)%>.<%=YEAR(personel("personel_yillik_izin_hakedis"))%>" />
+
                                 </div>
                             </div>
 
