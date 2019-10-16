@@ -532,6 +532,13 @@
         </div>
     </div>
 
+    <div class="row"  >
+        <label class="col-sm-12 col-form-label" >Kodu :</label>
+        <div class="col-sm-12">
+            <input type="text" id="kodu" value="<%=parca("parca_kodu") %>" class="form-control" />
+        </div>
+    </div>
+
     <div class="row">
         <label class="col-sm-12 col-form-label">Marka :</label>
         <div class="col-sm-12">

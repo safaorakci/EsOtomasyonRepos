@@ -1309,6 +1309,34 @@ function UretimSablonuKayit() {
 
 }
 
+function sablon_sil(id) {
+
+    var sor = confirm("Şablonu silmek istediğine eminmisiniz?");
+    if (sor) {
+        var data = "islem=uretim_sablonlari&islem2=sil";
+        data += "&sablon_id=" + id;
+        data = encodeURI(data);
+        $("#uretim_sablonlari").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+
+            mesaj_ver("Şablonlar", "Kayıt Başarıyla Silindi", "success");
+            $(".close").click();
+
+            var icons = {
+                header: "zmdi zmdi-chevron-down",
+                activeHeader: "zmdi zmdi-chevron-up"
+            };
+
+            $("#color-accordion").accordion({
+                heightStyle: "content",
+                icons: icons,
+                active: 50,
+                collapsible: true
+            });
+
+        });
+    }
+}
+
 function proje_sablonlara_kayit(proje_id) {
 
     var sablon_adi = $("#sablon_adi").val();
@@ -1325,7 +1353,6 @@ function proje_sablonlara_kayit(proje_id) {
 }
 
 function yeni_uretim_sablonu_ekle() {
-
 
     var data = "islem=yeni_uretim_sablonu_ekle";
     data = encodeURI(data);

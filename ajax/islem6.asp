@@ -2381,7 +2381,7 @@
             barcode = trn(request("barcode"))
             kodu = trn(request("kodu"))
 
-            SQL="update parca_listesi set parca_kodu = '"& kodu &", parca_resmi = '"& parca_resmi &"', marka = '"& marka &"', parca_adi = '"& parca_adi &"', kategori = '"& kategori &"', aciklama = '"& aciklama &"', birim_maliyet = '"& birim_maliyet &"', birim_pb = '"& birim_pb &"', miktar = '"& miktar &"', minumum_miktar = '"& minumum_miktar &"', barcode = '"& barcode &"' where id = '"& kayit_id &"'"
+            SQL="update parca_listesi set parca_kodu = '"& kodu &"', parca_resmi = '"& parca_resmi &"', marka = '"& marka &"', parca_adi = '"& parca_adi &"', kategori = '"& kategori &"', aciklama = '"& aciklama &"', birim_maliyet = '"& birim_maliyet &"', birim_pb = '"& birim_pb &"', miktar = '"& miktar &"', minumum_miktar = '"& minumum_miktar &"', barcode = '"& barcode &"' where id = '"& kayit_id &"'"
             set guncelle = baglanti.execute(SQL)
 
 
@@ -2394,7 +2394,7 @@
             silen_tarihi = date
             silen_saati = time
 
-            SQL="update parca_listesi set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silen_tarihi = '"& silen_tarihi &"', silen_saati = '"& silen_saati &"' where id = '"& kayit_id &"'"
+            SQL="update parca_listesi set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silen_tarihi = CONVERT(DATE, '"& silen_tarihi &"',103), silen_saati = '"& silen_saati &"' where id = '"& kayit_id &"'"
             set ekle = baglanti.execute(SQL)
 
         end if
@@ -4083,8 +4083,15 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             SQL="insert into uretim_sablonlari(sablon_adi, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& sablon_adi &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
+        elseif trn(request("islem2"))="sil" then
+
+            sablon_id = trn(request("sablon_id"))
+
+            SQL="update uretim_sablonlari set cop='true' where id = '"& sablon_id &"' "
+            set sil = baglanti.execute(SQL)
 
         end if
+
 
     %>
 
@@ -4104,24 +4111,34 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                     <br />
                 </div>
 
-                <% else %>
+                <% else %> 
                 <div class="color-accordion" id="color-accordion">
-                    <%
+                   <%
                         x = 0
                         do while not sablon.eof
                             x = x + 1
                     %>
-                    <a class="accordion-msg ustunegelince" href="#collapseOne<%=sablon("id") %>" onclick="UretimSablonDetayGetir('<%=sablon("id") %>');" id="acilacak_santiye<%=sablon("id") %>" style="color: #4f4e4e; border-top: 1px solid #fff; font-weight: normal;"><i class="fa fa-map-o projeikon"></i>&nbsp;&nbsp;<%=sablon("sablon_adi") %>
-                    </a>
+                          <a class="accordion-msg ustunegelince" href="#collapseOne<%=sablon("id") %>" onclick="UretimSablonDetayGetir('<%=sablon("id") %>');" id="acilacak_santiye<%=sablon("id") %>" style="color: #4f4e4e; border-top: 1px solid #fff; font-weight: normal;"><i class="fa fa-map-o projeikon"></i>&nbsp;&nbsp;<%=sablon("sablon_adi") %>
+
+                                <div style="float: right; width: 50px; padding: 6px; text-align: center; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; margin-top: -30px; position: absolute; right: 55px;        background-color:transparent">
+                                    <div class="pcoded-badge label" style="width:35px; font-size:100%;">
+                                        <i onclick="sablon_sil(<%=sablon("id") %>);" class="ti-trash" style="color: black; background: transparent; font-size: 20px" tabindex="1"></i>
+                                    </div>
+                                </div>
+                            </a>
+
                     <div class="accordion-desc">
-                        <div class="accoricler" id="accoric<%=sablon("id") %>">
+                        <div id="accoric<%=sablon("id") %>">
+
                         </div>
                     </div>
+                  
                     <%
                         sablon.movenext
                         loop
                     %>
-                </div>
+                </div>                                    
+            
 
                 <% end if %>
             </div>

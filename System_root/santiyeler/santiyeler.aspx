@@ -145,7 +145,8 @@
                         <div class="color-accordion" id="color-accordion">
                             <asp:repeater id="santiyeler_repeater" runat="server">
                                 <ItemTemplate>
-                        <a class="accordion-msg ustunegelince  " onclick="proje_ic_liste_getir(<%# DataBinder.Eval(Container.DataItem, "id") %>);" href="#collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" id="acilacak_santiye<%# DataBinder.Eval(Container.DataItem, "id") %>" style="color:#4f4e4e; border-top:1px solid #fff; font-weight:normal; "><i class="fa fa-map-o projeikon"></i>&nbsp;&nbsp;<%# DataBinder.Eval(Container.DataItem, "durum_adi") %><div style="float: right; width: 50px; padding: 6px; text-align: center; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; margin-top: -25px; position: absolute; right: 30px; ">
+                        <a class="accordion-msg ustunegelince  " onclick="proje_ic_liste_getir(<%# DataBinder.Eval(Container.DataItem, "id") %>);" href="#collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" id="acilacak_santiye<%# DataBinder.Eval(Container.DataItem, "id") %>" style="color:#4f4e4e; border-top:1px solid #fff; font-weight:normal; "><i class="fa fa-map-o projeikon"></i>&nbsp;&nbsp;<%# DataBinder.Eval(Container.DataItem, "durum_adi") %>
+                            <div style="float: right; width: 50px; padding: 6px; text-align: center; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; margin-top: -25px; position: absolute; right: 30px; ">
                             <div class="pcoded-badge label label-inverse" style="width:35px; font-size:100%;">
                             <%# DataBinder.Eval(Container.DataItem, "santiye_sayisi") %>
                                 </div>
@@ -158,7 +159,7 @@
                                 </div>
                             </ps>
                         </div>
-                    </ItemTemplate>
+                        </ItemTemplate>
                             </asp:repeater>
                         </div>
                     </div>

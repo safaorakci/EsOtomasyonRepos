@@ -4138,6 +4138,7 @@ function parca_guncelle(kayit_id) {
     var miktar = $("#miktar").val();
     var minumum_miktar = $("#minumum_miktar").val();
     var barcode = $("#barcode").val();
+    var kodu = $("#kodu").val();
 
     var data = "islem=parca_listesi&islem2=guncelle";
     data += "&kayit_id=" + kayit_id;
@@ -4151,8 +4152,10 @@ function parca_guncelle(kayit_id) {
     data += "&miktar=" + miktar;
     data += "&minumum_miktar=" + minumum_miktar;
     data += "&barcode=" + barcode;
+    data += "&kodu=" + kodu;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        $(".close").click();
         mesaj_ver("Parçalar", "Kayıt Başarıyla Güncellendi", "success");
     });
 
@@ -7355,9 +7358,7 @@ function santiye_sil(santiye_id) {
             sayfagetir('/santiyeler/', 'jsid=4559');
         });
     }
-
 }
-
 
 
 function olay_guncelle(proje_id, departman_id, tab_id, olay_id, buton) {
