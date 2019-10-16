@@ -4,7 +4,7 @@
     Response.AddHeader "Content-Type", "text/html;charset=UTF-8"
     Response.CodePage = 65001
 
-    Conn = "Provider=SQLOLEDB;User ID=sa;Password=Makro1234.;Initial Catalog=EsOtomasyon;Data Source=185.86.81.251;Network Library=DBMSSOCN;"
+    Conn = "Provider=SQLOLEDB;User ID=sa;Password=Makro1234.;Initial Catalog=ProskopV2Dev;Data Source=185.86.81.251;Network Library=DBMSSOCN;"
     set baglanti = server.CreateObject("Adodb.Connection")
     baglanti.Open conn
 

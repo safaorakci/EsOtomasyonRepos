@@ -803,9 +803,7 @@ function datatableyap() {
     responsiveHelper_dt_basic = undefined;
     if ($('.datatableyap:not(.yapilan)').length > 0) {
         $('.datatableyap:not(.yapilan)').addClass("yapilan").removeClass("datatableyap").dataTable({
-            "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
-                "t" +
-                "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+            "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'><'col-sm-6 col-xs-12 hidden-xs'l>r>" + "t" + "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
             "autoWidth": true,
             "preDrawCallback": function () {
                 var table = $(this);
