@@ -783,6 +783,7 @@ function gorev_guncelle(gorev_id) {
 function gorev_ekle() {
 
     var gorev_adi = $("#gorev_adi").val();
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=gorevler&islem2=ekle";
     data += "&gorev_adi=" + encodeURIComponent(gorev_adi);
@@ -790,6 +791,10 @@ function gorev_ekle() {
     if ($("#gorev_ekle_form input:not(input[type=button])").valid("valid")) {
         $("#gorev_listesi").loadHTML({ url: "islem1", data: data }, function () {
             datatableyap();
+
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
+
             mesaj_ver("Görevler", "Kayıt Başarıyla Eklendi", "success");
         });
     }
