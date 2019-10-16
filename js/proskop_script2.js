@@ -1183,6 +1183,7 @@ function SatinalmaSiparisKaydet() {
     var alttoplam = $("#satinalma_alttoplam").val();
     var aciklama = $("#satinalma_aciklama").val();
     var durum = $("#satinalma_durum").val();
+    var selectValue = $(".yetmislik").val();
 
     var toplamtl = NumericYap($("#satinalma_alttoplamtl").val().replace(",", "."));
     var toplamusd = NumericYap($("#satinalma_alttoplamusd").val().replace(",", "."));
@@ -1219,6 +1220,8 @@ function SatinalmaSiparisKaydet() {
         $("#satinalma_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
             datatableyap();
             $(".close").click();
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
             mesaj_ver("Satınalma Talepleri", "Kayıt Başarıyla Eklendi", "success");
         });
     }
@@ -1559,6 +1562,7 @@ function SatinalmaSiparisAramaYap() {
     var tedarikci_id = $("#satinalma_tedarikci_id").val();
     var aciklama = $("#satinalma_aciklama").val();
     var durum = $("#satinalma_durum").val();
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=satinalma_siparisleri&islem2=arama";
     data += "&baslik=" + baslik;
@@ -1570,6 +1574,10 @@ function SatinalmaSiparisAramaYap() {
     data = encodeURI(data);
     $("#satinalma_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         datatableyap();
+        $(".close").click();
+        $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+        $(".yetmislik").trigger("change");
+
     });
 
 }

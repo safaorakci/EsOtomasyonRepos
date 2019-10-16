@@ -3612,6 +3612,8 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         if (islem2 == "ekle")
         {
             string durum_adi = Request.Form["durum_adi"].ToString();
+            //string selectValue = Request.Form["selectValue"].ToString();
+            //hideValue.Text = selectValue;
 
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();

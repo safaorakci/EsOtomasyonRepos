@@ -60,12 +60,17 @@ function is_yuku_cizelgesi_ac(start, end) {
 function santiye_durum_ekle() {
 
     var durum_adi = $("#durum_adi").val();
+    var selectValue = $(".yetmislik").val();
+
     var data = "islem=santiye_durum&islem2=ekle";
     data += "&durum_adi=" + encodeURIComponent(durum_adi);
     data = encodeURI(data);
     if ($("#santiye_durum_ekle_form input:not(input[type=button])").valid("valid")) {
         $("#santiye_durum_listesi").loadHTML({ url: "islem1", data: data }, function () {
             datatableyap();
+
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
             mesaj_ver("Proje Durumları", "Kayıt Başarıyla Eklendi", "success");
         });
     }
@@ -110,7 +115,7 @@ function durum_guncelleme_calistir(tablo, id) {
 
 
 
-function kayit_sil(tablo, id, baslik, mesaj, fonksiyon) {
+function kayit_sil(tablo, id, baslik, mesaj, fonksiyon, kod) {
     swal({
         title: "Emin misiniz?",
         text: "Bu işlemi geri Alamayacaksınız, Kaydı Silmek İstediğinize Emin misiniz?",
@@ -130,14 +135,14 @@ function kayit_sil(tablo, id, baslik, mesaj, fonksiyon) {
                 $("#koftiden").loadWebMethod({ url: "/System_Root/ajax/islem1.aspx/KayitSil", data: data }, function () {
                     mesaj_ver(baslik, mesaj, "success");
                     if ($.isFunction(fonksiyon)) {
-                        fonksiyon();
+                        fonksiyon(kod);
                     }
                 });
             }
         });
 
     $("button.confirm").focus();
-    
+
 
 }
 
@@ -608,18 +613,22 @@ function departman_ekle() {
 
     var departman_adi = $("#departman_adi").val();
     var departman_tipi = $("#departman_tipi").val();
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=departmanlar&islem2=ekle";
     data += "&departman_adi=" + encodeURIComponent(departman_adi);
     data += "&departman_tipi=" + encodeURIComponent(departman_tipi);
     data += "&ust_id=" + 0;
     data = encodeURI(data);
-    //  if ($("#departman_ekle_form input:not(input[type=button])").valid("valid")) {
-    $("#departman_listesi").loadHTML({ url: "islem1", data: data }, function () {
-        datatableyap();
-        mesaj_ver("Departmanlar", "Kayıt Başarıyla Eklendi", "success");
-    });
-    //  }
+    if ($("#departman_ekle_form input:not(input[type=button])").valid("valid")) {
+        $("#departman_listesi").loadHTML({ url: "islem1", data: data }, function () {
+            datatableyap();
+
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
+            mesaj_ver("Departmanlar", "Kayıt Başarıyla Eklendi", "success");
+        });
+    }
 }
 
 
@@ -1662,8 +1671,8 @@ function is_ekle_yeni_takvim_calistir() {
 
             yeni_is_ekle_sure_hesap();
             IzinliPersonelKontrol();
-         
-          
+
+
         }
     }).mask("99.99.9999");
 }
@@ -4640,7 +4649,7 @@ function kendi_personel_bilgilerini_guncelle() {
         })
     }
 
-    
+
 
 }
 
@@ -4691,7 +4700,7 @@ function personel_bilgilerini_guncelle(personel_id) {
             mesaj_ver("Personel Detayları", "Kayıt Başarıyla Güncellendi", "success");
         })
     }
-    
+
 }
 
 
@@ -5040,6 +5049,7 @@ function firma_ekle(yetki_kodu) {
     var firma_telefon = $("#firma_telefon").val();
     var firma_mail = $("#firma_mail").val();
     var firma_supervisor_id = $("#firma_supervisor_id").val();
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=firmalar&islem2=ekle";
     data += "&yetki_kodu=" + yetki_kodu;
@@ -5053,6 +5063,9 @@ function firma_ekle(yetki_kodu) {
     if ($("#firma_ekle_form  input:not(input[type=button])").valid("valid")) {
         $("#firma_listesi").loadHTML({ url: "islem1", data: data }, function () {
             datatableyap();
+
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
             mesaj_ver("Firmalar", "Kayıt Başarıyla Eklendi", "success");
         });
     }
@@ -6644,7 +6657,7 @@ function firma_bilgilerini_guncelle(firma_id) {
             mesaj_ver("Müşteri Bilgileri", "Kayıt Başarıyla Güncellendi", "success");
         });
     }
-    
+
 }
 
 
