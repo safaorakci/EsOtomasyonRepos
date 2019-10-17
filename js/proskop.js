@@ -554,6 +554,7 @@ function popUp(URL, yukseklik, genislik) {
 $(document).on("click", "#btnUploadKaydet", function () {
     mesaj_ver("Envanter Kaydı", "İşlem Başarılı", "success");
     sayfagetir('/parcalar/', 'jsid=4559');
+    sayfa_yuklenince();
     $("button.close[data-dismiss=modal]").trigger("click");
     return false;
 });

@@ -3140,6 +3140,14 @@ works properly when clicked or hovered */
         }
     </style>
 </form>
+
+<% 
+    elseif trn(request("islem"))="StokListesiTemizle" then
+
+    SQL = "truncate table parca_listesi"
+    set truncateTable = baglanti.execute(SQL)
+%>
+
 <% elseif trn(request("islem"))="ModalParcaArama" then %>
 
 <div class="modal-header">
@@ -3317,9 +3325,6 @@ works properly when clicked or hovered */
 
 </form>
 <% elseif trn(request("islem"))="ModalBakimArama" then
-
-
-
 
 %>
 <div class="modal-header">

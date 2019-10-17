@@ -213,7 +213,7 @@
         </article>
         
     </div>
-        <link rel="stylesheet" type="text/css" href="/files/assets/pages/data-table/extensions/responsive/css/responsive.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="/files/assets/pages/data-table/extensions/responsive/css/responsive.dataTables.css">
     <script src="/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script src="/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
     <style>
