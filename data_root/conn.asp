@@ -12,7 +12,7 @@
     if Request.ServerVariables("Remote_Addr")="127.0.0.1" then
         site_url = "http://127.0.0.1:92"
     else
-        site_url = "http://www.esflw.com"
+        site_url = "http://proskopv2dev.makrogem.com.tr"
     end if
 
 %>
