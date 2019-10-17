@@ -3364,9 +3364,11 @@ function personel_izin_talep_onayla(personel_id, kayit_id, durum) {
     data += "&kayit_id=" + kayit_id;
     data += "&durum=" + durum;
     data = encodeURI(data);
-    $("#koftiden").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-        mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Güncellendi", "success");
-        $("#giris_cikis_buton").click();
+    $("#koftiden").loadHTML({ url: "/ajax_request6/", data: data, status }, function () {
+        if (status == "success")
+            mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Güncellendi", "success");
+        if (status == "error")
+            mesaj_ver("İzin Talepleri", "Kendi İzin Talebinizi Onaylayamazsınız. !", "danger");
     });
 }
 

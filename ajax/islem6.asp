@@ -634,7 +634,7 @@
 
                 bildirim = kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") & " "& cdate(baslangic_tarihi) &" "& left(baslangic_saati,5) &" ile "& cdate(bitis_tarihi) &" "& left(bitis_saati,5) &" tarihleri için izin talebinde bulundu." & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
                 tip = "personel_detaylari"
-                click = "sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id="& kullanicicek("id") &"');"
+                click = "sayfagetir("'/personel_detaylari/'", 'jsid=4559&personel_id="& kullanicicek("id") &"');"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -1763,11 +1763,23 @@
         kayit_id = trn(request("kayit_id"))
         durum = trn(request("durum"))
 
-        SQL="update ucgem_personel_izin_talepleri set durum = '"& durum &"', OnaylayanId = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& kayit_id &"'"
-        set guncelle = baglanti.execute(SQL)
-
         SQL="select * from ucgem_personel_izin_talepleri where id = '"& kayit_id &"'"
         set talep = baglanti.execute(SQL)
+    
+        if personel_id=Request.Cookies("kullanici")("kullanici_id") then
+    %>
+        <script>
+            mesaj_ver("İzin Talepleri", "Kendi İzin Talebinizi Onaylayamazsınız. !", "danger");
+        </script>
+    <%
+        else
+            SQL="update ucgem_personel_izin_talepleri set durum = '"& durum &"', OnaylayanId = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& kayit_id &"'"
+            set guncelle = baglanti.execute(SQL)
+
+        end if
+        
+
+
 
 
         for x = cdate(talep("baslangic_tarihi")) to cdate(talep("bitis_tarihi"))
@@ -1789,7 +1801,7 @@
 
             if trim(durum)="Onaylandı" then
 
-                SQL="insert into ucgem_personel_mesai_girisleri(personel_id, cihazID, giris_tipi, tarih, saat, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& personel_id &"', '"& cihazID &"', '"& giris_tipi &"', CONVERT(date, '"& tarih &"', 103), '"& saat &"', '"& ekleme_zamani &"', '"& durum &"', '"& cop &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"')"
+                SQL="insert into ucgem_personel_mesai_girisleri(personel_id, cihazID, giris_tipi, tarih, saat, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& personel_id &"', '"& cihazID &"', '"& giris_tipi &"', CONVERT(date, '"& tarih &"', 103), '"& saat &"', CONVERT(date, '"& ekleme_zamani &"', 103), '"& durum &"', '"& cop &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"')"
                 set ekle = baglanti.execute(SQL)
 
             end if
@@ -1811,7 +1823,7 @@
                     bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " İzin Talebinizi Reddetti. " & chr(13) & chr(13)
                 end if
                 tip = "is_listesi"
-                click = "sayfagetir('/profil_ayarlari/', 'jsid=4559');"
+                click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559"");"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
