@@ -1122,8 +1122,9 @@
             firma_id = Request.Cookies("kullanici")("firma_id")
             kullanici_id = Request.Cookies("kullanici")("kullanici_id")
 
-
+            
             Doc.ImportFromUrl site_url & "/izin_talep_formu/?jsid=4559&personel_id=" & personel_id & "&izin_id=" & izin_id & "&firma_id=" & firma_id & "&kullanici_id=" & kullanici_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
+            
             dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
             Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
             
