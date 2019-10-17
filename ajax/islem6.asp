@@ -2417,7 +2417,8 @@
 
     %>
     <div class="dt-responsive table-responsive">
-        <table id="dt_basic" class="table table-striped table-bordered nowrap datatableyap" style="width: 100%;">
+
+        <table id="dt_basic" class="table table-striped table-bordered nowrap datatableyap" aria-describedby="dt_basic_info" style="width: 100%;">
             <thead>
                 <tr>
                     <th data-hide="phone,tablet">ID</th>
@@ -2519,7 +2520,7 @@
                         p = p + 1
                 %>
                 <tr>
-                    <td style="text-align: center;"><%=p %></td>
+                    <td style="text-align: center;"><%=parca("id") %></td>
                     <td><%=parca("parca_kodu") %></td>
                     <td><%=parca("marka") %></td>
                     <td><%=parca("parca_adi") %></td>
@@ -2559,7 +2560,7 @@
 
     <center>
     <div class="btn-group">
-<!--        <button class="btn <% if sayfa = 1 or sayfa = 0 then %> disabled <% end if %>"  <% if sayfa=1 or sayfa = 0 then %> <% else %> onclick="parcalari_getir(<%=cdbl(sayfa)-1 %>);" <% end if %> type="button"><<</button>-->
+        <button class="btn <% if sayfa = 1 or sayfa = 0 then %> disabled <% end if %>"  <% if sayfa=1 or sayfa = 0 then %> <% else %> onclick="parcalari_getir(<%=cdbl(sayfa)-1 %>);" <% end if %> type="button"><<</button>
         <% 
             baslangic = sayfa-4
             if baslangic<1 then
@@ -2572,10 +2573,10 @@
             end if
         %>  
         <% for x = baslangic to bitis %>
-        <!--<button class="btn <% if int(x) = int(sayfa) or x = 1 and sayfa = 0 then  %>  btn-warning <% end if %>"  onclick="parcalari_getir(<%=cdbl(x)%>);" type="button"><%=x %></button>-->
+        <button class="btn <% if int(x) = int(sayfa) or x = 1 and sayfa = 0 then  %>  btn-warning <% end if %>"  onclick="parcalari_getir(<%=cdbl(x)%>);" type="button"><%=x %></button>
         <% next %>
-<!--        <button class="btn <% if int(sayfa) >= int(sayfasayisi) then %> disabled <% end if %>" <% if int(sayfa) >= int(sayfasayisi) then %> <% else %>onclick="parcalari_getir(<%=cdbl(sayfa)+1 %>);" <% end if %> type="button">>></button>
-    </div> </center>-->
+        <button class="btn <% if int(sayfa) >= int(sayfasayisi) then %> disabled <% end if %>" <% if int(sayfa) >= int(sayfasayisi) then %> <% else %>onclick="parcalari_getir(<%=cdbl(sayfa)+1 %>);" <% end if %> type="button">>></button>
+    </div> </center>
 
 
     <%

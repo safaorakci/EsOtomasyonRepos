@@ -145,7 +145,7 @@ public class upload : IHttpHandler
                             {
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
-                                ayarlar.cmd.CommandText = "update [dbo].[parca_listesi] set miktar=@miktar, birim_maliyet=@birim_maliyet, minumum_miktar@minumum_miktar  where id=@id";
+                                ayarlar.cmd.CommandText = "update [dbo].[parca_listesi] set miktar=@miktar, birim_maliyet=@birim_maliyet, minumum_miktar = @minumum_miktar  where id=@id";
                                 ayarlar.cmd.Parameters.Add("@miktar", SqlDbType.Int).Value = Convert.ToInt32(dReader["miktar"]);
                                 ayarlar.cmd.Parameters.Add("@birim_maliyet", SqlDbType.Int).Value = Convert.ToDecimal(dReader["birim_maliyet"]);
                                 ayarlar.cmd.Parameters.Add("@minumum_miktar", SqlDbType.Int).Value = Convert.ToInt32(dReader["minumum_miktar"]);
