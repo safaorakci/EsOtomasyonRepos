@@ -4062,7 +4062,20 @@ function ModalExcellUpload() {
     $("#modal_div").loadHTML({ url: "/ajax_request5/", data: data }, function () {
         sayfa_yuklenince();
     });
+}
 
+function StokListesiTemizle() {
+
+    var r = confirm("Bütün Tabloyu Silmek İstediğinize Eminmisiniz ?");
+    if (r) {
+        var data = "islem=StokListesiTemizle";
+        data = encodeURI(data);
+        $("#parca_listesi").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+            mesaj_ver("Stok Listesi", "Bütün Kayıtlar Silindi !", "success");
+            parcalari_getir();
+            sayfa_yuklenince();
+        });
+    }
 }
 
 function ModalSatinalmaArama() {
@@ -4106,7 +4119,7 @@ function Modaldan_parca_ara() {
     data += "&kodu=" + kodu;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-
+        sayfa_yuklenince();
     });
 
 }
@@ -4117,7 +4130,7 @@ function parcalari_getir(sayfa) {
     data += "&sayfa=" + sayfa;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-
+        sayfa_yuklenince();
     });
 
 }
@@ -4200,6 +4213,7 @@ function yeni_parca_ekle() {
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         mesaj_ver("Parçalar", "Kayıt Başarıyla Eklendi", "success");
         $(".close").click();
+        sayfa_yuklenince();
     });
 
 }

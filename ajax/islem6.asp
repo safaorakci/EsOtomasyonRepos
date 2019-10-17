@@ -21,6 +21,10 @@
         end if
 
 %>
+
+<script type="text/javascript">
+    sayfa_yuklenince();
+</script>
 <div class="card">
     <div class="card-header">
         <h5 class="card-header-text"><%=LNG("Personel Bilgileri")%></h5>
@@ -2401,16 +2405,18 @@
 
     %>
     <div class="dt-responsive table-responsive">
-        <table id="simpletable" class="table table-striped table-bordered nowrap datatableyap" style="width: 100%;">
+        <table id="dt_basic" class="table table-striped table-bordered nowrap datatableyap" style="width: 100%;">
             <thead>
                 <tr>
                     <th data-hide="phone,tablet">ID</th>
                     <th data-hide="phone,tablet">Kodu</th>
+                    <th data-hide="phone,tablet">Marka</th>
                     <th data-class="expand">Parça Adı</th>
                     <th data-hide="phone,tablet">Kategori</th>
                     <th data-hide="phone,tablet">Miktar</th>
                     <th data-hide="phone,tablet">Maliyet</th>
                     <th data-hide="phone,tablet">Barcode</th>
+                    <th data-hide="phone,tablet">Açıklama</th>
                     <th data-hide="phone,tablet">Ekleme</th>
                     <th data-hide="phone,tablet">İş Emirleri</th>
                     <th style="text-align: center;">Durum</th>
@@ -2419,7 +2425,6 @@
             </thead>
             <tbody>
                 <% 
-
                     kacadet = 15
                     sayfa = trn(request("sayfa"))
                     if isnumeric(sayfa)=false then
@@ -2493,7 +2498,7 @@
                     if parca.eof then
                 %>
                 <tr>
-                    <td colspan="10" style="text-align: center;">Kayıt Bulunamadı</td>
+                    <td colspan="13" style="text-align: center;">Kayıt Bulunamadı</td>
                 </tr>
                 <%
                     end if
@@ -2504,14 +2509,17 @@
                 <tr>
                     <td style="text-align: center;"><%=p %></td>
                     <td><%=parca("parca_kodu") %></td>
+                    <td><%=parca("marka") %></td>
                     <td><%=parca("parca_adi") %></td>
                     <td><%=parca("kategori_adi") %></td>
                     <td><%=parca("miktar") %></td>
                     <td><%=formatnumber(parca("birim_maliyet"),2) %>&nbsp;<%=parca("birim_pb") %></td>
                     <td><%=parca("barcode") %></td>
+                    <td><%=parca("aciklama") %></td>
                     <td><%=parca("adsoyad") %><br />
                         <%=cdate(parca("ekleme_tarihi")) %></td>
-                    <td style="text-align: center;"><span class="label label-warning" style="display: inline; font-size: 13px; padding-left: 10px; padding-right: 10px;"><%=parca("kullanilan") %></span> /
+                    <td style="text-align: center;">
+                        <span class="label label-warning" style="display: inline; font-size: 13px; padding-left: 10px; padding-right: 10px;">0</span> /
                         <input type="button" class="btn btn-info btn-mini" onclick="ParcadanIsListesiBul('<%=parca("id")%>');" value="Aç" /></td>
                     <td style="text-align: center; width: 100px;">
                         <span id="santiye_durum_repeater_str<%=parca("id") %>santiye_label_0" onclick="durum_guncelleme_calistir('parca_listesi', '<%=parca("id") %>');">
@@ -2539,7 +2547,7 @@
 
     <center>
     <div class="btn-group">
-        <button class="btn <% if sayfa = 1 or sayfa = 0 then %> disabled <% end if %>"  <% if sayfa=1 or sayfa = 0 then %> <% else %> onclick="parcalari_getir(<%=cdbl(sayfa)-1 %>);" <% end if %> type="button"><<</button>
+<!--        <button class="btn <% if sayfa = 1 or sayfa = 0 then %> disabled <% end if %>"  <% if sayfa=1 or sayfa = 0 then %> <% else %> onclick="parcalari_getir(<%=cdbl(sayfa)-1 %>);" <% end if %> type="button"><<</button>-->
         <% 
             baslangic = sayfa-4
             if baslangic<1 then
@@ -2552,10 +2560,10 @@
             end if
         %>  
         <% for x = baslangic to bitis %>
-        <button class="btn <% if int(x) = int(sayfa) or x = 1 and sayfa = 0 then  %>  btn-warning <% end if %>"  onclick="parcalari_getir(<%=cdbl(x)%>);" type="button"><%=x %></button>
+        <!--<button class="btn <% if int(x) = int(sayfa) or x = 1 and sayfa = 0 then  %>  btn-warning <% end if %>"  onclick="parcalari_getir(<%=cdbl(x)%>);" type="button"><%=x %></button>-->
         <% next %>
-        <button class="btn <% if int(sayfa) >= int(sayfasayisi) then %> disabled <% end if %>" <% if int(sayfa) >= int(sayfasayisi) then %> <% else %>onclick="parcalari_getir(<%=cdbl(sayfa)+1 %>);" <% end if %> type="button">>></button>
-    </div> </center>
+<!--        <button class="btn <% if int(sayfa) >= int(sayfasayisi) then %> disabled <% end if %>" <% if int(sayfa) >= int(sayfasayisi) then %> <% else %>onclick="parcalari_getir(<%=cdbl(sayfa)+1 %>);" <% end if %> type="button">>></button>
+    </div> </center>-->
 
 
     <%
@@ -3090,7 +3098,7 @@
                     if talepler.eof then
                 %>
                 <tr>
-                    <td colspan="7" style="text-align: center;">Talep Kaydı Bulunamadı</td>
+                    <td colspan="8" style="text-align: center;">Talep Kaydı Bulunamadı</td>
                 </tr>
                 <%
                     end if
