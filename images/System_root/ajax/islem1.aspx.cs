@@ -3508,7 +3508,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string kullanici_hid = SessionManager.CurrentUser.firma_hid + "." + kull_id;
 
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "update ucgem_firma_kullanici_listesi set kullanici_hid = @kullanici_hid where id = @kullanici_id;EXEC MailGonderBildirim @personel_id = @kullanici_id, @mesaj = 'Proskop Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://esotomasyon.makrogem.com>http://esotomasyon.makrogem.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : "+ personel_parola + "<br><br>'; ";
+            ayarlar.cmd.CommandText = "update ucgem_firma_kullanici_listesi set kullanici_hid = @kullanici_hid where id = @kullanici_id;EXEC MailGonderBildirim @personel_id = @kullanici_id, @mesaj = 'Esflw Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://otomasyon.esflw.com>http://otomasyon.esflw.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : "+ personel_parola + "<br><br>'; ";
             ayarlar.cmd.Parameters.Add("kullanici_hid", kullanici_hid);
             ayarlar.cmd.Parameters.Add("kullanici_id", kull_id);
             ayarlar.cmd.ExecuteNonQuery();

@@ -205,7 +205,7 @@
                     </form>
 
                     <div class="row modal-footer" style="margin-top:20px;">
-                            <input type="button" onclick="personel_ekle();" class="btn btn-primary" value="<% Response.Write(LNG("Personel Ekle")); %>" />
+                            <input type="button" id="personel_ekle" onclick="personel_ekle();" class="btn btn-primary" value="<% Response.Write(LNG("Personel Ekle")); %>" />
                     </div>
                 </div>
             </div>
@@ -213,7 +213,7 @@
         </article>
         
     </div>
-        <link rel="stylesheet" type="text/css" href="/files/assets/pages/data-table/extensions/responsive/css/responsive.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="/files/assets/pages/data-table/extensions/responsive/css/responsive.dataTables.css">
     <script src="/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
     <script src="/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
     <style>

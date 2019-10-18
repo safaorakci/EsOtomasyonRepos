@@ -105,7 +105,7 @@
                 <td><%=giris("idd") %></td>
                 <td><%=day(cdate(giris("tarih"))) %>&nbsp;<%=monthname(month(cdate(giris("tarih")))) %>&nbsp;<%=year(cdate(giris("tarih"))) %>&nbsp;<%=weekdayname(weekday(cdate(giris("tarih")))) %></td>
                 <td><%=left(giris("saat"),5) %></td>
-                <td><%=LNG(giris("giris_tipi"))%><% if trim(giris("giris_tipi"))="2" then %><%=LNG("İzin")%><% elseif trim(giris("giris_tipi"))="1" then %><%=LNG("Giriş")%><% else %><%=LNG("Çıkış")%><% end if %></td>
+                <td><% if trim(giris("giris_tipi"))="2" then %><%=LNG("İzin")%><% elseif trim(giris("giris_tipi"))="1" then %><%=LNG("Giriş")%><% else %><%=LNG("Çıkış")%><% end if %></td>
                 <% if trim(giris("giris_tipi"))="2" then %>
                 <td><span class="label label-info"><%=LNG("İzin Kullanıldı")%></span></td>
                 <% elseif trim(giris("giris_tipi"))="1" then %>

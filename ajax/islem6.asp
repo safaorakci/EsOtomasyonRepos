@@ -21,6 +21,10 @@
         end if
 
 %>
+
+<script type="text/javascript">
+    sayfa_yuklenince();
+</script>
 <div class="card">
     <div class="card-header">
         <h5 class="card-header-text"><%=LNG("Personel Bilgileri")%></h5>
@@ -79,7 +83,17 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" class="takvimyap form-control" id="personel_dtarih" required value="<%=cdate(personel("personel_dtarih")) %>" />
+                                    <%
+                                        Function formatNumber(value, digits) 
+                                            if digits > len(value) then 
+                                                formatNumber = String(digits-len(value),"0") & value 
+                                            else 
+                                                formatNumber = value 
+                                            end if 
+                                        End Function 
+
+                                    %>
+                                    <input type="text" class="takvimyap form-control" id="personel_dtarih" required value="<%=formatNumber(DAY(personel("personel_dtarih")),2)%>.<%=formatNumber(MONTH(personel("personel_dtarih")),2)%>.<%=YEAR(personel("personel_dtarih"))%>" />
                                 </div>
                             </div>
                         </div>
@@ -630,7 +644,7 @@
 
                 bildirim = kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") & " "& cdate(baslangic_tarihi) &" "& left(baslangic_saati,5) &" ile "& cdate(bitis_tarihi) &" "& left(bitis_saati,5) &" tarihleri için izin talebinde bulundu." & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
                 tip = "personel_detaylari"
-                click = "sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id="& kullanicicek("id") &"');"
+                click = "sayfagetir("'/personel_detaylari/'", 'jsid=4559&personel_id="& kullanicicek("id") &"');"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -1759,11 +1773,23 @@
         kayit_id = trn(request("kayit_id"))
         durum = trn(request("durum"))
 
-        SQL="update ucgem_personel_izin_talepleri set durum = '"& durum &"', OnaylayanId = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& kayit_id &"'"
-        set guncelle = baglanti.execute(SQL)
-
         SQL="select * from ucgem_personel_izin_talepleri where id = '"& kayit_id &"'"
         set talep = baglanti.execute(SQL)
+    
+        if personel_id=Request.Cookies("kullanici")("kullanici_id") then
+    %>
+        <script>
+            mesaj_ver("İzin Talepleri", "Kendi İzin Talebinizi Onaylayamazsınız. !", "danger");
+        </script>
+    <%
+        else
+            SQL="update ucgem_personel_izin_talepleri set durum = '"& durum &"', OnaylayanId = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& kayit_id &"'"
+            set guncelle = baglanti.execute(SQL)
+
+        end if
+        
+
+
 
 
         for x = cdate(talep("baslangic_tarihi")) to cdate(talep("bitis_tarihi"))
@@ -1785,7 +1811,7 @@
 
             if trim(durum)="Onaylandı" then
 
-                SQL="insert into ucgem_personel_mesai_girisleri(personel_id, cihazID, giris_tipi, tarih, saat, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& personel_id &"', '"& cihazID &"', '"& giris_tipi &"', CONVERT(date, '"& tarih &"', 103), '"& saat &"', '"& ekleme_zamani &"', '"& durum &"', '"& cop &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"')"
+                SQL="insert into ucgem_personel_mesai_girisleri(personel_id, cihazID, giris_tipi, tarih, saat, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& personel_id &"', '"& cihazID &"', '"& giris_tipi &"', CONVERT(date, '"& tarih &"', 103), '"& saat &"', CONVERT(date, '"& ekleme_zamani &"', 103), '"& durum &"', '"& cop &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"')"
                 set ekle = baglanti.execute(SQL)
 
             end if
@@ -1807,7 +1833,7 @@
                     bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " İzin Talebinizi Reddetti. " & chr(13) & chr(13)
                 end if
                 tip = "is_listesi"
-                click = "sayfagetir('/profil_ayarlari/', 'jsid=4559');"
+                click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559"");"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -2381,7 +2407,7 @@
             barcode = trn(request("barcode"))
             kodu = trn(request("kodu"))
 
-            SQL="update parca_listesi set parca_kodu = '"& kodu &", parca_resmi = '"& parca_resmi &"', marka = '"& marka &"', parca_adi = '"& parca_adi &"', kategori = '"& kategori &"', aciklama = '"& aciklama &"', birim_maliyet = '"& birim_maliyet &"', birim_pb = '"& birim_pb &"', miktar = '"& miktar &"', minumum_miktar = '"& minumum_miktar &"', barcode = '"& barcode &"' where id = '"& kayit_id &"'"
+            SQL="update parca_listesi set parca_kodu = '"& kodu &"', parca_resmi = '"& parca_resmi &"', marka = '"& marka &"', parca_adi = '"& parca_adi &"', kategori = '"& kategori &"', aciklama = '"& aciklama &"', birim_maliyet = '"& birim_maliyet &"', birim_pb = '"& birim_pb &"', miktar = '"& miktar &"', minumum_miktar = '"& minumum_miktar &"', barcode = '"& barcode &"' where id = '"& kayit_id &"'"
             set guncelle = baglanti.execute(SQL)
 
 
@@ -2394,23 +2420,26 @@
             silen_tarihi = date
             silen_saati = time
 
-            SQL="update parca_listesi set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silen_tarihi = '"& silen_tarihi &"', silen_saati = '"& silen_saati &"' where id = '"& kayit_id &"'"
+            SQL="update parca_listesi set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silen_tarihi = CONVERT(DATE, '"& silen_tarihi &"',103), silen_saati = '"& silen_saati &"' where id = '"& kayit_id &"'"
             set ekle = baglanti.execute(SQL)
 
         end if
 
     %>
     <div class="dt-responsive table-responsive">
-        <table id="simpletable" class="table table-striped table-bordered nowrap datatableyap" style="width: 100%;">
+
+        <table id="dt_basic" class="table table-striped table-bordered nowrap datatableyap" aria-describedby="dt_basic_info" style="width: 100%;">
             <thead>
                 <tr>
                     <th data-hide="phone,tablet">ID</th>
                     <th data-hide="phone,tablet">Kodu</th>
+                    <th data-hide="phone,tablet">Marka</th>
                     <th data-class="expand">Parça Adı</th>
                     <th data-hide="phone,tablet">Kategori</th>
                     <th data-hide="phone,tablet">Miktar</th>
                     <th data-hide="phone,tablet">Maliyet</th>
                     <th data-hide="phone,tablet">Barcode</th>
+                    <th data-hide="phone,tablet">Açıklama</th>
                     <th data-hide="phone,tablet">Ekleme</th>
                     <th data-hide="phone,tablet">İş Emirleri</th>
                     <th style="text-align: center;">Durum</th>
@@ -2419,7 +2448,6 @@
             </thead>
             <tbody>
                 <% 
-
                     kacadet = 15
                     sayfa = trn(request("sayfa"))
                     if isnumeric(sayfa)=false then
@@ -2493,7 +2521,7 @@
                     if parca.eof then
                 %>
                 <tr>
-                    <td colspan="10" style="text-align: center;">Kayıt Bulunamadı</td>
+                    <td colspan="13" style="text-align: center;">Kayıt Bulunamadı</td>
                 </tr>
                 <%
                     end if
@@ -2502,16 +2530,19 @@
                         p = p + 1
                 %>
                 <tr>
-                    <td style="text-align: center;"><%=p %></td>
+                    <td style="text-align: center;"><%=parca("id") %></td>
                     <td><%=parca("parca_kodu") %></td>
+                    <td><%=parca("marka") %></td>
                     <td><%=parca("parca_adi") %></td>
                     <td><%=parca("kategori_adi") %></td>
                     <td><%=parca("miktar") %></td>
                     <td><%=formatnumber(parca("birim_maliyet"),2) %>&nbsp;<%=parca("birim_pb") %></td>
                     <td><%=parca("barcode") %></td>
+                    <td><%=parca("aciklama") %></td>
                     <td><%=parca("adsoyad") %><br />
                         <%=cdate(parca("ekleme_tarihi")) %></td>
-                    <td style="text-align: center;"><span class="label label-warning" style="display: inline; font-size: 13px; padding-left: 10px; padding-right: 10px;"><%=parca("kullanilan") %></span> /
+                    <td style="text-align: center;">
+                        <span class="label label-warning" style="display: inline; font-size: 13px; padding-left: 10px; padding-right: 10px;">0</span> /
                         <input type="button" class="btn btn-info btn-mini" onclick="ParcadanIsListesiBul('<%=parca("id")%>');" value="Aç" /></td>
                     <td style="text-align: center; width: 100px;">
                         <span id="santiye_durum_repeater_str<%=parca("id") %>santiye_label_0" onclick="durum_guncelleme_calistir('parca_listesi', '<%=parca("id") %>');">
@@ -3090,7 +3121,7 @@
                     if talepler.eof then
                 %>
                 <tr>
-                    <td colspan="7" style="text-align: center;">Talep Kaydı Bulunamadı</td>
+                    <td colspan="8" style="text-align: center;">Talep Kaydı Bulunamadı</td>
                 </tr>
                 <%
                     end if
@@ -4083,8 +4114,15 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             SQL="insert into uretim_sablonlari(sablon_adi, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& sablon_adi &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
+        elseif trn(request("islem2"))="sil" then
+
+            sablon_id = trn(request("sablon_id"))
+
+            SQL="update uretim_sablonlari set cop='true' where id = '"& sablon_id &"' "
+            set sil = baglanti.execute(SQL)
 
         end if
+
 
     %>
 
@@ -4104,24 +4142,34 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                     <br />
                 </div>
 
-                <% else %>
+                <% else %> 
                 <div class="color-accordion" id="color-accordion">
-                    <%
+                   <%
                         x = 0
                         do while not sablon.eof
                             x = x + 1
                     %>
-                    <a class="accordion-msg ustunegelince" href="#collapseOne<%=sablon("id") %>" onclick="UretimSablonDetayGetir('<%=sablon("id") %>');" id="acilacak_santiye<%=sablon("id") %>" style="color: #4f4e4e; border-top: 1px solid #fff; font-weight: normal;"><i class="fa fa-map-o projeikon"></i>&nbsp;&nbsp;<%=sablon("sablon_adi") %>
-                    </a>
+                          <a class="accordion-msg ustunegelince" href="#collapseOne<%=sablon("id") %>" onclick="UretimSablonDetayGetir('<%=sablon("id") %>');" id="acilacak_santiye<%=sablon("id") %>" style="color: #4f4e4e; border-top: 1px solid #fff; font-weight: normal;"><i class="fa fa-map-o projeikon"></i>&nbsp;&nbsp;<%=sablon("sablon_adi") %>
+
+                                <div style="float: right; width: 50px; padding: 6px; text-align: center; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; margin-top: -30px; position: absolute; right: 55px;        background-color:transparent">
+                                    <div class="pcoded-badge label" style="width:35px; font-size:100%;">
+                                        <i onclick="sablon_sil(<%=sablon("id") %>);" class="ti-trash" style="color: black; background: transparent; font-size: 20px" tabindex="1"></i>
+                                    </div>
+                                </div>
+                            </a>
+
                     <div class="accordion-desc">
-                        <div class="accoricler" id="accoric<%=sablon("id") %>">
+                        <div id="accoric<%=sablon("id") %>">
+
                         </div>
                     </div>
+                  
                     <%
                         sablon.movenext
                         loop
                     %>
-                </div>
+                </div>                                    
+            
 
                 <% end if %>
             </div>

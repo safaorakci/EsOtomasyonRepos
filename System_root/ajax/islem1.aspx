@@ -15,7 +15,7 @@
                         <div class="row">
                             <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Firma :")); %></label>
                             <div class="col-sm-10">
-                                <asp:dropdownlist ID="firma_id" class="select2" runat="server"></asp:dropdownlist>
+                                <asp:dropdownlist ID="firma_id" class="js-example-basic-multiple" name="states[]" multiple="multiple" runat="server"></asp:dropdownlist>
                             </div>
                             <div class="col-sm-2">
                                 <a href="javascript:void(0);" onclick="javascript:$('.close').click();sayfagetir('/firma_yonetimi/','jsid=4559');"><i class="fa fa-plus-square"></i> <% Response.Write(LNG("Yeni")); %></a>
@@ -25,7 +25,7 @@
                         <div class="row">
                             <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Proje Durum :")); %></label>
                             <div class="col-sm-12">
-                                <asp:dropdownlist ID="santiye_durum_id" class="form-control select2" runat="server"></asp:dropdownlist>
+                                <asp:dropdownlist ID="santiye_durum_id" class="js-example-basic-multiple" name="states[]" multiple="multiple" runat="server"></asp:dropdownlist>
                             </div>
                         </div>
             
@@ -559,7 +559,7 @@
                     <i class="fa fa-external-link"></i>
                 </a>
                 &nbsp;
-                <a href="javascript:void(0);" onclick="kayit_sil('ucgem_firma_listesi', '<%# DataBinder.Eval(Container.DataItem, "id") %>', '<% Response.Write(LNG("Firmalar")); %>', '<% Response.Write(LNG("Kayıt Başarıyla Silindi")); %>', firma_listesi);" rel="tooltip" data-placement="top" data-original-title="<% Response.Write(LNG("Görev Sil")); %>">
+                <a href="javascript:void(0);" onclick="kayit_sil('ucgem_firma_listesi', '<%# DataBinder.Eval(Container.DataItem, "id") %>', '<% Response.Write(LNG("Firmalar")); %>', '<% Response.Write(LNG("Kayıt Başarıyla Silindi")); %>', firma_listesi, '<%Response.Write(Request.Form["yetki_kodu"].ToString()); %>');" rel="tooltip" data-placement="top" data-original-title="<% Response.Write(LNG("Görev Sil")); %>">
                     <i class="ti-trash"></i>
                 </a>
             </td>
@@ -743,7 +743,7 @@
             });
         </script>
         <div  class="dt-responsive table-responsive">
-            <table id="simpletable" class="table table-striped table-bordered nowrap datatableyap1">
+            <table id="dt_basic" class="table table-striped table-bordered table-hover datatableyap" style="width:973px">
     <thead>
         <tr>
             <th style="width: 30px; ">ID</th>
@@ -793,6 +793,13 @@
 
         </asp:panel>
 
+
+<%--    <asp:TextBox ID="hideValue" type="hidden" class="form-control" runat="server"></asp:TextBox>
+    <script type="text/javascript">
+        var value = $("#hideValue").val();
+        $(".yetmislik option[value=" + value + "]").attr('selected', 'selected');
+        $(".yetmislik").trigger("change");
+    </script>--%>
 
     <asp:panel id="gorevler_panel" runat="server">
         <div  class="dt-responsive table-responsive">
@@ -905,25 +912,25 @@
             });
         </script>
 
-<div  class="dt-responsive table-responsive">
-            <table id="simpletable" class="table table-striped table-bordered nowrap datatableyap1">
-    <thead>
-        <tr>
-            <th style="width: 30px;">ID</th>
-            <th><% Response.Write(LNG("Departman Adı")); %></th>
-            <th><% Response.Write(LNG("Departman Tipi")); %></th>
-            <th><% Response.Write(LNG("Yetkili Personeller")); %></th>
-            <th style="width: 60px; text-align:center;"><% Response.Write(LNG("Durum")); %></th>
-            <th style="width: 60px;"><% Response.Write(LNG("İşlem")); %></th>
-        </tr>
-    </thead>
-    <tbody>
-        <asp:Panel ID="departmanlar_kayityok_panel" runat="server">
+    <div class="dt-responsive table-responsive">
+        <table id="dt_basic" class="table table-striped table-bordered table-hover text-nowrap datatableyap" style="width:973px">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">ID</th>
+                    <th><% Response.Write(LNG("Departman Adı")); %></th>
+                    <th><% Response.Write(LNG("Departman Tipi")); %></th>
+                    <th><% Response.Write(LNG("Yetkili Personeller")); %></th>
+                    <th style="width: 60px; text-align: center;"><% Response.Write(LNG("Durum")); %></th>
+                    <th style="width: 60px;"><% Response.Write(LNG("İşlem")); %></th>
+                </tr>
+            </thead>
+            <tbody>
+                <asp:panel id="departmanlar_kayityok_panel" runat="server">
         <tr>
             <td colspan="5" style="text-align: center; vertical-align: middle;"><% Response.Write(LNG("Kayıt Yok")); %></td>
         </tr>
-       </asp:Panel>
-        <asp:Panel ID="departmanlar_kayitvar_panel" runat="server">
+       </asp:panel>
+                <asp:panel id="departmanlar_kayitvar_panel" runat="server">
             <asp:Repeater ID="departmanlar_repeater" runat="server">
                 <ItemTemplate>
                     <tr>
@@ -949,10 +956,10 @@
                 </ItemTemplate>
             </asp:Repeater>
         
-       </asp:Panel>
-    </tbody>
-</table>
-    </asp:panel>
+       </asp:panel>
+            </tbody>
+        </table>
+        </asp:panel>
 
     <script>
         $(function () {
@@ -965,7 +972,7 @@
             });
         });
     </script>
-    <asp:panel id="yeni_olay_ekle_panel" runat="server">
+        <asp:panel id="yeni_olay_ekle_panel" runat="server">
 
 
         <div id="yeni_olay_ekle_panel_form" style="padding:15px;">
@@ -1032,7 +1039,7 @@
             
     </asp:panel>
 
-    <asp:panel id="yeni_olay_duzenle_panel" runat="server">
+        <asp:panel id="yeni_olay_duzenle_panel" runat="server">
 
 
         <div id="yeni_olay_duzenle_panel_form" style="padding:15px;">
@@ -1098,7 +1105,7 @@
     </asp:panel>
 
 
-    <asp:panel id="departman_duzenle_panel" runat="server">
+        <asp:panel id="departman_duzenle_panel" runat="server">
 
          <div class="modal-header">
                 <h4 class="modal-title"><% Response.Write(LNG("Proje Durum Güncelle")); %></h4>
@@ -1133,7 +1140,7 @@
                     <asp:Button runat="server" class="btn btn-primary"  ID="departman_guncelle_buton"></asp:Button>
                 </div>
     </asp:panel>
-    <asp:panel id="gorev_duzenle_panel" runat="server">
+        <asp:panel id="gorev_duzenle_panel" runat="server">
          <div class="modal-header">
                                                                                 <h4 class="modal-title"><% Response.Write(LNG("Görev Güncelle")); %></h4>
                                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1165,7 +1172,7 @@
             
     </asp:panel>
 
-    <asp:panel id="santiye_durum_duzenle_panel" runat="server">
+        <asp:panel id="santiye_durum_duzenle_panel" runat="server">
 
         
                                                                             <div class="modal-header">
@@ -1199,7 +1206,7 @@
 
 
 
-    <asp:panel id="is_listesi_panel" runat="server">
+        <asp:panel id="is_listesi_panel" runat="server">
         <div id="lineer_kopyalanan" style="display:none;"></div>
         <div class="mobil_hide"  data-hide="phone" style="    width: 200px; float: right; margin-right: 250px; margin-bottom: -51px;  z-index: 13;  position: relative; padding-top: 10px;">
             <asp:ListBox name="tablo_customize" id="tablo_customize" multiple="multiple" runat="server"></asp:ListBox>
@@ -1226,7 +1233,7 @@
                                             <th sira="11" data-hide="phone" class="tablo85 bordersizis sortyeri sorting tablo_durum <% if (!gorunum.tablo_durum) { Response.Write(" gosterme "); } %>"><% Response.Write(LNG("Durum")); %></th>
                                         </tr>
                                        
-                                        <tr id="ikinumara" class="once_kapali ustteki" style="display:none;">
+                                        <tr id="ikinumara" class="once_kapali ustteki">
                                             <th sira="1" data-hide="phone" class="sortyeri2 details-control sorting_disabled" style="width: 30px; text-align:center;">ID</th>
                                             <th sira="2" data-class="expand" class="sortyeri2 sorting_asc"><% Response.Write(LNG("Yapılacak İş")); %></th>
                                             <th sira="3" data-hide="phone" class="desktop tablo85 sortyeri2 sorting tablo_gorevliler  <% if (!gorunum.tablo_gorevliler) { Response.Write(" gosterme "); } %>"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i><% Response.Write(LNG("Görevliler")); %></th>
@@ -1298,7 +1305,7 @@
             </div>
     </asp:panel>
 
-    <asp:panel id="is_ara_panel" runat="server">
+        <asp:panel id="is_ara_panel" runat="server">
         <div class="modal-header"> 
              <h5><% Response.Write(LNG("İş Arama")); %></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1405,7 +1412,7 @@
             
     </asp:panel>
 
-    <asp:panel id="yeni_is_ekle_panel" runat="server">
+        <asp:panel id="yeni_is_ekle_panel" runat="server">
 
         <script>
             $(function () {
@@ -1709,7 +1716,7 @@
                     <asp:Button runat="server" class="btn btn-primary"  ID="yeni_is_ekle_button"></asp:Button>
                 </div>
     </asp:panel>
-    <asp:panel class="row" id="is_detay_panel" style="padding: 10px;" runat="server">
+        <asp:panel class="row" id="is_detay_panel" style="padding: 10px;" runat="server">
         <style>
             @media screen and (max-width:767px) {
 
@@ -1990,3 +1997,11 @@
         </div>
     </asp:panel>
 </form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.js-example-basic-multiple').select2();
+    });
+</script>

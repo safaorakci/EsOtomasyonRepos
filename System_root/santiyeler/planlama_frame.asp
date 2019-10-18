@@ -300,7 +300,6 @@
 
         var prj = ge.saveProject();
         var planning = "0"; 
-        console.log(JSON.stringify(prj));
 
         //this is a simulation: save data to the local storage or to the textarea
         // saveInLocalStorage();
@@ -319,8 +318,6 @@
                 return;
             }
         }*/
-
-        console.log(prj.tasks[0].start);
 
         $.ajax("/ajax_planlama/", {
             dataType: "json",

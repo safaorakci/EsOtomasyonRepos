@@ -60,12 +60,17 @@ function is_yuku_cizelgesi_ac(start, end) {
 function santiye_durum_ekle() {
 
     var durum_adi = $("#durum_adi").val();
+    var selectValue = $(".yetmislik").val();
+
     var data = "islem=santiye_durum&islem2=ekle";
     data += "&durum_adi=" + encodeURIComponent(durum_adi);
     data = encodeURI(data);
     if ($("#santiye_durum_ekle_form input:not(input[type=button])").valid("valid")) {
         $("#santiye_durum_listesi").loadHTML({ url: "islem1", data: data }, function () {
             datatableyap();
+
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
             mesaj_ver("Proje Durumları", "Kayıt Başarıyla Eklendi", "success");
         });
     }
@@ -110,7 +115,7 @@ function durum_guncelleme_calistir(tablo, id) {
 
 
 
-function kayit_sil(tablo, id, baslik, mesaj, fonksiyon) {
+function kayit_sil(tablo, id, baslik, mesaj, fonksiyon, kod) {
     swal({
         title: "Emin misiniz?",
         text: "Bu işlemi geri Alamayacaksınız, Kaydı Silmek İstediğinize Emin misiniz?",
@@ -130,14 +135,14 @@ function kayit_sil(tablo, id, baslik, mesaj, fonksiyon) {
                 $("#koftiden").loadWebMethod({ url: "/System_Root/ajax/islem1.aspx/KayitSil", data: data }, function () {
                     mesaj_ver(baslik, mesaj, "success");
                     if ($.isFunction(fonksiyon)) {
-                        fonksiyon();
+                        fonksiyon(kod);
                     }
                 });
             }
         });
 
     $("button.confirm").focus();
-    
+
 
 }
 
@@ -608,18 +613,22 @@ function departman_ekle() {
 
     var departman_adi = $("#departman_adi").val();
     var departman_tipi = $("#departman_tipi").val();
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=departmanlar&islem2=ekle";
     data += "&departman_adi=" + encodeURIComponent(departman_adi);
     data += "&departman_tipi=" + encodeURIComponent(departman_tipi);
     data += "&ust_id=" + 0;
     data = encodeURI(data);
-    //  if ($("#departman_ekle_form input:not(input[type=button])").valid("valid")) {
-    $("#departman_listesi").loadHTML({ url: "islem1", data: data }, function () {
-        datatableyap();
-        mesaj_ver("Departmanlar", "Kayıt Başarıyla Eklendi", "success");
-    });
-    //  }
+    if ($("#departman_ekle_form input:not(input[type=button])").valid("valid")) {
+        $("#departman_listesi").loadHTML({ url: "islem1", data: data }, function () {
+            datatableyap();
+
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
+            mesaj_ver("Departmanlar", "Kayıt Başarıyla Eklendi", "success");
+        });
+    }
 }
 
 
@@ -783,6 +792,7 @@ function gorev_guncelle(gorev_id) {
 function gorev_ekle() {
 
     var gorev_adi = $("#gorev_adi").val();
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=gorevler&islem2=ekle";
     data += "&gorev_adi=" + encodeURIComponent(gorev_adi);
@@ -790,6 +800,10 @@ function gorev_ekle() {
     if ($("#gorev_ekle_form input:not(input[type=button])").valid("valid")) {
         $("#gorev_listesi").loadHTML({ url: "islem1", data: data }, function () {
             datatableyap();
+
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
+
             mesaj_ver("Görevler", "Kayıt Başarıyla Eklendi", "success");
         });
     }
@@ -840,7 +854,7 @@ function personel_ekle() {
     var gorevler = $("#gorevler").val();
     var personel_parola = $("#personel_parola").val();
     var personel_tcno = $("#personel_tcno").val();
-
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=personeller&islem2=ekle";
     data += "&personel_resim=" + encodeURIComponent(personel_resim);
@@ -862,6 +876,9 @@ function personel_ekle() {
                 $("#personel_listesi").loadHTML({ url: "islem1", data: data }, function () {
                     datatableyap();
                     mesaj_ver("Personeller", "Kayıt Başarıyla Eklendi", "success");
+
+                    $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+                    $(".yetmislik").trigger("change");
                 });
             } else {
                 mesaj_ver("Personeller", "Girdiğiniz Bilgilerle daha önce personel tanımlanmış. Lütfen Kontrol Ediniz.", "danger");
@@ -1654,8 +1671,8 @@ function is_ekle_yeni_takvim_calistir() {
 
             yeni_is_ekle_sure_hesap();
             IzinliPersonelKontrol();
-         
-          
+
+
         }
     }).mask("99.99.9999");
 }
@@ -3347,9 +3364,11 @@ function personel_izin_talep_onayla(personel_id, kayit_id, durum) {
     data += "&kayit_id=" + kayit_id;
     data += "&durum=" + durum;
     data = encodeURI(data);
-    $("#koftiden").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-        mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Güncellendi", "success");
-        $("#giris_cikis_buton").click();
+    $("#koftiden").loadHTML({ url: "/ajax_request6/", data: data, status }, function () {
+        if (status == "success")
+            mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Güncellendi", "success");
+        if (status == "error")
+            mesaj_ver("İzin Talepleri", "Kendi İzin Talebinizi Onaylayamazsınız. !", "danger");
     });
 }
 
@@ -4045,7 +4064,20 @@ function ModalExcellUpload() {
     $("#modal_div").loadHTML({ url: "/ajax_request5/", data: data }, function () {
         sayfa_yuklenince();
     });
+}
 
+function StokListesiTemizle() {
+
+    var r = confirm("Bütün Tabloyu Silmek İstediğinize Eminmisiniz ?");
+    if (r) {
+        var data = "islem=StokListesiTemizle";
+        data = encodeURI(data);
+        $("#parca_listesi").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+            mesaj_ver("Stok Listesi", "Bütün Kayıtlar Silindi !", "success");
+            parcalari_getir();
+            sayfa_yuklenince();
+        });
+    }
 }
 
 function ModalSatinalmaArama() {
@@ -4089,7 +4121,7 @@ function Modaldan_parca_ara() {
     data += "&kodu=" + kodu;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-
+        sayfa_yuklenince();
     });
 
 }
@@ -4130,6 +4162,7 @@ function parca_guncelle(kayit_id) {
     var miktar = $("#miktar").val();
     var minumum_miktar = $("#minumum_miktar").val();
     var barcode = $("#barcode").val();
+    var kodu = $("#kodu").val();
 
     var data = "islem=parca_listesi&islem2=guncelle";
     data += "&kayit_id=" + kayit_id;
@@ -4143,8 +4176,10 @@ function parca_guncelle(kayit_id) {
     data += "&miktar=" + miktar;
     data += "&minumum_miktar=" + minumum_miktar;
     data += "&barcode=" + barcode;
+    data += "&kodu=" + kodu;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        $(".close").click();
         mesaj_ver("Parçalar", "Kayıt Başarıyla Güncellendi", "success");
     });
 
@@ -4180,6 +4215,7 @@ function yeni_parca_ekle() {
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         mesaj_ver("Parçalar", "Kayıt Başarıyla Eklendi", "success");
         $(".close").click();
+        sayfa_yuklenince();
     });
 
 }
@@ -4632,7 +4668,7 @@ function kendi_personel_bilgilerini_guncelle() {
         })
     }
 
-    
+
 
 }
 
@@ -4683,7 +4719,7 @@ function personel_bilgilerini_guncelle(personel_id) {
             mesaj_ver("Personel Detayları", "Kayıt Başarıyla Güncellendi", "success");
         })
     }
-    
+
 }
 
 
@@ -5032,6 +5068,7 @@ function firma_ekle(yetki_kodu) {
     var firma_telefon = $("#firma_telefon").val();
     var firma_mail = $("#firma_mail").val();
     var firma_supervisor_id = $("#firma_supervisor_id").val();
+    var selectValue = $(".yetmislik").val();
 
     var data = "islem=firmalar&islem2=ekle";
     data += "&yetki_kodu=" + yetki_kodu;
@@ -5045,6 +5082,9 @@ function firma_ekle(yetki_kodu) {
     if ($("#firma_ekle_form  input:not(input[type=button])").valid("valid")) {
         $("#firma_listesi").loadHTML({ url: "islem1", data: data }, function () {
             datatableyap();
+
+            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+            $(".yetmislik").trigger("change");
             mesaj_ver("Firmalar", "Kayıt Başarıyla Eklendi", "success");
         });
     }
@@ -6636,7 +6676,7 @@ function firma_bilgilerini_guncelle(firma_id) {
             mesaj_ver("Müşteri Bilgileri", "Kayıt Başarıyla Güncellendi", "success");
         });
     }
-    
+
 }
 
 
@@ -6708,19 +6748,29 @@ function etiketli_yeni_is_ekle(etiket, etiket_id) {
 
 function yeni_is_ekle(proje_id, departman_id) {
     var d = new Date();
+    var day = "";
+    var month = "";
+    var year = d.getFullYear();
     var data = "islem=yeni_is_ekle";
     data += "&proje_id=" + proje_id;
     data += "&departman_id=" + departman_id;
-    if (d.getMonth < 10) {
-        console.log("1");
-        data += "&yeni_is_baslangic_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
-        data += "&yeni_is_bitis_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+
+    if (d.getDate < 10) {
+        day = "0" + d.getDate();
     }
     else {
-        console.log("2");
-        data += "&yeni_is_baslangic_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
-        data += "&yeni_is_bitis_tarihi=" + "0" + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        day = d.getDate();
     }
+    if (d.getMonth < 10) {
+        month = "0" + (d.getMonth() + 1);
+    }
+    else {
+        month = (d.getMonth() + 1);
+    }
+
+    data += "&yeni_is_baslangic_tarihi=" + day + "-" + month + "-" + year;
+    data += "&yeni_is_bitis_tarihi=" + day + "-" + month + "-" + year;
+
     console.log(data);
     data = encodeURI(data);
     $("#modal_butonum").click();
@@ -7337,9 +7387,7 @@ function santiye_sil(santiye_id) {
             sayfagetir('/santiyeler/', 'jsid=4559');
         });
     }
-
 }
-
 
 
 function olay_guncelle(proje_id, departman_id, tab_id, olay_id, buton) {
