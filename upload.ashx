@@ -134,7 +134,7 @@ public class upload : IHttpHandler
                         {
                             kodu = dReader["kodu"].ToString();
                             if (kodu == "")
-                                break;
+                                continue;
 
                             ayarlar.cmd.CommandText = "select id, miktar  from [dbo].[parca_listesi] where parca_kodu=@kodu";
                             ayarlar.cmd.Parameters.Clear();
