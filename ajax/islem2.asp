@@ -1560,7 +1560,7 @@
             ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
             ekleyen_ip = Request.ServerVariables("Remote_Addr")
 
-            SQL="update ahtapot_ajanda_olay_listesi set etiketler = '"& etiketler &"', title = N'"& title &"', color = '"& color &"', baslangic = '"& baslangic &"', baslangic_saati = '"& baslangic_saati &"', bitis = '"& bitis &"', bitis_saati = '"& bitis_saati &"', description = N'"& description &"', ekleyen_id = '"& ekleyen_id &"', ekleyen_ip = '"& ekleyen_ip &"' where id = '"& olay_id &"'"
+            SQL="update ahtapot_ajanda_olay_listesi set etiketler = '"& etiketler &"', title = N'"& title &"', color = '"& color &"', baslangic = CONVERT(date, '"& baslangic &"', 103), baslangic_saati = '"& baslangic_saati &"', bitis = CONVERT(date, '"& bitis &"', 103), bitis_saati = '"& bitis_saati &"', description = N'"& description &"', ekleyen_id = '"& ekleyen_id &"', ekleyen_ip = '"& ekleyen_ip &"' where id = '"& olay_id &"'"
             set guncelle = baglanti.execute(SQL)
 
             SQL="select case when isnull(ana_kayit_id,0) = 0 then id else ana_kayit_id end as ana_kayit_id from ahtapot_ajanda_olay_listesi where id = '"& olay_id &"'"
@@ -1568,7 +1568,7 @@
 
             ana_kayit_id = olay(0)
 
-            SQL="update ahtapot_ajanda_olay_listesi set etiketler = '"& etiketler &"', title = N'"& title &"', color = '"& color &"', baslangic = '"& baslangic &"', baslangic_saati = '"& baslangic_saati &"', bitis = '"& bitis &"', bitis_saati = '"& bitis_saati &"', description = N'"& description &"', ekleyen_id = '"& ekleyen_id &"', ekleyen_ip = '"& ekleyen_ip &"' where case when isnull(ana_kayit_id,0) = 0 then id else ana_kayit_id end = '"& ana_kayit_id &"'"
+            SQL="update ahtapot_ajanda_olay_listesi set etiketler = '"& etiketler &"', title = N'"& title &"', color = '"& color &"', baslangic = CONVERT(date, '"& baslangic &"', 103), baslangic_saati = '"& baslangic_saati &"', bitis = CONVERT(date, '"& bitis &"', 103), bitis_saati = '"& bitis_saati &"', description = N'"& description &"', ekleyen_id = '"& ekleyen_id &"', ekleyen_ip = '"& ekleyen_ip &"' where case when isnull(ana_kayit_id,0) = 0 then id else ana_kayit_id end = '"& ana_kayit_id &"'"
             set guncelle = baglanti.execute(SQL)
 
 
@@ -1590,7 +1590,7 @@
 
             if acikmi = true then
 
-                SQL="update ucgem_is_listesi set baslangic_tarihi = '"& olay("baslangic") &"', bitis_tarihi = '"& olay("bitis") &"', baslangic_saati = '"& olay("baslangic_saati") &"', bitis_saati = '"& olay("bitis_saati") &"' where id = '"& olay("is_id") &"'"
+                SQL="update ucgem_is_listesi set baslangic_tarihi = CONVERT(date, '"& olay("baslangic") &"', 103), bitis_tarihi = CONVERT(date, '"& olay("bitis") &"', 103), baslangic_saati = '"& olay("baslangic_saati") &"', bitis_saati = '"& olay("bitis_saati") &"' where id = '"& olay("is_id") &"'"
                 set guncelle = baglanti.execute(SQL)
 
             end if
