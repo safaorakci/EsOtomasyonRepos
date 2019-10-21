@@ -98,16 +98,10 @@ public class upload : IHttpHandler
 
     public void ExcellToDataBase(string filePath, string firmaKodu, string firmaID, string userID, string userIP)
     {
-
-
-        //string[] createText = { "Bilal", "TAS" };
-
-        //string path = @"C:\Users\MAKROGEM\source\repos\safaorakci\EsOtomasyonRepos\Example.txt";
-
-        //File.WriteAllLines(path, createText);
-
+        //string[] createText= {0};
         try
         {
+            string logText = "";
             String excelConnString = String.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0\"", filePath);
             String strConnection = ConfigurationManager.ConnectionStrings["baglantim"].ToString();
 
@@ -141,6 +135,9 @@ public class upload : IHttpHandler
                         while (dReader.Read())
                         {
                             kodu = dReader["kodu"].ToString();
+                            
+
+
                             if (kodu == "")
                                 continue;
 
@@ -151,6 +148,7 @@ public class upload : IHttpHandler
                             sda.Fill(dt);
                             if (dt.Rows.Count > 0)
                             {
+                                    logText = logText + Environment.NewLine + kodu + " - update";
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
                                 ayarlar.cmd.CommandText = "update [dbo].[parca_listesi] set miktar=@miktar, birim_maliyet=@birim_maliyet, minumum_miktar = @minumum_miktar  where id=@id";
@@ -162,6 +160,7 @@ public class upload : IHttpHandler
                             }
                             else
                             {
+                                    logText = logText + Environment.NewLine + kodu + " - insert";
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
                                 ayarlar.cmd.CommandText = "insert into [dbo].[parca_listesi] " +
@@ -187,22 +186,13 @@ public class upload : IHttpHandler
                                 ayarlar.cmd.Parameters.Add("@ekleyen_ip", SqlDbType.NVarChar).Value = userIP;
                                 ayarlar.cmd.Parameters.Add("@ekleme_tarihi", SqlDbType.DateTime).Value = DateTime.Now.ToString("yyyy-MM-dd");
                                 ayarlar.cmd.Parameters.Add("@ekleme_saati", SqlDbType.Time).Value = DateTime.Now.ToString("HH:mm:ss");
-
-
+                                //createText[0] = dt.Rows.ToString();
                                 ayarlar.cmd.ExecuteNonQuery();
                             }
                         }
+                        File.WriteAllText(HttpContext.Current.Server.MapPath("log.txt"), logText);
 
-                        //string[] createText = { "Bilal", "TAS" };
-                        //int count = 0;
-
-                        //string path = @"C:\Users\MAKROGEM\source\repos\safaorakci\EsOtomasyonRepos\Example.txt";
-
-                        //foreach (DataRow dr in dt.Rows)
-                        //{
-                        //    createText[count] = dr["parca_kodu"].ToString();
-                        //    count++;
-                        //}
+                        //string path = @"C:\Users\MAKROGEM\source\repos\safaorakci\EsOtomasyonRepos";
 
                         //createText = { "Hello" };
                         //File.WriteAllLines(path, createText);
@@ -219,6 +209,7 @@ public class upload : IHttpHandler
         }
         catch (Exception ex)
         {
+            File.WriteAllText(HttpContext.Current.Server.MapPath("log.txt"), ex.Message + " - " + ex.StackTrace);
             throw ex;
         }
     }
