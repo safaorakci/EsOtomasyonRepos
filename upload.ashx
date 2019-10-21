@@ -98,7 +98,14 @@ public class upload : IHttpHandler
 
     public void ExcellToDataBase(string filePath, string firmaKodu, string firmaID, string userID, string userIP)
     {
-        string[] createText= {0};
+
+
+        //string[] createText = { "Bilal", "TAS" };
+
+        //string path = @"C:\Users\MAKROGEM\source\repos\safaorakci\EsOtomasyonRepos\Example.txt";
+
+        //File.WriteAllLines(path, createText);
+
         try
         {
             String excelConnString = String.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0\"", filePath);
@@ -180,15 +187,25 @@ public class upload : IHttpHandler
                                 ayarlar.cmd.Parameters.Add("@ekleyen_ip", SqlDbType.NVarChar).Value = userIP;
                                 ayarlar.cmd.Parameters.Add("@ekleme_tarihi", SqlDbType.DateTime).Value = DateTime.Now.ToString("yyyy-MM-dd");
                                 ayarlar.cmd.Parameters.Add("@ekleme_saati", SqlDbType.Time).Value = DateTime.Now.ToString("HH:mm:ss");
-                                createText[0] = dt.Rows.ToString();
+
+
                                 ayarlar.cmd.ExecuteNonQuery();
                             }
                         }
 
-                        string path = @"C:\Users\MAKROGEM\source\repos\safaorakci\EsOtomasyonRepos";
+                        //string[] createText = { "Bilal", "TAS" };
+                        //int count = 0;
+
+                        //string path = @"C:\Users\MAKROGEM\source\repos\safaorakci\EsOtomasyonRepos\Example.txt";
+
+                        //foreach (DataRow dr in dt.Rows)
+                        //{
+                        //    createText[count] = dr["parca_kodu"].ToString();
+                        //    count++;
+                        //}
 
                         //createText = { "Hello" };
-                        File.WriteAllLines(path, createText);
+                        //File.WriteAllLines(path, createText);
 
 
                         //using (SqlBulkCopy sqlBulk = new SqlBulkCopy(strConnection))
