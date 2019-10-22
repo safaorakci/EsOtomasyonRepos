@@ -644,7 +644,7 @@
 
                 bildirim = kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") & " "& cdate(baslangic_tarihi) &" "& left(baslangic_saati,5) &" ile "& cdate(bitis_tarihi) &" "& left(bitis_saati,5) &" tarihleri için izin talebinde bulundu." & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
                 tip = "personel_detaylari"
-                click = "sayfagetir("'/personel_detaylari/'", 'jsid=4559&personel_id="& kullanicicek("id") &"');"
+                click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559&personel_id="& kullanicicek("id") &");"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -1136,7 +1136,7 @@
 
                 bildirim = kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") & " "& cdate(baslangic_tarihi) &" "& left(baslangic_saati,5) &" ile "& cdate(bitis_tarihi) &" "& left(bitis_saati,5) &" saatleri arasında mesai bildiriminde bulundu." & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
                 tip = "is_listesi"
-                click = "sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id="& kullanicicek("id") &"');"
+                click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559&personel_id="& kullanicicek("id") &");"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -1171,7 +1171,7 @@
 
                 bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " Mesai Bildirim Talebinizi Reddetti." & chr(13) & chr(13) 
                 tip = "is_listesi"
-                click = "sayfagetir('/profil_ayarlari/', 'jsid=4559');"
+                click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559"");"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -2078,8 +2078,16 @@
         personel_id = trn(request("personel_id"))
         kayit_id = trn(request("kayit_id"))
 
-        SQL="update ucgem_personel_mesai_bildirimleri set durum = 'Onaylandı' where id = '"& kayit_id &"'"
-        set guncelle = baglanti.execute(SQL)
+
+        if personel_id=Request.Cookies("kullanici")("kullanici_id") then
+    %>
+        <script>
+            mesaj_ver("Mesai Talepleri", "Kendi Mesai Talebinizi Onaylayamazsınız. !", "danger");
+        </script>
+    <%
+        else
+           SQL="update ucgem_personel_mesai_bildirimleri set durum = 'Onaylandı' where id = '"& kayit_id &"'"
+           set guncelle = baglanti.execute(SQL)
 
 
             SQL="select * from ucgem_firma_kullanici_listesi where id= '"& personel_id &"'"
@@ -2089,7 +2097,7 @@
 
                 bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " Mesai Bildirim Talebinizi Onayladı." & chr(13) & chr(13) 
                 tip = "is_listesi"
-                click = "sayfagetir('/profil_ayarlari/', 'jsid=4559');"
+                click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559"");"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -2107,6 +2115,8 @@
 
             kcek.movenext
             loop
+
+        end if
 
 
     elseif trn(request("islem"))="personel_bordro_getir" then
