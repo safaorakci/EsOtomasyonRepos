@@ -33,11 +33,7 @@
             SQL="select baslangic, bitis, baslangic_saati, bitis_saati, olay.id, tamamlandi, STRING_ESCAPE(title, 'json') as title, allDay, color from ahtapot_ajanda_olay_listesi olay left join etiketler etiket on (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value =  etiket.sorgu ) > 0 where ((olay.etiket = '"& etiket &"' and olay.etiket_id = '"& etiket_id &"') or ( (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value =  'proje-"& etiket_id &"' ) > 0)) "& gunluk_str &" and olay.cop = 'false'"& kelime_str &" and ((olay.baslangic between CONVERT(date, '"& cdate(baslangic) &"', 103) and CONVERT(date, '"& cdate(bitis) &"', 103) or olay.bitis between CONVERT(date, '"& cdate(baslangic) &"', 103) and CONVERT(date, '"& cdate(bitis) &"', 103)) or NOT (olay.baslangic >= CONVERT(date, '"& baslangic &"', 103) OR olay.bitis <=  CONVERT(date, '"& biris &"', 103))) group by baslangic, bitis, baslangic_saati, bitis_saati, olay.id, tamamlandi, title, allDay, color order by olay.baslangic asc"
         else
             SQL="select baslangic, bitis, baslangic_saati, bitis_saati, olay.id, tamamlandi, STRING_ESCAPE(title, 'json') as title, case when allDay=0 then 'False' else 'True' end as allDay, color from ahtapot_ajanda_olay_listesi olay left join etiketler etiket on (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value =  etiket.sorgu ) > 0 where  olay.etiket = '"& etiket &"' "& gunluk_str &" and olay.etiket_id = '"& etiket_id &"' and olay.cop = 'false'"& kelime_str &" and ((olay.baslangic between CONVERT(date, '"& cdate(baslangic) &"', 103) and CONVERT(date, '"& cdate(bitis) &"', 103) or olay.bitis between CONVERT(date, '"& cdate(baslangic) &"', 103) and CONVERT(date, '"& cdate(bitis) &"', 103)) or NOT (olay.baslangic >= CONVERT(date, '"& baslangic &"', 103) OR olay.bitis <=  CONVERT(date, '"& bitis &"', 103))) group by baslangic, bitis, baslangic_saati, bitis_saati, olay.id, tamamlandi, title, allDay, color order by olay.baslangic asc"
-
-               
-
         end if
-
         set olay = baglanti.execute(SQL)
 
         i = 0

@@ -74,7 +74,7 @@ function is_timer_start_kaydi(is_id, TamamlanmaID, zaman) {
     data += "&TamamlanmaID=" + TamamlanmaID;
     data = encodeURI(data);
     $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
-       
+        
     });
 
 
@@ -106,7 +106,7 @@ function is_timer_stop_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
     data += "&TamamlanmaID=" + TamamlanmaID;
     data = encodeURI(data);
     $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
-        //is_ilerleme_ajanda_senkronizasyon_kaydet2(is_id, TamamlanmaID, 100, 0, baslama_saati, '', baslangic_tarihi, '', baslik, aciklama);
+        is_ilerleme_ajanda_senkronizasyon_kaydet2(is_id, TamamlanmaID, 100, 0, baslama_saati, '', baslangic_tarihi, '', baslik, aciklama);
         manuel_isi_bitir2(TamamlanmaID, 100, is_id);
 
         setTimeout(function () {
