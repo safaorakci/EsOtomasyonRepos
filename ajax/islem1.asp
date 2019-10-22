@@ -3856,8 +3856,22 @@
 
                 <div class="col-lg-12">
                     <%
-                        sql="select isnull(kullanici.personel_yillik_izin, 0) - isnull((select count(id) from ucgem_personel_mesai_girisleri where personel_id = kullanici.id and giris_tipi = 2),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
-                        set personel = baglanti.execute(SQL)
+                        SQL ="select * from ucgem_personel_izin_talepleri where personel_id = '"& personel_id &"'"
+                        set durumKontrol = baglanti.execute(SQL)
+
+                        Durum = ""
+                        if not durumKontrol.eof then
+                            if durumKontrol("turu") = "Yillik Izin" or durumKontrol("turu") = "" then
+                               Durum = "- isnull((select count(id) from ucgem_personel_mesai_girisleri where personel_id = kullanici.id and giris_tipi = 2),0) as kalan, kullanici.*"
+                            else
+                               Durum = "as kalan"
+                            end if
+                            SQL="select isnull(kullanici.personel_yillik_izin, 0) "& Durum &" from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
+                            set personel = baglanti.execute(SQL)
+                        else
+                            SQL="select isnull(kullanici.personel_yillik_izin, 0) - isnull((select count(id) from ucgem_personel_mesai_girisleri where personel_id = kullanici.id and giris_tipi = 2),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
+                            set personel = baglanti.execute(SQL)
+                        end if
                     %>
                     <h5 class="card-header-text"><%=LNG("Personel İzin Talepleri")%></h5>
                     <div style="float: right; margin-top: -15px; font-weight: bold; margin-right: 30px;">
