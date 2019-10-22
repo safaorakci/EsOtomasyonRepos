@@ -2985,6 +2985,7 @@ function mesai_bildirim_kaydet(personel_id, durum) {
         data = encodeURI(data);
         $("#mesai_kayitlari").loadHTML({ url: "/ajax_request6/", data: data }, function () {
             mesaj_ver("Personel", "Mesai Bildirim Kaydı Eklendi", "success");
+            $(".close").click();
             $("#mesai_buton").click();
         });
 
@@ -3380,7 +3381,11 @@ function mesai_bildirim_onayla(personel_id, kayit_id) {
     data += "&kayit_id=" + kayit_id;
     data = encodeURI(data);
     $("#koftiden").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-        mesaj_ver("Mesai Bildirimleri", "Kayıt Başarıyla Güncellendi", "success");
+        if (status == "success")
+            mesaj_ver("Mesai Bildirimleri", "Kayıt Başarıyla Güncellendi", "success");
+        if (status == "error")
+            mesaj_ver("Mesai Bildirimleri", "Kendi Mesai Talebinizi Onaylayamazsınız. !", "danger");
+        
         $("#mesai_buton").click();
     });
 }
@@ -3526,7 +3531,7 @@ function depo_dosya_sil(etiket, kayit_id, dosya_id) {
 
 function depo_dosya_yukle(etiket, kayit_id) {
 
-    if ($("#dosya_yukleme_form input[type=text],textarea").valid("valid")) {
+    if ($("#dosya_yukleme_form input[type=text]").valid("valid")) {
 
         var depo_dosya_yolu = $("#depo_dosya_yolu").attr("filepath");
         var depo_dosya_adi = $("#depo_dosya_adi").val();
@@ -7179,12 +7184,13 @@ function is_personel_durt(PersonelID, IsID) {
 
 function yeni_is_dosyasi_indir(dosya_id) {
     $(window).off('beforeunload');
-    window.location.href = "/ajax/dosya_indir/?jsid=4559&tip=is&dosya_id=" + dosya_id;
+    window.location.href = "/dosya_indir/?jsid=4559&tip=is&dosya_id=" + dosya_id;
+    //window.location.href = "/ajax/dosya_indir/?jsid=4559&tip=is&dosya_id=" + dosya_id;
 }
 
 function yeni_is_dosya_ekle(IsID) {
 
-    var dosya_yolu = $("#dosya_yolu" + IsID).val();
+    var dosya_yolu = $("#dosya_yolu" + IsID).attr("filepath");
     var dosya_adi = $("#dosya_adi" + IsID).val();
 
     var data = "islem=dosya_listesi_getir&islem2=ekle";

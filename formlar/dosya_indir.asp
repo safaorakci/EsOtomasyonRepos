@@ -8,6 +8,17 @@
         Response.End
     end if
 
+    if request("tip")="is" then
+
+        dosya_id = request("dosya_id")
+
+        SQL="select * from ucgem_is_dosya_listesi where id = '"& dosya_id &"'"
+        set cek = baglanti.execute(SQL)
+
+        ParcaParcaDosyaIndir Server.MapPath(cek("dosya_yolu")), (cek("dosya_adi") & "." & split(right(cek("dosya_yolu"), 7), ".")(1))
+
+    end if
+
     if isnumeric(gp(4))=true then
         if cdbl(gp(4))>0 then
         
@@ -22,5 +33,9 @@
             end if
 
         end if
+
+        
     end if
+
+
 %>
