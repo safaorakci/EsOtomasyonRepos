@@ -1383,12 +1383,16 @@ works properly when clicked or hovered */
         
             end if 
 
-
-
             SQL="insert into ucgem_is_calisma_listesi(TamamlanmaID, is_id, baslangic, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& TamamlanmaID &"', '"& is_id &"', getdate(), '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 104), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
-
+%>
+<script type="text/javascript">
+    $(function () {
+        $('.stopButton').attr("disabled", "disabled");
+    });
+</script>
+<%
             SQL="select * from ucgem_is_listesi where id = '"& is_id &"'"
             set iscek = baglanti.execute(SQL)
 
@@ -1397,6 +1401,14 @@ works properly when clicked or hovered */
         elseif trn(request("islem2"))="pause" then
 
             TamamlanmaID = trn(request("TamamlanmaID"))
+%>
+<script type="text/javascript">
+    $(function () {
+        $('.stopButton').removeAttr("disabled");
+    });
+</script>
+
+<%
 
             SQL="select top 1 * from ucgem_is_calisma_listesi where is_id = '"& is_id &"' and TamamlanmaID = '"& TamamlanmaID &"' and bitis is null and cop = 'false' order by id desc"
             set cek = baglanti.execute(SQL)
@@ -1424,10 +1436,8 @@ works properly when clicked or hovered */
 
         end if
 
-
-
-
 %>
+
 <legend style="font-size: 15px; font-weight: bold; line-height: 2px;">Çalışma Geçmişi :</legend>
 <br />
 <table class="table">

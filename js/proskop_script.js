@@ -620,15 +620,15 @@ function departman_ekle() {
     data += "&departman_tipi=" + encodeURIComponent(departman_tipi);
     data += "&ust_id=" + 0;
     data = encodeURI(data);
-    if ($("#departman_ekle_form input:not(input[type=button])").valid("valid")) {
-        $("#departman_listesi").loadHTML({ url: "islem1", data: data }, function () {
-            datatableyap();
+    //if ($("#departman_ekle_form input:not(input[type=button])").valid("valid")) {
+    $("#departman_listesi").loadHTML({ url: "islem1", data: data }, function () {
+        datatableyap();
 
-            $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
-            $(".yetmislik").trigger("change");
-            mesaj_ver("Departmanlar", "Kayıt Başarıyla Eklendi", "success");
-        });
-    }
+        $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+        $(".yetmislik").trigger("change");
+        mesaj_ver("Departmanlar", "Kayıt Başarıyla Eklendi", "success");
+    });
+    //}
 }
 
 
