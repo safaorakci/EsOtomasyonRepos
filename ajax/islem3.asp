@@ -1908,7 +1908,7 @@
 		'Mail.Host = "mail.makrogem.com.tr"                                     ' Es-Posta sunucu adresi
 		Mail.Host = "mail.esotomasyon.com.tr"                                        ' E-Posta sunucu adresi
         Mail.Port = 587
-        Mail.TLS = true
+        Mail.TLS = false
 		Mail.Username = gonderici                                               ' Gönderim adresi
 		Mail.Password = "Es22995566"                                                ' Gönderen hesabın şifresi
 		Mail.From = gonderici                                                   ' E-Postayı gönderen adres

@@ -260,7 +260,7 @@
         //var prof = new Profiler("loadServerSide");
         //prof.reset();
 
-        $.getJSON("/ajax_uretim_sablon/?jsid=4559&tip=<%=request("tip")%>&proje_id=<%=request("proje_id")%>", { CM: "LOADPROJECT", taskId: taskId }, function (response) {
+        $.getJSON('/ajax_uretim_sablon/?jsid=4559&tip=<%=request("tip")%>&proje_id=<%=request("proje_id")%>', { CM: "LOADPROJECT", taskId: taskId }, function (response) {
             //console.debug(response);
             if (response.ok) {
                 if (!response.project.canWrite)

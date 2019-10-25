@@ -3287,11 +3287,12 @@
             bitis_saati = bitirme_saati
             url = ""
 
+            renk = "rgb(52, 152, 219)"
             color = ""
-            if trn(request("TamamlanmaID")) = 1 then
-                color = "rgb(52, 152, 219)"
-            else
+            if trn(request("tamamlanma_orani")) = "100" then
                 color = "rgb(46, 204, 113)"
+            elseif trn(request("tamamlanma_orani")) = "10" then
+                color = "rgb(241, 196, 15)"
             end if
             description = ajanda_aciklama
             etiketler = bilgicek("departmanlar")
@@ -3306,8 +3307,6 @@
             ana_kayit_id = 0
             tamamlandi = trn(request("TamamlanmaID"))
 
-            SQL="update ahtapot_ajanda_olay_listesi set cop = 'true' where IsID = '"& IsID &"' and etiket = '"& etiket &"' and etiket_id = '"& etiket_id &"'"
-            set guncelle = baglanti.execute(SQL)
 
             SQL="insert into ahtapot_ajanda_olay_listesi(IsID, etiket, etiket_id, title, allDay, baslangic, bitis, baslangic_saati, bitis_saati, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, kisiler, ana_kayit_id, tamamlandi) values('"& IsID &"', '"& etiket &"', '"& etiket_id &"', '"& title &"', '"& allDay &"', CONVERT(date,'"& baslangic &"',103),CONVERT(date,'"& bitis &"',103), '"& baslangic_saati &"', '"& bitis_saati &"', '"& url &"', '"& color &"', '"& description &"', '"& etiketler &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"',  CONVERT(date, '"& ekleme_tarihi &"',103), '"& ekleme_saati &"', '"& kisiler &"', '"& ana_kayit_id &"', '"& tamamlandi &"')"
             set ekle = baglanti.execute(SQL)

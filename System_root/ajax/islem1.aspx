@@ -174,7 +174,7 @@
             <div id="dyeni_is_ekle_form">
                         <div class="row">
                             
-                            <div class="col-sm-10">
+                            <div class="col-sm-12">
                                 <label class=" col-form-label"><% Response.Write(LNG("Yapılacak İş")); %></label>
                                 <div class="input-group input-group-primary">
                                     <span class="input-group-addon">
@@ -184,7 +184,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-sm-2">
+                             <div style="display:none">
                                 <label class="col-sm-12 col-form-label" style="padding-left:0;"><% Response.Write(LNG("Renk")); %></label>
                                 <!--<input type="hidden" id="renk" class="demo" value="#FC6180">-->
                                  <asp:TextBox id="renk" runat="server"></asp:TextBox>
@@ -1454,7 +1454,7 @@
             <div class="modal-body">
             <div id="yeni_is_ekle_form">
                         <div class="row">
-                            <div class="col-sm-10">
+                            <div class="col-sm-12">
                                 <label class="col-form-label"><% Response.Write(LNG("Yapılacak İş")); %></label>
                                 <div class="input-group input-group-primary">
                                     <span class="input-group-addon">
@@ -1467,7 +1467,7 @@
                            
 
 
-                            <div class="col-sm-2">
+                            <div style="display:none">
                                 <label class="col-sm-12 col-form-label" style="padding-left:0;"><% Response.Write(LNG("Renk")); %></label>
                                 <!--<input type="hidden" id="renk" class="demo" value="#FC6180">-->
                                 <input type='text' id="renk" value="rgb(52, 152, 219)" />

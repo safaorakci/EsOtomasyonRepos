@@ -2079,7 +2079,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                             string adi = Personel["personel_adsoyad"].ToString();
 
-                            if (Personel["PushUserKey"].ToString().Length > 10)
+                            if (Personel["PushUserKey"].ToString() != null)
                             {
 
                                 if (yeni_adi.Length > 100)
@@ -2089,7 +2089,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
-                                ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = @user_id, @mesaj = @bildirim;";
+                                ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate())";
                                 ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Dürttü !.");
                                 ayarlar.cmd.Parameters.Add("tip", "is_listesi");
                                 ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
@@ -2193,7 +2193,8 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string duration_uygulama = simdistring;
 
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "update ucgem_is_listesi set tamamlanma_orani = @tamamlanma_orani, tamamlanma_tarihi = getdate(), tamamlanma_saati = getdate(), guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen = @guncelleyen where id = @IsID;update ahtapot_proje_gantt_adimlari set progress = @tamamlanma_orani, iend_uygulama = @iend_uygulama, end_tarih_uygulama = @end_tarih_uygulama, duration_uygulama = DATEDIFF(day, start_tarih_uygulama, @end_tarih_uygulama)-1  where id = (select top 1 isnull(GantAdimID,0) from ucgem_is_listesi where id = @IsID);";
+            ayarlar.cmd.CommandText = "update ucgem_is_listesi set tamamlanma_orani = @tamamlanma_orani, tamamlanma_tarihi = getdate(), tamamlanma_saati = getdate(), guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen = @guncelleyen where id = @IsID" +
+                ";update ahtapot_proje_gantt_adimlari set progress = @tamamlanma_orani, iend_uygulama = CONVERT(date, @iend_uygulama, 103), end_tarih_uygulama = CONVERT(date, @end_tarih_uygulama, 103), duration_uygulama = DATEDIFF(day, start_tarih_uygulama, @end_tarih_uygulama)-1  where id = (select top 1 isnull(GantAdimID,0) from ucgem_is_listesi where id = @IsID);";
             ayarlar.cmd.Parameters.Add("guncelleyen", SessionManager.CurrentUser.kullanici_adsoyad);
             ayarlar.cmd.Parameters.Add("tamamlanma_orani", genel_durum);
             ayarlar.cmd.Parameters.Add("IsID", IsID);
@@ -2245,7 +2246,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                     //string donen = ayarlar.DakikSMSMesajGonder(Personel["personel_telefon"].ToString(), SessionManager.CurrentUser.kullanici_adsoyad + " '" + iss["adi"] + "' adlı işi bitirdi.");
 
 
-                    if (Personel["PushUserKey"].ToString().Length > 10)
+                    if (Personel["PushUserKey"].ToString() != null)
                     {
                         Exception except;
                         string yeni_adi = iss["adi"].ToString();

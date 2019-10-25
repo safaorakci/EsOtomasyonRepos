@@ -25,6 +25,10 @@
             ay = "0" + ay;
         }
         yenitarih = gun + "." + ay + "." + yil;
+
+
+        
+
         return yenitarih;
     }
     function getMillisInHoursMinutes(millis) {
@@ -565,38 +569,7 @@
         SQL="select STRING_ESCAPE(name, 'json') as name2, STRING_ESCAPE(description, 'json') as description2, * from ahtapot_sablon_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false'"
         set adim = baglanti.execute(SQL)
         x = 0
-        if adim.eof then
-            .Add x, oJSON.Collection()
-            With .item(x)
-                .Add "id", 1
-                .Add "name", ""
-                .Add "progress", 0
-                .Add "progressByWorklog", false
-                .Add "relevance", 0
-                .Add "type", ""
-                .Add "typeId", 0
-                .Add "description", ""
-                .Add "code", ""
-                .Add "level", 0
-                .Add "status", "STATUS_ACTIVE"
-                .Add "depends", ""
-                .Add "start", 1533934800000
-                .Add "duration", 10
-                .Add "end", 1535576399999
-                .Add "start_golge", 1533934800000
-                .Add "duration_golge", 10
-                .Add "end_golge", 1535576399999
-                .Add "startIsMilestone", false
-                .Add "endIsMilestone", false
-                .Add "collapsed", false
-                .Add "canWrite", true
-                .Add "canAdd", true
-                .Add "canDelete", true
-                .Add "canAddIssue", true
-                .Add "assigs", oJSON.Collection()
-                .Add "hasChild", false
-            End With
-        end if
+        
         do while not adim.eof
             .Add x, oJSON.Collection()
             With .item(x)
@@ -700,7 +673,7 @@
     oJSON.data("project").Add "canDelete", true
     oJSON.data("project").Add "canAdd", true
     oJSON.data("project").Add "canWriteOnParent", true
-    oJSON.data("project").Add "zoom", trim(proje("zoom"))
+    'oJSON.data("project").Add "zoom", trim(proje("zoom"))
     Response.Write oJSON.JSONoutput
             
 

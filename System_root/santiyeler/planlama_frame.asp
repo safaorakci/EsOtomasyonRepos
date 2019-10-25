@@ -266,7 +266,7 @@
         //$("#end").datepicker("setDate", currentDate);
 
 
-        $.getJSON("/ajax_planlama/?jsid=4559&tip=<%=request("tip")%>&proje_id=<%=request("proje_id")%>", { CM: "LOADPROJECT", taskId: taskId }, function (response) {
+        $.getJSON('/ajax_planlama/?jsid=4559&tip=<%=request("tip")%>&proje_id=<%=request("proje_id")%>', { CM: "LOADPROJECT", taskId: taskId }, function (response) {
             //console.debug(response);
 
 
@@ -321,11 +321,11 @@
 
         $.ajax("/ajax_planlama/", {
             dataType: "json",
-            data: { islem: "kayit", tip: "<%=tip%>", proje_id: "<%=request("proje_id")%>", prj: JSON.stringify(prj), planning: planning },
+            data: { islem: "kayit", tip: "<%=tip%>", proje_id: '<%=request("proje_id")%>', prj: JSON.stringify(prj), planning: planning },
             type: "POST",
             success: function (response) {
                 //console.log("girdi");
-                window.parent.mesaj_ver("Proje Planı", "<%=LNG("Kayıt Başarıyla Güncellendi")%>", "success");
+                window.parent.mesaj_ver("Proje Planı", '<%=LNG("Kayıt Başarıyla Güncellendi")%>', "success");
                 if (response.ok) {
                     if (response.project) {
                         ge.loadProject(response.project); //must reload as "tmp_" ids are now the good ones

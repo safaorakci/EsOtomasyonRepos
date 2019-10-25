@@ -5074,7 +5074,7 @@
 <form id="koftiform"></form>
 <form autocomplete="off" id="yeni_olay_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
     <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-12">
             <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Başlık")%></label>
             <div class="input-group input-group-primary">
                 <span class="input-group-addon">
@@ -5089,7 +5089,7 @@
                 </script>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-2" style="display:none">
             <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Renk")%></label>
             <!--<input type="hidden" id="renk" class="demo" value="#FC6180">-->
             <input type='text' id="renk" value="rgb(231, 76, 60)" />

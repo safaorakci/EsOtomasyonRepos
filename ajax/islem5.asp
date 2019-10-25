@@ -1378,13 +1378,6 @@ works properly when clicked or hovered */
             SQL="insert into ucgem_is_calisma_listesi(TamamlanmaID, is_id, baslangic, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& TamamlanmaID &"', '"& is_id &"', getdate(), '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 104), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
-%>
-<script type="text/javascript">
-    $(function () {
-        $('.stopButton').attr("disabled", "disabled");
-    });
-</script>
-<%
             SQL="select * from ucgem_is_listesi where id = '"& is_id &"'"
             set iscek = baglanti.execute(SQL)
 
@@ -1393,14 +1386,6 @@ works properly when clicked or hovered */
         elseif trn(request("islem2"))="pause" then
 
             TamamlanmaID = trn(request("TamamlanmaID"))
-%>
-<script type="text/javascript">
-    $(function () {
-        $('.stopButton').removeAttr("disabled");
-    });
-</script>
-
-<%
 
             SQL="select top 1 * from ucgem_is_calisma_listesi where is_id = '"& is_id &"' and TamamlanmaID = '"& TamamlanmaID &"' and bitis is null and cop = 'false' order by id desc"
             set cek = baglanti.execute(SQL)
@@ -1600,7 +1585,7 @@ works properly when clicked or hovered */
 
             SQL="select isnull(count(id),0) from ahtapot_proje_gantt_adimlari where proje_id = '"& hedef_proje_id &"'"
             set kactanecek = baglanti.execute(SQL)
-    Response.Write(SQL)
+    
 
             kactane = kactanecek(0)
 
@@ -1609,28 +1594,7 @@ works properly when clicked or hovered */
 
             SQL="select * from ahtapot_sablon_gantt_adimlari where proje_id = '"& uretim_sablonu_id &"' and ltrim(ilevel) != '0' order by id asc"
             set cek = baglanti.execute(SQL)
-            do while not cek.eof
-
-                depends = cek("depends")
-                yeni_depends = ""
-
-                for x = 0 to ubound(split(depends, ","))
-                    eldeki = split(depends, ",")(x)
-                    if isnumeric(eldeki)=true then
-                        if cdbl(eldeki)>0 then
-                            yeni_depends = (cdbl(eldeki) + cdbl(kactane)) & ","
-                        end if
-                    end if
-                next
-                if len(yeni_depends)>0 then
-                    yeni_depends = left(yeni_depends, len(yeni_depends)-1)
-                end if
-
-                SQL="insert into ahtapot_proje_gantt_adimlari(start_tarih, end_tarih, start_tarih_uygulama, end_tarih_uygulama, cop, proje_id, name, progress, progressByWorklog, irelevance, type, typeId, description, code, ilevel, status, depends, start, duration, iend, start_uygulama, duration_uygulama, iend_uygulama, startIsMilestone, endIsMilestone, collapsed, canWrite, canAdd, canDelete, canAddIssue, hasChild) select start_tarih, end_tarih, start_tarih, end_tarih, cop, '"& hedef_proje_id &"', name, 0, progressByWorklog, irelevance, type, typeId, description, code, ilevel, status, '"& yeni_depends &"', start, duration, iend, start, duration, iend, startIsMilestone, endIsMilestone, collapsed, canWrite, canAdd, canDelete, canAddIssue, hasChild from ahtapot_sablon_gantt_adimlari where id = '"& cek("id") &"'"
-                set ekle = baglanti.execute(SQL)
-
-            cek.movenext
-            loop
+            
 
         end if
 
@@ -2291,7 +2255,7 @@ works properly when clicked or hovered */
                     <input type="text" name="parcalar" id="parcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control parcalar required" style="width: 90%;" required />
                 </td>
                 <td>
-                    <input id="parca_adeti" type="number" class="form-control" style="width: 50px; text-align: center;" value="1" />
+                    <input id="parca_adeti" type="number" class="form-control" style="width: 50px; text-align: center;" value="1" min="1"/>
                 </td>
                 <td style="padding-left: 10px;">
                     <input type="text" name="aparcalar" id="aparcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control aparcalar required" style="width: 90%;" required /></td>

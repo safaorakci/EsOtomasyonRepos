@@ -74,7 +74,7 @@ function is_timer_start_kaydi(is_id, TamamlanmaID, zaman) {
     data += "&TamamlanmaID=" + TamamlanmaID;
     data = encodeURI(data);
     $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
-        
+        $('.stopButton').removeAttr("disabled");
     });
 
 
@@ -891,6 +891,13 @@ function parcalar_autocomplete_calistir() {
 
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
 
+        var IsId = $(this).attr("isid");
+        var parcaAdi = "Parça adı girilmedi";
+        var marka = "Marka girilmedi";
+        var aciklama = "Açıklama girilmedi";
+        var kodu = "Ürün Kodu Girilmedi";
+        var bildirim = "Kayıt Bulunamadı";
+
         $(this).autocomplete({
             source: "/ajax_request6/?jsid=4559&islem=parcalar_auto",
             minLength: 2,
@@ -901,7 +908,26 @@ function parcalar_autocomplete_calistir() {
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
-            return $("<li>").append("<a>" + item.parcaadi + " - " + item.marka + "</a>").appendTo(ul);
+
+            if (item.parcaadi !== "") {
+                parcaAdi = item.parcaadi;
+            }
+            if (item.kodu !== "") {
+                kodu = item.kodu;
+            }
+            if (item.marka !== "") {
+                marka = item.marka;
+            }
+            if (item.aciklama !== "") {
+                aciklama = item.aciklama;
+            }
+
+            if (item.parcaadi === undefined && item.marka === undefined && item.aciklama === undefined && item.kodu === undefined) {
+                return $("<p style='Display:none'>").append("<a>" + bildirim + "</a>").appendTo(ul);
+            }
+            else {
+                return $("<li>").append("<a>" + parcaAdi + " - " + kodu + " - " + marka + " - " + aciklama + "</a>").appendTo(ul);
+            }
         };
     });
 
@@ -913,6 +939,11 @@ function parcalar_autocomplete_calistir2() {
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
 
         var IsId = $(this).attr("isid");
+        var parcaAdi = "Parça adı girilmedi";
+        var marka = "Marka girilmedi";
+        var aciklama = "Açıklama girilmedi";
+        var kodu = "Ürün Kodu Girilmedi";
+        var bildirim = "Kayıt Bulunamadı";
 
         $(this).autocomplete({
             source: "/ajax_request6/?jsid=4559&islem=parcalar_auto",
@@ -920,22 +951,32 @@ function parcalar_autocomplete_calistir2() {
             select: function (event, ui) {
                 var inpuu = $(this);
                 setTimeout(function () {
-                    //$(inpuu).val(ui.item.parcaadi + "-" + ui.item.marka).attr("data", ui.item.id);
                     var adet = $("#parca_adeti").val();
                     is_detay_parca_sectim(IsId, ui.item.id, adet);
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
-            if (item.parcaadi === undefined && item.marka === undefined && item.aciklama === undefined) {
-                return $("<li style='display:none'>").append("<a></a>").appendTo(ul);
+
+            if (item.parcaadi !== "") {
+                parcaAdi = item.parcaadi;
+            }
+            if (item.kodu !== "") {
+                kodu = item.kodu;
+            }
+            if (item.marka !== "") {
+                marka = item.marka;
+            }
+            if (item.aciklama !== "") {
+                aciklama = item.aciklama;
+            }
+
+            if (item.parcaadi === undefined && item.marka === undefined && item.aciklama === undefined && item.kodu === undefined) {
+                return $("<p style='Display:none'>").append("<a>" + bildirim + "</a>").appendTo(ul);
             }
             else {
-                return $("<li>").append("<a>" + item.parcaadi + " - " + item.marka + " - " + item.aciklama + "</a>").appendTo(ul);
-                //var parcaBilgi = "Parça adı girilmedi";
-                //var markaBilgi = "Marka girilmedi";
-                //var aciklamaBilgi = "Açıklama girilmedi";
-                //return $("<li>").append("<a>" + item.parcaadi === "" ? parcaBilgi : item.parcaadi + " - " + item.marka === "" ? markaBilgi : item.marka + " - " + item.aciklama === "" ? aciklamaBilgi : item.aciklama + "</a>").appendTo(ul);
+                return $("<li>").append("<a>" + parcaAdi + " - " + kodu + " - " + marka + " - " + aciklama + "</a>").appendTo(ul);
             }
+
         };
     });
 
