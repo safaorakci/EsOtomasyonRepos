@@ -663,10 +663,10 @@
             <tr>
                 <th style="width: 10px;"></th>
                 <th><%=LNG("Gelir Adı")%></th>
-                <th style="text-align: center;  width:10%"><%=LNG("Durum")%></th>
-                <th style="text-align: center;  width:10%"><%=LNG("Öngörülen Tarih")%></th>
-                <th style="text-align: center;  width:10%"><%=LNG("Gerçek Tarih")%></th>
-                <th style="text-align: center; width:10%"><%=LNG("Tutar")%></th>
+                <th style="text-align: center; width: 10%"><%=LNG("Durum")%></th>
+                <th style="text-align: center; width: 10%"><%=LNG("Öngörülen Tarih")%></th>
+                <th style="text-align: center; width: 10%"><%=LNG("Gerçek Tarih")%></th>
+                <th style="text-align: center; width: 10%"><%=LNG("Tutar")%></th>
                 <th style="width: 10px;"></th>
             </tr>
         </thead>
@@ -677,7 +677,7 @@
                 if gelir.eof then
             %>
             <tr>
-                <td colspan="6" style="text-align:center;"><%=LNG("Kayıt Yok")%></td>
+                <td colspan="6" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
             </tr>
             <%
                 end if
@@ -715,11 +715,11 @@
                 <td><strong><%=x %></strong></td>
                 <td><%=gelir("gelir_adi") %></td>
                 <td style="text-align: center;">
-                    <label class="label label-lg label-<% if trim(gelir("gelir_durum"))="Ödendi" then %>success<% elseif trim(gelir("gelir_durum"))="Bekliyor" then %>warning<% elseif trim(gelir("gelir_durum"))="Ertelendi" then %>danger<% end if %>" style="font-size:12px;">Ödendi</label></td>
+                    <label class="label label-lg label-<% if trim(gelir("gelir_durum"))="Ödendi" then %>success<% elseif trim(gelir("gelir_durum"))="Bekliyor" then %>warning<% elseif trim(gelir("gelir_durum"))="Ertelendi" then %>danger<% end if %>" style="font-size: 12px;">Ödendi</label></td>
                 <td style="text-align: center;"><%=cdate(gelir("planlanan_tarih")) %></td>
                 <td style="text-align: center;"><% if trim(gelir("gelir_durum"))="Ödendi" then %><%=cdate(gelir("odeme_tarih")) %><% else %>---<% end if %></td>
                 <td style="text-align: center;">
-                    <label style="display: block; font-size:12px;" class="label label-lg label-<% if trim(gelir("gelir_durum"))="Ödendi" then %>success<% elseif trim(gelir("gelir_durum"))="Bekliyor" then %>warning<% elseif trim(gelir("gelir_durum"))="Ertelendi" then %>danger<% end if %>"><%=formatnumber(gelir("odeme_tutar"),2) %>&nbsp;<%=gelir("odeme_pb") %></label></td>
+                    <label style="display: block; font-size: 12px;" class="label label-lg label-<% if trim(gelir("gelir_durum"))="Ödendi" then %>success<% elseif trim(gelir("gelir_durum"))="Bekliyor" then %>warning<% elseif trim(gelir("gelir_durum"))="Ertelendi" then %>danger<% end if %>"><%=formatnumber(gelir("odeme_tutar"),2) %>&nbsp;<%=gelir("odeme_pb") %></label></td>
                 <td class="dropdown" style="width: 10px;">
                     <button type="button" class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
                     <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
@@ -733,20 +733,20 @@
                 loop
             %>
             <tr>
-                <td colspan="5" style="text-align:right;"><strong><%=LNG("TAHSİL EDİLEN TOPLAM :")%> </strong></td>
-                <td style="line-height:5px; text-align:center;">
-                    <label class="label label-lg label-inverse" style="font-size:12px;"><%=formatnumber(odenen_toplam_tl,2) %> TL</label><br />
-                    <label class="label label-lg label-inverse" style="font-size:12px;"><%=formatnumber(odenen_toplam_usd,2) %> USD</label><br />
-                    <label class="label label-lg label-inverse" style="font-size:12px;"><%=formatnumber(odenen_toplam_eur,2) %> EUR</label>
+                <td colspan="5" style="text-align: right;"><strong><%=LNG("TAHSİL EDİLEN TOPLAM :")%> </strong></td>
+                <td style="line-height: 5px; text-align: center;">
+                    <label class="label label-lg label-inverse" style="font-size: 12px;"><%=formatnumber(odenen_toplam_tl,2) %> TL</label><br />
+                    <label class="label label-lg label-inverse" style="font-size: 12px;"><%=formatnumber(odenen_toplam_usd,2) %> USD</label><br />
+                    <label class="label label-lg label-inverse" style="font-size: 12px;"><%=formatnumber(odenen_toplam_eur,2) %> EUR</label>
                 </td>
                 <td></td>
             </tr>
-              <tr>
-                <td colspan="5" style="text-align:right;"><strong><%=LNG("KALAN TOPLAM :")%> </strong></td>
-                <td style="line-height:5px; text-align:center;">
-                    <label class="label label-lg label-inverse" style="font-size:12px;"><%=formatnumber(kalan_toplam_tl,2) %> TL</label><br />
-                    <label class="label label-lg label-inverse" style="font-size:12px;"><%=formatnumber(kalan_toplam_usd,2) %> USD</label><br />
-                    <label class="label label-lg label-inverse" style="font-size:12px;"><%=formatnumber(kalan_toplam_eur,2) %> EUR</label>
+            <tr>
+                <td colspan="5" style="text-align: right;"><strong><%=LNG("KALAN TOPLAM :")%> </strong></td>
+                <td style="line-height: 5px; text-align: center;">
+                    <label class="label label-lg label-inverse" style="font-size: 12px;"><%=formatnumber(kalan_toplam_tl,2) %> TL</label><br />
+                    <label class="label label-lg label-inverse" style="font-size: 12px;"><%=formatnumber(kalan_toplam_usd,2) %> USD</label><br />
+                    <label class="label label-lg label-inverse" style="font-size: 12px;"><%=formatnumber(kalan_toplam_eur,2) %> EUR</label>
                 </td>
                 <td></td>
             </tr>
@@ -829,7 +829,7 @@
     </div>
 
 
-    <div class="row gelir_odendi" <% if not trim(gelir("gelir_durum"))="Ödendi" then %> style="display: none;"<% end if %>>
+    <div class="row gelir_odendi" <% if not trim(gelir("gelir_durum"))="Ödendi" then %> style="display: none;" <% end if %>>
         <label class="col-sm-12 col-form-label"><%=LNG("Ödeme Tarihi")%></label>
         <div class="col-sm-12">
             <div class="input-group input-group-primary">
@@ -864,43 +864,43 @@
 </form>
 <% elseif trn(request("islem"))="destek_listesi_getir" then %>
 <div class="dt-responsive table-responsive">
-                <table id="new-cons2" class="table table-striped table-bordered table-hover" width="100%">
-                    <thead>
-                        <tr>
-                            <th style="width:30px;">ID</th>
-                            <th><%=LNG("Konu")%></th>
-                            <th><%=LNG("Departman")%></th>
-                            <th style="width: 120px;"><%=LNG("Durum")%></th>
-                            <th style="width: 120px;"><%=LNG("Ekleme Tarihi")%></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%
+    <table id="new-cons2" class="table table-striped table-bordered table-hover" width="100%">
+        <thead>
+            <tr>
+                <th style="width: 30px;">ID</th>
+                <th><%=LNG("Konu")%></th>
+                <th><%=LNG("Departman")%></th>
+                <th style="width: 120px;"><%=LNG("Durum")%></th>
+                <th style="width: 120px;"><%=LNG("Ekleme Tarihi")%></th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
                             SQL="SELECT id, bildirim_tipi, baslik, beta_aciklama, ekleme_tarihi, ekleme_saati FROM dbo.ahtapot_beta_bildirimleri WHERE ekleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' AND durum = 'true' AND cop = 'false'"
                             set bildirim = baglanti.execute(SQL)
                             if bildirim.eof then
-                            %>
-                            <tr>
-                                <td colspan="5" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
-                            </tr>
-                            <%
+            %>
+            <tr>
+                <td colspan="5" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
+            </tr>
+            <%
                             end if
                             do while not bildirim.eof
-                        %>
-                        <tr>
-                            <td><%=bildirim("id") %></td>
-                            <td><%=bildirim("baslik") %></td>
-                            <td><%=bildirim("bildirim_tipi") %></td>
-                            <td style="width: 120px;"><span class="label label-primary" style="font-size:12px;"><%=LNG("AÇIK")%></span></td>
-                            <td><%=cdate(bildirim("ekleme_tarihi")) %>&nbsp;<%=left(bildirim("ekleme_saati"),5) %></td>
-                        </tr>
-                        <%
+            %>
+            <tr>
+                <td><%=bildirim("id") %></td>
+                <td><%=bildirim("baslik") %></td>
+                <td><%=bildirim("bildirim_tipi") %></td>
+                <td style="width: 120px;"><span class="label label-primary" style="font-size: 12px;"><%=LNG("AÇIK")%></span></td>
+                <td><%=cdate(bildirim("ekleme_tarihi")) %>&nbsp;<%=left(bildirim("ekleme_saati"),5) %></td>
+            </tr>
+            <%
                             bildirim.movenext
                             loop
-                        %>
-                    </tbody>
-                </table>
-            </div>
+            %>
+        </tbody>
+    </table>
+</div>
 <% 
 
     elseif trn(request("islem"))="temaal" then
@@ -925,27 +925,27 @@
 
 
         
-    %>
-    <style>
-        .taskin {
-            background-color:#fb8f8f!important;
-        }
-    </style>
-    <div>
-        <div id="tablediv">
-            <table id="tablegosterge" style="border-color: #e8e8e8; font-family: Tahoma; width:100%;">
-                <thead id="thead">
-                    <tr>
-                        <th rowspan="2" class="ilkth headcol">
-                            <div style="width: 150px;"><%=LNG("Kaynaklar")%></div>
-                        </th>
-                        <th rowspan="2" class="ilkth headcol ">
-                            <div style="width: 80px; text-align: center; margin-left: auto; margin-right: auto;">
-                                <%=LNG("İş Sayısı")%>
-                            </div>
-                        </th>
+%>
+<style>
+    .taskin {
+        background-color: #fb8f8f !important;
+    }
+</style>
+<div>
+    <div id="tablediv">
+        <table id="tablegosterge" style="border-color: #e8e8e8; font-family: Tahoma; width: 100%;">
+            <thead id="thead">
+                <tr>
+                    <th rowspan="2" class="ilkth headcol">
+                        <div style="width: 150px;"><%=LNG("Kaynaklar")%></div>
+                    </th>
+                    <th rowspan="2" class="ilkth headcol ">
+                        <div style="width: 80px; text-align: center; margin-left: auto; margin-right: auto;">
+                            <%=LNG("İş Sayısı")%>
+                        </div>
+                    </th>
 
-                        <% 
+                    <% 
                             son_ay = 0
                             for x = dongu_baslangic to dongu_bitis 
                                 if not son_ay = month(x) then
@@ -958,25 +958,25 @@
                                     end if
 
                                     cols = cols + 1
-                        %>
-                        <th class="ust_th" colspan="<%=cols %>"><%=monthname(son_ay) %>&nbsp;<%=year(x) %></th>
-                        <% 
+                    %>
+                    <th class="ust_th" colspan="<%=cols %>"><%=monthname(son_ay) %>&nbsp;<%=year(x) %></th>
+                    <% 
                                 end if
                             next
-                        %>
-                    </tr>
-                    <tr>
+                    %>
+                </tr>
+                <tr>
 
-                        <% for x = dongu_baslangic to dongu_bitis  %>
-                        <th class="alt_th" style="<% if day(x)=1 then %> border-left: solid 3px white; <% end if %>">
-                            <div class="guncizelge"><%=day(x) %></div>
-                        </th>
-                        <% next %>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
+                    <% for x = dongu_baslangic to dongu_bitis  %>
+                    <th class="alt_th" style="<% if day(x)=1 then %> border-left: solid 3px white; <% end if %>">
+                        <div class="guncizelge"><%=day(x) %></div>
+                    </th>
+                    <% next %>
+                </tr>
+            </thead>
+            <tbody id="tbody">
 
-                    <%
+                <%
 
                         SQL="Exec [dbo].[ProjeIsYukuCetveli] @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @gosterim_tipi = '"& gosterim_tipi &"';"
                         set cetvel = baglanti.execute(sql)
@@ -1001,43 +1001,43 @@
                                 gunsayi = 0
 
                                 if k > 1 then
-                    %>
+                %>
                                         </tr>
                                         <% end if %>
-                    <tr class=" ustunegelince <%=klas %>">
-                        <%
+                <tr class=" ustunegelince <%=klas %>">
+                    <%
                             if trim(gosterim_tipi)="0" then
                                 toplam_sayi = cdbl(toplam_sayi) + cdbl(cetvel("kaynak_toplam_sayi"))
                             elseif trim(gosterim_tipi)="1" then
                                 toplam_sayi = cdbl(toplam_sayi) + cdbl(cetvel("kaynak_toplam_dakika"))
                             end if
-                        %>
-                        <td style="width: 150px;" class="ust_td2 headcol"><a href="javascript:void(0);" onclick="KaynakIsYukuDetayGoster('<%=cetvel("tip") %>', '<%=cetvel("id") %>');" style="color:white;"><i class="fa fa-plus-square"></i>&nbsp;&nbsp;<%=cetvel("kaynak") %></a></td>
-                        <td class="gosterge_td alt_td ">
-                            <% if trim(gosterim_tipi)="0" then %>
-                            <%=cetvel("kaynak_toplam_sayi") %>
-                            <% elseif trim(gosterim_tipi)="1" then %>
-                            <%=cetvel("kaynak_toplam_saat") %>
-                            <% end if %></td>
+                    %>
+                    <td style="width: 150px;" class="ust_td2 headcol"><a href="javascript:void(0);" onclick="KaynakIsYukuDetayGoster('<%=cetvel("tip") %>', '<%=cetvel("id") %>');" style="color: white;"><i class="fa fa-plus-square"></i>&nbsp;&nbsp;<%=cetvel("kaynak") %></a></td>
+                    <td class="gosterge_td alt_td ">
+                        <% if trim(gosterim_tipi)="0" then %>
+                        <%=cetvel("kaynak_toplam_sayi") %>
+                        <% elseif trim(gosterim_tipi)="1" then %>
+                        <%=cetvel("kaynak_toplam_saat") %>
+                        <% end if %></td>
 
+                    <% end if %>
+                    <td class="alt_td  <% if cdbl(cetvel("saat"))>480 then %> taskin <% end if %> <% if day(cetvel("tarih"))=1 then %> alt_td2 <% end if %> <% if cdate(cetvel("tarih"))=cdate(date) then %> sarialan <% end if %> ">
+                        <% if trim(gosterim_tipi)="0" then %>
+                        <% if cdbl(cetvel("sayi"))=0 then %>-<% else %>
+                        <!--<a href="javascript:void(0);" onclick="aiyda('<%=cetvel("id") %>','<%=cdate(cetvel("tarih")) %>');">-->
+                        <%=cetvel("sayi") %>
+                        <!--</a>-->
                         <% end if %>
-                        <td class="alt_td  <% if cdbl(cetvel("saat"))>480 then %> taskin <% end if %> <% if day(cetvel("tarih"))=1 then %> alt_td2 <% end if %> <% if cdate(cetvel("tarih"))=cdate(date) then %> sarialan <% end if %> ">
-                            <% if trim(gosterim_tipi)="0" then %>
-                            <% if cdbl(cetvel("sayi"))=0 then %>-<% else %>
-                            <!--<a href="javascript:void(0);" onclick="aiyda('<%=cetvel("id") %>','<%=cdate(cetvel("tarih")) %>');">-->
-                                <%=cetvel("sayi") %>
-                            <!--</a>-->
-                            <% end if %>
-                            <% elseif trim(gosterim_tipi)="1" then %>
-                            <% if trim(cetvel("saat2"))="00:00" then %>-<% else %>
-                            <!--<a href="javascript:void(0);" onclick="aiyda('<%=cetvel("id") %>','<%=cetvel("tarih") %>');">-->
-                                <%=cetvel("saat2") %>
-                            <!--</a>-->
-                            <% end if %>
-                            <% end if %>
+                        <% elseif trim(gosterim_tipi)="1" then %>
+                        <% if trim(cetvel("saat2"))="00:00" then %>-<% else %>
+                        <!--<a href="javascript:void(0);" onclick="aiyda('<%=cetvel("id") %>','<%=cetvel("tarih") %>');">-->
+                        <%=cetvel("saat2") %>
+                        <!--</a>-->
+                        <% end if %>
+                        <% end if %>
 
-                        </td>
-                        <%  
+                    </td>
+                    <%  
                             if trim(gosterim_tipi)="0" then
                                 gun_toplam2(gunsayi) = cdbl(gun_toplam2(gunsayi)) + cdbl(cetvel("sayi"))
                             elseif trim(gosterim_tipi)="1" then
@@ -1047,37 +1047,37 @@
 
                             cetvel.movenext
                             loop
-                        %>
-                    </tr>
-                    <tr>
-                        <td class="ust_td2 headcol" style="width: 150px; background-color: #4d7193; color: white!important;">TOPLAM</td>
-                        <td class="gosterge_td alt_td ">
-                            <% if trim(gosterim_tipi)="0" then %>
-                            <%=toplam_sayi %>
-                            <% elseif trim(gosterim_tipi)="1" then %>
-                            <%=DakikadanSaatYap(toplam_sayi) %>
-                            <% end if %>
-                        </td>
-
-                        <% for x = 0 to ubound(gun_toplam2)-1 %>
-                        <td class="alt_td" style="background-color: #4d7193; color: white;">
-                            <% if trim(gosterim_tipi)="0" then %>
-                            <%=gun_toplam2(x) %>
-                            <% elseif trim(gosterim_tipi)="1" then %>
-                            <%=DakikadanSaatYap(gun_toplam2(x)) %>
-                            <% end if %>
-                        </td>
-                        <% next %>
-                    </tr>
-                    <%
-                        Erase gun_toplam2
                     %>
-                </tbody>
-            </table>
-        </div>
+                </tr>
+                <tr>
+                    <td class="ust_td2 headcol" style="width: 150px; background-color: #4d7193; color: white!important;">TOPLAM</td>
+                    <td class="gosterge_td alt_td ">
+                        <% if trim(gosterim_tipi)="0" then %>
+                        <%=toplam_sayi %>
+                        <% elseif trim(gosterim_tipi)="1" then %>
+                        <%=DakikadanSaatYap(toplam_sayi) %>
+                        <% end if %>
+                    </td>
 
-        <div id="tablediv2" style="display:none;"></div>
+                    <% for x = 0 to ubound(gun_toplam2)-1 %>
+                    <td class="alt_td" style="background-color: #4d7193; color: white;">
+                        <% if trim(gosterim_tipi)="0" then %>
+                        <%=gun_toplam2(x) %>
+                        <% elseif trim(gosterim_tipi)="1" then %>
+                        <%=DakikadanSaatYap(gun_toplam2(x)) %>
+                        <% end if %>
+                    </td>
+                    <% next %>
+                </tr>
+                <%
+                        Erase gun_toplam2
+                %>
+            </tbody>
+        </table>
     </div>
+
+    <div id="tablediv2" style="display: none;"></div>
+</div>
 <% 
     elseif trn(request("islem"))="rapor_pdf_indir" then
 
@@ -1094,20 +1094,56 @@
 
             sName = server.MapPath(dosya_yolu)
 
-
         if trn(request("islem3"))="yazdir" then
 
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+
+
+<%
+    else
+        ParcaParcaDosyaIndir sName, "Rapor.pdf"
+    end if
+
+            elseif trn(request("islem2"))="mesai_bildirim_formu" then
+
+                personel_id = trn(request("personel_id"))
+                izin_id = trn(request("izin_id"))
+
+                firma_id = Request.Cookies("kullanici")("firma_id")
+                kullanici_id = Request.Cookies("kullanici")("kullanici_id")
+
+                Doc.ImportFromUrl site_url & "/mesai_bildirim_formu/?jsid=4559&personel_id=" & personel_id & "&izin_id=" & izin_id & "&firma_id=" & firma_id & "&kullanici_id=" & kullanici_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
+
+                dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
+                Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
+
+                sName = server.MapPath(dosya_yolu)
+            
+                
+                
+
+
+         if trn(request("islem3"))="yazdir" then
+%>
+<script>
+        $(function (){
+            $(".btnPrint").printPage();
+        });
+</script>
+<center>
+<img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
+    <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
+    </center>
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1124,25 +1160,29 @@
 
             
             Doc.ImportFromUrl site_url & "/izin_talep_formu/?jsid=4559&personel_id=" & personel_id & "&izin_id=" & izin_id & "&firma_id=" & firma_id & "&kullanici_id=" & kullanici_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
-            
+
             dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
             Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
+
+            
             
             sName = server.MapPath(dosya_yolu)
 
+            
+
         if trn(request("islem3"))="yazdir" then
 
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1167,17 +1207,17 @@
 
             if trn(request("islem3"))="yazdir" then
 
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1200,17 +1240,17 @@
             sName = server.MapPath(dosya_yolu)
 
             if trn(request("islem3"))="yazdir" then
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1224,17 +1264,17 @@
             sName = server.MapPath(dosya_yolu)
 
             if trn(request("islem3"))="yazdir" then
-                %>
-                <script>
+%>
+<script>
                     $(function (){
                         $(".btnPrint").printPage();
                     });
-                </script>
-            <center>
+</script>
+<center>
             <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
                 <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
                 </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1257,17 +1297,17 @@
             sName = server.MapPath(dosya_yolu)
 
             if trn(request("islem3"))="yazdir" then
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1291,17 +1331,17 @@
 
             if trn(request("islem3"))="yazdir" then
         
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1325,17 +1365,17 @@
 
             if trn(request("islem3"))="yazdir" then
         
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1358,17 +1398,17 @@
 
         
         
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1396,17 +1436,17 @@
 
         
         
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1428,17 +1468,17 @@
 
         
         
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1460,17 +1500,17 @@
 
         
         
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1497,17 +1537,17 @@
 
         
         
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1535,17 +1575,17 @@
 
         
         
-    %>
-    <script>
+%>
+<script>
         $(function (){
             $(".btnPrint").printPage();
         });
-    </script>
+</script>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
     </center>
-    <%
+<%
             else
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
@@ -1565,15 +1605,14 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<form autocomplete="off"  class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
-<div class="row">
-    <label id="olusturuluyor" class="col-sm-12 col-form-label">
-        <center style="font-weight: bold;"><%=LNG("Belgeniz Oluşturuluyor...")%></center>
-    </label>
-    <div id="olusturulan_belge_yeri" class="col-sm-12">
-            
+<form autocomplete="off" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+    <div class="row">
+        <label id="olusturuluyor" class="col-sm-12 col-form-label">
+            <center style="font-weight: bold;"><%=LNG("Belgeniz Oluşturuluyor...")%></center>
+        </label>
+        <div id="olusturulan_belge_yeri" class="col-sm-12">
+        </div>
     </div>
-</div>
 </form>
 <%
     elseif trn(request("islem"))="pdf_gonder" then
@@ -1585,11 +1624,13 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<form autocomplete="off"  class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
-<div class="row">
-    <label id="olusturuluyor" class="col-sm-12 col-form-label"><center style="font-weight: bold;"><%=LNG("Belgeniz Oluşturuluyor...")%></center></label>
-    <div id="olusturulan_belge_yeri" class="col-sm-12"></div>
-</div>
+<form autocomplete="off" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+    <div class="row">
+        <label id="olusturuluyor" class="col-sm-12 col-form-label">
+            <center style="font-weight: bold;"><%=LNG("Belgeniz Oluşturuluyor...")%></center>
+        </label>
+        <div id="olusturulan_belge_yeri" class="col-sm-12"></div>
+    </div>
 </form>
 <%
 
@@ -1628,6 +1669,7 @@
             Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
 
             sName = server.MapPath(dosya_yolu)
+
     
         elseif trn(request("islem2"))="personel_is_yuku" then
 
@@ -1820,8 +1862,8 @@
         end if
         
 
-    %>
-    
+%>
+
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br />
@@ -1841,7 +1883,7 @@
         </div>
     </div>
 
-    
+
     <div class="row">
         <label class="col-sm-12 col-form-label"><%=LNG("Konu")%></label>
         <div class="col-sm-12">
@@ -1877,7 +1919,7 @@
     </script>
 </form>
 
-    <%
+<%
 
 
         

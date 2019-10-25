@@ -117,6 +117,8 @@
         Server.Execute("/System_root/formlar/form_nakit_akis_raporu.asp")
     elseif gp(3) = "izin_talep_formu" then
         Server.Execute("/System_root/formlar/izin_talep_formu.asp")
+    elseif gp(3) = "mesai_bildirim_formu" then
+        Server.Execute("/System_root/formlar/mesai_bildirim_formu.asp")
     elseif gp(3) = "satinalma_formu" then
         Server.Execute("/System_root/formlar/satinalma_formu.asp")
     elseif gp(3) = "teknik_servis_formu" then

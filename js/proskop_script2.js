@@ -427,8 +427,6 @@ function sinirlama_gorunum_degis() {
         $(".timepicker").css("max-width", "55px");
         $(".sinirlama_yeri").show();
 
-
-
     }
 }
 
