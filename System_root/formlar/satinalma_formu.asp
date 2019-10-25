@@ -11,6 +11,10 @@
     SQL="select * from satinalma_listesi where id = '"& satinalma_id &"'"
     set satinalma = baglanti.execute(SQL)
 
+    SQL="SELECT personel_ad,personel_soyad FROM ucgem_firma_kullanici_listesi kullanici INNER JOIN	 satinalma_listesi satinalma on satinalma.ekleyen_id = kullanici.id WHERE satinalma.id = '"& satinalma_id &"'"
+    Response.Write(SQL)
+    set kullanici = baglanti.execute(SQL)
+
 %>
 <html lang="tr">
 <head>
@@ -44,7 +48,7 @@
             </tr>
             <tr>
                 <td style="height: 40px;">Tedarikçi : Tedarikçi LTD ŞTİ</td>
-                <td style="height: 40px;">Sipariş Eden : Salih ŞAHİN</td>
+                <td style="height: 40px;">Sipariş Eden : <%=kullanici("personel_ad") %> <%=kullanici("personel_soyad") %></td>
             </tr>
         </tbody>
     </table>

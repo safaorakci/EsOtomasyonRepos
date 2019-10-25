@@ -1107,7 +1107,7 @@
        
             baslangic_tarihi = trn(request("baslangic_tarihi"))
             baslangic_saati = trn(request("baslangic_saati"))
-            bitis_tarihi = trn(request("bitis_tarihi"))
+            'bitis_tarihi = trn(request("bitis_tarihi"))
             bitis_saati = trn(request("bitis_saati"))
             aciklama = trn(request("aciklama"))
             durum = trn(request("durum"))
@@ -1124,7 +1124,7 @@
             ekleme_tarihi = date
             ekleme_saati = time
 
-            SQL="insert into ucgem_personel_mesai_bildirimleri(personel_id, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, aciklama, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& personel_id &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& aciklama &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+            SQL="insert into ucgem_personel_mesai_bildirimleri(personel_id, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, aciklama, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& personel_id &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', NULL, '"& bitis_saati &"', '"& aciklama &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
 
@@ -1202,8 +1202,9 @@
         <thead>
             <tr>
                 <th style="width: 30px;">ID</th>
-                <th><%=LNG("Mesai Başlangıç")%></th>
-                <th><%=LNG("Mesai Bitiş")%></th>
+                <th><%=LNG("Mesai Tarihi")%></th>
+                <th><%=LNG("Mesai Başlangıç Saati")%></th>
+                <th><%=LNG("Mesai Bitiş Saati")%></th>
                 <th><%=LNG("Açıklama")%></th>
                 <th><%=LNG("Durum")%></th>
                 <th><%=LNG("İşlem")%></th>
@@ -1224,8 +1225,9 @@
             %>
             <tr>
                 <td style="width: 30px;"><%=mesai("id") %></td>
-                <td><%=cdate(mesai("baslangic_tarihi")) %>&nbsp;<%=left(mesai("baslangic_saati"),5) %></td>
-                <td><%=cdate(mesai("baslangic_tarihi")) %>&nbsp;<%=left(mesai("baslangic_saati"),5) %></td>
+                <td><%=cdate(mesai("baslangic_tarihi")) %></td>
+                <td><%=left(mesai("baslangic_saati"),5) %></td>
+                <td><%=left(mesai("bitis_saati"),5) %></td>
                 <td><%=mesai("aciklama") %></td>
                 <td><%=mesai("durum") %></td>
                 <td>
@@ -1527,10 +1529,23 @@
                 <span class="input-group-addon">
                     <i class="icon-prepend fa fa-cubes"></i>
                 </span>
+                <script type="text/javascript">
+                    $(".takvimyap").datepicker({
+
+                    }).datepicker("setDate", new Date());
+                    //$("#mesai_baslangic_tarihi").datepicker({ dateFormat: "dd.mm.yyyy" }).datepicker("setDate", new Date());
+                    //$("#mesai_baslangic_tarihi").datepicker({ dateFormat: "dd-mm-yyyy" }).val(new Date().getDate() + "." + new Date().getMonth() + "." + new Date().getFullYear());
+                </script>
                 <input type="text" class="required form-control takvimyap" name="mesai_baslangic_tarihi" id="mesai_baslangic_tarihi" placeholder="__.__.____" />
+                
             </div>
         </div>
-        <div class="col-sm-4">
+       
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <label class="col-form-label"><%=LNG("Mesai Başlangıç Saati")%></label>
             <div class="input-group input-group-primary">
                 <span class="input-group-addon">
                     <i class="icon-prepend fa fa-cubes"></i>
@@ -1538,19 +1553,8 @@
                 <input type="text" class="required form-control timepicker" name="mesai_baslangic_saati" id="mesai_baslangic_saati" placeholder="__:__" />
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <label class="col-sm-12 col-form-label"><%=LNG("Mesai Bitiş Tarihi")%></label>
-        <div class="col-sm-8">
-            <div class="input-group input-group-primary">
-                <span class="input-group-addon">
-                    <i class="icon-prepend fa fa-cubes"></i>
-                </span>
-                <input type="text" class="required form-control takvimyap" name="mesai_bitis_tarihi" id="mesai_bitis_tarihi" placeholder="__.__.____" />
-            </div>
-        </div>
-        <div class="col-sm-4">
+        <div class="col-md-6">
+            <label class="col-form-label"><%=LNG("Mesai Bitiş Saati")%></label>
             <div class="input-group input-group-primary">
                 <span class="input-group-addon">
                     <i class="icon-prepend fa fa-cubes"></i>
@@ -1560,6 +1564,21 @@
         </div>
     </div>
 
+    <div class="row">
+        <label class="col-sm-12 col-form-label" style="display:none" ><%=LNG("Mesai Bitiş Tarihi")%></label>
+        <div class="col-sm-8" style="display:none">
+            <div class="input-group input-group-primary">
+                <span class="input-group-addon">
+                    <i class="icon-prepend fa fa-cubes"></i>
+                </span>
+                <script type="text/javascript">
+                    $("#mesai_bitis_tarihi").datepicker({ dateFormat: "dd-mm-yyyy" }).datepicker("setDate", $("#mesai_baslangic_tarihi").val());
+                </script>
+                <input type="text" class="required form-control takvimyap" name="mesai_bitis_tarihi" id="mesai_bitis_tarihi" placeholder="__.__.____" />
+            </div>
+        </div>
+       
+    </div>
 
     <div class="row">
         <label class="col-sm-12 col-form-label"><%=LNG("Açıklama")%></label>
@@ -1625,6 +1644,11 @@
                     <i class="icon-prepend fa fa-cubes"></i>
                 </span>
                 <input type="text" class="required form-control takvimyap" name="izin_baslangic_tarihi" id="izin_baslangic_tarihi" placeholder="__.__.____" />
+                <script type="text/javascript">
+                    $(".takvimyap").datepicker({
+                        minDate: new Date()
+                    });
+                </script>
             </div>
         </div>
         <div class="col-sm-4">
@@ -1645,6 +1669,11 @@
                     <i class="icon-prepend fa fa-cubes"></i>
                 </span>
                 <input type="text" class="required form-control takvimyap" name="izin_bitis_tarihi" id="izin_bitis_tarihi" placeholder="__.__.____" />
+                <script type="text/javascript">
+                    $(".takvimyap").datepicker({
+                        minDate: new Date()
+                    });
+                </script>
             </div>
         </div>
         <div class="col-sm-4">
@@ -1698,7 +1727,59 @@
 
 </form>
 <%
+    elseif trn(request("islem"))="personel_mesai_talep_onayla" then
 
+        personel_id = trn(request("personel_id"))
+        kayit_id = trn(request("kayit_id"))
+        durum = trn(request("durum"))
+
+        SQL="select * from ucgem_personel_mesai_bildirimleri where id = '"& kayit_id &"'"
+        set talep = baglanti.execute(SQL)
+    
+        if personel_id=Request.Cookies("kullanici")("kullanici_id") then
+%>
+<script>
+            mesaj_ver("Mesai Talepleri", "Kendi Mesai Talebiniz Üzerinde İşlem Yapamazsınız. !", "danger");
+</script>
+<%
+        else
+            SQL="update ucgem_personel_mesai_bildirimleri set durum = '"& durum &"' where id = '"& kayit_id &"'"
+            set guncelle = baglanti.execute(SQL)
+
+        end if
+        
+
+            SQL="select * from ucgem_firma_kullanici_listesi where id= '"& personel_id &"'"
+            set kcek = baglanti.execute(SQL)
+
+            do while not kcek.eof
+
+                if trim(durum)="Onaylandı" then
+                    bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " İzin Talebinizi Onayladı. " & chr(13) & chr(13)
+                elseif trim(durum)="Onay Bekliyor" then
+                    bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " İzin Talebinizi Beklemeye Aldı. " & chr(13) & chr(13)
+                else
+                    bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " İzin Talebinizi Reddetti. " & chr(13) & chr(13)
+                end if
+                tip = "is_listesi"
+                click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559"");"
+                user_id = kcek("id")
+                okudumu = "0"
+                durum = "true"
+                cop = "false"
+                firma_kodu = request.Cookies("kullanici")("firma_kodu")
+                firma_id = request.Cookies("kullanici")("firma_id")
+                ekleyen_id = request.Cookies("kullanici")("kullanici_id")
+                ekleyen_ip = Request.ServerVariables("Remote_Addr")
+    
+                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& kcek("id") &"', @mesaj = '"& replace(bildirim, chr(13), "<br>") &"';"
+                set ekle2 = baglanti.execute(SQL)
+
+                NetGSM_SMS kcek("personel_telefon"), bildirim
+
+
+            kcek.movenext
+            loop
 
 
     elseif trn(request("islem"))="bordro_indir" then
@@ -1777,11 +1858,11 @@
         set talep = baglanti.execute(SQL)
     
         if personel_id=Request.Cookies("kullanici")("kullanici_id") then
-    %>
-        <script>
+%>
+<script>
             mesaj_ver("İzin Talepleri", "Kendi İzin Talebinizi Onaylayamazsınız. !", "danger");
-        </script>
-    <%
+</script>
+<%
         else
             SQL="update ucgem_personel_izin_talepleri set durum = '"& durum &"', OnaylayanId = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& kayit_id &"'"
             set guncelle = baglanti.execute(SQL)
@@ -1877,16 +1958,17 @@
                             <thead>
                                 <tr>
                                     <th style="width: 30px;">ID</th>
-                                    <th><%=LNG("Mesai Başlangıç")%></th>
-                                    <th><%=LNG("Mesai Bitiş")%></th>
-                                    <th><%=LNG("Açıklama")%></th>
-                                    <th><%=LNG("Durum")%></th>
-                                    <th><%=LNG("İşlem")%></th>
+                                     <th><%=LNG("Mesai Tarihi")%></th>
+                                     <th><%=LNG("Mesai Başlangıç Saati")%></th>
+                                     <th><%=LNG("Mesai Bitiş Saati")%></th>
+                                     <th><%=LNG("Açıklama")%></th>
+                                     <th><%=LNG("Durum")%></th>
+                                     <th><%=LNG("İşlem")%></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <%
-                SQL="select * from ucgem_personel_mesai_bildirimleri where personel_id = '"& personel_id &"' and cop = 'false' and durum = 'Onaylandı'"
+                SQL="select * from ucgem_personel_mesai_bildirimleri where personel_id = '"& personel_id &"' and cop = 'false'"
                 set mesai = baglanti.execute(SQL)
                 if mesai.eof then
                                 %>
@@ -1899,12 +1981,23 @@
                                 %>
                                 <tr>
                                     <td style="width: 30px;"><%=mesai("id") %></td>
-                                    <td><%=cdate(mesai("baslangic_tarihi")) %>&nbsp;<%=left(mesai("baslangic_saati"),5) %></td>
-                                    <td><%=cdate(mesai("baslangic_tarihi")) %>&nbsp;<%=left(mesai("baslangic_saati"),5) %></td>
+                                    <td><%=cdate(mesai("baslangic_tarihi")) %></td>
+                                    <td><%=left(mesai("baslangic_saati"),5) %></td>
+                                    <td><%=left(mesai("bitis_saati"),5) %></td>
                                     <td><%=mesai("aciklama") %></td>
                                     <td><%=mesai("durum") %></td>
-                                    <td>
-                                        <input type="button" class="btn btn-danger btn-mini" value="Sil" onclick="mesai_bildirim_sil('<%=personel_id%>', '<%=mesai("id")%>');" /></td>
+                                    <!--<td><input type="button" class="btn btn-danger btn-mini" value="Sil" onclick="mesai_bildirim_sil('<%=personel_id%>', '<%=mesai("id")%>');" /></td>-->
+                                    <td class="dropdown" style="width: 10px;">
+                                        <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                                        <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('mesai_bildirim_formu', '<%=personel_id %>','<%=mesai("id") %>');"><i class="fa fa-download"></i>İndir</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('mesai_bildirim_formu','<%=personel_id %>','<%=mesai("id") %>');"><i class="fa fa-print"></i>Yazdır</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('mesai_bildirim_formu','<%=personel_id %>','<%=mesai("id") %>');"><i class="fa fa-send"></i>Gönder</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="personel_mesai_talep_onayla('<%=personel_id %>','<%=mesai("id") %>', 'Onaylandı');"><i class="icofont icofont-edit"></i>Onayla</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="personel_mesai_talep_onayla('<%=personel_id %>','<%=mesai("id") %>', 'Reddedildi');"><i class="icofont icofont-ui-delete"></i>Reddet</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="personel_mesai_talep_onayla('<%=personel_id %>','<%=mesai("id") %>', 'Onay Bekliyor');"><i class="icofont icofont-ui-calendar"></i>Beklet</a>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <%
                 mesai.movenext
@@ -2006,7 +2099,7 @@
         </div>
     </div>
 
-    <div class="cards">
+    <div class="cards" style="display:none">
         <div class="card-block">
             <div class="view-info">
                 <div class="row">
@@ -2014,13 +2107,14 @@
                         <h5 class="card-header-text"><%=LNG("Onay Bekleyen Mesai Bildirimleri")%></h5>
                         <br />
                         <br />
-                        <div class="dt-responsive table-responsive">
+                        <div class="dt-responsive table-responsive" style="padding-bottom:400px">
                             <table id="new-cons2" class="table table-striped table-bordered table-hover" width="100%">
                                 <thead>
                                     <tr>
                                         <th style="width: 30px;">ID</th>
-                                        <th><%=LNG("Mesai Başlangıç")%></th>
-                                        <th><%=LNG("Mesai Bitiş")%></th>
+                                        <th><%=LNG("Mesai Tarihi")%></th>
+                                        <th><%=LNG("Mesai Başlangıç Saati")%></th>
+                                        <th><%=LNG("Mesai Bitiş Saati")%></th>
                                         <th><%=LNG("Açıklama")%></th>
                                         <th><%=LNG("Durum")%></th>
                                         <th style="width: 120px;"><%=LNG("İşlem")%></th>
@@ -2028,7 +2122,7 @@
                                 </thead>
                                 <tbody>
                                     <%
-                SQL="select * from ucgem_personel_mesai_bildirimleri where personel_id = '"& personel_id &"' and cop = 'false' and durum = 'Onay Bekliyor'"
+                SQL="select * from ucgem_personel_mesai_bildirimleri where personel_id = '"& personel_id &"' and cop = 'false' and durum = 'Onay Bekliyor' OR durum = 'Reddedildi'"
                 set mesai = baglanti.execute(SQL)
                 if mesai.eof then
                                     %>
@@ -2041,12 +2135,24 @@
                                     %>
                                     <tr>
                                         <td style="width: 30px;"><%=mesai("id") %></td>
-                                        <td><%=cdate(mesai("baslangic_tarihi")) %>&nbsp;<%=left(mesai("baslangic_saati"),5) %></td>
-                                        <td><%=cdate(mesai("baslangic_tarihi")) %>&nbsp;<%=left(mesai("baslangic_saati"),5) %></td>
+                                        <td><%=cdate(mesai("baslangic_tarihi")) %></td>
+                                        <td><%=left(mesai("baslangic_saati"),5) %></td>
+                                        <td><%=left(mesai("bitis_saati"),5) %></td>
                                         <td><%=mesai("aciklama") %></td>
                                         <td><%=mesai("durum") %></td>
-                                        <td>
-                                            <input type="button" class="btn btn-success btn-mini" value="Onayla" onclick="mesai_bildirim_onayla('<%=personel_id%>', '<%=mesai("id")%>');" />&nbsp;<input type="button" class="btn btn-danger btn-mini" value="Sil" onclick="mesai_bildirim_sil('<%=personel_id%>', '<%=mesai("id")%>');" /></td>
+                                        <!--<td>
+                                            <input type="button" class="btn btn-success btn-mini" value="Onayla" onclick="mesai_bildirim_onayla('<%=personel_id%>', '<%=mesai("id")%>');" />&nbsp;<input type="button" class="btn btn-danger btn-mini" value="Sil" onclick="mesai_bildirim_sil('<%=personel_id%>', '<%=mesai("id")%>');" /></td>-->
+                                        <td class="dropdown" style="width: 10px;">
+                                        <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                                        <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('mesai_bildirim_formu', '<%=personel_id %>','<%=mesai("id") %>');"><i class="fa fa-download"></i>İndir</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('mesai_bildirim_formu','<%=personel_id %>','<%=mesai("id") %>');"><i class="fa fa-print"></i>Yazdır</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('mesai_bildirim_formu','<%=personel_id %>','<%=mesai("id") %>');"><i class="fa fa-send"></i>Gönder</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="personel_mesai_talep_onayla('<%=personel_id %>','<%=mesai("id") %>', 'Onaylandı');"><i class="icofont icofont-edit"></i>Onayla</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="personel_mesai_talep_onayla('<%=personel_id %>','<%=mesai("id") %>', 'Reddedildi');"><i class="icofont icofont-ui-delete"></i>Reddet</a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="personel_mesai_talep_onayla('<%=personel_id %>','<%=mesai("id") %>', 'Onay Bekliyor');"><i class="icofont icofont-ui-calendar"></i>Beklet</a>
+                                        </div>
+                                    </td>
                                     </tr>
                                     <%
                 mesai.movenext
@@ -2505,7 +2611,8 @@
                         
                     end if
 
-                    SQL="SELECT * FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY parca.id ) AS RowNum, parca.*, kat.kategori_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad as adsoyad, isnull((select sum(ipl.adet) from is_parca_listesi ipl where ipl.ParcaId =parca.id and ipl.cop = 'false' ),0) kullanilan from parca_listesi parca join tanimlama_kategori_listesi kat on kat.id = parca.kategori join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id where parca.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and parca.cop = 'false' "& arama_str &" ) AS RowConstrainedResult WHERE RowNum >= "& cdbl(nereden) &" AND RowNum < "& ( cdbl(nereden) + kacadet )  &" ORDER BY RowNum"
+                    
+                    SQL="SELECT * FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY parca.id ) AS RowNum, parca.*, kat.kategori_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad as adsoyad, isnull((SELECT COUNT(*) from  is_parca_listesi WHERE cop = 'false' AND ParcaId= parca.id ),0) kullanilan from parca_listesi parca join tanimlama_kategori_listesi kat on kat.id = parca.kategori join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id where parca.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and parca.cop = 'false' "& arama_str &" ) AS RowConstrainedResult WHERE RowNum >= "& cdbl(nereden) &" AND RowNum < "& ( cdbl(nereden) + kacadet )  &" ORDER BY RowNum"
                     set parca = baglanti.execute(SQL)
 
 
@@ -2552,7 +2659,7 @@
                     <td><%=parca("adsoyad") %><br />
                         <%=cdate(parca("ekleme_tarihi")) %></td>
                     <td style="text-align: center;">
-                        <span class="label label-warning" style="display: inline; font-size: 13px; padding-left: 10px; padding-right: 10px;">0</span> /
+                        <span class="label label-warning" style="display: inline; font-size: 13px; padding-left: 10px; padding-right: 10px;"><%=parca("kullanilan") %></span> /
                         <input type="button" class="btn btn-info btn-mini" onclick="ParcadanIsListesiBul('<%=parca("id")%>');" value="Aç" /></td>
                     <td style="text-align: center; width: 100px;">
                         <span id="santiye_durum_repeater_str<%=parca("id") %>santiye_label_0" onclick="durum_guncelleme_calistir('parca_listesi', '<%=parca("id") %>');">

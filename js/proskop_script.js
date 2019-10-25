@@ -3373,7 +3373,20 @@ function personel_izin_talep_onayla(personel_id, kayit_id, durum) {
     });
 }
 
+function personel_mesai_talep_onayla(personel_id, kayit_id, durum) {
 
+    var data = "islem=personel_mesai_talep_onayla";
+    data += "&personel_id=" + personel_id;
+    data += "&kayit_id=" + kayit_id;
+    data += "&durum=" + durum;
+    data = encodeURI(data);
+    $("#koftiden").loadHTML({ url: "/ajax_request6/", data: data, status }, function () {
+        if (status == "success")
+            mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Güncellendi", "success");
+        if (status == "error")
+            mesaj_ver("İzin Talepleri", "Kendi İzin Talebinizi Onaylayamazsınız. !", "danger");
+    });
+}
 function mesai_bildirim_onayla(personel_id, kayit_id) {
 
     var data = "islem=mesai_bildirim_onayla";
@@ -5932,7 +5945,12 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&baslangic=" + baslangic;
         data += "&bitis=" + bitis;
 
-    } else if (deger == "izin_talep_formu") {
+    }else if (deger == "mesai_bildirim_formu") {
+
+        data += "&personel_id=" + personel_id;
+        data += "&izin_id=" + izin_id;
+
+    }else if (deger == "izin_talep_formu") {
 
         data += "&personel_id=" + personel_id;
         data += "&izin_id=" + izin_id;
@@ -6099,6 +6117,11 @@ function rapor_pdf_gonder(deger, personel_id, izin_id, dosya_yolu) {
             data += "&personel_id=" + personel_id;
             data += "&izin_id=" + izin_id;
 
+        } else if (deger == "mesai_bildirim_formu") {
+
+            data += "&personel_id=" + personel_id;
+            data += "&izin_id=" + izin_id;
+
         }
         else if (deger == "personel_is_yuku_verimlilik") {
 
@@ -6233,6 +6256,11 @@ function rapor_pdf_yazdir(deger, personel_id, izin_id) {
 
             data += "&satinalma_id=" + personel_id;
 
+
+        } else if (deger == "mesai_bildirim_formu") {
+
+            data += "&personel_id=" + personel_id;
+            data += "&izin_id=" + izin_id;
 
         } else if (deger == "personel_is_yuku_verimlilik") {
 

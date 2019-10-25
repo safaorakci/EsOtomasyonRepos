@@ -1575,7 +1575,7 @@
                                             <%
                                                 string bitis_saati = DateTime.Now.AddMinutes(15).ToShortTimeString();
                                             %>
-                                            <input type="text" id="yeni_is_bitis_saati" onkeyup="yeni_is_ekle_sure_hesap();" required class="timepicker" style="padding-left:10px; max-width:55px;" value="<%Response.Write(bitis_saati); %>" />
+                                            <input type="text" id="yeni_is_bitis_saati" onkeyup="yeni_is_ekle_sure_hesap();" required class="timepicker" style="padding-left:10px; max-width:55px;" placeholder="__:__" />
                                         </div>
                                     </div>
                                 </div>

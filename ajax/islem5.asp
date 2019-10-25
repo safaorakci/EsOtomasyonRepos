@@ -169,7 +169,7 @@
                     <div class="tab-pane active" id="tab-r1" role="tabpanel">
                         <legend><%=LNG("Görevliler")%></legend>
                         <%
-                        SQL="SELECT iss.adi, dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' AND olay.durum = 'true' AND olay.cop = 'false' ) ) AS harcanan, CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN '-' ELSE '' END + dbo.DakikadanSaatYap( CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN -1 * DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ELSE DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT(DATETIME, olay.bitis) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) END ) AS kalan, ISNULL(gorevli.toplam_sure, '0:00') AS toplam_sure, ISNULL(gorevli.gunluk_sure, '0:00') AS gunluk_sure, ISNULL(gorevli.toplam_gun, '0:00') AS toplam_gun, CASE WHEN ISNULL(gorevli.toplam_sure, '0:00') = '0:00' THEN 0 ELSE 1 end AS GantAdimID, ISNULL(sinirlama_varmi, 0) as sinirlama_varmi, CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati) AS tamamlanma_zamani, kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_adsoyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani FROM ucgem_is_gorevli_durumlari gorevli WITH (NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH (NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = '"& is_id &"' GROUP BY iss.adi, gorevli.toplam_sure, gorevli.gunluk_sure, gorevli.toplam_gun, ISNULL(iss.GantAdimID, 0), CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati), kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani, gorevli.is_id, iss.baslangic_tarihi, iss.sinirlama_varmi;"
+                        SQL="with cte as (SELECT iss.adi, case when (select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = '"& is_id &"' )=1 then '00:00' else dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' AND olay.durum = 'true' AND olay.cop = 'false' ) ) end  AS harcanan, CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN '-' ELSE '' END + dbo.DakikadanSaatYap( CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN -1 * DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ELSE DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT(DATETIME, olay.bitis) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) END ) AS kalan, ISNULL(gorevli.toplam_sure, '0:00') AS toplam_sure, ISNULL(gorevli.gunluk_sure, '0:00') AS gunluk_sure, ISNULL(gorevli.toplam_gun, '0:00') AS toplam_gun, CASE WHEN ISNULL(gorevli.toplam_sure, '0:00') = '0:00' THEN 0 ELSE 1 end AS GantAdimID, ISNULL(sinirlama_varmi, 0) as sinirlama_varmi, CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati) AS tamamlanma_zamani, kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_adsoyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani FROM ucgem_is_gorevli_durumlari gorevli WITH (NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH (NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = '"& is_id &"' GROUP BY iss.adi, gorevli.toplam_sure, gorevli.gunluk_sure, gorevli.toplam_gun, ISNULL(iss.GantAdimID, 0), CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati), kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani, gorevli.is_id, iss.baslangic_tarihi, iss.sinirlama_varmi ) select CASE WHEN DATEPART(MINUTE, harcanan) > DATEPART(MINUTE, toplam_sure) THEN 90 ELSE CONVERT(decimal(5,2),  CONVERT(decimal(5,2), DATEPART(mi, harcanan)) / CONVERT(decimal(5,2), DATEPART(mi, toplam_sure))) * 100  END as TamamlanmaOrani,*from cte"
                         set gorevli = baglanti.execute(SQL)
                         do while not gorevli.eof
 
@@ -194,7 +194,7 @@
                                 <%=LNG("İşin Tamamlanma Durumu :")%>
                                 <br />
                                 <div class="nprogress">
-                                    <div class="nprogress-bar nprogress-bar-striped nprogress-bar-success" role="progressbar" style="width: <%=gorevli("tamamlanma_orani") %>%" aria-valuenow="<%=gorevli("tamamlanma_orani") %>" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="nprogress-bar nprogress-bar-striped nprogress-bar-success" role="progressbar" style="width: <%=gorevli("TamamlanmaOrani") %>%" aria-valuenow="<%=gorevli("TamamlanmaOrani") %>" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <% end if %>
 
@@ -202,12 +202,20 @@
                                 <span style="float: left;">
                                     <% if trim(gorevli("sinirlama_varmi"))="0" then %>
                                     <table style="text-align: center;">
-                                        <tr>
-                                            <td><%=LNG("Harcanan Süre")%></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fa fa-clock-o"></i><strong style="font-size: 15px;"><%=gorevli("harcanan") %></strong></td>
-                                        </tr>
+                                        <thead>
+                                            <tr>
+                                                <th><%=LNG("Planlanan Süre")%></th>
+                                                <th></th>
+                                                <th><%=LNG("Harcanan Süre")%></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><i class="fa fa-clock-o"></i><strong style="font-size: 15px;"><%=gorevli("toplam_sure") %></strong></td>
+                                                <td></td>
+                                                <td><i class="fa fa-clock-o"></i><strong style="font-size: 15px;"><%=gorevli("harcanan") %></strong></td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                     <% else %>
                                     <table style="text-align: center;">
@@ -265,9 +273,9 @@
                                
 
                             </div>-->
-
+                            
                             <div class="col-xs-1 hidden-xs" style="padding-top: 5px;">
-                                <input id="easyPieChart<%=gorevli("id") %>" type="text" class="dial easyPieChartlar" value="<%=gorevli("tamamlanma_orani") %>" data-width="68" data-height="75" data-linecap="round" data-displayprevious="true" data-displayinput="true" data-readonly="true" data-fgcolor="#4ECDC4">
+                                <input id="easyPieChart<%=gorevli("id") %>" type="text" class="dial easyPieChartlar" value="<%=gorevli("TamamlanmaOrani") %>" data-width="68" data-height="75" data-linecap="round" data-displayprevious="true" data-displayinput="true" data-readonly="true" data-fgcolor="#4ECDC4">
                             </div>
                             <div class="col-xs-1" style="padding-top: 5px;">
                                 <input type="button" class="btn btn-danger btn-sm" onclick="is_personel_durt('<%=gorevli("gorevli_id") %>', '<%=is_id %>');" value="<%=LNG("Dürt")%>" />
@@ -364,7 +372,7 @@
                                 <h4><%=LNG("Dosya Ekle")%></h4>
                                 <br />
                                 <input type="file" value="/img/kucukboy.png" tip="kucuk" yol="dosya_deposu/" style="height: 31px!important;" id="dosya_yolu<%=is_id %>" folder="IsDosyaları" />
-                                <img src="/img/loader_green.gif" id="fileLoading" style="display:none"/>
+                                <img src="/img/loader_green.gif" id="fileLoading" style="display: none" />
                                 <br />
                                 <%=LNG("Dosya Adı:")%><br />
                                 <input type="text" id="dosya_adi<%=is_id %>" />
@@ -532,8 +540,8 @@
         </div>
     </div>
 
-    <div class="row"  >
-        <label class="col-sm-12 col-form-label" >Kodu :</label>
+    <div class="row">
+        <label class="col-sm-12 col-form-label">Kodu :</label>
         <div class="col-sm-12">
             <input type="text" id="kodu" value="<%=parca("parca_kodu") %>" class="form-control" />
         </div>
@@ -1361,13 +1369,13 @@ works properly when clicked or hovered */
                Response.Clear()
 %>
 <script type="text/javascript">
-            $(function (){
-                mesaj_ver("İkinci İş", "Aynı Anda İkinci İşi Başlatamazsınız", "danger");
-                timer.stop();
-                $('.startButton').show();
-                $('.pauseButton').hide();
-                $('.stopButton').hide();
-            });
+    $(function () {
+        mesaj_ver("İkinci İş", "Aynı Anda İkinci İşi Başlatamazsınız", "danger");
+        timer.stop();
+        $('.startButton').show();
+        $('.pauseButton').hide();
+        $('.stopButton').hide();
+    });
 </script>
 <%
             Response.End
@@ -1504,16 +1512,17 @@ works properly when clicked or hovered */
 %>
 <input type="hidden" id="sonacikkayit<%=is_id %>" baslangic_tarihi="<%=cdate(baslangic_tarihi) %>" baslangic_saati="<%=baslangic_saati %>" />
 <script type="text/javascript">
-        $(function (){
+    $(function () {
 
-            timer.start({precision: 'seconds', startValues: {seconds: <%=saniye %>}});
+        timer.start({ precision: 'seconds', startValues: { seconds: <%=saniye %>}});
 
-            $('.startButton').hide();
-            $('.pauseButton').show();
-            $('.stopButton').show();
+    $('.startButton').hide();
+    $('.pauseButton').show();
+    $('.stopButton').show();
 
         });
 </script>
+<% count = count +1 %>
 <% end if %>
 
 <%
@@ -3030,8 +3039,8 @@ works properly when clicked or hovered */
         %>
         <tr>
             <td style="padding: 1px!important; text-align: center;">
-            <!--<input kayitid="<%=parca("id") %>" type="number" class="ictekiparcalar<%=IsID %>" style="width: 50px; text-align: center;" value="<%=parca("Adet") %>" />-->
-                <span kayitid="<%=parca("id") %>" style="width: 50px; text-align: center; font-weight:bold"><%=parca("Adet") %></span>
+                <!--<input kayitid="<%=parca("id") %>" type="number" class="ictekiparcalar<%=IsID %>" style="width: 50px; text-align: center;" value="<%=parca("Adet") %>" />-->
+                <span kayitid="<%=parca("id") %>" style="width: 50px; text-align: center; font-weight: bold"><%=parca("Adet") %></span>
             </td>
             <td style="padding: 1px!important; text-align: center"><%=parca("marka") & " - " & parca("parca_adi") %></td>
             <td style="padding: 1px!important; text-align: center"><%=parca("ekleyen") %></td>
@@ -3047,7 +3056,7 @@ works properly when clicked or hovered */
         %>
     </tbody>
 </table>
-<input type="button" style="display:none" class="btn btn-primary btn-mini" onclick="KullanilanParcaListesiGuncelle('<%=IsID %>');" value="Güncelle" />
+<input type="button" style="display: none" class="btn btn-primary btn-mini" onclick="KullanilanParcaListesiGuncelle('<%=IsID %>');" value="Güncelle" />
 
 <% end if %>
 
@@ -3061,7 +3070,7 @@ works properly when clicked or hovered */
 
 %>
 <div class="modal-header">
-    <b><%=parca("parca_adi") %> - <%=parca("marka") %> Parçasının Kullanıldığı İşler</b>
+    <b><%=parca("parca_kodu") %>    Parçasının Kullanıldığı İşler</b>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -3235,7 +3244,7 @@ works properly when clicked or hovered */
         <label class="col-sm-12 col-form-label">Excell Dosyası :</label>
         <div class="col-sm-12">
             <input class="form-control required" required type="file" id="FileUpload" tip="kucuk" folder="envanter" />
-            <img src="../img/loader_green.gif" style="display:none" id="fileLoading"/>
+            <img src="../img/loader_green.gif" style="display: none" id="fileLoading" />
         </div>
     </div>
 
