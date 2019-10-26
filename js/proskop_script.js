@@ -4150,7 +4150,7 @@ function parcalari_getir(sayfa) {
     data += "&sayfa=" + sayfa;
     data = encodeURI(data);
     $("#parca_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-
+        sayfa_yuklenince();
     });
 
 }

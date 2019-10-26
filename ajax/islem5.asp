@@ -170,7 +170,6 @@
                         <legend><%=LNG("Görevliler")%></legend>
                         <%
                         SQL="with cte as (SELECT iss.adi, case when (select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = '"& is_id &"' )=1 then '00:00' else dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' AND olay.durum = 'true' AND olay.cop = 'false' ) ) end  AS harcanan, CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN '-' ELSE '' END + dbo.DakikadanSaatYap( CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN -1 * DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ELSE DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT(DATETIME, olay.bitis) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) END ) AS kalan, ISNULL(gorevli.toplam_sure, '0:00') AS toplam_sure, ISNULL(gorevli.gunluk_sure, '0:00') AS gunluk_sure, ISNULL(gorevli.toplam_gun, '0:00') AS toplam_gun, CASE WHEN ISNULL(gorevli.toplam_sure, '0:00') = '0:00' THEN 0 ELSE 1 end AS GantAdimID, ISNULL(sinirlama_varmi, 0) as sinirlama_varmi, CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati) AS tamamlanma_zamani, kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_adsoyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani FROM ucgem_is_gorevli_durumlari gorevli WITH (NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH (NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = '"& is_id &"' GROUP BY iss.adi, gorevli.toplam_sure, gorevli.gunluk_sure, gorevli.toplam_gun, ISNULL(iss.GantAdimID, 0), CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati), kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani, gorevli.is_id, iss.baslangic_tarihi, iss.sinirlama_varmi ) select CASE WHEN tamamlanma_orani = 100 THEN 100 WHEN DATEPART(MINUTE, harcanan) > DATEPART(MINUTE, toplam_sure) THEN 90 ELSE CONVERT(decimal(5,2), CONVERT(decimal(5,2), DATEPART(mi, harcanan)) / CONVERT(decimal(5,2), DATEPART(mi, toplam_sure))) * 100 END as tamamlanmorani,*from cte"
-                            Response.Write(SQL)
                         set gorevli = baglanti.execute(SQL)
                         do while not gorevli.eof
 
@@ -2694,6 +2693,7 @@ works properly when clicked or hovered */
         if trn(request("islem2"))="agacekle" then
 
             AgacId = trn(request("AgacId"))
+            IsID = trn(request("IsID"))
 
             durum = "true"
             cop = "false"
@@ -2704,8 +2704,16 @@ works properly when clicked or hovered */
             ekleme_tarihi = date
             ekleme_saati = time
 
-            SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) select 1, '"& IsID &"', parca.id, '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"' from parca_listesi parca join parca_grup_listesi grup on dbo.iceriyormu(grup.parcalar, parca.id)=1 where grup.id = '"& AgacId &"'"
-            set ekle = baglanti.execute(SQL)
+            SQL = "select * from is_parca_listesi where ParcaID = '"& AgacId &"' and IsID = '"& IsID &"'"
+            set varmi = baglanti.execute(SQL)
+            if varmi.eof then
+                SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) select 1, '"& IsID &"', parca.id, '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"' from parca_listesi parca join parca_grup_listesi grup on dbo.iceriyormu(grup.parcalar, parca.id)=1 where grup.id = '"& AgacId &"'"
+                set ekle = baglanti.execute(SQL)
+            else
+                SQL="update is_parca_listesi set Adet = Adet + '"& 1 &"' where id = '"& varmi("id") &"'"
+                set guncelle = baglanti.execute(SQL)
+            end if
+                
 
         elseif trn(request("islem2"))="guncelle" then
 
@@ -2985,7 +2993,7 @@ works properly when clicked or hovered */
 
         end if
 
-        SQL="select tanim.marka, tanim.parca_adi, parca.*, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from is_parca_listesi parca join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id join parca_listesi tanim on tanim.id = parca.ParcaId where parca.IsID = '"& IsID &"' and parca.cop = 'false' order by parca.id asc"
+        SQL="select tanim.marka, tanim.parca_kodu, parca.*, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from is_parca_listesi parca join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id join parca_listesi tanim on tanim.id = parca.ParcaId where parca.IsID = '"& IsID &"' and parca.cop = 'false' order by parca.id asc"
             set parca = baglanti.execute(SQL)
             if parca.eof then
 %>
@@ -3017,7 +3025,7 @@ works properly when clicked or hovered */
                 <!--<input kayitid="<%=parca("id") %>" type="number" class="ictekiparcalar<%=IsID %>" style="width: 50px; text-align: center;" value="<%=parca("Adet") %>" />-->
                 <span kayitid="<%=parca("id") %>" style="width: 50px; text-align: center; font-weight: bold"><%=parca("Adet") %></span>
             </td>
-            <td style="padding: 1px!important; text-align: center"><%=parca("marka") & " - " & parca("parca_adi") %></td>
+            <td style="padding: 1px!important; text-align: center"><%=parca("marka") & " - " & parca("parca_kodu") %></td>
             <td style="padding: 1px!important; text-align: center"><%=parca("ekleyen") %></td>
             <td style="padding: 1px!important; text-align: center"><%=cdate(parca("ekleme_tarihi")) %></td>
             <td style="padding: 1px!important; text-align: center;" class="icon-list-demo2">
@@ -3128,8 +3136,8 @@ works properly when clicked or hovered */
 <% 
     elseif trn(request("islem"))="StokListesiTemizle" then
 
-    SQL = "truncate table parca_listesi"
-    set truncateTable = baglanti.execute(SQL)
+    SQL = "delete from parca_listesi"
+    set deleteTable = baglanti.execute(SQL)
 %>
 
 <% elseif trn(request("islem"))="ModalParcaArama" then %>

@@ -2114,15 +2114,10 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                 ayarlar.cmd.Parameters.Add("ekleyen_ip", HttpContext.Current.Request.ServerVariables["Remote_Addr"]);
                                 ayarlar.cmd.ExecuteNonQuery();
 
-
-
-
                                 if (Personel["personel_telefon"].ToString().Length > 5)
                                 {
                                     ayarlar.NetGSM_SMS(Personel["personel_telefon"].ToString(), SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Dürttü !.");
                                 }
-
-
 
                                 Exception except;
                                 bool result = Pushover.SendNotification(ayarlar.PushOverAppKey, Personel["PushUserKey"].ToString(), "ÜÇGEM MEKANİK A.Ş ERP SYTEM", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Dürttü !.", Priority.Normal, PushoverSound.DeviceDefault, String.Empty, "http://erp.ucgem.com", "http://erp.ucgem.com", 60, 3600, out except);
@@ -2139,7 +2134,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             HataLogTut(e);
         }
         return durum;
-
     }
 
     [WebMethod(EnableSession = true)]

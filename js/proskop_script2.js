@@ -890,7 +890,6 @@ function parcalar_autocomplete_calistir() {
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
 
         var IsId = $(this).attr("isid");
-        var parcaAdi = "Parça adı girilmedi";
         var marka = "Marka girilmedi";
         var aciklama = "Açıklama girilmedi";
         var kodu = "Ürün Kodu Girilmedi";
@@ -902,29 +901,35 @@ function parcalar_autocomplete_calistir() {
             select: function (event, ui) {
                 var inpuu = $(this);
                 setTimeout(function () {
-                    $(inpuu).val(ui.item.parcaadi + "-" + ui.item.marka).attr("data", ui.item.id);
+                    $(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", ui.item.id);
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
 
-            if (item.parcaadi !== "") {
-                parcaAdi = item.parcaadi;
-            }
             if (item.kodu !== "") {
                 kodu = item.kodu;
+            }
+            else {
+                kodu = "Parça Kodu Girilmedi !";
             }
             if (item.marka !== "") {
                 marka = item.marka;
             }
+            else {
+                marka = "Marka Girilmedi !";
+            }
             if (item.aciklama !== "") {
                 aciklama = item.aciklama;
+            }
+            else {
+                aciklama = "Açıklama Boş !";
             }
 
             if (item.parcaadi === undefined && item.marka === undefined && item.aciklama === undefined && item.kodu === undefined) {
                 return $("<p style='Display:none'>").append("<a>" + bildirim + "</a>").appendTo(ul);
             }
             else {
-                return $("<li>").append("<a>" + parcaAdi + " - " + kodu + " - " + marka + " - " + aciklama + "</a>").appendTo(ul);
+                return $("<li>").append("<a>" + kodu + " " + marka + " " + aciklama + "</a>").appendTo(ul);
             }
         };
     });
@@ -937,7 +942,6 @@ function parcalar_autocomplete_calistir2() {
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
 
         var IsId = $(this).attr("isid");
-        var parcaAdi = "Parça adı girilmedi";
         var marka = "Marka girilmedi";
         var aciklama = "Açıklama girilmedi";
         var kodu = "Ürün Kodu Girilmedi";
@@ -949,30 +953,37 @@ function parcalar_autocomplete_calistir2() {
             select: function (event, ui) {
                 var inpuu = $(this);
                 setTimeout(function () {
+                    //$(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", ui.item.id);
                     var adet = $("#parca_adeti").val();
                     is_detay_parca_sectim(IsId, ui.item.id, adet);
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
 
-            if (item.parcaadi !== "") {
-                parcaAdi = item.parcaadi;
-            }
             if (item.kodu !== "") {
                 kodu = item.kodu;
+            }
+            else {
+                kodu = "Parça Kodu Girilmedi !";
             }
             if (item.marka !== "") {
                 marka = item.marka;
             }
+            else {
+                marka = "Marka Girilmedi !";
+            }
             if (item.aciklama !== "") {
                 aciklama = item.aciklama;
+            }
+            else {
+                aciklama = "Açıklama Boş !";
             }
 
             if (item.parcaadi === undefined && item.marka === undefined && item.aciklama === undefined && item.kodu === undefined) {
                 return $("<p style='Display:none'>").append("<a>" + bildirim + "</a>").appendTo(ul);
             }
             else {
-                return $("<li>").append("<a>" + parcaAdi + " - " + kodu + " - " + marka + " - " + aciklama + "</a>").appendTo(ul);
+                return $("<li>").append("<a>" + kodu + " - " + marka + " - " + aciklama + "</a>").appendTo(ul);
             }
 
         };
@@ -989,15 +1000,13 @@ function parcalar_autocomplete_calistir2() {
             select: function (event, ui) {
                 var inpuu = $(this);
                 setTimeout(function () {
-                    //$(inpuu).val(ui.item.parcaadi + "-" + ui.item.marka).attr("data", ui.item.id);
-
+                    //$(inpuu).val(ui.item.kodu + " " + ui.item.marka).attr("data", ui.item.id);
                     is_detay_parca_agaci_sectim(IsId, ui.item.id);
-
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
             if (item.agacadi === undefined) {
-                return;
+                return $("<li style='display:none'>").append("<a> </a>").appendTo(ul);
             } else {
                 return $("<li>").append("<a>" + item.agacadi + "</a>").appendTo(ul);
             }

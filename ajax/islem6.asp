@@ -1607,7 +1607,7 @@
         personel_id = trn(request("personel_id"))
 
 
-        SQL="select * from ucgem_firma_kullanici_listesi where id = '"& personel_id &"'"
+        SQL="select isnull(kullanici.personel_yillik_izin, 0) - isnull((select count(id) from ucgem_personel_mesai_girisleri where personel_id = kullanici.id and giris_tipi = 2),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
         set personel = baglanti.execute(SQL)
 
         personel_yillik_izin_hakedis = personel("personel_yillik_izin_hakedis")
@@ -1630,7 +1630,7 @@
 
 <div class="well" style="margin: 30px;">
     <br />
-    <center style="text-align: center;">Yıllık İzin Süreniz : <strong><%=personel_yillik_izin %></strong> gündür. Yıllık İzin Hakediş Tarihiniz : <strong><%=cdate(personel_yillik_izin_hakedis) %></strong></center>
+    <center style="text-align: center;">Yıllık İzin Süreniz : <strong><%=personel("kalan") %></strong> gündür. Yıllık İzin Hakediş Tarihiniz : <strong><%=cdate(personel_yillik_izin_hakedis) %></strong></center>
     <br />
 </div>
 
@@ -1953,7 +1953,7 @@
                     </span>
                     <br />
                     <br />
-                    <div class="dt-responsive table-responsive">
+                    <div class="dt-responsive table-responsive" style="padding-bottom:120px">
                         <table id="new-cons" class="table table-striped table-bordered table-hover" width="100%">
                             <thead>
                                 <tr>
@@ -2564,7 +2564,7 @@
             </thead>
             <tbody>
                 <% 
-                    kacadet = 15
+                    kacadet = 350
                     sayfa = trn(request("sayfa"))
                     if isnumeric(sayfa)=false then
                         sayfa = 1
@@ -2577,7 +2577,7 @@
 
                     arama_str = ""
                     if trn(request("islem2"))="arama" then
-
+                        where_str = ""
                         marka = trn(request("marka"))
                         parca_adi = trn(request("parca_adi"))
                         kategori = trn(request("kategori"))
@@ -2608,32 +2608,10 @@
                         if len(barcode)>1 then
                             arama_str = arama_str & " and (parca.barcode collate French_CI_AI like '%"& barcode &"%')"
                         end if
-                        
                     end if
 
-                    
-                    SQL="SELECT * FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY parca.id ) AS RowNum, parca.*, kat.kategori_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad as adsoyad, isnull((SELECT COUNT(*) from  is_parca_listesi WHERE cop = 'false' AND ParcaId= parca.id ),0) kullanilan from parca_listesi parca join tanimlama_kategori_listesi kat on kat.id = parca.kategori join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id where parca.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and parca.cop = 'false' "& arama_str &" ) AS RowConstrainedResult WHERE RowNum >= "& cdbl(nereden) &" AND RowNum < "& ( cdbl(nereden) + kacadet )  &" ORDER BY RowNum"
+                    SQL="SELECT * FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY parca.id ) AS RowNum, parca.*, kat.kategori_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad as adsoyad, isnull((SELECT COUNT(*) from  is_parca_listesi WHERE cop = 'false' AND ParcaId= parca.id ),0) kullanilan from parca_listesi parca join tanimlama_kategori_listesi kat on kat.id = parca.kategori join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id where parca.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and parca.cop = 'false' "& arama_str &" ) AS RowConstrainedResult WHERE RowNum >= "& cdbl(nereden) &" AND RowNum <= "& kacadet &" ORDER BY RowNum"
                     set parca = baglanti.execute(SQL)
-
-
-                    SQL="select isnull(count(parca.id),0) as sayfasayisi from parca_listesi parca join tanimlama_kategori_listesi kat on kat.id = parca.kategori join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id where parca.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and parca.cop = 'false' "& arama_str &""
-                    set sayfasayisicek = baglanti.execute(SQL)
-
-                    sayfasayisi = sayfasayisicek(0)
-
-                    if isnumeric(sayfasayisi)=false then
-                        sayfasayisi = 0
-                    end if
-
-                    if cdbl(sayfasayisi)<1 then
-                        sayfasayisi = 1
-                    else
-                        sayfasayisi = int(cdbl(sayfasayisi) / cdbl(kacadet))
-                    end if
-
-                    if cdbl(sayfasayisi)<1 then
-                        sayfasayisi = 1
-                    end if
 
                     if parca.eof then
                 %>
@@ -2642,9 +2620,7 @@
                 </tr>
                 <%
                     end if
-                    p = 0
                     do while not parca.eof
-                        p = p + 1
                 %>
                 <tr>
                     <td style="text-align: center;"><%=parca("id") %></td>
@@ -2685,7 +2661,7 @@
     </div>
 
 
-    <center>
+<!--    <center>
     <div class="btn-group">
         <button class="btn <% if sayfa = 1 or sayfa = 0 then %> disabled <% end if %>"  <% if sayfa=1 or sayfa = 0 then %> <% else %> onclick="parcalari_getir(<%=cdbl(sayfa)-1 %>);" <% end if %> type="button"><<</button>
         <% 
@@ -2703,7 +2679,7 @@
         <button class="btn <% if int(x) = int(sayfa) or x = 1 and sayfa = 0 then  %>  btn-warning <% end if %>"  onclick="parcalari_getir(<%=cdbl(x)%>);" type="button"><%=x %></button>
         <% next %>
         <button class="btn <% if int(sayfa) >= int(sayfasayisi) then %> disabled <% end if %>" <% if int(sayfa) >= int(sayfasayisi) then %> <% else %>onclick="parcalari_getir(<%=cdbl(sayfa)+1 %>);" <% end if %> type="button">>></button>
-    </div> </center>
+    </div> </center>-->
 
 
     <%
