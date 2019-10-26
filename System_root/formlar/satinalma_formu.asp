@@ -8,7 +8,7 @@
     satinalma_id = trn(request("satinalma_id"))
     
 
-    SQL="select * from satinalma_listesi where id = '"& satinalma_id &"'"
+    SQL="SELECT firma_adi, satinalma.*  FROM ucgem_firma_listesi firma, satinalma_listesi satinalma  WHERE firma.id =( select tedarikci_id from satinalma_listesi satinalma WHERE id = '"& satinalma_id &"') AND satinalma.id = '"& satinalma_id &"'"
     set satinalma = baglanti.execute(SQL)
 
     SQL="SELECT personel_ad,personel_soyad FROM ucgem_firma_kullanici_listesi kullanici INNER JOIN	 satinalma_listesi satinalma on satinalma.ekleyen_id = kullanici.id WHERE satinalma.id = '"& satinalma_id &"'"
@@ -46,7 +46,7 @@
                 <td>Öncelik : <%=satinalma("oncelik") %></td>
             </tr>
             <tr>
-                <td style="height: 40px;">Tedarikçi : Tedarikçi LTD ŞTİ</td>
+                <td style="height: 40px;">Tedarikçi : <%=satinalma("firma_adi") %></td>
                 <td style="height: 40px;">Sipariş Eden : <%=kullanici("personel_ad") %>&nbsp;<%=kullanici("personel_soyad") %></td>
             </tr>
         </tbody>

@@ -1,4 +1,5 @@
 ﻿using Ahtapot.App_Code.ayarlar;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -123,7 +124,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 break;
             case "personel_izin_kontrol":
                 yeni_is_ekle_panel.Visible = true;
-                personel_izin_kontrol();
+                //personel_izin_kontrol();
                 break;
             case "is_aramasi_yap":
                 is_ara_panel.Visible = true;
@@ -1566,7 +1567,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 is_gorunum yeniis = new is_gorunum();
                 yeniis.id = Convert.ToInt32(item["id"]);
 
-                ayarlar.cmd.CommandText = "with cte as (SELECT iss.adi, case when (select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = " + yeniis.id + " )=1 then '00:00' else dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = " + SessionManager.CurrentUser.kullanici_id + " AND olay.durum = 'true' AND olay.cop = 'false' ) ) end  AS harcanan, CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN '-' ELSE '' END + dbo.DakikadanSaatYap( CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN -1 * DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ELSE DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT(DATETIME, olay.bitis) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) END ) AS kalan, ISNULL(gorevli.toplam_sure, '0:00') AS toplam_sure, ISNULL(gorevli.gunluk_sure, '0:00') AS gunluk_sure, ISNULL(gorevli.toplam_gun, '0:00') AS toplam_gun, CASE WHEN ISNULL(gorevli.toplam_sure, '0:00') = '0:00' THEN 0 ELSE 1 end AS GantAdimID, ISNULL(sinirlama_varmi, 0) as sinirlama_varmi, CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati) AS tamamlanma_zamani, kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_adsoyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani FROM ucgem_is_gorevli_durumlari gorevli WITH (NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH (NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = " + yeniis.id + " GROUP BY iss.adi, gorevli.toplam_sure, gorevli.gunluk_sure, gorevli.toplam_gun, ISNULL(iss.GantAdimID, 0), CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati), kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani, gorevli.is_id, iss.baslangic_tarihi, iss.sinirlama_varmi ) select CASE WHEN tamamlanma_orani = 100 THEN 100 WHEN DATEPART(MINUTE, harcanan) > DATEPART(MINUTE, toplam_sure) THEN 90 ELSE CONVERT(decimal(5,2), CONVERT(decimal(5,2), DATEPART(mi, harcanan)) / CONVERT(decimal(5,2), DATEPART(mi, toplam_sure))) * 100 END as tamamlanmorani,*from cte";
+                ayarlar.cmd.CommandText = "with cte as (SELECT iss.adi, case when (select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = " + yeniis.id + " )=1 then '00:00' else dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = " + SessionManager.CurrentUser.kullanici_id + " AND olay.durum = 'true' AND olay.cop = 'false' AND olay.tamamlandi= 1 ) ) end  AS harcanan, CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN '-' ELSE '' END + dbo.DakikadanSaatYap( CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN -1 * DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ELSE DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT(DATETIME, olay.bitis) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) END ) AS kalan, ISNULL(gorevli.toplam_sure, '0:00') AS toplam_sure, ISNULL(gorevli.gunluk_sure, '0:00') AS gunluk_sure, ISNULL(gorevli.toplam_gun, '0:00') AS toplam_gun, CASE WHEN ISNULL(gorevli.toplam_sure, '0:00') = '0:00' THEN 0 ELSE 1 end AS GantAdimID, ISNULL(sinirlama_varmi, 0) as sinirlama_varmi, CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati) AS tamamlanma_zamani, kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_adsoyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani FROM ucgem_is_gorevli_durumlari gorevli WITH (NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH (NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = " + yeniis.id + " GROUP BY iss.adi, gorevli.toplam_sure, gorevli.gunluk_sure, gorevli.toplam_gun, ISNULL(iss.GantAdimID, 0), CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati), kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani, gorevli.is_id, iss.baslangic_tarihi, iss.sinirlama_varmi ) select CASE WHEN tamamlanma_orani = 100 THEN 100 WHEN DATEPART(MINUTE, harcanan) > DATEPART(MINUTE, toplam_sure) THEN 90 ELSE CONVERT(decimal(5,2), CONVERT(decimal(5,2), DATEPART(mi, harcanan)) / CONVERT(decimal(5,2), DATEPART(mi, toplam_sure))) * 100 END as tamamlanmorani,*from cte";
                 SqlDataAdapter dataReader = new SqlDataAdapter(ayarlar.cmd);
                 DataSet dataSet = new DataSet();
                 dataReader.Fill(dataSet);
@@ -1585,7 +1586,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 string hidden_etiketler = item["hidden_etiketler"].ToString().Replace("~", "");
                 yeniis.hidden_etiketler = hidden_etiketler;
                 yeniis.departman_isimleri = item["departman_isimleri"].ToString().Replace("~", "<br>");
-                
+
                 yeniis.baslangic_tarihi = Convert.ToDateTime(item["baslangic_tarihi"]).ToShortDateString();
                 yeniis.baslangic_tarihi_order = DateTime.Parse(Convert.ToDateTime(item["baslangic_tarihi"]).ToShortDateString() + " " + item["baslangic_saati"].ToString()).Ticks;
                 yeniis.baslangic_saati = item["baslangic_saati"].ToString().Substring(0, 5);
@@ -1681,7 +1682,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            throw(ex);
+            throw (ex);
         }
     }
 
@@ -3271,9 +3272,9 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-        //ayarlar.cmd.CommandText = "select id, personel_ad + ' ' + personel_soyad as personel_ad_soyad from ucgem_firma_kullanici_listesi where firma_id = @firma_id and durum = 'true' and cop = 'false';";
 
-        ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <= CONVERT(date, '" + baslangic_tarihi + "', 103)  AND  bitis_tarihi >= CONVERT(date, '" + bitis_tarihi + "', 103) OR (baslangic_tarihi >= CONVERT(date, '" + baslangic_tarihi + "', 103) AND  bitis_tarihi <= CONVERT(date, '" + bitis_tarihi + "', 103)))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
+        //ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND izin.durum='Onaylandi' AND(baslangic_tarihi <= CONVERT(date, '" + baslangic_tarihi + "', 103)  AND  bitis_tarihi >= CONVERT(date, '" + bitis_tarihi + "', 103) OR (baslangic_tarihi >= CONVERT(date, '" + baslangic_tarihi + "', 103) AND  bitis_tarihi <= CONVERT(date, '" + bitis_tarihi + "', 103)))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
+        ayarlar.cmd.CommandText = "SELECT DISTINCT( kul.id), kul.personel_ad + ' ' + kul.personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul INNER JOIN ucgem_personel_mesai_girisleri mesai ON mesai.personel_id = kul.id WHERE NOT EXISTS(SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND izin.durum= 'Onaylandi' AND (izin.baslangic_tarihi <= CONVERT(date, '" + baslangic_tarihi + "', 103)  AND izin.bitis_tarihi >= CONVERT(date, '" + bitis_tarihi + "', 103) OR(izin.baslangic_tarihi >= CONVERT(date, '" + baslangic_tarihi + "', 103) AND  izin.bitis_tarihi <= CONVERT(date, '" + bitis_tarihi + "', 103)))) AND mesai.personel_id IN(SELECT DISTINCT(personel_id) from ucgem_personel_mesai_girisleri mesai WHERE mesai.personel_id NOT IN (Select personel_id from ucgem_personel_mesai_girisleri mesai_giris WHERE giris_tipi = 2 AND tarih = CONVERT(date, '26-10-2019', 103))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false' AND mesai.giris_tipi = 2";
 
         ayarlar.cmd.Parameters.Add("@firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
@@ -3399,55 +3400,23 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         ayarlar.cnn.Close();
     }
 
-    public void personel_izin_kontrol()
+    [WebMethod]
+    public static string personel_izin_kontrol(string baslangicTarihi, string bitisTarihi)
     {
-        string baslangic_tarihi = "";
-        string bitis_tarihi = "";
-        baslangic_tarihi = Request.Form["yeni_is_baslangic_tarihi"];
-        bitis_tarihi = Request.Form["yeni_is_bitis_tarihi"];
-
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
 
-        ayarlar.cmd.CommandText = "SELECT id, personel_ad + ' ' + personel_soyad as personel_ad_soyad FROM ucgem_firma_kullanici_listesi kul WHERE NOT EXISTS (SELECT personel_id FROM ucgem_personel_izin_talepleri izin WHERE kul.id = izin.personel_id AND(baslangic_tarihi <=  CONVERT(date, '" + baslangic_tarihi + "', 103)   AND  bitis_tarihi >= CONVERT(date, '" + bitis_tarihi + "', 103)  OR(baslangic_tarihi >= CONVERT(date, '" + baslangic_tarihi + "', 103) AND  bitis_tarihi <= CONVERT(date, '" + bitis_tarihi + "', 103)))) AND kul.firma_id = @firma_id and kul.durum = 'true' and kul.cop = 'false'; ";
+        ayarlar.cmd.CommandText =
+            @"select personel_id 
+            from ucgem_personel_izin_talepleri
+            where baslangic_tarihi <= CONVERT(date, '" + baslangicTarihi + "', 103) and bitis_tarihi >= CONVERT(date, '" + baslangicTarihi+ "', 103) and bitis_tarihi >= CONVERT(date, '" + bitisTarihi + "', 103)";
 
-        ayarlar.cmd.Parameters.Add("@firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
-        DataSet ds = new DataSet();
-        sda.Fill(ds);
-
-
-
-        //yeni_is_gorevliler.DataSource = null;
-        yeni_is_gorevliler.DataSource = ds.Tables[0];
-        yeni_is_gorevliler.DataTextField = "personel_ad_soyad";
-        yeni_is_gorevliler.DataValueField = "id";
-
-        yeni_is_gorevliler.DataBind();
-
-        yeni_is_gorevliler.Attributes.Remove("multiple");
-        yeni_is_gorevliler.CssClass = "";
-
-        yeni_is_gorevliler.CssClass = "select2";
-        yeni_is_gorevliler.Attributes.Add("multiple", "multiple");
-
-
-        ayarlar.baglan();
-        ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select id, adi from ucgem_bildirim_cesitleri";
-        SqlDataAdapter sda_bildirim = new SqlDataAdapter(ayarlar.cmd);
-        DataSet ds_bildirim = new DataSet();
-        sda_bildirim.Fill(ds_bildirim);
-
-        yeni_is_kontrol_bildirim.Visible = true;
-        yeni_is_kontrol_bildirim.DataSource = ds_bildirim.Tables[0];
-        yeni_is_kontrol_bildirim.DataTextField = "adi";
-        yeni_is_kontrol_bildirim.DataValueField = "id";
-        yeni_is_kontrol_bildirim.DataBind();
-
-
-
+        DataTable dt = new DataTable();
+        sda.Fill(dt);
         ayarlar.cnn.Close();
+
+        return JsonConvert.SerializeObject(dt);
     }
 
     public void gorev_duzenle()

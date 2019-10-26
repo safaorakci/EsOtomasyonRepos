@@ -14,6 +14,8 @@
 <head>
     <title><%=LNG("Fazla Mesai Formu")%></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
 </head>
 <body>
 
@@ -31,13 +33,8 @@
                 </td>
                 <td style="width: 250px;">
                     <center><h2>Tanzim Tarihi</h2></center>
-                    
-                    <center><h3 id="tanzim"><span id="tanzimtarihi"> </span></h3></center>
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $("#tanzim span").text("asd");
-                        });
-                    </script>
+                    <center><h3><span id="sp"><%Response.Write Date()%></span></h3></center>
+
                 </td>
             </tr>
             <tr style="background-color: lightgray;">
@@ -49,7 +46,7 @@
                 <th>Bitiş / Saat</th>
                 <th>F.M Süresi (Saat)</th>
                 <th>İmza</th>
-                       
+
             </tr>
             <tr>
                 <td style="height: 40px;"><%=cdate(mesai("baslangic_tarihi")) %></td>
@@ -58,8 +55,8 @@
                 <td style="height: 40px;"></td>
                 <td style="height: 40px;"><%=mesai("baslangic_saati") %></td>
                 <td style="height: 40px;"><%=mesai("bitis_saati") %></td>
-               
-                    <%
+
+                <%
                         mesaiSaat = ""
                         mesaiDakika = ""
                         if mesai("saat") < 10 then
@@ -72,7 +69,7 @@
                         else
                            mesaiDakika = mesai("dakika")
                         end if
-                    %> 
+                %>
                 <td style="height: 40px;">
                     <%=mesaiSaat %> : <%=mesaiDakika %>
                 </td>
@@ -126,6 +123,12 @@
         </tbody>
     </table>
 
-
 </body>
+    <script type="text/javascript">
+        $(function () {
+            var d = new Date();
+            var strDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+            $("#sp").html("bİLAL");
+        });
+      </script>
 </html>

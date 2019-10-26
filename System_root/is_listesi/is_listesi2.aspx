@@ -217,9 +217,9 @@
                 <div class="col">
                     <div class="page-header-breadcrumb">
                         <ul class="breadcrumb-title">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);" onclick="ModalTalepEkle();" class="btn btn-success btn-round" style="color:white;"><i class="fa  fa-cube"></i>&nbsp;<% Response.Write(LNG("Talep Fişi Ekle")); %></a>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);" onclick="yeni_is_ekle();" class="btn btn-success btn-round" style="color: white;"><i class="fa  fa-cube"></i>&nbsp;<% Response.Write(LNG("Yeni İş Emri Ekle")); %></a>
                             </li>
-                            <li class="breadcrumb-item"><a href="javascript:void(0);" onclick="is_aramasi_yap();" class="btn btn-danger btn-round" style="color:white;"><i class="fa fa-search"></i>&nbsp;<% Response.Write(LNG("Arama Yap")); %></a>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);" onclick="is_aramasi_yap();" class="btn btn-danger btn-round" style="color: white;"><i class="fa fa-search"></i>&nbsp;<% Response.Write(LNG("Arama Yap")); %></a>
                             </li>
                         </ul>
                     </div>

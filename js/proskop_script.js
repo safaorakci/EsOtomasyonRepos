@@ -1678,6 +1678,7 @@ function is_ekle_yeni_takvim_calistir() {
 }
 
 function IzinliPersonelKontrol() {
+    var pathname = window.location.origin;
     var yeni_is_bitis_tarihi = $("#yeni_is_bitis_tarihi").val();
     var yeni_is_baslangic_tarihi = $("#yeni_is_baslangic_tarihi").val();
     console.log(yeni_is_bitis_tarihi + " " + yeni_is_baslangic_tarihi);
@@ -1686,9 +1687,42 @@ function IzinliPersonelKontrol() {
     data += "&yeni_is_bitis_tarihi=" + yeni_is_bitis_tarihi;
 
 
-    //$("#koftiden").loadHTML({ url: "/System_Root/ajax/islem1.aspx/personel_izin_kontrol", data: data }, function () {
-    //    mesaj_ver("İşler", "sorgu çalıştı ", "success");
-    //});
+    //$.post('system_root/ajax/islem1.aspx/personel_izin_kontrol',{ baslangicTarihi: '27-10-2019', bitisTarihi: '30-10-2019' },
+    //    function (returnedData) {
+    //        console.log(returnedData);
+    //    });
+
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        url: pathname + "/system_root/ajax/islem1.aspx/personel_izin_kontrol",
+        data: JSON.stringify({
+            baslangicTarihi: yeni_is_baslangic_tarihi,
+            bitisTarihi: yeni_is_bitis_tarihi
+        }),
+        datatype: 'JSON',
+        error: function (xhr) {
+            console.log(xhr);
+        },
+        success: function (data) {
+
+            var asd = jQuery.parseJSON(data.d);
+            var personelID = [];
+            $(asd).each(function (i, val) {
+                $.each(val, function (k, v) {
+                    personelID.push(v);
+                });
+            });
+            console.log(personelID);
+
+
+
+            for (var i = 0; i < personelID.length; i++) {
+                $("#yeni_is_gorevliler option[value=" + personelID[i] + "]").remove();
+            }
+
+        }
+    });
 }
 
 function dis_ekle_yeni_takvim_calistir() {
@@ -3398,7 +3432,7 @@ function mesai_bildirim_onayla(personel_id, kayit_id) {
             mesaj_ver("Mesai Bildirimleri", "Kayıt Başarıyla Güncellendi", "success");
         if (status == "error")
             mesaj_ver("Mesai Bildirimleri", "Kendi Mesai Talebinizi Onaylayamazsınız. !", "danger");
-        
+
         $("#mesai_buton").click();
     });
 }
@@ -5945,12 +5979,12 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&baslangic=" + baslangic;
         data += "&bitis=" + bitis;
 
-    }else if (deger == "mesai_bildirim_formu") {
+    } else if (deger == "mesai_bildirim_formu") {
 
         data += "&personel_id=" + personel_id;
         data += "&izin_id=" + izin_id;
 
-    }else if (deger == "izin_talep_formu") {
+    } else if (deger == "izin_talep_formu") {
 
         data += "&personel_id=" + personel_id;
         data += "&izin_id=" + izin_id;
