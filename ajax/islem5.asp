@@ -2693,6 +2693,7 @@ works properly when clicked or hovered */
         if trn(request("islem2"))="agacekle" then
 
             AgacId = trn(request("AgacId"))
+            IsID = trn(request("IsID"))
 
             durum = "true"
             cop = "false"
@@ -2703,8 +2704,16 @@ works properly when clicked or hovered */
             ekleme_tarihi = date
             ekleme_saati = time
 
-            SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) select 1, '"& IsID &"', parca.id, '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"' from parca_listesi parca join parca_grup_listesi grup on dbo.iceriyormu(grup.parcalar, parca.id)=1 where grup.id = '"& AgacId &"'"
-            set ekle = baglanti.execute(SQL)
+            SQL = "select * from is_parca_listesi where ParcaID = '"& AgacId &"' and IsID = '"& IsID &"'"
+            set varmi = baglanti.execute(SQL)
+            if varmi.eof then
+                SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) select 1, '"& IsID &"', parca.id, '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"' from parca_listesi parca join parca_grup_listesi grup on dbo.iceriyormu(grup.parcalar, parca.id)=1 where grup.id = '"& AgacId &"'"
+                set ekle = baglanti.execute(SQL)
+            else
+                SQL="update is_parca_listesi set Adet = Adet + '"& 1 &"' where id = '"& varmi("id") &"'"
+                set guncelle = baglanti.execute(SQL)
+            end if
+                
 
         elseif trn(request("islem2"))="guncelle" then
 
@@ -2984,7 +2993,7 @@ works properly when clicked or hovered */
 
         end if
 
-        SQL="select tanim.marka, tanim.parca_adi, parca.*, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from is_parca_listesi parca join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id join parca_listesi tanim on tanim.id = parca.ParcaId where parca.IsID = '"& IsID &"' and parca.cop = 'false' order by parca.id asc"
+        SQL="select tanim.marka, tanim.parca_kodu, parca.*, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from is_parca_listesi parca join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id join parca_listesi tanim on tanim.id = parca.ParcaId where parca.IsID = '"& IsID &"' and parca.cop = 'false' order by parca.id asc"
             set parca = baglanti.execute(SQL)
             if parca.eof then
 %>
@@ -3016,7 +3025,7 @@ works properly when clicked or hovered */
                 <!--<input kayitid="<%=parca("id") %>" type="number" class="ictekiparcalar<%=IsID %>" style="width: 50px; text-align: center;" value="<%=parca("Adet") %>" />-->
                 <span kayitid="<%=parca("id") %>" style="width: 50px; text-align: center; font-weight: bold"><%=parca("Adet") %></span>
             </td>
-            <td style="padding: 1px!important; text-align: center"><%=parca("marka") & " - " & parca("parca_adi") %></td>
+            <td style="padding: 1px!important; text-align: center"><%=parca("marka") & " - " & parca("parca_kodu") %></td>
             <td style="padding: 1px!important; text-align: center"><%=parca("ekleyen") %></td>
             <td style="padding: 1px!important; text-align: center"><%=cdate(parca("ekleme_tarihi")) %></td>
             <td style="padding: 1px!important; text-align: center;" class="icon-list-demo2">
@@ -3127,8 +3136,8 @@ works properly when clicked or hovered */
 <% 
     elseif trn(request("islem"))="StokListesiTemizle" then
 
-    SQL = "truncate table parca_listesi"
-    set truncateTable = baglanti.execute(SQL)
+    SQL = "delete from parca_listesi"
+    set deleteTable = baglanti.execute(SQL)
 %>
 
 <% elseif trn(request("islem"))="ModalParcaArama" then %>
