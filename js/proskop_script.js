@@ -6942,7 +6942,13 @@ function yeni_is_kaydet(buton) {
     var gunluk_sure = $("#yeni_is_gunluk_ortalama_calisma").val();
     var toplam_sure = $("#yeni_is_toplam_calisma").val();
     var toplam_gun = parseFloat(parseFloat(Date.gunfark(bitis_tarihi, baslangic_tarihi)) + 1);
-    toplam_sure = getMillisInHoursMinutes(millisFromHourMinute(toplam_sure));
+    if (toplam_sure.length == 4) {
+        toplam_sure = '0' + getMillisInHoursMinutes(millisFromHourMinute(toplam_sure));
+    }
+    else {
+        toplam_sure = getMillisInHoursMinutes(millisFromHourMinute(toplam_sure));
+    }
+    
     var is_tipi = $("#is_tipi").val();
     var sinirlama_varmi = "0";
     if ($("#sinirlama_varmi").attr("checkeds") == "checkeds") {
