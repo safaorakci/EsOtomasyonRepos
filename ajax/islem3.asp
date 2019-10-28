@@ -1654,8 +1654,21 @@
 
             sName = server.MapPath(dosya_yolu)
 
+         elseif trn(request("islem2"))="mesai_bildirim_formu" then
+            
+                personel_id = trn(request("personel_id"))
+                izin_id = trn(request("izin_id"))
 
+                firma_id = Request.Cookies("kullanici")("firma_id")
+                kullanici_id = Request.Cookies("kullanici")("kullanici_id")
 
+                Doc.ImportFromUrl site_url & "/mesai_bildirim_formu/?jsid=4559&personel_id=" & personel_id & "&izin_id=" & izin_id & "&firma_id=" & firma_id & "&kullanici_id=" & kullanici_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
+
+                dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
+                Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
+
+                sName = server.MapPath(dosya_yolu)
+          
          elseif trn(request("islem2"))="izin_talep_formu" then
 
             personel_id = trn(request("personel_id"))

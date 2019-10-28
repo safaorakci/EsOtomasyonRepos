@@ -424,19 +424,18 @@
 
     elseif trn(request("islem"))="profil_personel_izin_getir" then
 
-        personel_id = trn(request("personel_id"))
+       personel_id = trn(request("personel_id"))
 
-        sql="select isnull(kullanici.personel_yillik_izin, 0) - isnull((select count(id) from ucgem_personel_mesai_girisleri where personel_id = kullanici.id and giris_tipi = 2),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
-        set personel = baglanti.execute(SQL)
+       SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin')),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
+       set personel = baglanti.execute(SQL)
 
-        personel_yillik_izin_hakedis = personel("personel_yillik_izin_hakedis")
+       personel_yillik_izin_hakedis = personel("personel_yillik_izin_hakedis")
 
-        if isdate(personel_yillik_izin_hakedis)=true then
+       if isdate(personel_yillik_izin_hakedis)=true then
             personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)
-        else
+       else
             personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)+1
-        end if
-
+       end if
 %>
 <div class="card">
     <div class="card-block">
@@ -1599,25 +1598,21 @@
 
 </form>
 
-
-
 <%
     elseif trn(request("islem"))="yeni_izin_talebi_modal" then
 
-        personel_id = trn(request("personel_id"))
+       personel_id = trn(request("personel_id"))
 
+       SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin')),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
+       set personel = baglanti.execute(SQL)
 
-        SQL="select isnull(kullanici.personel_yillik_izin, 0) - isnull((select count(id) from ucgem_personel_mesai_girisleri where personel_id = kullanici.id and giris_tipi = 2),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
-        set personel = baglanti.execute(SQL)
+       personel_yillik_izin_hakedis = personel("personel_yillik_izin_hakedis")
 
-        personel_yillik_izin_hakedis = personel("personel_yillik_izin_hakedis")
-        personel_yillik_izin = personel("personel_yillik_izin")
-
-        if isdate(personel_yillik_izin_hakedis)=true then
+       if isdate(personel_yillik_izin_hakedis)=true then
             personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)
-        else
+       else
             personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)+1
-        end if
+       end if
 
 %>
 <form id="koftiforms"></form>
