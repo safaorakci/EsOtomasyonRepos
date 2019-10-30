@@ -277,7 +277,7 @@
                                         <a class="nav-link" onclick="is_listesi('bekleyen');" data-toggle="tab" href="#bekleyen_isler_ust" role="tab"><i class="fa fa-lg fa-folder" style="color: #c79121;"></i><% Response.Write(LNG("Bekleyenler")); %></a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" onclick="is_listesi('devam');" data-toggle="tab" href="#devameden_isler_ust" role="tab"><i class="fa fa-lg fa-clock-o" style="color: blue;"></i><% Response.Write(LNG("Devam Edenler")); %></a>
+                                        <a class="nav-link" onclick="is_listesi('devameden');" data-toggle="tab" href="#devameden_isler_ust" role="tab"><i class="fa fa-lg fa-clock-o" style="color: blue;"></i><% Response.Write(LNG("Devam Edenler")); %></a>
                                     </li>
 
                                     <li class="nav-item">

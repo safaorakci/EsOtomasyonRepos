@@ -1259,7 +1259,7 @@ works properly when clicked or hovered */
                     set kontrol_select = baglanti.execute(SQL)
                     do while not kontrol_select.eof
                     %>
-                    <option value="<%=kontrol_select("id") %>"><%=kontrol_select("adi") %></option>
+                    <option value="<%=kontrol_select("adi") %>"><%=kontrol_select("adi") %></option>
                     <%
                     kontrol_select.movenext
                     loop
@@ -1294,7 +1294,7 @@ works properly when clicked or hovered */
 
         kayit_id = trn(request("kayit_id"))
 
-        SQL="select * from talep_fisleri where id = '"& kayit_id &"'"
+        SQL="select * from talep_fisleri where id = '"& kayit_id &"' and talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"'"
         set talepcek = baglanti.execute(SQL)
 
 %>
@@ -1345,6 +1345,7 @@ works properly when clicked or hovered */
     </div>
 </form>
 <%
+
     elseif trn(request("islem"))="is_timer_start_kaydi" then
 
         is_id = trn(request("is_id"))
@@ -2264,7 +2265,7 @@ works properly when clicked or hovered */
                     <input type="text" name="parcalar" id="parcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control parcalar required" style="width: 90%;" required />
                 </td>
                 <td>
-                    <input id="parca_adeti" type="number" class="form-control" style="width: 50px; text-align: center;" value="1" min="1"/>
+                    <input id="parca_adeti" type="number" oninput="numControl();" class="form-control" style="width: 50px; text-align: center;" value="1" min="1"/>
                 </td>
                 <td style="padding-left: 10px;">
                     <input type="text" name="aparcalar" id="aparcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control aparcalar required" style="width: 90%;" required /></td>
@@ -2272,6 +2273,14 @@ works properly when clicked or hovered */
         </table>
     </div>
 </div>
+
+<script type="text/javascript">
+    function numControl() {
+        if ($("#parca_adeti").val() < 1 || $("#parca_adeti").val() === null) {
+            $("#parca_adeti").val("1");
+        }
+    }
+</script>
 
 <br />
 <div class="row">

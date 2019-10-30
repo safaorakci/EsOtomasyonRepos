@@ -952,19 +952,18 @@ function is_tablo_islemler(durum) {
             eldeki_sayi = 200;
         }
         $(".tablo_is_adi").css("width", eldeki_sayi);
-    } else {
+    }
+    else {
 
-        if ($("body").width() < 500) {
-
-        } else {
+        if ($("body").width() < 500) {  }
+        else {
             console.log($("#tablo_customize").val());
-            var eldeki_sayi = $("body").width() - ($(".card").width() + ($("#tablo_customize").val().length * 107) + 600);
-            if (eldeki_sayi < 200) {
-                eldeki_sayi = 200;
+            var eldeki_sayi1 = $("body").width() - ($(".card").width() + ($("#tablo_customize").val().length * 107) + 600);
+            if (eldeki_sayi1 < 200) {
+                eldeki_sayi1 = 200;
             }
-            $(".tablo_is_adi").css("width", eldeki_sayi);
+            $(".tablo_is_adi").css("width", eldeki_sayi1);
         }
-
     }
 
     $('#tablo_customize').change(function () {
@@ -6797,9 +6796,22 @@ function TalebiIseDonustur(TalepId) {
     data += "&yeni_is_bitis_tarihi=" + day + "-" + month + "-" + year;
 
     data = encodeURI(data);
-    $("#modal_butonum").click();
-    $("#modal_div").loadHTML({ url: "islem1", data: data }, function () {
-        sayfa_yuklenince();
+
+    var saveData = $.ajax({
+        type: 'POST',
+        url: "islem1",
+        data: data,
+        dataType: "text",
+        success: function () {
+            $("#modal_butonum").click();
+            $("#modal_div").loadHTML({ url: "islem1", data: data }, function () {
+                sayfa_yuklenince();
+            });
+        }
+    });
+
+    saveData.error(function () {
+        mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Düzenleyebilirsiniz !", "danger");
     });
 
 }
@@ -6948,7 +6960,7 @@ function yeni_is_kaydet(buton) {
     else {
         toplam_sure = getMillisInHoursMinutes(millisFromHourMinute(toplam_sure));
     }
-    
+
     var is_tipi = $("#is_tipi").val();
     var sinirlama_varmi = "0";
     if ($("#sinirlama_varmi").attr("checkeds") == "checkeds") {
@@ -8371,8 +8383,23 @@ function talep_fisi_onay(talep_id, deger) {
     data += "&talep_id=" + talep_id;
     data += "&deger=" + deger;
     data = encodeURI(data);
-    $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-        mesaj_ver("Talep Fişleri", "Kayıt Başarıyla Güncellendi", "success");
+
+    var saveData = $.ajax({
+        type: 'POST',
+        url: "/ajax_request6/",
+        data: data,
+        dataType: "text",
+        fail: function () {
+            mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Reddedebilirsiniz !", "danger");
+        },
+        success: function () {
+            $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+                mesaj_ver("Talep Fişleri", "Kayıt Başarıyla Güncellendi", "success");
+            });
+        }
+    });
+    saveData.error(function () {
+        mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Reddedebilirsiniz !", "danger");
     });
 }
 
@@ -8406,11 +8433,22 @@ function talep_fisi_duzenle(kayit_id) {
     var data = "islem=ModalTalepDuzenle";
     data += "&kayit_id=" + kayit_id;
     data = encodeURI(data);
-    $("#modal_butonum").click();
-    $("#modal_div").loadHTML({ url: "/ajax_request5/", data: data }, function () {
-        sayfa_yuklenince();
+    var saveData = $.ajax({
+        type: 'POST',
+        url: "/ajax_request5/",
+        data: data,
+        dataType: "text",
+        success: function () {
+            $("#modal_butonum").click();
+            $("#modal_div").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+                sayfa_yuklenince();
+            });
+        }
     });
-
+    
+    saveData.error(function () {
+        mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Düzenleyebilirsiniz !", "danger");
+    });
 }
 
 function yeni_talep_fisi_ekle() {
@@ -8427,7 +8465,7 @@ function yeni_talep_fisi_ekle() {
     data += "&baslik=" + baslik;
     data += "&oncelik=" + oncelik;
     data += "&talep_edilen=" + talep_edilen;
-    data += "&bildirim=" + bildirim;
+    data += "&bildirimTuru=" + bildirim;
     data += "&aciklama=" + aciklama;
     data += "&dosya=" + dosya;
     data = encodeURI(data);

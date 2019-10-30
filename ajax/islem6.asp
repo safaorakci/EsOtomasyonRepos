@@ -426,7 +426,7 @@
 
        personel_id = trn(request("personel_id"))
 
-       SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin')),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
+       SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and talep.cop = 'false' and talep.personel_id = kullanici.id and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin') and talep.durum = 'Onaylandi'),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
        set personel = baglanti.execute(SQL)
 
        personel_yillik_izin_hakedis = personel("personel_yillik_izin_hakedis")
@@ -3065,7 +3065,7 @@
             baslik = trn(request("baslik"))
             oncelik = trn(request("oncelik"))
             talep_edilen = trn(request("talep_edilen"))
-            bildirim = trn(request("bildirim"))
+            bildirimTuru = trn(request("bildirimTuru"))
             aciklama = trn(request("aciklama"))
             dosya = trn(request("dosya"))
 
@@ -3082,13 +3082,10 @@
             SQL="insert into talep_fisleri(baslik, oncelik, aciklama, dosya, durum, cop, firma_kodu, firma_id, ekleyen_id, talep_edilen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', '"& oncelik &"', '"& aciklama &"', '"& dosya &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& talep_edilen &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
         
-            SQL="select * from ucgem_firma_kullanici_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and cop = 'false' and durum = 'true' and isnull(yonetici_yetkisi, 'false')='true'"
+            SQL="select * from ucgem_firma_kullanici_listesi where id = '"& Request.Cookies("kullanici")("kullanici_id") &"' and cop = 'false' and durum = 'true'"
             set kcek = baglanti.execute(SQL)
 
-        Response.Write(Request.Cookies("kullanici")("firma_id"))
-
             do while not kcek.eof
-
                 bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " ''"& baslik &"'' adlı öncelik seviyesi "& oncelik &" bir Talep Fişi Oluşturdu. " & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
                 tip = "is_listesi"
                 click = "sayfagetir('/talepler/','jsid=4559');"
@@ -3100,9 +3097,9 @@
                 firma_id = request.Cookies("kullanici")("firma_id")
                 ekleyen_id = request.Cookies("kullanici")("kullanici_id")
                 ekleyen_ip = Request.ServerVariables("Remote_Addr")
-               
-
-            if trn(request("bildirim")) = "SMS" then
+            
+            if bildirimTuru = "SMS" then
+        response.Write(bildirimTuru)
                 NetGSM_SMS kcek("personel_telefon"), bildirim
             end if
 
@@ -3143,7 +3140,12 @@
             talep_id = trn(request("talep_id"))
             deger = trn(request("deger"))
 
-            SQL="update talep_fisleri set durum = '"& deger &"' where id = '"& talep_id &"'"
+            SQL = "select * from talep_fisleri where id = '"& talep_id &"' and talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"'"
+            set kontrol = baglanti.execute(SQL)
+    %>
+    <div> </div>
+    <%
+            SQL="update talep_fisleri set durum = '"& deger &"' where id = '"& talep_id &"' and talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"'"
             set guncelle = baglanti.execute(SQL)
 
             SQL="select * from talep_fisleri where id = '"& talep_id &"'"
@@ -3176,8 +3178,6 @@
             loop
 
 
-
-
         end if
 
     %>
@@ -3203,7 +3203,7 @@
             </thead>
             <tbody>
                 <%
-                    SQL="select fis.*, kullanici.personel_ad, kullanici.personel_soyad, kul.personel_ad + ' ' + kul.personel_soyad as 'talep_edilen_adsoyad' from talep_fisleri fis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = fis.ekleyen_id join ucgem_firma_kullanici_listesi kul on kul.id = fis.talep_edilen_id where fis.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and fis.cop = 'false' order by fis.id desc"
+                    SQL="select fis.*, kullanici.personel_ad, kullanici.personel_soyad, kul.personel_ad + ' ' + kul.personel_soyad as 'talep_edilen_adsoyad' from talep_fisleri fis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = fis.ekleyen_id join ucgem_firma_kullanici_listesi kul on kul.id = fis.talep_edilen_id where fis.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and fis.talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' and fis.cop = 'false' order by fis.id desc"
                     set talepler = baglanti.execute(SQL)
 
 

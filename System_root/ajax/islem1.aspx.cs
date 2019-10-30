@@ -1145,7 +1145,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             {
                 sql_str = @" and isler.durum = 'true' and 
                         case 
-                        when ISNULL(isler.tamamlanma_orani,0)< 100
+                        when ISNULL(isler.tamamlanma_orani,0) < 100 and ISNULL(isler.tamamlanma_orani,0) > 1
                             then 'DEVAM EDİYOR'
                         end = 'DEVAM EDİYOR'";
             }
@@ -2195,12 +2195,12 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string simdistring = Convert.ToString(GetTime(simdi));
 
             string iend_uygulama = simdistring;
-            string end_tarih_uygulama = DateTime.Today.ToShortDateString();
+            string end_tarih_uygulama = DateTime.Today.ToString("yyyy-MM-dd");
             string duration_uygulama = simdistring;
 
             ayarlar.cmd.Parameters.Clear();
             ayarlar.cmd.CommandText = "update ucgem_is_listesi set tamamlanma_orani = @tamamlanma_orani, tamamlanma_tarihi = getdate(), tamamlanma_saati = getdate(), guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen = @guncelleyen where id = @IsID" +
-                ";update ahtapot_proje_gantt_adimlari set progress = @tamamlanma_orani, iend_uygulama = CONVERT(date, @iend_uygulama, 103), end_tarih_uygulama = CONVERT(date, @end_tarih_uygulama, 103), duration_uygulama = DATEDIFF(day, start_tarih_uygulama, @end_tarih_uygulama)-1  where id = (select top 1 isnull(GantAdimID,0) from ucgem_is_listesi where id = @IsID);";
+                ";update ahtapot_proje_gantt_adimlari set progress = @tamamlanma_orani, iend_uygulama = @iend_uygulama, end_tarih_uygulama = @end_tarih_uygulama, duration_uygulama = DATEDIFF(day, start_tarih_uygulama, @end_tarih_uygulama)-1  where id = (select top 1 isnull(GantAdimID,0) from ucgem_is_listesi where id = @IsID);";
             ayarlar.cmd.Parameters.Add("guncelleyen", SessionManager.CurrentUser.kullanici_adsoyad);
             ayarlar.cmd.Parameters.Add("tamamlanma_orani", genel_durum);
             ayarlar.cmd.Parameters.Add("IsID", IsID);
