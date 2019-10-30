@@ -1526,7 +1526,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <input type="text" id="yeni_is_baslangic_tarihi" name="yeni_is_baslangic_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%DateTime.Today.ToShortTimeString();%>" />
+                                            <input type="text" id="yeni_is_baslangic_tarihi" name="yeni_is_baslangic_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;"  runat="server"></input>
                                         </div>
                                     </div>
                                 </div>
@@ -1561,7 +1561,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <input type="text" id="yeni_is_bitis_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" name="yeni_is_bitis_tarihi" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%DateTime.Today.ToShortDateString(); %>" />
+                                            <input type="text" id="yeni_is_bitis_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" name="yeni_is_bitis_tarihi" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" value="<%DateTime.Today.ToShortDateString(); %>" runat="server" />
                                         </div>
                                     </div>
                                 </div>

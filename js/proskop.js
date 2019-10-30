@@ -293,7 +293,7 @@ function AJAX() {
 })(jQuery);
 
 
-function sayfagetir(sayfa, data) {
+function sayfagetir(sayfa, data, ikincisayfa,personelid) {
 
 
 
@@ -335,6 +335,10 @@ function sayfagetir(sayfa, data) {
             }
         }
     })
+    ikincisayfa;
+    if (ikincisayfa == "personel_giris_cikis_getir") {
+        personel_giris_cikis_getir(personelid, this);
+    }
 
     var yer = data.indexOf("uyari");
     if (yer > 0) {

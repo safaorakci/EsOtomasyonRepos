@@ -9,12 +9,14 @@
     baglanti.Open conn
 
     
-    if Request.ServerVariables("Remote_Addr")="127.0.0.1" then
-        site_url = "http://127.0.0.1:92"
-    elseif Request.ServerVariables("Remote_Addr")="::1" then
+
+
+    'if Request.ServerVariables("Remote_Addr")="127.0.0.1" then
+        'site_url = "http://127.0.0.1:92"
+    'elseif Request.ServerVariables("Remote_Addr")="::1" then
         site_url = "http://localhost:52225"
-    else
-        site_url = "http://proskopv2dev.makrogem.com.tr"
-    end if
+    'else
+        'site_url = "http://proskopv2dev.makrogem.com.tr"
+    'end if
 
 %>
