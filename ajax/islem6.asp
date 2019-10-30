@@ -643,7 +643,9 @@
 
                 bildirim = kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") & " "& cdate(baslangic_tarihi) &" "& left(baslangic_saati,5) &" ile "& cdate(bitis_tarihi) &" "& left(bitis_saati,5) &" tarihleri için izin talebinde bulundu." & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
                 tip = "personel_detaylari"
-                click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559&personel_id="& kullanicicek("id") &");"
+                'click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559&personel_id="& kullanicicek("id") &");"
+                click = "sayfagetir(''/personel_detaylari/'',''jsid=4559&personel_id="& kullanicicek("id") &"'',''personel_giris_cikis_getir'',''"& personel_id &"'');" 
+                'personel_giris_cikis_getir('70', this);
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"

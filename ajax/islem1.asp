@@ -3775,7 +3775,7 @@
                 </style>
                 <div class="col-lg-8 col-xl-9" style="padding-top: 15px;">
                     <h5 class="card-header-text"><%=LNG("Personel Giriş Çıkış Bilgileri")%></h5>
-                    <input type="button" style="float: right; margin-top: 10px;" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" /><input type="button" class="btn btn-inverse btn-mini btn-rnd" onclick="giris_cikis_izin_ekle('<%=personel_id%>', '<%=cdate(date)%>');" style="float: right; margin-right: 15px; margin-top: 10px;" value="<%=LNG("İzin Ekle")%>" />
+                    <input type="button" style="float: right; margin-top: 10px;" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" /><input type="button" class="btn btn-inverse btn-mini btn-rnd" onclick="giris_cikis_izin_ekle('<%=personel_id%>', '<%=cdate(date)%>');" style="float: right; margin-right: 15px; margin-top: 10px; display:none;" value="<%=LNG("İzin Ekle")%>" />
                     <br />
                     <br />
                     <div id="giris_cikis_kayitlari">
