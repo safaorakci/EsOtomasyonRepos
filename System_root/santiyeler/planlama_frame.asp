@@ -249,6 +249,12 @@
         return target;
     }
 
+    function addDays(theDate, days) {
+        return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
+    }
+
+    
+
     function loadGanttFromServer(taskId, callback) {
 
         var asd;
@@ -264,21 +270,17 @@
         //var currentDate = new Date();  
         //$("#start").datepicker("setDate",currentDate);
         //$("#end").datepicker("setDate", currentDate);
+        var newDate = addDays(new Date(), -1);
+        var dateInt = newDate.getTime();
+        var urlData = '/ajax_planlama/?jsid=4559&tip=<%=request("tip")%>&proje_id=<%=request("proje_id")%>&dateInt=' + dateInt;
 
-
-        $.getJSON('/ajax_planlama/?jsid=4559&tip=<%=request("tip")%>&proje_id=<%=request("proje_id")%>', { CM: "LOADPROJECT", taskId: taskId }, function (response) {
-            //console.debug(response);
-
-
-
+        $.getJSON(urlData, { CM: "LOADPROJECT", taskId: taskId }, function (response) {
             if (response.ok) {
 
 
                 if (!response.project.canWrite)
                     $(".ganttButtonBar button.requireWrite").attr("disabled", "true");
 
-
-                //prof.stop();
 
                 ge.loadProject(response.project);
                 ge.checkpoint(); //empty the undo stack
