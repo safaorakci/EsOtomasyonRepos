@@ -3775,7 +3775,7 @@
                 </style>
                 <div class="col-lg-8 col-xl-9" style="padding-top: 15px;">
                     <h5 class="card-header-text"><%=LNG("Personel Giriş Çıkış Bilgileri")%></h5>
-                    <input type="button" style="float: right; margin-top: 10px;" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" /><input type="button" class="btn btn-inverse btn-mini btn-rnd" onclick="giris_cikis_izin_ekle('<%=personel_id%>', '<%=cdate(date)%>');" style="float: right; margin-right: 15px; margin-top: 10px;" value="<%=LNG("İzin Ekle")%>" />
+                    <input type="button" style="float: right; margin-top: 10px;" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" /><input type="button" class="btn btn-inverse btn-mini btn-rnd" onclick="giris_cikis_izin_ekle('<%=personel_id%>', '<%=cdate(date)%>');" style="float: right; margin-right: 15px; margin-top: 10px; display:none;" value="<%=LNG("İzin Ekle")%>" />
                     <br />
                     <br />
                     <div id="giris_cikis_kayitlari">
@@ -3856,7 +3856,7 @@
 
                 <div class="col-lg-12">
                     <%
-                        SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin')),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
+                        SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and talep.cop = 'false' and talep.personel_id = kullanici.id and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin') and talep.durum = 'Onaylandi'),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
                         set personel = baglanti.execute(SQL)
                     %>
                     <h5 class="card-header-text"><%=LNG("Personel İzin Talepleri")%></h5>

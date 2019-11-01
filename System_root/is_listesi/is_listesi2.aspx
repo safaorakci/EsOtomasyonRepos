@@ -268,7 +268,7 @@
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs tabs is_tab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" onclick="is_listesi('tum');" data-toggle="tab" href="#tum_isler_ust" role="tab"><i class="fa fa-lg fa-cubes" style="color: black;"></i><% Response.Write(LNG("Tümü")); %></a>
+                                        <a class="nav-link active" onclick="is_listesi('tum');" data-toggle="tab" href="#tum_isler_ust" role="tab"><i class="fa fa-lg fa-cubes" style="color: black;"></i><% Response.Write(LNG("Tamamlanmamış")); %></a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" onclick="is_listesi('geciken');" data-toggle="tab" href="#geciken_isler_ust" role="tab"><i class="fa fa-lg fa-frown-o" style="color: red;"></i><% Response.Write(LNG("Gecikenler")); %></a>
@@ -277,7 +277,7 @@
                                         <a class="nav-link" onclick="is_listesi('bekleyen');" data-toggle="tab" href="#bekleyen_isler_ust" role="tab"><i class="fa fa-lg fa-folder" style="color: #c79121;"></i><% Response.Write(LNG("Bekleyenler")); %></a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" onclick="is_listesi('devam');" data-toggle="tab" href="#devameden_isler_ust" role="tab"><i class="fa fa-lg fa-clock-o" style="color: blue;"></i><% Response.Write(LNG("Devam Edenler")); %></a>
+                                        <a class="nav-link" onclick="is_listesi('devameden');" data-toggle="tab" href="#devameden_isler_ust" role="tab"><i class="fa fa-lg fa-clock-o" style="color: blue;"></i><% Response.Write(LNG("Devam Edenler")); %></a>
                                     </li>
 
                                     <li class="nav-item">
