@@ -1615,10 +1615,11 @@ function parcalar_ve_iscilik_getir(IsID) {
 
 }
 
-function ParcadanIsListesiBul(parcaId) {
+function ParcadanIsListesiBul(parcaId, Stok) {
 
     var data = "islem=ParcadanIsListesiBul";
     data += "&parcaId=" + parcaId;
+    data += "&stok=" + Stok;
     data = encodeURI(data);
     $("#modal_butonum2").click();
     $("#modal_div2").loadHTML({ url: "/ajax_request5/", data: data }, function () {

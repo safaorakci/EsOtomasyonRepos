@@ -3056,6 +3056,7 @@ works properly when clicked or hovered */
     elseif trn(request("islem"))="ParcadanIsListesiBul" then
 
         parcaId = trn(request("parcaId"))
+        stok = trn(request("stok"))
 
         SQL="select * from parca_listesi where id = '"& parcaId &"'"
         set parca = baglanti.execute(SQL)
@@ -3074,7 +3075,7 @@ works properly when clicked or hovered */
             <div id="tum_isler">
                 <script>
                     $(function (){
-                        is_listesi_etiket('parca', '<%=parcaId %>');
+                       is_listesi_etiket('parca', '<%=parcaId %>', '<%=stok %>');
                     });
                 </script>
             </div>

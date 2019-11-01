@@ -4362,7 +4362,7 @@ function personel_is_listesi_getir(personel_id, nesne) {
 
 }
 
-function is_listesi_etiket(etiket_tip, etiket) {
+function is_listesi_etiket(etiket_tip, etiket, stok) {
 
     var adi = "";
     var durum = "0";
@@ -4380,7 +4380,6 @@ function is_listesi_etiket(etiket_tip, etiket) {
     if (etiket_tip == "personel") {
         gorevliler = etiket;
     }
-
 
     if (etiket_tip == "firma") {
         firmalar = etiket;
@@ -4402,8 +4401,9 @@ function is_listesi_etiket(etiket_tip, etiket) {
 
 
     var data = "islem=is_listesi";
+    data += "&stok=" + stok;
     data += "&durum=";
-    data += "&tip=arama";
+    data += "&tip=";
     data += "&adi=" + adi;
     data += "&is_durum=" + durum;
     data += "&gorevliler=" + gorevliler;
@@ -4416,6 +4416,7 @@ function is_listesi_etiket(etiket_tip, etiket) {
     data += "&is_bitis_tarihi=" + is_bitis_tarihi;
     data += "&toplantilar=" + toplantilar;
     data += "&parcalar=" + parcalar;
+    
     $("#tum_isler").loadHTML({ url: "islem1", data: data }, function () {
         sayfa_yuklenince();
         is_tablo_islemler();

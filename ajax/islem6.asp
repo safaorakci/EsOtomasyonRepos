@@ -2633,7 +2633,7 @@
                         <%=cdate(parca("ekleme_tarihi")) %></td>
                     <td style="text-align: center;">
                         <span class="label label-warning" style="display: inline; font-size: 13px; padding-left: 10px; padding-right: 10px;"><%=parca("kullanilan") %></span> /
-                        <input type="button" class="btn btn-info btn-mini" onclick="ParcadanIsListesiBul('<%=parca("id")%>');" value="Aç" /></td>
+                        <input type="button" class="btn btn-info btn-mini" onclick="ParcadanIsListesiBul('<%=parca("id")%>', 'Stok');" value="Aç" /></td>
                     <td style="text-align: center; width: 100px;">
                         <span id="santiye_durum_repeater_str<%=parca("id") %>santiye_label_0" onclick="durum_guncelleme_calistir('parca_listesi', '<%=parca("id") %>');">
                             <input id="santiye_durum_repeater_st<%=parca("id") %>_santiye_0" type="checkbox" name="santiye_durum_repeater$ctl00$st<%=parca("id") %>_santiye" checked="checked" class="js-switch" />

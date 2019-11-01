@@ -1464,9 +1464,6 @@
                                 </div>
                             </div>
 
-                           
-
-
                             <div style="display:none">
                                 <label class="col-sm-12 col-form-label" style="padding-left:0;"><% Response.Write(LNG("Renk")); %></label>
                                 <!--<input type="hidden" id="renk" class="demo" value="#FC6180">-->
@@ -1526,7 +1523,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <input type="text" id="yeni_is_baslangic_tarihi" name="yeni_is_baslangic_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;"  runat="server"></input>
+                                            <input type="text" id="yeni_is_baslangic_tarihi" name="yeni_is_baslangic_tarihi" onkeyup="yeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;"  runat="server" value="<%DateTime.Today.ToShortDateString();%>"/>
                                         </div>
                                     </div>
                                 </div>
