@@ -63,6 +63,7 @@
     tip = trn(request("tip"))
     start_date = ""
     end_date = ""
+    dateInt = request("dateInt")
 
 
 
@@ -583,12 +584,12 @@
                 .Add "level", 0
                 .Add "status", "STATUS_ACTIVE"
                 .Add "depends", ""
-                .Add "start", 1533934800000
-                .Add "duration", 10
-                .Add "end", 1535576399999
-                .Add "start_golge", 1533934800000
-                .Add "duration_golge", 10
-                .Add "end_golge", 1535576399999
+                .Add "start", cdbl(dateInt & tip_str)
+                .Add "duration", 0
+                .Add "end", dateInt
+                .Add "start_golge", dateInt
+                .Add "duration_golge", 0
+                .Add "end_golge", dateInt
                 .Add "startIsMilestone", false
                 .Add "endIsMilestone", false
                 .Add "collapsed", false
