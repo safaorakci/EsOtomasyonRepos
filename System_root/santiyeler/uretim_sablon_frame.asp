@@ -283,35 +283,15 @@
 
         var prj = ge.saveProject();
 
-        //console.log(JSON.stringify(prj));
-
-        //this is a simulation: save data to the local storage or to the textarea
-        // saveInLocalStorage();
-
         delete prj.resources;
         delete prj.roles;
 
-        /*
-        var prof = new Profiler("saveServerSide");
-        prof.reset();
-        */
-
-        /*
-        if (ge.deletedTaskIds.length > 0) {
-            if (!confirm("TASK_THAT_WILL_BE_REMOVED" + ge.deletedTaskIds.length)) {
-                return;
-            }
-        }*/
-
-        console.log(prj.tasks[0].start);
-
         $.ajax("/ajax_uretim_sablon/", {
             dataType: "json",
-            data: { islem: "kayit", tip: "<%=tip%>", proje_id: "<%=request("proje_id")%>", prj: JSON.stringify(prj) },
+            data: { islem: "kayit", tip: "<%=tip%>", proje_id: '<%=request("proje_id")%>', prj: JSON.stringify(prj) },
             type: "POST",
             success: function (response) {
-                //console.log("girdi");
-                window.parent.mesaj_ver("Proje Planı", "<%=LNG("Kayıt Başarıyla Güncellendi")%>", "success");
+                window.parent.mesaj_ver("Proje Planı", '<%=LNG("Kayıt Başarıyla Güncellendi !")%>', "success");
                 if (response.ok) {
                     if (response.project) {
                         ge.loadProject(response.project); //must reload as "tmp_" ids are now the good ones
@@ -331,13 +311,23 @@
                     alert(errMsg);
                 }
             }
-
         });
-
     }
 
     function newProject() {
-        clearGantt();
+        var sor = confirm("Şablonu 'SIFIRLAMAK' istediğinize eminmisini ?");
+        if (sor) {
+            clearGantt();
+
+            $.ajax("/ajax_uretim_sablon/", {
+                dataType: "json",
+                data: { islem: "sil", tip: "<%=tip%>", proje_id: '<%=request("proje_id")%>' },
+                type: "POST",
+                success: function () {
+                    window.parent.mesaj_ver("Üretim Şablonu", '<%=LNG("Kayıtlar Başarıyla Temizlendi !")%>', "success");
+                }
+            });
+        }
     }
 
 
@@ -652,7 +642,7 @@
               <button onclick="editResources();" style="display:none;" class="button textual requireWrite" title="edit resources"><span class="teamworkIcon">M</span></button>
               <div style="float:right;">
                   <button onclick="saveGanttOnServer();" class="button" style="background-color: #2ed8b6;" title="<%=LNG("Değişiklikleri Kaydet")%>"><%=LNG("Değişiklikleri Kaydet")%></button>
-                  <button onclick='newProject();' class='button' style="background-color: #ff5370;"><em><%=LNG("Sıfırla")%></em></button>
+                  <button onclick='newProject();' class='button' style="background-color: #ff5370"><em><%=LNG("Sıfırla")%></em></button>
               </div>
                 <div style="display:none;">
                   <button class="button login" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>

@@ -35,11 +35,11 @@
 <script src="/js/plugin/select2/select2.min.js"></script>
 <link rel="stylesheet" href="/files/assets/css/style.css" type="text/css" />
 <link rel="stylesheet" type="text/css" href="/files/assets/icon/font-awesome/css/font-awesome.min.css">
+
 <div id="workSpace" style="padding: 0px; overflow-y: auto; overflow-x: hidden; position: relative; margin: 0 5px"></div>
 <style>
-
     .bwinPopupd {
-        margin-top:0!important;
+        margin-top: 0 !important;
     }
 
     .taskBoxGolge {
@@ -161,7 +161,7 @@
     var ret;
 
     $(function () {
-        
+
         //localStorage.clear();
         var canWrite = true; //this is the default for test purposes
 
@@ -253,7 +253,7 @@
         return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
     }
 
-    
+
 
     function loadGanttFromServer(taskId, callback) {
 
@@ -301,7 +301,7 @@
     function saveGanttOnServer() {
 
         var prj = ge.saveProject();
-        var planning = "0"; 
+        var planning = "0";
 
         //this is a simulation: save data to the local storage or to the textarea
         // saveInLocalStorage();
@@ -326,7 +326,6 @@
             data: { islem: "kayit", tip: "<%=tip%>", proje_id: '<%=request("proje_id")%>', prj: JSON.stringify(prj), planning: planning },
             type: "POST",
             success: function (response) {
-                //console.log("girdi");
                 window.parent.mesaj_ver("Proje Planı", '<%=LNG("Kayıt Başarıyla Güncellendi")%>', "success");
                 if (response.ok) {
                     if (response.project) {
@@ -353,7 +352,19 @@
     }
 
     function newProject() {
-        clearGantt();
+        var sor = confirm("Planlamayı 'SIFIRLAMAK' istediğinize eminmisini ?");
+        if (sor) {
+            clearGantt();
+
+            $.ajax("/ajax_planlama/", {
+                dataType: "json",
+                data: { islem: "sil", tip: "<%=tip%>", proje_id: '<%=request("proje_id")%>' },
+                type: "POST",
+                success: function () {
+                    window.parent.mesaj_ver("Proje Planı", '<%=LNG("Kayıtlar Başarıyla Temizlendi !")%>', "success");
+                }
+            });
+        }
     }
 
 
@@ -497,9 +508,9 @@
 
     function ajandada_goster() {
 
-        
-        if ($("#planning").attr("checked") === "checked") { 
-             planning = "1";
+
+        if ($("#planning").attr("checked") === "checked") {
+            planning = "1";
         }
     }
 
@@ -681,7 +692,7 @@
               <button onclick="editResources();" style="display:none;" class="button textual requireWrite" title="edit resources"><span class="teamworkIcon">M</span></button>
               <div style="float:right;">
                   <button onclick="saveGanttOnServer();" class="button" style="background-color: #2ed8b6;" title="<%=LNG("Değişiklikleri Kaydet")%>"><%=LNG("Değişiklikleri Kaydet")%></button>
-                  <button onclick='newProject();' class='button' style="background-color: #ff5370;"><em><%=LNG("Sıfırla")%></em></button>
+                  <button onclick='newProject();' class='button' style="background-color: #ff5370;" ><em><%=LNG("Sıfırla")%></em></button>
               </div>
                 <div style="display:none;">
                   <button class="button login" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
@@ -870,18 +881,52 @@
     </div>
     </div>
     -->
+
     </div>
+    <form aria-required="true">
     <div class="__template__" type="ASSIGNMENT_ROW">
-            <!--
+
+        
+                        <!--
         <tr taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="assigEditRow" >
           <td style="width:50%;"><select style="width:100%;" name="resourceId"  class="form-control select2 resourceId" ></select></td>
           <td style="display:none;" ><select type="select" name="roleId" class="form-control"></select></td>
-          <td style="text-align:center;"><input type="text" onkeyup="gunluk_calisma_girdim(this);" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="gunluk_calisma" name="gunluk_calisma" value="(#=getMillisInHours((parseFloat(obj.assig.effort) || 0) / parseFloat(obj.task.duration) || 0)#)" size="5" class="form-control timepicker"> X<span class="gunsayisi"> (#=obj.task.duration#) gün<span></td>
+          <td style="text-align:center;"> <input type="text" onblur="numControl()" id="gunlukcalisma" style="width:100px" required="required" onkeyup="gunluk_calisma_girdim(this);" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="gunluk_calisma" name="gunluk_calisma" value="(#=getMillisInHours((parseFloat(obj.assig.effort) || 0) / parseFloat(obj.task.duration) || 0)#)" size="5" class="form-control timepicker"><p style="margin-top: 0px; margin-bottom: 0px">Bu Alan Zorunludur !!!</p> <span style="float:right" class="gunsayisi"> X (#=obj.task.duration#) gün<span></td>
           <td style="text-align:center;"><input onkeyup="toplam_calisma_girdim(this);" type="text" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" name="effort" value="(#=getMillisInHoursMinutes(obj.assig.effort)#)" size="5" class="form-control timepicker"></td>
           <td align="center"><span class="teamworkIcon delAssig del" style="cursor: pointer">d</span></td>
         </tr>
         -->
+        
+
     </div>
+    </form>
+
+    <script type="text/javascript">
+        function numControl() {
+            $('#gunlukcalisma').tooltip({
+                title: "Lütfen bu alanı doldurun !",
+                trigger: "manual"
+            });
+
+            $("#gunlukcalisma").click(function (e) {
+                $(this).tooltip("hide");
+            });
+
+            if ($("#gunluk_calisma_girdim").length < 0) {
+                $("#saveButton").attr("disabled", "disabled");
+
+                if (!$('#gunlukcalisma').val()) {
+                    $('#gunlukcalisma').tooltip("show");  // Show tooltip
+                }
+                else {
+                    //Do Some Other Stuff
+                }
+            }
+            else {
+                $("#saveButton").removeAttr("disabled");
+            }
+        }
+    </script>
 
     <div class="__template__" type="RESOURCE_EDITOR">
         <!--
@@ -960,7 +1005,7 @@
             "CIRCULAR_REFERENCE": "<%=LNG("Dairesel referans.")%>",
             "CANNOT_DEPENDS_ON_ANCESTORS": "<%=LNG("Atalara bağlı olamaz.")%>",
             "INVALID_DATE_FORMAT": "<%=LNG("Eklenen veriler alan formatı için geçersiz.")%>",
-            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED": "<%=LNG("Veriler yüklenirken bir hata oluştu. Bir görev atıldı.")%>",
+            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED": "<%=LNG("Veriler yüklenirken bir hata oluştu.Bir görev atıldı.")%>",
             "CANNOT_CLOSE_TASK_IF_OPEN_ISSUE": "<%=LNG("Açık sorunları olan bir görev kapatılamıyor")%>",
             "TASK_MOVE_INCONSISTENT_LEVEL": "<%=LNG("Farklı derinlikteki görevleri değiştiremezsiniz.")%>",
             "CANNOT_MOVE_TASK": "<%=LNG("İş Adımı taşınamaz.")%>",

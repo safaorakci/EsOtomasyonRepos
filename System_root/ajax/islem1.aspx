@@ -1,5 +1,4 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="islem1.aspx.cs" EnableViewState="false" Inherits="System_root_ajax_islem1" %>
-
 <form autocomplete="off" id="form1" class="smart-form validateform" runat="server">
 
     <asp:panel id="yeni_santiye_ekle_panel" runat="server">

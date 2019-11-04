@@ -4402,6 +4402,7 @@ function is_listesi_etiket(etiket_tip, etiket, stok) {
 
     var data = "islem=is_listesi";
     data += "&stok=" + stok;
+    data += "&parcaId=" + etiket;
     data += "&durum=";
     data += "&tip=";
     data += "&adi=" + adi;

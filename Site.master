@@ -38,7 +38,6 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="/js/NumberFormat154.js"></script>
     <link href="css/animatedIcon.css" rel="stylesheet" />
-   
 </head>
 <body>
     <div class="theme-loader">

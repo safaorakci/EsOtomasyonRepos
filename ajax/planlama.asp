@@ -47,11 +47,11 @@
         return getMillisInHours((parseFloat(effort) || 0) / parseFloat(toplam_gun) || 0);
     }
     function pad(str, len, ch) {
-	    if ((str + "").length < len) {
-		    return new Array(len - ('' + str).length + 1).join(ch) + str;
-	    } else {
-		    return str
-	    }
+        if ((str + "").length < len) {
+            return new Array(len - ('' + str).length + 1).join(ch) + str;
+        } else {
+            return str
+        }
     }
 
 </script>
@@ -84,11 +84,8 @@
         tip_str = "_uygulama"
         ters_str = ""
     end if
-
     
     if trn(request("islem"))="kayit" then
-          
-
           Set myJSON = JSON2.parse(request("prj"))
             for each task in myJSON.tasks
 
@@ -354,6 +351,8 @@
                                 gorevliler = gorevliler & kaynak_id & ","
                             end if
 
+                            toplam_sure = getMillisInHoursMinutes(effort)
+                            gunluk_sure = gunluk_sure_uygula(effort, toplam_gun)
                         next
                     End If
 
@@ -379,6 +378,9 @@
                         bitis_saati = "17:00"
                         durum = "true"
                         cop = "false"
+                        tamamlanma_orani = 0
+                        tamamlanma_tarihi = date
+                        tamamlanma_saati = time
                         firma_kodu = Request.Cookies("kullanici")("firma_kodu")
                         firma_id = Request.Cookies("kullanici")("firma_id")
                         ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
@@ -387,7 +389,7 @@
                         ekleme_saati = time
                         guncelleme_tarihi = date
                         guncelleme_saati = time
-                        guncelleyen = Request.Cookies("kullanici")("kullanici_id")
+                        guncelleyen = Request.Cookies("kullanici")("kullanici_adsoyad")
                         GantAdimID  = adimID
 
                         toplam_gun = DateDiff("d", baslangic_tarihi, bitis_tarihi)
@@ -395,7 +397,7 @@
                             toplam_gun = 1
                         end if
 
-                        SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', CONVERT(date, '"& guncelleme_tarihi &"', 103), '"& guncelleme_saati &"', '"& guncelleyen &"'); SELECT SCOPE_IDENTITY() id;"
+                        SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen, tamamlanma_orani, tamamlanma_tarihi, tamamlanma_saati, toplam_sure, gunluk_sure, toplam_gun) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', CONVERT(date, '"& guncelleme_tarihi &"', 103), '"& guncelleme_saati &"', '"& guncelleyen &"', '"& tamamlanma_orani &"', '"& tamamlanma_tarihi &"', '"& tamamlanma_saati &"', '"& toplam_sure &"', '"& gunluk_sure &"', '"& toplam_gun &"'); SELECT SCOPE_IDENTITY() id;"
                         set isEkle = baglanti.execute(SQL)
 
                         
@@ -553,9 +555,34 @@
             ekleme_saati = time
 
             SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', CONVERT(date, '"& olay_tarihi &"', 103), '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
-            set olay_ekle = baglanti.execute(SQL)
-            
-    
+            set olay_ekle = baglanti.execute(SQL) 
+
+
+    elseif trn(request("islem")) = "sil" then
+        
+        proje_id = trn(request("proje_id"))
+        tip = trn(request("tip"))
+        cop = "true"
+        silen_id = Request.Cookies("kullanici")("kullanici_id")
+        silen_ip = Request.ServerVariables("Remote_Addr")
+        silme_tarihi = date
+        silme_saati = time
+        guncelleyen = Request.Cookies("kullanici")("kullanici_adsoyad")
+
+        SQL = "select * from ahtapot_proje_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false'"
+        set kontrol = baglanti.execute(SQL)
+
+        SQL = "update ahtapot_proje_gantt_adimlari set cop = '"& cop &"' where proje_id = '"& proje_id &"' and cop = 'false'"
+        set gantUpdate = baglanti.execute(SQL)
+
+        SQL = "update ucgem_proje_olay_listesi set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silme_tarihi = CONVERT(date, '"& silme_tarihi &"'), silme_saati = '"& silme_saati &"' where proje_id = '"& proje_id &"' and cop = 'false'"
+        set olayUpdate = baglanti.execute(SQL)
+
+        SQL = "select * from ucgem_is_listesi where departmanlar = 'proje-" & proje_id &"'"
+
+        SQL = "update ucgem_is_listesi set durum = 'false' where departmanlar = 'proje-"& proje_id &"'"
+        set isUpdate = baglanti.execute(SQL)
+
     end if
 
     SQL="select * from ucgem_proje_listesi where id = '" & proje_id &"'"
@@ -584,7 +611,7 @@
                 .Add "level", 0
                 .Add "status", "STATUS_ACTIVE"
                 .Add "depends", ""
-                .Add "start", cdbl(dateInt & tip_str)
+                .Add "start", cdbl(dateInt)
                 .Add "duration", 0
                 .Add "end", dateInt
                 .Add "start_golge", dateInt
