@@ -335,7 +335,7 @@
                     progressByWorklog = IIf(progressByWorklog = "Yanlis", 0, 1)
 
                     SQL="SET NOCOUNT ON; insert into ahtapot_sablon_gantt_adimlari(start_tarih"& tip_str &", end_tarih"& tip_str &", start_tarih"& ters_str &", end_tarih"& ters_str &", cop, proje_id , name , progress , progressByWorklog , irelevance , type , typeId , description , code , ilevel , status , depends , start"& tip_str &" , duration"& tip_str &", iend"& tip_str &" , start"& ters_str &" , duration"& ters_str &", iend"& ters_str &" , startIsMilestone , endIsMilestone , collapsed , canWrite , canAdd , canDelete , canAddIssue , hasChild) values(CONVERT(date, '"& start_tarih &"', 103), CONVERT(date, '"& end_tarih &"', 103), CONVERT(date, '"& start_tarih &"', 103), CONVERT(date, '"& end_tarih &"', 103), 'false', '" & proje_id & "', '" & name & "', '" & progress & "', '" & progressByWorklog & "', '" & irelevance & "', '" & itype & "', '" & typeId & "', '" & description & "', '" & code & "', '" & ilevel & "', '" & status & "', '" & depends & "', '" & start & "', '" & duration & "', '" & iend & "', '" & start & "', '" & duration & "', '" & iend & "', '" & startIsMilestone & "', '" & endIsMilestone & "', '" & collapsed & "', '" & canWrite & "', '" & canAdd & "', '" & canDelete & "', '" & canAddIssue & "', '" & hasChild & "'); SELECT SCOPE_IDENTITY() id;"
-    Response.Write(SQL)
+    
                     set ekle = baglanti.execute(SQL)
 
                     adimID = ekle(0)
@@ -555,6 +555,23 @@
 
             SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', '"& olay_tarihi &"', '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"')"
             'set olay_ekle = baglanti.execute(SQL)
+
+     elseif trn(request("islem")) = "sil" then
+        
+        proje_id = trn(request("proje_id"))
+        tip = trn(request("tip"))
+        cop = "true"
+        silen_id = Request.Cookies("kullanici")("kullanici_id")
+        silen_ip = Request.ServerVariables("Remote_Addr")
+        silme_tarihi = date
+        silme_saati = time
+        guncelleyen = Request.Cookies("kullanici")("kullanici_adsoyad")
+
+        SQL = "update ahtapot_sablon_gantt_adimlari set cop = '"& cop &"' where proje_id = '"& proje_id &"' and cop = 'false'"
+        set gantUpdate = baglanti.execute(SQL)
+
+        'SQL = "update ucgem_is_listesi set durum = 'false' where departmanlar = 'proje-"& proje_id &"'"
+        'set isUpdate = baglanti.execute(SQL)
 
     end if
 
