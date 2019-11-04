@@ -6109,9 +6109,24 @@ function mail_gonderim_baslat(nesne) {
         data += "&ek_dosya=" + encodeURIComponent(ek_dosya);
         data = encodeURI(data);
         $(nesne).attr("disabled", "disabled").val("İşlem Yapılıyor...");
-        $("#olusturulan_belge_yeri").loadHTML({ url: "/ajax_request3/", data: data }, function () {
+            $("#olusturulan_belge_yeri").loadHTML({ url: "/ajax_request3/", data: data }, function () {
         });
     }
+}
+function MailGonder(eposta, konu, mesaj, ekdosya) {
+
+    alert("buraya geldi.");
+
+    var data = "islem=mail_gonderim_baslat";
+    data += "&eposta=" + eposta;
+    data += "&konu=" + konu;
+    data += "&mesaj=" + mesaj;
+    data += "&ek_dosya=" + encodeURIComponent(ekdosya);
+    data = encodeURI(data);
+    $(this).attr("disabled", "disabled").val("İşlem Yapılıyor...");
+    $("#olusturulan_belge_yeri").loadHTML({ url: "/ajax_request3/", data: data }, function () {
+    });
+
 }
 
 function rapor_pdf_gonder(deger, personel_id, izin_id, dosya_yolu) {

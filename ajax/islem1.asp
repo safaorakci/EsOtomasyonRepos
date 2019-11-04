@@ -3318,6 +3318,9 @@
         SQL="select * from ucgem_firma_kullanici_listesi where id = '"& personel_id &"' and firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
         set personel = baglanti.execute(SQL)
 
+        
+        
+
 %>
 <div class="card">
     <div class="card-header">

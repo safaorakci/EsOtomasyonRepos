@@ -20,6 +20,11 @@
             personel_resim = "/img/user.png"
         end if
 
+        user_id = Request.Cookies("kullanici")("kullanici_id")
+
+        SQL="select yonetici_yetkisi from ucgem_firma_kullanici_listesi where id = '"& user_id &"' and firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
+        set personelbilgi = baglanti.execute(SQL)
+
 %>
 
 <script type="text/javascript">
@@ -111,7 +116,18 @@
                             <div class="col-sm-12">
                                 <br />
                                 <br />
-                                <input type="button" class="btn btn-primary" onclick="kendi_personel_bilgilerini_guncelle();" value="<%=LNG("Bilgilerimi Güncelle")%>" />
+                                <%if trim(personelbilgi("yonetici_yetkisi"))="false" then  %>
+                                    <script type="text/javascript">
+                                        $("#personelbtn").click(function () {
+                                            mesaj_ver("Personel Yetkisi", "Bu İşemi Yapmak İçin Yetkili Değilsiniz. !", "danger");
+                                        });
+                                    </script>
+                                <% elseif trim(personelbilgi("yonetici_yetkisi"))="true" then %>
+                                    <script type="text/javascript">
+                                        $("#personelbtn").attr("onclick", "kendi_personel_bilgilerini_guncelle();");
+                                    </script>
+                                <% end if %>
+                                <input type="button" id="personelbtn" class="btn btn-primary" value="<%=LNG("Bilgilerimi Güncelle")%>" />
                             </div>
                         </div>
                     </div>
@@ -644,7 +660,8 @@
                 bildirim = kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") & " "& cdate(baslangic_tarihi) &" "& left(baslangic_saati,5) &" ile "& cdate(bitis_tarihi) &" "& left(bitis_saati,5) &" tarihleri için izin talebinde bulundu." & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
                 tip = "personel_detaylari"
                 'click = "sayfagetir(""/profil_ayarlari/"", ""jsid=4559&personel_id="& kullanicicek("id") &");"
-                click = "sayfagetir(''/personel_detaylari/'',''jsid=4559&personel_id="& kullanicicek("id") &"'',''personel_giris_cikis_getir'',''"& personel_id &"'');" 
+                'click = "sayfagetir(''/personel_detaylari/'',''jsid=4559&personel_id="& kullanicicek("id") &"'',''personel_giris_cikis_getir'',''"& personel_id &"'');" 
+                click = "CokluIsYap(''"& kullanicicek("id") &"'');" 
                 'personel_giris_cikis_getir('70', this);
                 user_id = kcek("id")
                 okudumu = "0"
@@ -3087,10 +3104,15 @@
             SQL="select * from ucgem_firma_kullanici_listesi where id = '"& Request.Cookies("kullanici")("kullanici_id") &"' and cop = 'false' and durum = 'true'"
             set kcek = baglanti.execute(SQL)
 
+            SQL="select * from ucgem_firma_kullanici_listesi where id = '"& talep_edilen &"' and cop = 'false' and durum = 'true'"
+            set kcek2 = baglanti.execute(SQL)
+            
+            personelmail = kcek2("personel_eposta") 
+
             do while not kcek.eof
-                bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " ''"& baslik &"'' adlı öncelik seviyesi "& oncelik &" bir Talep Fişi Oluşturdu. " & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
-                tip = "is_listesi"
-                click = "sayfagetir('/talepler/','jsid=4559');"
+                bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & ""& baslik &" adlı öncelik seviyesi "& oncelik &" bir Talep Fişi Oluşturdu. Açıklama :" & aciklama
+                tip = "talep_fisleri"
+                click = "sayfagetir(''/talepler/'',''jsid=4559'');"
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -3099,14 +3121,30 @@
                 firma_id = request.Cookies("kullanici")("firma_id")
                 ekleyen_id = request.Cookies("kullanici")("kullanici_id")
                 ekleyen_ip = Request.ServerVariables("Remote_Addr")
+
+                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& talep_edilen &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& kcek("id") &"', @mesaj = '"& replace(bildirim, chr(13), "<br>") &"';"
+                set ekle2 = baglanti.execute(SQL)
             
             if bildirimTuru = "SMS" then
-        response.Write(bildirimTuru)
-                NetGSM_SMS kcek("personel_telefon"), bildirim
+                
+                NetGSM_SMS kcek2("personel_telefon"), bildirim
+            elseif bildirimTuru = "MAIL" then
+                
+                    'yol = "/ajax_request3/" & "&eposta=" & kcek2("personel_eposta") & "&konu=" &  "Talep Fişi Bildirim"    & "&mesaj=" & bildirim
+                    'Response.Write(yol)
+                    'Response.Redirect("/ajax_request3/" & "?eposta=" & kcek2("personel_eposta") & "?konu=" &  "Talep Fişi Bildirim"    & "?mesaj=" & bildirim )    
+                %>
+                    <script type="text/javascript">
+                        MailGonder('<%=kcek2("personel_eposta") %>', '<%=baslik %>', '<%=bildirim %>');
+                    </script>
+                    
+                <%
             end if
 
             kcek.movenext
             loop
+            
+            
 
 
 

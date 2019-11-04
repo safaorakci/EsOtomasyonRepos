@@ -293,7 +293,7 @@ function AJAX() {
 })(jQuery);
 
 
-function sayfagetir(sayfa, data, ikincisayfa,personelid) {
+function sayfagetir(sayfa, data) {
 
 
 
@@ -335,11 +335,7 @@ function sayfagetir(sayfa, data, ikincisayfa,personelid) {
             }
         }
     })
-    ikincisayfa;
-    if (ikincisayfa == "personel_giris_cikis_getir") {
-        personel_giris_cikis_getir(personelid, this);
-    }
-
+    
     var yer = data.indexOf("uyari");
     if (yer > 0) {
         data = data.slice(0, yer - 1);
@@ -347,6 +343,18 @@ function sayfagetir(sayfa, data, ikincisayfa,personelid) {
     sondata = data;
 
 
+}
+
+function CokluIsYap(personelid) {
+
+    setTimeout(function () { sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id=' + personelid); }, 2000);
+    
+
+    setTimeout(function () {
+        $("#giris_cikis_buton").trigger("click");
+    }, 2000);
+
+   
 }
 
 
