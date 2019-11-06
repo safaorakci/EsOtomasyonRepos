@@ -335,7 +335,7 @@ function sayfagetir(sayfa, data) {
             }
         }
     })
-    
+
     var yer = data.indexOf("uyari");
     if (yer > 0) {
         data = data.slice(0, yer - 1);
@@ -344,17 +344,52 @@ function sayfagetir(sayfa, data) {
 
 
 }
+//personel_giris_cikis_getir('<%=personel_id %>', this)
+function CokluIsYap(sayfa,personelid, subpage,IsID) {
 
-function CokluIsYap(personelid) {
-
-    setTimeout(function () { sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id=' + personelid); }, 2000);
+    if (sayfa == "personel_detaylari") {
+        sayfagetir('/' + sayfa + '/', 'jsid=4559&personel_id=' + personelid);
+    } else if (sayfa == "is_listesi") {
+        sayfagetir('/' + sayfa + '/', 'jsid=4559&bildirim=true&bildirim_id=' + IsID );
+    }
     
 
-    setTimeout(function () {
-        $("#giris_cikis_buton").trigger("click");
-    }, 2000);
+    if (subpage == "izin") {
+        setTimeout(function () {
+            var tabID = $("#giris_cikis_buton").attr("href");
+            $(".personel_tablar").html("");
+            $(".nav-link_yeni").removeClass("tab-current");
+            personel_giris_cikis_getir(personelid, $("#giris_cikis_buton"));
+            $(".tabs ul li").removeClass("tab-current");
+            $($("#giris_cikis_buton")).parent("li").addClass("tab-current");
+            $(".tabs .content-wrap section").removeClass("content-current");
+            $("section" + tabID).addClass("content-current");
+        }, 100);
+    }
+    else if (subpage == "mesai") {
+        setTimeout(function () {
+            var nesne = $("#mesai_buton");
+            var tabID = nesne.attr("href");
+            $(".personel_tablar").html("");
+            $(".nav-link_yeni").removeClass("tab-current");
+            personel_mesai_getir(personelid, nesne);
+            $(".tabs ul li").removeClass("tab-current");
+            $(nesne).parent("li").addClass("tab-current");
+            $(".tabs .content-wrap section").removeClass("content-current");
+            $("section" + tabID).addClass("content-current");
+        }, 100);
+    }
+    else if (subpage == "biten") {
+        setTimeout(function () {
+            $("#biten").trigger("click");
+            //$("#birnumara").attr("style", "display: none;");
+        }, 1000);
+    }
+    
 
-   
+
+    
+
 }
 
 
@@ -367,39 +402,39 @@ function notify(from, align, icon, type, animIn, animOut, title, mesaj) {
         allow_dismiss: false,
         url: ''
     }, {
-            element: 'body',
-            type: type,
-            allow_dismiss: true,
-            placement: {
-                from: from,
-                align: align
-            },
-            offset: {
-                x: 30,
-                y: 30
-            },
-            spacing: 10,
-            z_index: 999999,
-            delay: 2500,
-            timer: 1000,
-            url_target: '_blank',
-            mouse_over: false,
-            animate: {
-                enter: animIn,
-                exit: animOut
-            },
-            icon_type: 'class',
-            template: '<div data-growl="container" class="alert" role="alert">' +
-                '<button type="button" class="close" data-growl="dismiss">' +
-                '' +
-                '<span class="sr-only">Close</span>' +
-                '</button>' +
-                '<span data-growl="icon"></span>' +
-                '<span data-growl="title"></span>' +
-                '<span data-growl="message"></span>' +
-                '<a href="#" data-growl="url"></a>' +
-                '</div>'
-        });
+        element: 'body',
+        type: type,
+        allow_dismiss: true,
+        placement: {
+            from: from,
+            align: align
+        },
+        offset: {
+            x: 30,
+            y: 30
+        },
+        spacing: 10,
+        z_index: 999999,
+        delay: 2500,
+        timer: 1000,
+        url_target: '_blank',
+        mouse_over: false,
+        animate: {
+            enter: animIn,
+            exit: animOut
+        },
+        icon_type: 'class',
+        template: '<div data-growl="container" class="alert" role="alert">' +
+            '<button type="button" class="close" data-growl="dismiss">' +
+            '' +
+            '<span class="sr-only">Close</span>' +
+            '</button>' +
+            '<span data-growl="icon"></span>' +
+            '<span data-growl="title"></span>' +
+            '<span data-growl="message"></span>' +
+            '<a href="#" data-growl="url"></a>' +
+            '</div>'
+    });
 };
 
 

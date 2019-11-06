@@ -294,7 +294,7 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a class="nav-link" onclick="is_listesi('biten');" data-toggle="tab" href="#biten_isler_ust" role="tab"><i class="fa fa-lg fa-gavel" style="color: green;"></i><% Response.Write(LNG("Bitenler")); %></a>
+                                        <a class="nav-link" id="biten" onclick="is_listesi('biten');" data-toggle="tab" href="#biten_isler_ust" role="tab"><i class="fa fa-lg fa-gavel" style="color: green;"></i><% Response.Write(LNG("Bitenler")); %></a>
                                     </li>
 
                                     <li class="nav-item">

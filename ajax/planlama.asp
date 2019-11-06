@@ -204,13 +204,12 @@
                                 toplam_gun = 1
                             end if
 
-                            
-
                             SQL="select id from ucgem_is_listesi where GantAdimID = '"& GantAdimID &"' and cop = 'false'"
                             set varmi = baglanti.execute(SQL)
+
+                            
+
                             if varmi.eof then
-
-
 
                                 SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', CONVERT(date, '"& guncelleme_tarihi &"', 103), '"& guncelleme_saati &"', '"& guncelleyen &"'); SELECT SCOPE_IDENTITY() id;"
                                 set isEkle = baglanti.execute(SQL)
@@ -397,8 +396,43 @@
                             toplam_gun = 1
                         end if
 
+
                         SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen, tamamlanma_orani, tamamlanma_tarihi, tamamlanma_saati, toplam_sure, gunluk_sure, toplam_gun) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', CONVERT(date, '"& guncelleme_tarihi &"', 103), '"& guncelleme_saati &"', '"& guncelleyen &"', '"& tamamlanma_orani &"', '"& tamamlanma_tarihi &"', '"& tamamlanma_saati &"', '"& toplam_sure &"', '"& gunluk_sure &"', '"& toplam_gun &"'); SELECT SCOPE_IDENTITY() id;"
                         set isEkle = baglanti.execute(SQL)
+
+                        SQL="select * from ucgem_firma_kullanici_listesi where id = '"& ekleyen_id &"'"
+                        set kullanicicek = baglanti.execute(SQL)
+
+                        ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
+                        count = 1
+    
+                        If CheckProperty(task, "assigs") Then
+
+                            for each kaynak in task.assigs
+                                    
+                                    bildirim =  kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") &" sizi "& adi & " adlı işte görevlendirdi."
+                                    tip = "is_listesi"
+                                    click = "sayfagetir(''/is_listesi/'',''jsid=4559&bildirim=true'');"
+                                    user_id = split(resourceId, "-")(count)
+                                    count = count + 1
+                                    okudumu = "0"
+                                    durum = "true"
+                                    cop = "false"
+                                    firma_kodu = kullanicicek("firma_kodu")
+                                    firma_id = kullanicicek("firma_id")
+                                    ekleyen_id = personel_id
+                                    ekleyen_ip = Request.ServerVariables("Remote_Addr")
+    
+                                    SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& Request.Cookies("kullanici")("kullanici_id") &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON;"
+                                    set ekle2 = baglanti.execute(SQL)
+
+                                    SQL="select * from ucgem_firma_kullanici_listesi where id = '"& user_id &"'"
+                                    set personelcek = baglanti.execute(SQL)
+
+                                    NetGSM_SMS personelcek("personel_telefon"), bildirim
+                            next
+                        End If
+                        
 
                         
 
@@ -439,7 +473,7 @@
                                             set ekle = baglanti.execute(SQL)
 
                                             if not trim(gorevli_id) = trim(Request.Cookies("kullanici")("kullanici_id")) then
-                                                bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " sizi ''"& adi &"'' adlı işte Görvlendirdi."
+                                                bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " sizi ''"& adi &"'' adlı işte Görevlendirdi."
                                                 tip = "is_listesi"
                                                 click = "sayfagetir(''/is_listesi/'',''jsid=4559&bildirim=true&bildirim_id="& is_id &"'');"
                                                 user_id = gorevli_id

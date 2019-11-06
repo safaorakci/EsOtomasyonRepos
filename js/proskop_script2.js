@@ -98,6 +98,8 @@ function is_timer_pause_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
 
 function is_timer_stop_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
 
+    
+
     var baslangic_tarihi = $("#sonacikkayit" + is_id).attr("baslangic_tarihi");
     var baslama_saati = $("#sonacikkayit" + is_id).attr("baslangic_saati");
 

@@ -3461,9 +3461,9 @@ function izin_talep_formu(personel_id, izin_id) {
 }
 
 function personel_giris_cikis_getir(personel_id, nesne) {
-    $(".personel_tablar").html("");
-    $(".nav-link_yeni").removeClass("tab-current");
-    $(nesne).parent("li").addClass("tab-current");
+
+    
+    //$(nesne).parent("li").addClass("tab-current");
     setTimeout(function () {
         var data = "islem=personel_giris_cikis_getir";
         data += "&personel_id=" + personel_id;
@@ -3472,6 +3472,7 @@ function personel_giris_cikis_getir(personel_id, nesne) {
             $(".timepicker").mask("99:99");
         });
     }, 200);
+
 }
 
 function zimmet_getir(etiket, etiket_id, nesne) {
@@ -6771,17 +6772,16 @@ function BakimdanIsEmriOlustur(projeId, bakimId, Tum, tarih) {
     data += "&bakimvarmi=true";
     data += "&bakimId=" + bakimId;
     data += "&Tum=" + Tum;
-    var tarih1 = tarih;
     var month = 0;
     var day = 0;
-    if (tarih1 == null) {
-        if (d.getMonth < 10) {
+    if (tarih == null) {
+        if (d.getMonth() < 10) {
             month = "-0" + (d.getMonth() + 1);
         }
         else {
             month = "-" + (d.getMonth() + 1);
         }
-        if (d.getDate < 10) {
+        if (d.getDate() < 10) {
             day = "0" + d.getDate();
         }
         else {
@@ -6791,8 +6791,21 @@ function BakimdanIsEmriOlustur(projeId, bakimId, Tum, tarih) {
         data += "&yeni_is_bitis_tarihi=" + day + month + "-" + d.getFullYear();
     }
     else {
-        data += "&yeni_is_baslangic_tarihi=" + tarih.replace(".", "-").replace(".", "-");
-        data += "&yeni_is_bitis_tarihi=" + tarih.replace(".", "-").replace(".", "-");
+        var parts = tarih.split('.');
+        if (parts[1] < 10) {
+            month = "-0" + parts[1];
+        }
+        else {
+            month = "-" + parts[1];
+        }
+        if (parts[0] < 10) {
+            day = "0" + parts[0];
+        }
+        else {
+            day = parts[0];
+        }
+        data += "&yeni_is_baslangic_tarihi=" + day + month + "-"+ parts[2];
+        data += "&yeni_is_bitis_tarihi=" + day + month + "-" + parts[2];
     }
    
     console.log(data);
@@ -6881,13 +6894,13 @@ function yeni_is_ekle(proje_id, departman_id) {
     data += "&proje_id=" + proje_id;
     data += "&departman_id=" + departman_id;
 
-    if (d.getDate < 10) {
+    if (d.getDate() < 10) {
         day = "0" + d.getDate();
     }
     else {
         day = d.getDate();
     }
-    if (d.getMonth < 10) {
+    if (d.getMonth() < 10) {
         month = "0" + (d.getMonth() + 1);
     }
     else {
@@ -7854,7 +7867,7 @@ function senkronizasyon_tarih_degistir() {
 
 function is_ilerleme_ajanda_senkronizasyon_kaydet2(IsID, TamamlanmaID, tamamlanma_orani, onceki_oran, baslama_saati, bitirme_saati, baslama_tarihi, bitirme_tarihi, ajanda_baslik, ajanda_aciklama) {
 
-
+    
     var data = "islem=is_ilerleme_ajanda_senkronizasyon_kaydet&islem2=islem2";
     data += "&IsID=" + IsID;
     data += "&TamamlanmaID=" + TamamlanmaID;
@@ -8420,23 +8433,31 @@ function talep_fisi_onay(talep_id, deger) {
     data += "&deger=" + deger;
     data = encodeURI(data);
 
-    var saveData = $.ajax({
-        type: 'POST',
-        url: "/ajax_request6/",
-        data: data,
-        dataType: "text",
-        fail: function () {
-            mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Reddedebilirsiniz !", "danger");
-        },
-        success: function () {
-            $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-                mesaj_ver("Talep Fişleri", "Kayıt Başarıyla Güncellendi", "success");
-            });
+    $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        if (deger =="Onaylandı") {
+        } else {
+            mesaj_ver("Talep Fişleri", "Kayıt Başarıyla Reddedildi. !", "success");
         }
+        
     });
-    saveData.error(function () {
-        mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Reddedebilirsiniz !", "danger");
-    });
+
+    //var saveData = $.ajax({
+    //    type: 'POST',
+    //    url: "/ajax_request6/",
+    //    data: data,
+    //    dataType: "text",
+    //    fail: function () {
+    //        mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Reddedebilirsiniz !", "danger");
+    //    },
+    //    success: function () {
+    //        $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+    //            mesaj_ver("Talep Fişleri", "Kayıt Başarıyla Reddedildi. !", "success");
+    //        });
+    //    }
+    //});
+    //saveData.error(function () {
+    //    mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Reddedebilirsiniz !", "danger");
+    //});
 }
 
 
