@@ -3860,6 +3860,7 @@
                 <div class="col-lg-12">
                     <%
                         SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and talep.cop = 'false' and talep.personel_id = kullanici.id and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin') and talep.durum = 'Onaylandi'),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
+                        
                         set personel = baglanti.execute(SQL)
                     %>
                     <h5 class="card-header-text"><%=LNG("Personel İzin Talepleri")%></h5>
@@ -3885,6 +3886,7 @@
                             <tbody>
                                 <%
                                     SQL="select * from ucgem_personel_izin_talepleri where personel_id = '"& personel_id &"' and cop = 'false'"
+                                    
                                     set izin = baglanti.execute(SQL)
 
                                     if izin.eof then

@@ -188,6 +188,9 @@
                             bitis_saati = "17:00"
                             durum = "true"
                             cop = "false"
+                            tamamlanma_orani = 0
+                            tamamlanma_tarihi = date
+                            tamamlanma_saati = time
                             firma_kodu = Request.Cookies("kullanici")("firma_kodu")
                             firma_id = Request.Cookies("kullanici")("firma_id")
                             ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
@@ -199,6 +202,9 @@
                             guncelleyen = Request.Cookies("kullanici")("kullanici_adsoyad")
                             GantAdimID  = adimID
 
+                            toplam_sure = getMillisInHoursMinutes(effort)
+                            gunluk_sure = gunluk_sure_uygula(effort, toplam_gun)
+
                             toplam_gun = DateDiff("d", baslangic_tarihi, bitis_tarihi)
                             if cdbl(toplam_gun)<1 then
                                 toplam_gun = 1
@@ -207,20 +213,14 @@
                             SQL="select id from ucgem_is_listesi where GantAdimID = '"& GantAdimID &"' and cop = 'false'"
                             set varmi = baglanti.execute(SQL)
 
-                            
+                                SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', CONVERT(date, '"& guncelleme_tarihi &"', 103), '"& guncelleme_saati &"', '"& guncelleyen &"', '"& tamamlanma_orani &"', '"& tamamlanma_tarihi &"', '"& tamamlanma_saati &"', LEFT(CONVERT(time, '"& toplam_sure &"'), 5), '"& gunluk_sure &"', '"& toplam_gun &"'); SELECT SCOPE_IDENTITY() id;"
 
-                            if varmi.eof then
-
-                                SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', CONVERT(date, '"& guncelleme_tarihi &"', 103), '"& guncelleme_saati &"', '"& guncelleyen &"'); SELECT SCOPE_IDENTITY() id;"
                                 set isEkle = baglanti.execute(SQL)
-
                                  IsID = isEkle(0)
-
-    
 
                             else
 
-                                SQL="update ucgem_is_listesi  set durum = 'true',adi = '"& adi &"', aciklama = '"& aciklama &"', gorevliler = '"& gorevliler &"', departmanlar = '"& departmanlar &"', baslangic_tarihi = CONVERT(date, '"& baslangic_tarihi &"', 103), baslangic_saati = '"& baslangic_saati &"', bitis_tarihi = CONVERT(date, '"& bitis_tarihi &"', 103), bitis_saati = '"& bitis_saati &"', guncelleme_tarihi = CONVERT(date, '"& guncelleme_tarihi &"', 103), guncelleme_saati = '"& guncelleme_saati &"', guncelleyen = '"& guncelleyen  &"', ajanda_gosterim = '"& ajanda_gosterim  &"' where id = '"& varmi("id") &"'"
+                                SQL="update ucgem_is_listesi  set durum = 'true',adi = '"& adi &"', aciklama = '"& aciklama &"', gorevliler = '"& gorevliler &"', departmanlar = '"& departmanlar &"', baslangic_tarihi = CONVERT(date, '"& baslangic_tarihi &"', 103), baslangic_saati = '"& baslangic_saati &"', bitis_tarihi = CONVERT(date, '"& bitis_tarihi &"', 103), bitis_saati = '"& bitis_saati &"', guncelleme_tarihi = CONVERT(date, '"& guncelleme_tarihi &"', 103), guncelleme_saati = '"& guncelleme_saati &"', guncelleyen = '"& guncelleyen  &"', ajanda_gosterim = '"& ajanda_gosterim  &"', toplam_sure = LEFT(CONVERT(time, '"& toplam_sure &"'), 5), gunluk_sure ='"& gunluk_sure &"', toplam_gun = '"& toplam_gun &"' where id = '"& varmi("id") &"'"
                                 set guncelle = baglanti.execute(SQL)
 
                                 IsID = varmi("id")

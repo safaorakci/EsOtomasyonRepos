@@ -68,16 +68,15 @@ function is_timer_start_kaydi_getir(is_id) {
 
 }
 
-function is_timer_start_kaydi(is_id, TamamlanmaID, zaman) {
+function is_timer_start_kaydi(is_id, TamamlanmaID, user_id) {
     var data = "islem=is_timer_start_kaydi&islem2=baslat";
     data += "&is_id=" + is_id;
     data += "&TamamlanmaID=" + TamamlanmaID;
+    data += "&userId=" + user_id;
     data = encodeURI(data);
     $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
         $('.stopButton').removeAttr("disabled");
     });
-
-
 }
 
 
@@ -91,6 +90,7 @@ function is_timer_pause_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
     data += "&TamamlanmaID=" + TamamlanmaID;
     data = encodeURI(data);
     $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
+        //var tamamlanmaOrani = $(".easyPieChartlar").val();
         is_ilerleme_ajanda_senkronizasyon_kaydet2(is_id, TamamlanmaID, 10, 0, baslama_saati, '', baslangic_tarihi, '', baslik, aciklama);
     });
 
@@ -157,6 +157,7 @@ function is_timer_stop_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
                 $('.stopButton').attr("disabled", "disabled");
 
                 timer = new easytimer.Timer();
+                var Id;
 
                 $('.startButton').click(function () {
                     $(this).attr("disabled", "disabled");
@@ -165,7 +166,9 @@ function is_timer_stop_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
                     timer.start();
                     var is_id = $(this).attr("is_id");
                     var TamamlanmaID = $(this).attr("tamamlanmaid");
-                    is_timer_start_kaydi(is_id, TamamlanmaID, timer.getTimeValues());
+                    var userId = $(this).attr("tamamlanmaid");
+                    is_timer_start_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues());
+                    Id = $(this).attr("user_id");
                 });
                 $('.pauseButton').click(function () {
                     $('.startButton').removeAttr("disabled");
@@ -173,8 +176,10 @@ function is_timer_stop_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
                     var aciklama = $(this).attr("aciklama");
                     var is_id = $(this).attr("is_id");
                     var TamamlanmaID = $(this).attr("tamamlanmaid");
+                    var userId = $(this).attr("tamamlanmaid");
                     timer.pause();
-                    is_timer_pause_kaydi(is_id, TamamlanmaID, timer.getTimeValues(), baslik, aciklama);
+                    is_timer_pause_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
+                    Id = $(this).attr("user_id");
                 });
                 $('.stopButton').click(function () {
                     timer.stop();
@@ -182,8 +187,9 @@ function is_timer_stop_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
                     var TamamlanmaID = $(this).attr("tamamlanmaid");
                     var baslik = $('.pauseButton').attr("baslik");
                     var aciklama = $('.pauseButton').attr("aciklama");
-                    is_timer_stop_kaydi(is_id, TamamlanmaID, timer.getTimeValues(), baslik, aciklama);
-
+                    var userId = $(this).attr("tamamlanmaid");
+                    is_timer_stop_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
+                    Id = $(this).attr("user_id");
                 });
 
                 timer.addEventListener('secondsUpdated', function (e) {

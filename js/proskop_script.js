@@ -1,4 +1,5 @@
 ﻿var timer;
+var timer2;
 
 function santiye_durum_listesi() {
     var data = "islem=santiye_durum";
@@ -955,7 +956,7 @@ function is_tablo_islemler(durum) {
     }
     else {
 
-        if ($("body").width() < 500) {  }
+        if ($("body").width() < 500) { }
         else {
             console.log($("#tablo_customize").val());
             var eldeki_sayi1 = $("body").width() - ($(".card").width() + ($("#tablo_customize").val().length * 107) + 600);
@@ -1065,8 +1066,8 @@ function is_tablo_islemler(durum) {
             });
         }
 
-    } else {
-
+    }
+    else {
         var reg = /(<([^>]+)>)/ig;
         var iii = 0;
 
@@ -1162,13 +1163,8 @@ function is_tablo_islemler(durum) {
 
                         }
                     });
-
-
                     $("#" + durum + "_isler_loading").hide();
                     $("#" + durum + "_isler").show();
-
-
-
                 },
 
 
@@ -1292,6 +1288,8 @@ function is_tablo_islemler(durum) {
                     $('.stopButton').hide();
 
                     timer = new easytimer.Timer();
+                    
+                    var Id;
 
                     $('.startButton').click(function () {
                         $(this).hide();
@@ -1301,6 +1299,7 @@ function is_tablo_islemler(durum) {
                         var is_id = $(this).attr("is_id");
                         var TamamlanmaID = $(this).attr("tamamlanmaid");
                         is_timer_start_kaydi(is_id, TamamlanmaID, timer.getTimeValues());
+                        Id = $(this).attr("user_id");
                     });
                     $('.pauseButton').click(function () {
                         $(this).hide();
@@ -1311,6 +1310,7 @@ function is_tablo_islemler(durum) {
                         var TamamlanmaID = $(this).attr("tamamlanmaid");
                         timer.pause();
                         is_timer_pause_kaydi(is_id, TamamlanmaID, timer.getTimeValues(), baslik, aciklama);
+                        Id = $(this).attr("user_id");
                     });
                     $('.stopButton').click(function () {
                         timer.stop();
@@ -1319,7 +1319,7 @@ function is_tablo_islemler(durum) {
                         var baslik = $('.pauseButton').attr("baslik");
                         var aciklama = $('.pauseButton').attr("aciklama");
                         is_timer_stop_kaydi(is_id, TamamlanmaID, timer.getTimeValues(), baslik, aciklama);
-
+                        Id = $(this).attr("user_id");
                     });
 
                     timer.addEventListener('secondsUpdated', function (e) {
@@ -4418,7 +4418,7 @@ function is_listesi_etiket(etiket_tip, etiket, stok) {
     data += "&is_bitis_tarihi=" + is_bitis_tarihi;
     data += "&toplantilar=" + toplantilar;
     data += "&parcalar=" + parcalar;
-    
+
     $("#tum_isler").loadHTML({ url: "islem1", data: data }, function () {
         sayfa_yuklenince();
         is_tablo_islemler();
@@ -6807,13 +6807,13 @@ function BakimdanIsEmriOlustur(projeId, bakimId, Tum, tarih) {
         data += "&yeni_is_baslangic_tarihi=" + day + month + "-"+ parts[2];
         data += "&yeni_is_bitis_tarihi=" + day + month + "-" + parts[2];
     }
-   
+
     console.log(data);
     data = encodeURI(data);
     $("#modal_butonum").click();
     $("#modal_div").loadHTML({ url: "islem1", data: data }, function () {
         sayfa_yuklenince();
-       
+
     });
     //$("#yeni_is_baslangic_tarihi").datepicker("setValue", tarih);
     //$('#yeni_is_baslangic_tarihi').datepicker('update', '05.11.2015');
@@ -7892,7 +7892,6 @@ function is_ilerleme_ajanda_senkronizasyon_kaydet2(IsID, TamamlanmaID, tamamlanm
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-
                 if (response.d === "0") {
                     $.bigBox({
                         title: "Uyarı",
@@ -7904,10 +7903,8 @@ function is_ilerleme_ajanda_senkronizasyon_kaydet2(IsID, TamamlanmaID, tamamlanm
                     });
                 } else {
                     $("#is_chart" + IsID).css('width', response.d + '%').attr('aria-valuenow', response.d).attr("data-progressbar-value", response.d);
-                    // mesaj_ver("Görevler", "Kayıt Başarıyla Güncellendi", "success");
                     $(".close").click();
                 }
-
             }, failure: function (response) {
 
 
@@ -8503,7 +8500,7 @@ function talep_fisi_duzenle(kayit_id) {
             });
         }
     });
-    
+
     saveData.error(function () {
         mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Düzenleyebilirsiniz !", "danger");
     });
