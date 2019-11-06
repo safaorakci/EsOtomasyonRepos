@@ -1,5 +1,4 @@
 ﻿var timer;
-var timer2;
 
 function santiye_durum_listesi() {
     var data = "islem=santiye_durum";

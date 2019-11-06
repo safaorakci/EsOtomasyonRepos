@@ -1467,9 +1467,9 @@ works properly when clicked or hovered */
                     girdimi = true
                     if CStr(calisma("ekleyen_id")) = Request.Cookies("kullanici")("kullanici_id") then
                         user_id = calisma("ekleyen_id")
+                        fromDate=cdate(left(calisma("baslangic"),10)) & " " & calisma("baslangicSaat") & ":" & second(calisma("baslangic"))
+                        toDate=now()
                     end if
-                    fromDate=cdate(left(calisma("baslangic"),10)) & " " & calisma("baslangicSaat") & ":" & second(calisma("baslangic"))
-                    toDate=now()
 
                     baslangic_tarihi = cdate(left(calisma("baslangic"),10))
                     baslangic_saati = calisma("baslangicSaat")
@@ -1498,23 +1498,14 @@ works properly when clicked or hovered */
 </table>
 <% 
     if girdimi = true and CStr(user_id) = Request.Cookies("kullanici")("kullanici_id") then 
-
-    saniye =  DateDiff("s",fromDate,toDate)
-    userId = user_id
+        saniye =  DateDiff("s",fromDate,toDate)
+        userId = user_id
 %>
 <input type="hidden" id="sonacikkayit<%=is_id %>" baslangic_tarihi="<%=cdate(baslangic_tarihi) %>" baslangic_saati="<%=baslangic_saati %>" />
 <script type="text/javascript">
     $(function ()
     {
-        //timer = new easytimer.Timer();
         timer.start({ precision: 'seconds', startValues: { seconds: <%=saniye %> }});
-
-        //$(document).ready(function () {
-        //    var Interval = 0;
-        //    setInterval(function () {
-        //        $('#basicUsage' + <%=userId %>).html(timer.getTimeValues().toString());
-        //    },1000);
-        //});
 
         $('.startButton').hide();
         $('.pauseButton').show();
