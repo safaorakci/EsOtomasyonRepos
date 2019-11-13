@@ -474,7 +474,15 @@
     }
 
     function toplam_calisma_girdim(nesne) {
-
+        var value = $("#toplamcalisma").val();
+        if (value < 1) {
+            myAlert(nesne);
+            $("#saveButton").removeAttr("onclick");
+        }
+        else {
+            $("#saveButton").attr("onclick", "$(this).trigger('saveFullEditor.gantt');");
+            $("#toplamcalisma").removeAttr("tooltip");
+        }
         var gun_sayisi = $("#duration").val();
         var gunluk_saat = parseFloat($(nesne).val()) / parseFloat(gun_sayisi);
         var taskId = $(nesne).attr("taskId");
@@ -486,9 +494,16 @@
         $("input[name=gunluk_calisma][taskId=" + taskId + "][assId=" + assId + "]").val(gunluk_saat);
     }
 
-
-
     function gunluk_calisma_girdim(nesne) {
+        var value = $("#gunlukcalisma").val();
+        if (value < 1) {
+            myAlert(nesne);
+            $("#saveButton").removeAttr("onclick");
+        }
+        else {
+            $("#saveButton").attr("onclick", "$(this).trigger('saveFullEditor.gantt');");
+            $("#gunlukcalisma").removeAttr("tooltip");
+        }
         var gun_sayisi = $("#duration").val();
         var toplam_saat = parseFloat($(nesne).val().replace(",", ".")) * parseFloat(gun_sayisi);
         var taskId = $(nesne).attr("taskId");
@@ -500,6 +515,15 @@
         $("input[name=effort][taskId=" + taskId + "][assId=" + assId + "]").val(toplam_saat);
     }
 
+    function myAlert(nesne) {
+        $(nesne).attr("title", "Çalışma saati '0', 'Negatif' veya 'Boş' değer eklenemez !");
+        $(nesne).tooltip({
+            placement: "bottom",
+            trigger: "mouseover"
+        });
+        $(nesne).trigger("mouseover");
+    }
+
     function is_yuku_cizelgesi_ac2(start, end) {
         var start = $("#start").val();
         var end = $("#end").val();
@@ -507,8 +531,6 @@
     }
 
     function ajandada_goster() {
-
-
         if ($("#planning").attr("checked") === "checked") {
             planning = "1";
         }
@@ -641,6 +663,12 @@
 
     }
 
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#gunlukcalisma").trigger("onkeyup");
+    });
 </script>
 
 <div id="gantEditorTemplates" style="display: none;">
@@ -877,56 +905,24 @@
         </div>
 
     <div style="text-align: right; padding-top: 20px">
-      <span id="saveButton" class="button first" onClick="$(this).trigger('saveFullEditor.gantt');"><%=LNG("Kaydet ")%></span>
+      <input type="button" id="saveButton" onclick="$(this).trigger('saveFullEditor.gantt');" class="btn btn-success btn-sm text-dark" value="Kaydet"/>
     </div>
     </div>
     -->
 
     </div>
-    <form aria-required="true">
-    <div class="__template__" type="ASSIGNMENT_ROW">
 
-        
+    <div class="__template__" type="ASSIGNMENT_ROW">
                         <!--
         <tr taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="assigEditRow" >
           <td style="width:50%;"><select style="width:100%;" name="resourceId"  class="form-control select2 resourceId" ></select></td>
           <td style="display:none;" ><select type="select" name="roleId" class="form-control"></select></td>
-          <td style="text-align:center;"> <input type="text" onblur="numControl()" id="gunlukcalisma" style="width:100px" required="required" onkeyup="gunluk_calisma_girdim(this);" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="gunluk_calisma" name="gunluk_calisma" value="(#=getMillisInHours((parseFloat(obj.assig.effort) || 0) / parseFloat(obj.task.duration) || 0)#)" size="5" class="form-control timepicker"><p style="margin-top: 0px; margin-bottom: 0px">Bu Alan Zorunludur !!!</p> <span style="float:right" class="gunsayisi"> X (#=obj.task.duration#) gün<span></td>
-          <td style="text-align:center;"><input onkeyup="toplam_calisma_girdim(this);" type="text" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" name="effort" value="(#=getMillisInHoursMinutes(obj.assig.effort)#)" size="5" class="form-control timepicker"></td>
+          <td style="text-align:center;"> <input type="number" id="gunlukcalisma" style="width:100px" onkeyup="gunluk_calisma_girdim(this);" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="gunluk_calisma" name="gunluk_calisma" value="1" size="5" class="form-control timepicker"><span style="float:right" class="gunsayisi"> X (#=obj.task.duration#) gün<span></td>
+          <td style="text-align:center;"><input id="toplamcalisma" onkeyup="toplam_calisma_girdim(this);" type="text" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" name="effort" value="1.00" size="5" class="form-control timepicker"></td>
           <td align="center"><span class="teamworkIcon delAssig del" style="cursor: pointer">d</span></td>
         </tr>
         -->
-        
-
     </div>
-    </form>
-
-    <script type="text/javascript">
-        function numControl() {
-            $('#gunlukcalisma').tooltip({
-                title: "Lütfen bu alanı doldurun !",
-                trigger: "manual"
-            });
-
-            $("#gunlukcalisma").click(function (e) {
-                $(this).tooltip("hide");
-            });
-
-            if ($("#gunluk_calisma_girdim").length < 0) {
-                $("#saveButton").attr("disabled", "disabled");
-
-                if (!$('#gunlukcalisma').val()) {
-                    $('#gunlukcalisma').tooltip("show");  // Show tooltip
-                }
-                else {
-                    //Do Some Other Stuff
-                }
-            }
-            else {
-                $("#saveButton").removeAttr("disabled");
-            }
-        }
-    </script>
 
     <div class="__template__" type="RESOURCE_EDITOR">
         <!--

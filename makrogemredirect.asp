@@ -123,7 +123,6 @@
         Server.Execute("/System_root/formlar/satinalma_formu.asp")
     elseif gp(3) = "teknik_servis_formu" then
         Server.Execute("/System_root/formlar/teknik_servis_formu.asp")
-
     elseif gp(3) = "teknik_servis_formu2" then
         Server.Execute("/System_root/formlar/teknik_servis_formu2.asp")
 
