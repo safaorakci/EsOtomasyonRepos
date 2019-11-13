@@ -1,7 +1,6 @@
 ﻿<!-- #include virtual="/data_root/conn.asp" -->
 <!-- #include virtual="/data_root/functions.asp" bilal -->
 
-
 <% 
 
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
@@ -1909,13 +1908,7 @@
             kcek.movenext
             loop
 
-        end if
-        
-
-
-
-
-        for x = cdate(talep("baslangic_tarihi")) to cdate(talep("bitis_tarihi"))
+            for x = cdate(talep("baslangic_tarihi")) to cdate(talep("bitis_tarihi"))
 
             cihazID = 0
             giris_tipi = 2
@@ -1925,24 +1918,24 @@
             cop = "false"
             ekleme_tarihi = date
             ekleme_saati = time
+            OnayDurum = "Onaylandi"
             ekleyen_ip = Request.ServerVariables("Remote_Addr")
             firma_id = Request.Cookies("kullanici")("firma_id")
             ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
 
             SQL="delete from ucgem_personel_mesai_girisleri where personel_id = '"& personel_id &"' and giris_tipi = '"& giris_tipi &"' and tarih = CONVERT(date, '"& tarih &"', 103)"
             set sil = baglanti.execute(SQL)
-
-            if trim(durum)="Onaylandı" then
-
-                SQL="insert into ucgem_personel_mesai_girisleri(personel_id, cihazID, giris_tipi, tarih, saat, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& personel_id &"', '"& cihazID &"', '"& giris_tipi &"', CONVERT(date, '"& tarih &"', 103), '"& saat &"', CONVERT(date, '"& ekleme_zamani &"', 103), '"& durum &"', '"& cop &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"')"
+            if trim(durum)="true" then
+    
+                SQL="insert into ucgem_personel_mesai_girisleri(personel_id, cihazID, giris_tipi, tarih, saat, ekleme_zamani, durum, cop, ekleme_tarihi, ekleme_saati, ekleyen_ip, firma_id, ekleyen_id) values('"& personel_id &"', '"& cihazID &"', '"& giris_tipi &"', CONVERT(date, '"& tarih &"', 103), '"& saat &"', CONVERT(date, '"& ekleme_zamani &"', 103), '"& OnayDurum &"', '"& cop &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"')"
                 set ekle = baglanti.execute(SQL)
 
             end if
 
         next
 
-
-
+        end if
+     
   elseif trn(request("islem"))="personel_mesai_getir" then
 
         personel_id = trn(request("personel_id"))
@@ -3505,6 +3498,7 @@
                     
                     end if
                     set satinalma = baglanti.execute(SQL)
+                    'response.Write(SQL)
                     if satinalma.eof then
                 %>
                 <tr>
@@ -3543,7 +3537,7 @@
                     <%if trim(satinalma("proje_id")) = "0" then%>
                         <td><span style="font-size: 12px; font-weight:bold">Belirtilmedi</span></td>
                     <%else%>
-                        <td><%=satinalma("proje_id")%></td>
+                        <td><%=satinalma("proje")%></td>
                     <%end if %>
                     <td><%=formatnumber(satinalma("toplamtl"),2) %> TL - 
                         <%=formatnumber(satinalma("toplamusd"),2) %> USD - 
@@ -4569,6 +4563,1292 @@ elseif trn(request("islem"))="uretim_sablonlari" then
         </div>
     </form>
     <%
+
+    elseif trn(request("islem")) = "YeniServisBakimKaydiEkle" then
+    %>
+    
+    <div class="modal-header">
+        Yeni Servis Bakım Kaydı
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form autocomplete="off" id="servisbakimkaydi" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+        <script>
+           $(function (){
+               parcalar_autocomplete_calistir();
+           });
+        </script>
+        <div class="row">
+            <label class="col-sm-11  col-lg-11 col-form-label"><%=LNG("Müşteri")%></label>
+            <div class="col-sm-11 col-lg-11">
+                <select id="musteri_id" name="musteri" class="select2" onchange="musteribilgilerial();">
+                    <option disabled selected>Müşteri Seç...
+                    </option>
+                    <%
+                        SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where durum = 'true' and cop = 'false'"
+                        set musteri = baglanti.execute(SQL)
+                        do while not musteri.eof
+                    %>
+                    <option value="<%=musteri("id") %>"><%=musteri("firma_adi") %> - <%=musteri("firma_yetkili") %></option>
+                    <%
+                        musteri.movenext
+                        loop
+                    %>
+                </select>
+            </div>
+            <div class="col-md-1 col-lg-1">
+                <button class="btn btn-link btn-sm" onclick="YeniMusteriOlustur();" style="margin-left:-15px; margin-top:-7px;">
+                    <i class="fa fa-plus fa-2x"></i>
+                </button>
+            </div>
+            <div class="col-md-12" id="musteriformu" style="display:none; margin-top:10px">
+                 <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
+                    <label class="col-form-label col-md-12 font-weight-bold" style="text-align:left; margin-bottom:10px">Müşteri Bilgileri</label>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Firma Adı</label>
+                            <input type="text" class="form-control" id="firmaadi" placeholder="Firma Adı"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Yetkili Kişi</label>
+                            <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Firma Telefon</label>
+                            <input type="text" class="form-control" id="firmatelefon" placeholder="0(555) 123 45 67"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Firma E-posta</label>
+                            <input class="form-control" type="email" id="firmaeposta" placeholder="example@gmail.com"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Firma Adress</label>
+                            <input class="form-control" type="text" id="firmaadress" placeholder="Adress"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Vergi Dairesi</label>
+                            <input class="form-control" type="text" id="firmavergidairesi" placeholder="Vergi Dairesi"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Vergi No</label>
+                            <input class="form-control" type="text" id="firmavergino" placeholder="Vergi No"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Makine Bilgileri</label>
+                            <input class="form-control" type="text" id="firmamakinebilgi" placeholder="Makine Bilgileri"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Bildirilen Arıza</label>
+                            <input class="form-control" type="text" id="firmaariza" placeholder="Bildirilen Arıza"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Başlangıç Tarihi</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="icon-prepend fa fa-calendar"></i>
+                                </span>
+                                <input type="text" id="baslangic_tarihi" required class="takvimyap_yeni hasDatepicker" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Bitiş Tarihi</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="icon-prepend fa fa-calendar"></i>
+                                </span>
+                                <input type="text" id="bitis_tarihi" required class="takvimyap_yeni hasDatepicker" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding-left:15px; width:110px">
+                        <label>Başlangıç Saati</label>
+                        <div class="form-group">
+                             <input type="text" id="baslangic_saati" required class="timepicker form-control" style="padding-left:10px" value=""/>
+                        </div>
+                    </div>
+                    <div style="padding-left:15px; width:110px">
+                        <label>Bitiş Saati</label>
+                        <div class="form-group">
+                             <input type="text" id="bitis_saati" required class="timepicker form-control" style="padding-left:10px" value=""/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-from-label">Yapılan İşlemler</label>
+                            <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height:100px"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-from-label">Not</label>
+                            <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height:100px"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="display:none">
+                        <div class="form-group">
+                            <div class="form-check">
+                                <label class="form-check-label" style="padding-left:1px" for="listeyeekle">Müşteri Listesine Kaydet</label>
+                                <input type="checkbox" class="form-check-input" style="margin-left: 10px; margin-top: 3px;" id="listeyeekle">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Parça Adı</label>
+                            <input type="text" name="parcalar" id="parcalar1" i="<1" data="0" class="form-control parcalar" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Adet</label>
+                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1"/>
+                    </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Görevli</label>
+                            <select id="firmagorevli" class="form-control select2" multiple>
+                                <%
+                                    SQL = "select id, personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'"
+                                    set kullanicilar = baglanti.execute(SQL)
+                                    do while not kullanicilar.eof
+                                %>
+                                    <option value="<%=kullanicilar("id") %>""><%=kullanicilar("adsoyad") %></option>
+                                <%
+                                    kullanicilar.movenext
+                                    loop        
+                                %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-12">
+                        <label class="col-form-label font-weight-bold" style="margin-bottom:10px">Stok Listesi</label>
+                        <table class="table table-bordered table-sm table-sprited">
+                            <thead>
+                                <tr>
+                                    <th>Adet</th>
+                                    <th>Parça</th>
+                                    <th>Ekleyen</th>
+                                    <th>Ekleme Tarihi</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%
+                                    SQL = ""
+                                %>
+                                <tr>
+                                    <td colspan="5" style="text-align:center">Kayıt Bulunamadı</td>
+                                </tr>
+<!--                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-primary" onclick="ServisBakimKaydiEkle();" value="Servis / Bakım Planı Kaydet" />
+        </div>
+        <style>
+            .ui-helper-hidden {
+                display: none;
+            }
+
+            .ui-helper-hidden-accessible {
+                border: 0;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            .ui-helper-reset {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                outline: 0;
+                line-height: 1.3;
+                text-decoration: none;
+                font-size: 100%;
+                list-style: none;
+            }
+
+            .ui-helper-clearfix:before,
+            .ui-helper-clearfix:after {
+                content: "";
+                display: table;
+                border-collapse: collapse;
+            }
+
+            .ui-helper-clearfix:after {
+                clear: both;
+            }
+
+            .ui-helper-zfix {
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                position: absolute;
+                opacity: 0;
+                filter: Alpha(Opacity=0); /* support: IE8 */
+            }
+
+            .ui-front {
+                z-index: 1070;
+            }
+
+
+            /* Interaction Cues
+----------------------------------*/
+            .ui-state-disabled {
+                cursor: default !important;
+                pointer-events: none;
+            }
+
+
+            /* Icons
+----------------------------------*/
+            .ui-icon {
+                display: inline-block;
+                vertical-align: middle;
+                margin-top: -.25em;
+                position: relative;
+                text-indent: -99999px;
+                overflow: hidden;
+                background-repeat: no-repeat;
+            }
+
+            .ui-widget-icon-block {
+                left: 50%;
+                margin-left: -8px;
+                display: block;
+            }
+
+            /* Misc visuals
+----------------------------------*/
+
+            /* Overlays */
+            .ui-widget-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            .ui-autocomplete {
+                position: absolute;
+                top: 0;
+                left: 0;
+                cursor: default;
+            }
+
+            .ui-menu {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: block;
+                outline: 0;
+            }
+
+                .ui-menu .ui-menu {
+                    position: absolute;
+                }
+
+                .ui-menu .ui-menu-item {
+                    display: flex;
+                    margin: 0;
+                    cursor: pointer;
+                    /* support: IE10, see #8844 */
+                    list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+                }
+
+                .ui-menu .ui-menu-item-wrapper {
+                    position: relative;
+                    padding: 3px 1em 3px .4em;
+                    display: block;
+                    width: 100%;
+                    border: 1px solid #ccc;
+                }
+
+                .ui-menu .ui-menu-divider {
+                    margin: 5px 0;
+                    height: 0;
+                    font-size: 0;
+                    line-height: 0;
+                    border-width: 1px 0 0 0;
+                }
+
+                .ui-menu .ui-state-focus,
+                .ui-menu .ui-state-active {
+                    margin: -1px;
+                }
+
+            /* icon support */
+            .ui-menu-icons {
+                position: relative;
+            }
+
+                .ui-menu-icons .ui-menu-item-wrapper {
+                    padding-left: 2em;
+                }
+
+            /* left-aligned */
+            .ui-menu .ui-icon {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: .2em;
+                margin: auto 0;
+            }
+
+            /* right-aligned */
+            .ui-menu .ui-menu-icon {
+                left: auto;
+                right: 0;
+            }
+
+            /* Component containers
+----------------------------------*/
+            .ui-widget {
+                font-family: Arial,Helvetica,sans-serif;
+                font-size: 1em;
+            }
+
+                .ui-widget .ui-widget {
+                    font-size: 1em;
+                }
+
+                .ui-widget input,
+                .ui-widget select,
+                .ui-widget textarea,
+                .ui-widget button {
+                    font-family: Arial,Helvetica,sans-serif;
+                    font-size: 1em;
+                }
+
+                .ui-widget.ui-widget-content {
+                    border: 1px solid #c5c5c5;
+                }
+
+            .ui-widget-content {
+                border: 1px solid #dddddd;
+                background: #ffffff;
+                color: #333333;
+            }
+
+                .ui-widget-content a {
+                    color: #333333;
+                }
+
+            .ui-widget-header {
+                border: 1px solid #dddddd;
+                background: #e9e9e9;
+                color: #333333;
+                font-weight: bold;
+            }
+
+                .ui-widget-header a {
+                    color: #333333;
+                }
+
+                /* Interaction states
+----------------------------------*/
+                .ui-state-default,
+                .ui-widget-content .ui-state-default,
+                .ui-widget-header .ui-state-default,
+                .ui-button,
+                /* We use html here because we need a greater specificity to make sure disabled
+works properly when clicked or hovered */
+                html .ui-button.ui-state-disabled:hover,
+                html .ui-button.ui-state-disabled:active {
+                    border: 1px solid #c5c5c5;
+                    background: #f6f6f6;
+                    font-weight: normal;
+                    color: #454545;
+                }
+
+                    .ui-state-default a,
+                    .ui-state-default a:link,
+                    .ui-state-default a:visited,
+                    a.ui-button,
+                    a:link.ui-button,
+                    a:visited.ui-button,
+                    .ui-button {
+                        color: #454545;
+                        text-decoration: none;
+                    }
+
+                        .ui-state-hover,
+                        .ui-widget-content .ui-state-hover,
+                        .ui-widget-header .ui-state-hover,
+                        .ui-state-focus,
+                        .ui-widget-content .ui-state-focus,
+                        .ui-widget-header .ui-state-focus,
+                        .ui-button:hover,
+                        .ui-button:focus {
+                            border: 1px solid #cccccc;
+                            background: #ededed;
+                            font-weight: normal;
+                            color: #2b2b2b;
+                        }
+
+                            .ui-state-hover a,
+                            .ui-state-hover a:hover,
+                            .ui-state-hover a:link,
+                            .ui-state-hover a:visited,
+                            .ui-state-focus a,
+                            .ui-state-focus a:hover,
+                            .ui-state-focus a:link,
+                            .ui-state-focus a:visited,
+                            a.ui-button:hover,
+                            a.ui-button:focus {
+                                color: #2b2b2b;
+                                text-decoration: none;
+                            }
+
+            .ui-visual-focus {
+                box-shadow: 0 0 3px 1px rgb(94, 158, 214);
+            }
+
+            .ui-state-active,
+            .ui-widget-content .ui-state-active,
+            .ui-widget-header .ui-state-active,
+            a.ui-button:active,
+            .ui-button:active,
+            .ui-button.ui-state-active:hover {
+                border: 1px solid #003eff;
+                background: #007fff;
+                font-weight: normal;
+                color: #ffffff;
+            }
+
+                .ui-icon-background,
+                .ui-state-active .ui-icon-background {
+                    border: #003eff;
+                    background-color: #ffffff;
+                }
+
+                .ui-state-active a,
+                .ui-state-active a:link,
+                .ui-state-active a:visited {
+                    color: #ffffff;
+                    text-decoration: none;
+                }
+
+            /* Interaction Cues
+----------------------------------*/
+            .ui-state-highlight,
+            .ui-widget-content .ui-state-highlight,
+            .ui-widget-header .ui-state-highlight {
+                border: 1px solid #dad55e;
+                background: #fffa90;
+                color: #777620;
+            }
+
+            .ui-state-checked {
+                border: 1px solid #dad55e;
+                background: #fffa90;
+            }
+
+            .ui-state-highlight a,
+            .ui-widget-content .ui-state-highlight a,
+            .ui-widget-header .ui-state-highlight a {
+                color: #777620;
+            }
+
+            .ui-state-error,
+            .ui-widget-content .ui-state-error,
+            .ui-widget-header .ui-state-error {
+                border: 1px solid #f1a899;
+                background: #fddfdf;
+                color: #5f3f3f;
+            }
+
+                .ui-state-error a,
+                .ui-widget-content .ui-state-error a,
+                .ui-widget-header .ui-state-error a {
+                    color: #5f3f3f;
+                }
+
+            .ui-state-error-text,
+            .ui-widget-content .ui-state-error-text,
+            .ui-widget-header .ui-state-error-text {
+                color: #5f3f3f;
+            }
+
+            .ui-priority-primary,
+            .ui-widget-content .ui-priority-primary,
+            .ui-widget-header .ui-priority-primary {
+                font-weight: bold;
+            }
+
+            .ui-priority-secondary,
+            .ui-widget-content .ui-priority-secondary,
+            .ui-widget-header .ui-priority-secondary {
+                opacity: .7;
+                filter: Alpha(Opacity=70); /* support: IE8 */
+                font-weight: normal;
+            }
+
+            .ui-state-disabled,
+            .ui-widget-content .ui-state-disabled,
+            .ui-widget-header .ui-state-disabled {
+                opacity: .35;
+                filter: Alpha(Opacity=35); /* support: IE8 */
+                background-image: none;
+            }
+
+                .ui-state-disabled .ui-icon {
+                    filter: Alpha(Opacity=35); /* support: IE8 - See #6059 */
+                }
+
+
+            /* Misc visuals
+----------------------------------*/
+
+            /* Corner radius */
+            .ui-corner-all,
+            .ui-corner-top,
+            .ui-corner-left,
+            .ui-corner-tl {
+                border-top-left-radius: 3px;
+            }
+
+            .ui-corner-all,
+            .ui-corner-top,
+            .ui-corner-right,
+            .ui-corner-tr {
+                border-top-right-radius: 3px;
+            }
+
+            .ui-corner-all,
+            .ui-corner-bottom,
+            .ui-corner-left,
+            .ui-corner-bl {
+                border-bottom-left-radius: 3px;
+            }
+
+            .ui-corner-all,
+            .ui-corner-bottom,
+            .ui-corner-right,
+            .ui-corner-br {
+                border-bottom-right-radius: 3px;
+            }
+
+            /* Overlays */
+            .ui-widget-overlay {
+                background: #aaaaaa;
+                opacity: .3;
+                filter: Alpha(Opacity=30); /* support: IE8 */
+            }
+
+            .ui-widget-shadow {
+                -webkit-box-shadow: 0px 0px 5px #666666;
+                box-shadow: 0px 0px 5px #666666;
+            }
+        </style>
+        <script src="/js/jquery-ui.js"></script>
+    </form>
+    <%
+        elseif trn(request("islem"))="YeniServisBakimKaydiDuzenle" then
+            kayitId = trn(request("kayitId"))
+            durum = "true"
+            cop = "false"
+
+            SQL="select * from servis_bakim_kayitlari where Durum = '"& durum &"' and Cop = '"& cop &"' and id = '"& kayitId &"'"
+            set formduzenle = baglanti.execute(SQL)
+    %>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#musteriformu").slideDown();
+        });
+    </script>
+            <div class="modal-header">
+        Servis Bakım Düzenle
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+            <form autocomplete="off" id="servisbakimkaydi" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+        <script>
+           $(function (){
+               parcalar_autocomplete_calistir();
+           });
+        </script>
+        <div class="row">
+            <label class="col-sm-11  col-lg-11 col-form-label"><%=LNG("Müşteri")%></label>
+            <div class="col-sm-11 col-lg-11">
+                <select id="musteri_id" name="musteri" class="select2" onchange="musteribilgilerial();">
+                    <option disabled selected>Müşteri Seç...
+                    </option>
+                    <%
+                        SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where durum = 'true' and cop = 'false'"
+                        set musteri = baglanti.execute(SQL)
+                        do while not musteri.eof
+                    %>
+                    <option <%if formduzenle("FirmaId") = musteri("id") then %> selected="selected" <%end if %> value="<%=musteri("id") %>"><%=musteri("firma_adi") %> - <%=musteri("firma_yetkili") %></option>
+                    <%
+                        musteri.movenext
+                        loop
+                    %>
+                </select>
+            </div>
+            <div class="col-md-1 col-lg-1">
+                <button class="btn btn-link btn-sm" onclick="YeniMusteriOlustur();" style="margin-left:-15px; margin-top:-7px;">
+                    <i class="fa fa-plus fa-2x"></i>
+                </button>
+            </div>
+            <div class="col-md-12" id="musteriformu" style="display:none; margin-top:10px">
+                 <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
+                    <label class="col-form-label col-md-12 font-weight-bold" style="text-align:left; margin-bottom:10px">Müşteri Bilgileri</label>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Firma Adı</label>
+                            <input type="text" class="form-control" id="firmaadi" placeholder="Firma Adı" value="<%=formduzenle("FirmaUnvani") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Yetkili Kişi</label>
+                            <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi" value="<%=formduzenle("Yetkili") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Firma Telefon</label>
+                            <input type="text" class="form-control" id="firmatelefon" placeholder="0(555) 123 45 67" value="<%=formduzenle("Telefon") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Firma E-posta</label>
+                            <input class="form-control" type="email" id="firmaeposta" placeholder="example@gmail.com" value="<%=formduzenle("Email") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Firma Adress</label>
+                            <input class="form-control" type="text" id="firmaadress" placeholder="Adress" value="<%=formduzenle("Adress") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Vergi Dairesi</label>
+                            <input class="form-control" type="text" id="firmavergidairesi" placeholder="Vergi Dairesi" value="<%=formduzenle("VergiDairesi") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Vergi No</label>
+                            <input class="form-control" type="text" id="firmavergino" placeholder="Vergi No" value="<%=formduzenle("VergiNo") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Makine Bilgileri</label>
+                            <input class="form-control" type="text" id="firmamakinebilgi" placeholder="Makine Bilgileri" value="<%=formduzenle("MakinaBilgileri") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="col-from-label">Bildirilen Arıza</label>
+                            <input class="form-control" type="text" id="firmaariza" placeholder="Bildirilen Arıza" value="<%=formduzenle("BildirilenAriza") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Başlangıç Tarihi</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="icon-prepend fa fa-calendar"></i>
+                                </span>
+                                <input type="text" id="baslangic_tarihi" required class="takvimyap_yeni hasDatepicker" style="padding-left:10px" value="<%=formatNumber(DAY(formduzenle("BaslangicTarihi")),2)%>.<%=formatNumber(MONTH(formduzenle("BaslangicTarihi")),2)%>.<%=YEAR(formduzenle("BaslangicTarihi"))%>"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Bitiş Tarihi</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="icon-prepend fa fa-calendar"></i>
+                                </span>
+                                <input type="text" id="bitis_tarihi" required class="takvimyap_yeni hasDatepicker" style="padding-left:10px" value="<%=formatNumber(DAY(formduzenle("BitisTarihi")),2)%>.<%=formatNumber(MONTH(formduzenle("BitisTarihi")),2)%>.<%=YEAR(formduzenle("BitisTarihi"))%>"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding-left:15px; width:110px">
+                        <label>Başlangıç Saati</label>
+                        <div class="form-group">
+                             <input type="text" id="baslangic_saati" required class="timepicker form-control" style="padding-left:10px" value="<%=formduzenle("BaslangicSaati") %>"/>
+                        </div>
+                    </div>
+                    <div style="padding-left:15px; width:110px">
+                        <label>Bitiş Saati</label>
+                        <div class="form-group">
+                             <input type="text" id="bitis_saati" required class="timepicker form-control" style="padding-left:10px" value="<%=formduzenle("BitisSaati") %>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-from-label">Yapılan İşlemler</label>
+                            <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height:100px"><%=formduzenle("YapilanIslemler") %></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-from-label">Not</label>
+                            <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height:100px"><%=formduzenle("FormNot") %></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="display:none">
+                        <div class="form-group">
+                            <div class="form-check">
+                                <label class="form-check-label" style="padding-left:1px" for="listeyeekle">Müşteri Listesine Kaydet</label>
+                                <input type="checkbox" class="form-check-input" style="margin-left: 10px; margin-top: 3px;" id="listeyeekle">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Parça Adı</label>
+                            <input type="text" name="parcalar" id="parcalar1" i="<1" data="" class="form-control parcalar" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Adet</label>
+                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1"/>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Görevli</label>
+                            <select id="firmagorevli" class="form-control select2" multiple>
+                                <%
+                                    SQL = "select id, personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'"
+                                    set kullanicilar = baglanti.execute(SQL)
+                                    do while not kullanicilar.eof
+                                %>
+
+                                <%
+                                    for x = 0 to ubound(split(formduzenle("Gorevliler"), ","))
+                                    user = split(formduzenle("Gorevliler"), ",")(x)
+                                %>  
+                                    <option <%if CStr(user) = CStr(kullanicilar("id")) then %> selected="selected" <%end if %> value="<%=kullanicilar("id") %>"><%=kullanicilar("adsoyad") %></option>
+                                <% next %>
+                                    
+                                <%
+                                    kullanicilar.movenext
+                                    loop        
+                                %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-12">
+                        <label class="col-form-label font-weight-bold" style="margin-bottom:10px">Stok Listesi</label>
+                        <table class="table table-bordered table-sm table-sprited">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Parça</th>
+                                    <th>Adet</th>
+                                    <th>Açıklama</th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                    <%  
+                                        if formduzenle.eof then 
+                                    %>
+                                        <tr>
+                                            <td colspan="4" style="text-align:center">Kayıt Bulunamadı</td>
+                                        </tr>
+                                    <%
+                                        end if
+
+                                        for x = 0 to ubound(split(formduzenle("ParcaId"), ","))
+                                        id = split(formduzenle("ParcaId"), ",")(x)
+                                        Adet = split(formduzenle("Adet"), ",")(x)
+
+                                        SQL = "select * from parca_listesi where durum = 'true' and cop = 'false' and id = '"& id &"'"
+                                        set parcadetay = baglanti.execute(SQL)
+
+                                        k = 0
+                                        do while not parcadetay.eof
+                                            k = k + 1
+                                    %>   
+                                    <tr>
+                                        <td style="text-align:center"><%=k %></td>
+                                        <td style="text-align:center"><%=parcadetay("marka") %> - <%=parcadetay("parca_kodu") %></td>
+                                        <td style="text-align:center"><%=Adet %></td>
+                                        <td style="text-align:center"><%=parcadetay("aciklama") %></td>
+                                    </tr>
+                                    <% 
+                                        parcadetay.movenext 
+                                        loop
+                                    %>
+                                    <% next %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="ServisBakimKaydiDuzenlemeYap(<%=kayitId%>);">Servis / Bakım Planı Kaydet</button>
+        </div>
+        <style>
+            .ui-helper-hidden {
+                display: none;
+            }
+
+            .ui-helper-hidden-accessible {
+                border: 0;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            .ui-helper-reset {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                outline: 0;
+                line-height: 1.3;
+                text-decoration: none;
+                font-size: 100%;
+                list-style: none;
+            }
+
+            .ui-helper-clearfix:before,
+            .ui-helper-clearfix:after {
+                content: "";
+                display: table;
+                border-collapse: collapse;
+            }
+
+            .ui-helper-clearfix:after {
+                clear: both;
+            }
+
+            .ui-helper-zfix {
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                position: absolute;
+                opacity: 0;
+                filter: Alpha(Opacity=0); /* support: IE8 */
+            }
+
+            .ui-front {
+                z-index: 1070;
+            }
+
+
+            /* Interaction Cues
+----------------------------------*/
+            .ui-state-disabled {
+                cursor: default !important;
+                pointer-events: none;
+            }
+
+
+            /* Icons
+----------------------------------*/
+            .ui-icon {
+                display: inline-block;
+                vertical-align: middle;
+                margin-top: -.25em;
+                position: relative;
+                text-indent: -99999px;
+                overflow: hidden;
+                background-repeat: no-repeat;
+            }
+
+            .ui-widget-icon-block {
+                left: 50%;
+                margin-left: -8px;
+                display: block;
+            }
+
+            /* Misc visuals
+----------------------------------*/
+
+            /* Overlays */
+            .ui-widget-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            .ui-autocomplete {
+                position: absolute;
+                top: 0;
+                left: 0;
+                cursor: default;
+            }
+
+            .ui-menu {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: block;
+                outline: 0;
+            }
+
+                .ui-menu .ui-menu {
+                    position: absolute;
+                }
+
+                .ui-menu .ui-menu-item {
+                    display: flex;
+                    margin: 0;
+                    cursor: pointer;
+                    /* support: IE10, see #8844 */
+                    list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+                }
+
+                .ui-menu .ui-menu-item-wrapper {
+                    position: relative;
+                    padding: 3px 1em 3px .4em;
+                    display: block;
+                    width: 100%;
+                    border: 1px solid #ccc;
+                }
+
+                .ui-menu .ui-menu-divider {
+                    margin: 5px 0;
+                    height: 0;
+                    font-size: 0;
+                    line-height: 0;
+                    border-width: 1px 0 0 0;
+                }
+
+                .ui-menu .ui-state-focus,
+                .ui-menu .ui-state-active {
+                    margin: -1px;
+                }
+
+            /* icon support */
+            .ui-menu-icons {
+                position: relative;
+            }
+
+                .ui-menu-icons .ui-menu-item-wrapper {
+                    padding-left: 2em;
+                }
+
+            /* left-aligned */
+            .ui-menu .ui-icon {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: .2em;
+                margin: auto 0;
+            }
+
+            /* right-aligned */
+            .ui-menu .ui-menu-icon {
+                left: auto;
+                right: 0;
+            }
+
+            /* Component containers
+----------------------------------*/
+            .ui-widget {
+                font-family: Arial,Helvetica,sans-serif;
+                font-size: 1em;
+            }
+
+                .ui-widget .ui-widget {
+                    font-size: 1em;
+                }
+
+                .ui-widget input,
+                .ui-widget select,
+                .ui-widget textarea,
+                .ui-widget button {
+                    font-family: Arial,Helvetica,sans-serif;
+                    font-size: 1em;
+                }
+
+                .ui-widget.ui-widget-content {
+                    border: 1px solid #c5c5c5;
+                }
+
+            .ui-widget-content {
+                border: 1px solid #dddddd;
+                background: #ffffff;
+                color: #333333;
+            }
+
+                .ui-widget-content a {
+                    color: #333333;
+                }
+
+            .ui-widget-header {
+                border: 1px solid #dddddd;
+                background: #e9e9e9;
+                color: #333333;
+                font-weight: bold;
+            }
+
+                .ui-widget-header a {
+                    color: #333333;
+                }
+
+                /* Interaction states
+----------------------------------*/
+                .ui-state-default,
+                .ui-widget-content .ui-state-default,
+                .ui-widget-header .ui-state-default,
+                .ui-button,
+                /* We use html here because we need a greater specificity to make sure disabled
+works properly when clicked or hovered */
+                html .ui-button.ui-state-disabled:hover,
+                html .ui-button.ui-state-disabled:active {
+                    border: 1px solid #c5c5c5;
+                    background: #f6f6f6;
+                    font-weight: normal;
+                    color: #454545;
+                }
+
+                    .ui-state-default a,
+                    .ui-state-default a:link,
+                    .ui-state-default a:visited,
+                    a.ui-button,
+                    a:link.ui-button,
+                    a:visited.ui-button,
+                    .ui-button {
+                        color: #454545;
+                        text-decoration: none;
+                    }
+
+                        .ui-state-hover,
+                        .ui-widget-content .ui-state-hover,
+                        .ui-widget-header .ui-state-hover,
+                        .ui-state-focus,
+                        .ui-widget-content .ui-state-focus,
+                        .ui-widget-header .ui-state-focus,
+                        .ui-button:hover,
+                        .ui-button:focus {
+                            border: 1px solid #cccccc;
+                            background: #ededed;
+                            font-weight: normal;
+                            color: #2b2b2b;
+                        }
+
+                            .ui-state-hover a,
+                            .ui-state-hover a:hover,
+                            .ui-state-hover a:link,
+                            .ui-state-hover a:visited,
+                            .ui-state-focus a,
+                            .ui-state-focus a:hover,
+                            .ui-state-focus a:link,
+                            .ui-state-focus a:visited,
+                            a.ui-button:hover,
+                            a.ui-button:focus {
+                                color: #2b2b2b;
+                                text-decoration: none;
+                            }
+
+            .ui-visual-focus {
+                box-shadow: 0 0 3px 1px rgb(94, 158, 214);
+            }
+
+            .ui-state-active,
+            .ui-widget-content .ui-state-active,
+            .ui-widget-header .ui-state-active,
+            a.ui-button:active,
+            .ui-button:active,
+            .ui-button.ui-state-active:hover {
+                border: 1px solid #003eff;
+                background: #007fff;
+                font-weight: normal;
+                color: #ffffff;
+            }
+
+                .ui-icon-background,
+                .ui-state-active .ui-icon-background {
+                    border: #003eff;
+                    background-color: #ffffff;
+                }
+
+                .ui-state-active a,
+                .ui-state-active a:link,
+                .ui-state-active a:visited {
+                    color: #ffffff;
+                    text-decoration: none;
+                }
+
+            /* Interaction Cues
+----------------------------------*/
+            .ui-state-highlight,
+            .ui-widget-content .ui-state-highlight,
+            .ui-widget-header .ui-state-highlight {
+                border: 1px solid #dad55e;
+                background: #fffa90;
+                color: #777620;
+            }
+
+            .ui-state-checked {
+                border: 1px solid #dad55e;
+                background: #fffa90;
+            }
+
+            .ui-state-highlight a,
+            .ui-widget-content .ui-state-highlight a,
+            .ui-widget-header .ui-state-highlight a {
+                color: #777620;
+            }
+
+            .ui-state-error,
+            .ui-widget-content .ui-state-error,
+            .ui-widget-header .ui-state-error {
+                border: 1px solid #f1a899;
+                background: #fddfdf;
+                color: #5f3f3f;
+            }
+
+                .ui-state-error a,
+                .ui-widget-content .ui-state-error a,
+                .ui-widget-header .ui-state-error a {
+                    color: #5f3f3f;
+                }
+
+            .ui-state-error-text,
+            .ui-widget-content .ui-state-error-text,
+            .ui-widget-header .ui-state-error-text {
+                color: #5f3f3f;
+            }
+
+            .ui-priority-primary,
+            .ui-widget-content .ui-priority-primary,
+            .ui-widget-header .ui-priority-primary {
+                font-weight: bold;
+            }
+
+            .ui-priority-secondary,
+            .ui-widget-content .ui-priority-secondary,
+            .ui-widget-header .ui-priority-secondary {
+                opacity: .7;
+                filter: Alpha(Opacity=70); /* support: IE8 */
+                font-weight: normal;
+            }
+
+            .ui-state-disabled,
+            .ui-widget-content .ui-state-disabled,
+            .ui-widget-header .ui-state-disabled {
+                opacity: .35;
+                filter: Alpha(Opacity=35); /* support: IE8 */
+                background-image: none;
+            }
+
+                .ui-state-disabled .ui-icon {
+                    filter: Alpha(Opacity=35); /* support: IE8 - See #6059 */
+                }
+
+
+            /* Misc visuals
+----------------------------------*/
+
+            /* Corner radius */
+            .ui-corner-all,
+            .ui-corner-top,
+            .ui-corner-left,
+            .ui-corner-tl {
+                border-top-left-radius: 3px;
+            }
+
+            .ui-corner-all,
+            .ui-corner-top,
+            .ui-corner-right,
+            .ui-corner-tr {
+                border-top-right-radius: 3px;
+            }
+
+            .ui-corner-all,
+            .ui-corner-bottom,
+            .ui-corner-left,
+            .ui-corner-bl {
+                border-bottom-left-radius: 3px;
+            }
+
+            .ui-corner-all,
+            .ui-corner-bottom,
+            .ui-corner-right,
+            .ui-corner-br {
+                border-bottom-right-radius: 3px;
+            }
+
+            /* Overlays */
+            .ui-widget-overlay {
+                background: #aaaaaa;
+                opacity: .3;
+                filter: Alpha(Opacity=30); /* support: IE8 */
+            }
+
+            .ui-widget-shadow {
+                -webkit-box-shadow: 0px 0px 5px #666666;
+                box-shadow: 0px 0px 5px #666666;
+            }
+        </style>
+        <script src="/js/jquery-ui.js"></script>
+    </form>
+    <%
+    elseif trn(request("islem")) = "musteribilgilerial" then
+
+        musteriId = trn(request("musteriID"))
+        SQL = "select * from ucgem_firma_listesi where id = '"& musteriId &"'"
+        response.Write(SQL)
+        set result = baglanti.execute(SQL)
+
     elseif trn(request("islem"))="personeller" then
 
         personel_tcno = trn(request("personel_tcno"))

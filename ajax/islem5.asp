@@ -169,7 +169,7 @@
                     <div class="tab-pane active" id="tab-r1" role="tabpanel">
                         <legend><%=LNG("Görevliler")%></legend>
                         <%
-                        SQL="with cte as (SELECT iss.adi, case when (select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = '"& is_id &"' and etiket_id = 1 and not color = 'rgb(52, 152, 219)')=0 then '00:00' else dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' AND olay.tamamlandi= 1 ) ) end AS harcanan, CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.etiket_id = gorevli.gorevli_id and olay.cop = 'false'), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN '-' ELSE '' END + dbo.DakikadanSaatYap( CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.etiket_id = gorevli.gorevli_id and olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN -1 * DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ELSE DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT(DATETIME, olay.bitis) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) END ) AS kalan, CASE WHEN (select COUNT(id) from ucgem_is_calisma_listesi where baslangic is not null and bitis is null and ekleyen_id = '72') = 0 then 'Baslanmamis' else 'Baslanmis' end as CalismaDurumu, ISNULL(gorevli.toplam_sure, '0:00') AS toplam_sure, ISNULL(gorevli.gunluk_sure, '0:00') AS gunluk_sure, ISNULL(gorevli.toplam_gun, '0:00') AS toplam_gun, CASE WHEN ISNULL(gorevli.toplam_sure, '0:00') = '0:00' THEN 0 ELSE 1 end AS GantAdimID, ISNULL(sinirlama_varmi, 0) as sinirlama_varmi, CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati) AS tamamlanma_zamani, kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_adsoyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani FROM ucgem_is_gorevli_durumlari gorevli WITH (NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH (NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = '"& is_id &"' GROUP BY iss.adi, gorevli.toplam_sure, gorevli.gunluk_sure, gorevli.toplam_gun, ISNULL(iss.GantAdimID, 0), CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati), kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani, gorevli.is_id, iss.baslangic_tarihi, iss.sinirlama_varmi ) select CASE WHEN DATEDIFF(MINUTE, 0, harcanan) = 0 THEN 0 WHEN tamamlanma_orani = 0 THEN 0 WHEN tamamlanma_orani = 100 THEN 100 WHEN DATEDIFF(MINUTE, 0, harcanan) > DATEDIFF(MINUTE, 0, toplam_sure) THEN 90 WHEN DATEDIFF(MINUTE, 0, harcanan) = DATEDIFF(MINUTE, 0, toplam_sure) THEN 90 ELSE CONVERT(decimal(5,2), CONVERT(decimal(5,2), DATEDIFF(MINUTE, 0, harcanan)) / CONVERT(decimal(5,2), (DATEDIFF(MINUTE, 0, toplam_sure)))) * 100 END as tamamlanmorani,*from cte"
+                        SQL="with cte as (SELECT iss.adi, case when (select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = '"& is_id &"' and etiket_id = gorevli.gorevli_id and not color = 'rgb(52, 152, 219)')=0 then '00:00' else dbo.DakikadanSaatYap( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' AND olay.tamamlandi= 1 ) ) end AS harcanan, CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.durum = 'true' AND olay.etiket_id = gorevli.gorevli_id and olay.cop = 'false'), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN '-' ELSE '' END + dbo.DakikadanSaatYap( CASE WHEN (DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id AND olay.etiket_id = gorevli.gorevli_id and olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ) < 0 THEN -1 * DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT( DATETIME, olay.bitis ) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL( gorevli.toplam_sure, '00:00' ) ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) ELSE DATEDIFF( n, DATEADD( n, ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT( DATETIME, olay.baslangic ) + CONVERT( DATETIME, olay.baslangic_saati ), CONVERT(DATETIME, olay.bitis) + CONVERT( DATETIME, olay.bitis_saati ) ) ) ), 0 ) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' ), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ), DATEADD( n, dbo.SaattenDakikaYap(ISNULL(gorevli.toplam_sure, '00:00')), CONVERT(DATETIME, iss.baslangic_tarihi) + CONVERT(DATETIME, '00:00') ) ) END ) AS kalan, CASE WHEN (select COUNT(id) from ucgem_is_calisma_listesi where baslangic is not null and bitis is null and ekleyen_id = gorevli.gorevli_id) = 0 then 'Baslanmamis' else 'Baslanmis' end as CalismaDurumu, ISNULL(gorevli.toplam_sure, '0:00') AS toplam_sure, ISNULL(gorevli.gunluk_sure, '0:00') AS gunluk_sure, ISNULL(gorevli.toplam_gun, '0:00') AS toplam_gun, CASE WHEN ISNULL(gorevli.toplam_sure, '0:00') = '0:00' THEN 0 ELSE 1 end AS GantAdimID, ISNULL(sinirlama_varmi, 0) as sinirlama_varmi, CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati) AS tamamlanma_zamani, kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_adsoyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani FROM ucgem_is_gorevli_durumlari gorevli WITH (NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH (NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = '"& is_id &"' GROUP BY iss.adi, gorevli.toplam_sure, gorevli.gunluk_sure, gorevli.toplam_gun, ISNULL(iss.GantAdimID, 0), CONVERT(DATETIME, gorevli.ekleme_tarihi) + CONVERT(DATETIME, gorevli.ekleme_saati), kullanici.personel_resim, kullanici.personel_ad + ' ' + kullanici.personel_soyad, gorevli.gorevli_id, gorevli.id, gorevli.tamamlanma_orani, gorevli.is_id, iss.baslangic_tarihi, iss.sinirlama_varmi ) select CASE WHEN DATEDIFF(MINUTE, 0, harcanan) = 0 THEN 0 WHEN tamamlanma_orani = 0 THEN 0 WHEN tamamlanma_orani = 100 THEN 100 WHEN DATEDIFF(MINUTE, 0, harcanan) > DATEDIFF(MINUTE, 0, toplam_sure) THEN 90 WHEN DATEDIFF(MINUTE, 0, harcanan) = DATEDIFF(MINUTE, 0, toplam_sure) THEN 90 ELSE CONVERT(decimal(5,2), CONVERT(decimal(5,2), DATEDIFF(MINUTE, 0, harcanan)) / CONVERT(decimal(5,2), (DATEDIFF(MINUTE, 0, toplam_sure)))) * 100 END as tamamlanmorani,*from cte"
                         set gorevli = baglanti.execute(SQL)
                             'response.Write(SQL)
                         do while not gorevli.eof
@@ -295,8 +295,7 @@
                             </div>
                         </div>-->
                         <hr />
-                        <% else
-                            %>
+                        <% else %>
 
                         <div class="row">
                             <div class="col-xs-1">
@@ -304,13 +303,13 @@
                                     <img style="width: 100%; min-width: 21px;" src="<%=gorevli("personel_resim") %>" class="online"></a>
                             </div>
                             <div class="col-xs-1">
-                                <input id="easyPieChartlar" type="text" class="dial easyPieChartlar" value="<%=gorevli("tamamlanma_orani") %>" data-width="68" data-height="75" data-linecap="round" data-displayprevious="true" data-displayinput="true" data-readonly="true" data-fgcolor="#40c4ff">
+                                <input id="easyPieChartlar" type="text" class="dial easyPieChartlar" value="<%=gorevli("tamamlanmorani") %>" data-width="68" data-height="75" data-linecap="round" data-displayprevious="true" data-displayinput="true" data-readonly="true" data-fgcolor="#40c4ff">
                             </div>
                             <div class="col-xs-8">
                                 <%=LNG("İşin Tamamlanma Durumu :")%>
                                 <br />
                                 <div class="nprogress">
-                                    <div class="nprogress-bar nprogress-bar-striped nprogress-bar-success" role="progressbar" style="width: <%=gorevli("tamamlanma_orani") %>%" aria-valuenow="<%=gorevli("tamamlanma_orani") %>" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="nprogress-bar nprogress-bar-striped nprogress-bar-success" role="progressbar" style="width: <%=gorevli("tamamlanmorani") %>%" aria-valuenow="<%=gorevli("tamamlanmorani") %>" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <br />
                                 <span style="float: left;">
@@ -341,11 +340,11 @@
                                         <tr>
                                             <td style="padding-right: 15px;"><strong style="font-size: 15px;"><%=gorevli("gunluk_sure") & " X " & gorevli("toplam_gun") & " gün = " & gorevli("toplam_sure") %></strong></td>
                                             <td style="padding-right: 15px;"><i class="fa fa-clock-o"></i><strong style="font-size: 15px;"><%=gorevli("harcanan") %></strong></td>
-                                            <td><i class="fa fa-clock-o"></i><strong style="font-size: 15px;"><%=gorevli("toplam_sure") %></strong></td>
+                                            <td><i class="fa fa-clock-o"></i><strong style="font-size: 15px;"><%=gorevli("kalan") %></strong></td>
                                         </tr>
                                     </table>
                                     <% end if %>
-                                </span><span style="float: right; padding-top: 0px;"><%=LNG("Son Güncelleme :")%> <%=gorevli("tamamlanma_zamani") %></span>
+                                </span><span style="float: right; padding-top: 0px;"><%=LNG("Son Güncelleme : ")%> <strong><%=gorevli("tamamlanma_zamani") %></strong></span>
                             </div>
                             <div class="col-xs-1 " style="padding-top: 5px;">
                                 <input type="button" class="btn btn-danger btn-sm" onclick="is_personel_durt('<%=gorevli("gorevli_id") %>', '<%=is_id %>');" value="<%=LNG("Dürt")%>" />
@@ -1430,7 +1429,7 @@ works properly when clicked or hovered */
 
 <legend style="font-size: 15px; font-weight: bold; line-height: 2px;">Çalışma Geçmişi :</legend>
 <br />
-<table class="table">
+<table class="table table-xs">
     <thead>
         <tr>
             <th>Başlangıç</th>
@@ -1441,8 +1440,9 @@ works properly when clicked or hovered */
     </thead>
     <tbody>
         <%
-          SQL="SELECT ekleyen.personel_ad + ' ' + ekleyen.personel_soyad AS ekleyen_adsoyad, CASE WHEN ISNULL(c.bitis, 0) = 0 THEN '00:00:00' ELSE CASE WHEN LEN(CONVERT(NVARCHAR(10), DATEDIFF(HOUR, c.baslangic, c.bitis))) = 1 THEN '0' ELSE '' END + CONVERT(NVARCHAR(10), DATEDIFF(HOUR, c.baslangic, c.bitis)) + ':' + CASE WHEN LEN(CONVERT(NVARCHAR(50), DATEDIFF(MINUTE, c.baslangic, c.bitis) % 60)) = 1 THEN '0' ELSE '' END + CONVERT(NVARCHAR(50), DATEDIFF(MINUTE, c.baslangic, c.bitis) % 60) + ':00' END AS sure, DATEDIFF(MINUTE, c.baslangic, ISNULL(c.bitis, c.baslangic)) AS dakika,RIGHT('0'+CAST(DATEPART(HOUR, c.baslangic)as varchar(2)),2)+ ':'+ RIGHT('0'+CAST(DATEPART(minute, c.baslangic)as varchar(2)),2) as baslangicSaat, RIGHT('0'+CAST(DATEPART(HOUR, c.bitis)as varchar(2)),2)+ ':'+ RIGHT('0'+CAST(DATEPART(minute, c.bitis)as varchar(2)),2) as bitisSaat, c.* FROM ucgem_is_calisma_listesi c JOIN ucgem_firma_kullanici_listesi ekleyen WITH (NOLOCK) ON ekleyen.id = c.ekleyen_id WHERE c.is_id = '"& is_id &"' and c.cop = 'false' ORDER BY c.id ASC;"
+          SQL="SELECT ekleyen.personel_ad + ' ' + ekleyen.personel_soyad AS ekleyen_adsoyad, CASE WHEN ISNULL(c.bitis, 0) = 0 THEN '00:00:00' ELSE CASE WHEN LEN(CONVERT(NVARCHAR(10), DATEDIFF(HOUR, c.baslangic, c.bitis))) = 1 THEN '0' ELSE '' END + CONVERT(nvarchar(10), DATEDIFF(HOUR, 0, CONVERT(char(8), DATEADD(MINUTE, CONVERT(int, DATEDIFF(MINUTE, c.baslangic, c.bitis)), ''), 114))) + ':' + CASE WHEN LEN(CONVERT(NVARCHAR(50), DATEDIFF(MINUTE, c.baslangic, c.bitis) % 60)) = 1 THEN '0' ELSE '' END + CONVERT(NVARCHAR(50), DATEDIFF(MINUTE, c.baslangic, c.bitis) % 60) + ':00' END AS sure, DATEDIFF(MINUTE, c.baslangic, ISNULL(c.bitis, c.baslangic)) AS dakika,RIGHT('0'+CAST(DATEPART(HOUR, c.baslangic)as varchar(2)),2)+ ':'+ RIGHT('0'+CAST(DATEPART(minute, c.baslangic)as varchar(2)),2) as baslangicSaat, RIGHT('0'+CAST(DATEPART(HOUR, c.bitis)as varchar(2)),2)+ ':'+ RIGHT('0'+CAST(DATEPART(minute, c.bitis)as varchar(2)),2) as bitisSaat, c.* FROM ucgem_is_calisma_listesi c JOIN ucgem_firma_kullanici_listesi ekleyen WITH (NOLOCK) ON ekleyen.id = c.ekleyen_id WHERE c.is_id = '"& is_id &"' and c.cop = 'false' ORDER BY c.id ASC;"
           set calisma = baglanti.execute(SQL)
+            'response.Write(SQL)
           if calisma.eof then
         %>
         <tr>
@@ -1484,15 +1484,16 @@ works properly when clicked or hovered */
             calisma.movenext
             loop
 
-            SQL = "with sorgu as (SELECT CASE WHEN ISNULL(c.bitis, 0) = 0 THEN '00:00:00' ELSE CASE WHEN LEN(CONVERT(NVARCHAR(10), DATEDIFF(HOUR, c.baslangic, c.bitis))) = 1 THEN '0' ELSE '' END + CONVERT(NVARCHAR(10), DATEDIFF(HOUR, c.baslangic, c.bitis)) + ':' + CASE WHEN LEN(CONVERT(NVARCHAR(50), DATEDIFF(MINUTE, c.baslangic, c.bitis) % 60)) = 1 THEN '0' ELSE '' END + CONVERT(NVARCHAR(50), DATEDIFF(MINUTE, c.baslangic, c.bitis) % 60) + ':00' END AS sure FROM ucgem_is_calisma_listesi c JOIN ucgem_firma_kullanici_listesi ekleyen WITH (NOLOCK) ON ekleyen.id = c.ekleyen_id WHERE c.is_id = '"& is_id &"' and c.cop = 'false' ) select CONVERT(char(8), DATEADD(MINUTE, SUM(datediff(MINUTE, 0, CONVERT(time, sure))), ''), 114) as toplamsure from sorgu"
+            SQL = "with sorgu as (SELECT CASE WHEN ISNULL(c.bitis, 0) = 0 THEN '00:00:00' ELSE CASE WHEN LEN(CONVERT(NVARCHAR(10), DATEDIFF(HOUR, c.baslangic, c.bitis))) = 1 THEN '0' ELSE '' END + CONVERT(nvarchar(10), DATEDIFF(HOUR, 0, CONVERT(char(8), DATEADD(MINUTE, CONVERT(int, DATEDIFF(MINUTE, c.baslangic, c.bitis)), ''), 114))) + ':' + CASE WHEN LEN(CONVERT(NVARCHAR(50), DATEDIFF(MINUTE, c.baslangic, c.bitis) % 60)) = 1 THEN '0' ELSE '' END + CONVERT(NVARCHAR(50), DATEDIFF(MINUTE, c.baslangic, c.bitis) % 60) + ':00' END AS sure FROM ucgem_is_calisma_listesi c JOIN ucgem_firma_kullanici_listesi ekleyen WITH (NOLOCK) ON ekleyen.id = c.ekleyen_id WHERE c.is_id = '"& is_id &"' and c.cop = 'false' ) select CONVERT(char(8), DATEADD(MINUTE, SUM(datediff(MINUTE, 0, CONVERT(time, sure))), ''), 114) as toplamsure from sorgu"
             set toplamCalisma = baglanti.execute(SQL)
+            'response.Write(SQL)
 
             SQL = "SELECT COUNT(DISTINCT c.ekleyen_id) as sayi  FROm ucgem_is_calisma_listesi c WHERE c.is_id = '"& is_id &"' and c.cop = 'false'"
             set userSayi = baglanti.execute(SQL)
         %>
         <tr>
             <td colspan="2"></td>
-            <td><b><%=toplamCalisma("toplamsure") %></b></td>
+            <td colspan="2"><b><%=toplamCalisma("toplamsure") %></b></td>
         </tr>
     </tbody>
 </table>
@@ -2235,6 +2236,144 @@ works properly when clicked or hovered */
     </tbody>
 </table>
 <%
+    elseif trn(request("islem"))="YeniServisBakimKaydiEkle" then
+    
+        if trn(request("islem2"))="ekle" then
+            firmaunvani = trn(request("firmaunvani"))
+            firmayetkili = trn(request("firmayetkili"))
+            firmatelefon = trn(request("firmatelefon"))
+            firmaeposta = trn(request("firmaeposta"))
+            firmaadress = trn(request("firmaadress"))
+            firmavergidairesi = trn(request("firmavergidairesi"))
+            firmavergino = trn(request("firmavergino"))
+            listeyeekle = trn(request("listeyeekle"))
+            gorevli = trn(request("gorevli"))
+            parcaId = trn(request("parcaId"))
+            adet = trn(request("adet"))
+            musteri_id = trn(request("musteri_id"))
+
+            firmamakinebilgi = trn(request("firmamakinebilgi"))
+            firmaariza = trn(request("firmaariza"))
+            baslangic_tarihi = trn(request("baslangic_tarihi"))
+            bitis_tarihi = trn(request("bitis_tarihi"))
+            baslangic_saati = trn(request("baslangic_saati"))
+            bitis_saati = trn(request("bitis_saati"))
+            firmayapilanislemler = trn(request("firmayapilanislemler"))
+            firmanot = trn(request("firmanot"))
+            
+            firma_kodu = Request.Cookies("kullanici")("firma_kodu")
+            firma_id = Request.Cookies("kullanici")("firma_id")
+            ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
+            ekleyen_ip = Request.ServerVariables("Remote_Addr")
+            ekleme_tarihi = date
+            ekleme_saati = time
+            durum = "true"
+            cop = "false"
+
+            SQL = "insert into servis_bakim_kayitlari (FirmaId, FirmaUnvani, Yetkili, Adress, Email, Telefon, VergiDairesi, VergiNo, Durum, Cop, EkleyenId, EkleyenIp, EklemeTarihi, EklemeSaati, Gorevliler, ParcaId, Adet, MakinaBilgileri, BildirilenAriza, BaslangicTarihi, BitisTarihi, BaslangicSaati, BitisSaati, YapilanIslemler, FormNot) values('"& musteri_id &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmaeposta &"', '"& firmatelefon &"', '"& firmavergidairesi &"', '"& firmavergino &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), CONVERT(time, '"& ekleme_saati &"'), '"& gorevli &"', '"& parcaId &"', '"& adet &"', '"& firmamakinebilgi &"', '"& firmaariza &"', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), CONVERT(time, '"& baslangic_saati &"'), CONVERT(time, '"& bitis_saati &"'), '"& firmayapilanislemler &"', '"& firmanot &"')"
+            set servisekle = baglanti.execute(SQL)
+
+        elseif trn(request("islem2"))="sil" then
+            kayitId = trn(request("kayit_id"))
+            cop = "true"
+
+            SQL = "update servis_bakim_kayitlari set Cop = '"& cop &"' where id = '"& kayitId &"'"
+            set servissil = baglanti.execute(SQL)
+
+        elseif trn(request("islem2"))="duzenle" then
+
+            firmaunvani = trn(request("firmaunvani"))
+            firmayetkili = trn(request("firmayetkili"))
+            firmatelefon = trn(request("firmatelefon"))
+            firmaeposta = trn(request("firmaeposta"))
+
+            firmavergino = trn(request("firmavergino"))
+            listeyeekle = trn(request("listeyeekle"))
+            gorevli = trn(request("gorevli"))
+            parcaId = trn(request("parcaId"))
+            adet = trn(request("adet"))
+            musteri_id = trn(request("musteri_id"))
+
+            firmamakinebilgi = trn(request("firmamakinebilgi"))
+            firmaariza = trn(request("firmaariza"))
+            baslangic_tarihi = trn(request("baslangic_tarihi"))
+            bitis_tarihi = trn(request("bitis_tarihi"))
+            baslangic_saati = trn(request("baslangic_saati"))
+            bitis_saati = trn(request("bitis_saati"))
+            firmayapilanislemler = trn(request("firmayapilanislemler"))
+            firmanot = trn(request("firmanot"))
+            kayitId = trn(request("kayitId"))
+
+            SQL = "update servis_bakim_kayitlari set FirmaId = '"& musteri_id &"', FirmaUnvani = '"& firmaunvani &"', Yetkili = '"& firmayetkili &"', Adress = '"& firmaadress &"', Email = '"& firmaeposta &"', Telefon = '"& firmatelefon &"', VergiDairesi = '"& firmavergidairesi &"', VergiNo = '"& firmavergino &"', Gorevliler = '"& gorevli &"', ParcaId = ParcaId +','+'"& parcaId &"', Adet = Adet +','+'"& adet &"', MakinaBilgileri = '"& firmamakinebilgi &"', BildirilenAriza = '"& firmaariza &"', BaslangicTarihi = CONVERT(date, '"& baslangic_tarihi &"', 103), BitisTarihi = CONVERT(date, '"& bitis_tarihi &"', 103), BaslangicSaati = CONVERT(time, '"& baslangic_saati &"'), BitisSaati = CONVERT(time, '"& bitis_saati &"'), YapilanIslemler = '"& firmayapilanislemler &"', FormNot = '"& firmanot &"' where id = '"& kayitId &"'"
+            set formguncelle = baglanti.execute(SQL)
+        end if
+
+    SQL = "select * from servis_bakim_kayitlari where Durum = 'true' and Cop = 'false'"
+    set servisbakim = baglanti.execute(SQL)
+%>
+    <table class="table datatableyap table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firma Ünvanı</th>
+                <th>Yetkili</th>
+                <th>Görevliler</th>
+                <th>Adress</th>
+                <th>Email</th>
+                <th>Vergi Dairesi</th>
+                <th>Vergi No</th>
+                <th>Işlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                SQL = "select kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen, servis.* from servis_bakim_kayitlari servis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = servis.EkleyenId where servis.Durum = 'true' and servis.Cop = 'false' order by servis.EklemeTarihi asc"
+                set servisBakim = baglanti.execute(SQL)
+
+                if servisBakim.eof then
+            %>
+                <tr>
+                    <td colspan="9" style="text-align:center">Kayıt Bulunamadı</td>
+                </tr>
+            <%
+                end if
+                k = 0
+                do while not servisBakim.eof
+                    k = k + 1
+            %>
+            <tr>
+                <td><%=k %></td>
+                <td><%=servisBakim("FirmaUnvani") %></td>
+                <td><%=servisBakim("Yetkili") %></td>
+                <td> <%
+                            for x = 0 to ubound(split(servisBakim("Gorevliler"), ","))
+                                user = split(servisBakim("Gorevliler"), ",")(x)
+                                SQL="SELECT * FROM ucgem_firma_kullanici_listesi WHERE id = '"& user &"' " 
+                                set kcek2 = baglanti.execute(SQL)  
+                      %>  <%=kcek2("personel_ad") & " " & kcek2("personel_soyad") %><br /> <%next %>
+                </td>
+                <td><%=servisBakim("Adress") %></td>
+                <td><%=servisBakim("Email") %></td>
+                <td><%=servisBakim("VergiDairesi") %></td>
+                <td><%=servisBakim("VergiNo") %></td>
+                <td>
+                    <button type="button" class="btn btn-mini btn-primary dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            İşlemler
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item waves-effect waves-light" onclick="rapor_pdf_indir('teknik_servis_formu', '<%=Request.Cookies("kullanici")("kullanici_id") %>', '<%=servisBakim("id") %>');" href="javascript:void(0);">Servis Formu Oluştur</a>
+                            <a class="dropdown-item waves-effect waves-light" onclick="ServisBakimKaydiDuzenle(<%=servisBakim("id") %>);" href="javascript:void(0);">Düzenle</a>
+                            <a class="dropdown-item waves-effect waves-light" onclick="ServisBakimKaydiSil(<%=servisBakim("id") %>);" href="javascript:void(0);">Sil</a>
+                        </div>
+                </td>
+            </tr>
+            <%
+                servisBakim.movenext
+                loop
+            %>
+        </tbody>
+    </table>
+<%
     elseif trn(request("islem"))="parcalar_ve_iscilik_getir" then
 
         IsID = trn(request("IsID"))
@@ -2259,7 +2398,7 @@ works properly when clicked or hovered */
                     <input type="text" name="parcalar" id="parcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control parcalar required" style="width: 90%;" required />
                 </td>
                 <td>
-                    <input id="parca_adeti" type="number" oninput="numControl();" class="form-control" style="width: 50px; text-align: center;" value="1" min="1"/>
+                    <input id="parca_adeti" type="number" onkeyup="numControl();" class="form-control" style="width: 50px; text-align: center;" value="1" min="1"/>
                 </td>
                 <td style="padding-left: 10px;">
                     <input type="text" name="aparcalar" id="aparcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control aparcalar required" style="width: 90%;" required /></td>
@@ -2759,7 +2898,7 @@ works properly when clicked or hovered */
                 SQL = "select * from parca_listesi where id = '"& ParcaId &"'"
                 set parcalar = baglanti.execute(SQL)
 
-                SQL = "select case when departmanlar like 'proje%' then SUBSTRING(departmanlar,7, LEN(CHARINDEX(',', departmanlar)-CHARINDEX(',', departmanlar))) else '0' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
+                SQL = "select case when departmanlar like 'proje%' then SUBSTRING(departmanlar,7, LEN(CHARINDEX(',', departmanlar)-CHARINDEX(',', departmanlar))) else '1' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
                 set isListesi = baglanti.execute(SQL)
 
                 projeID = isListesi("ProjeID")
@@ -2771,6 +2910,7 @@ works properly when clicked or hovered */
                    birimFiyat = CDbl(parcalar("birim_maliyet"))
 
                    birim = parcalar("birim_pb")
+                   stokAdeti = miktar
                    toplamTL = "0.00"
                    toplamEUR = "0.00"
                    toplamUSD = "0.00"
@@ -2789,14 +2929,14 @@ works properly when clicked or hovered */
 
                    if eksikParca > 0 then
 
-                         SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"' and IsId = '"& IsID &"'"
+                         SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"' and IsId = '"& IsID &"' and cop = 'false'"
                          set siparisVarmi = baglanti.execute(SQL)
 
                          SQL="select * from satinalma_listesi where IsId = '"& IsID &"'"
                          set siparisFormuVarmi = baglanti.execute(SQL)
 
-                         if siparisVarmi.eof then
-                            if siparisFormuVarmi.eof then
+
+                         if siparisFormuVarmi.eof then
                                 SQL = "SET NOCOUNT ON; insert into satinalma_listesi(IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& IsID &"', '"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
                                 set satinalmaListesi = baglanti.execute(SQL)
    
@@ -2819,12 +2959,12 @@ works properly when clicked or hovered */
                                   set satinalmaListesi = baglanti.execute(SQL)
                                   satinalmaId = siparisFormuVarmi("id")
                                end if
-                            end if
-
-                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+                            
+                         if siparisVarmi.eof then
+                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, stokAdeti, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& stokAdeti &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                             set satinalmaSiparisListesi = baglanti.execute(SQL)
                          else
-                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where parcaId = '"& siparisVarmi("parcaId") &"' and IsId = '"& siparisVarmi("IsId") &"'"
+                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"', stokAdeti = stokAdeti + '"& stokAdeti &"' where parcaId = '"& siparisVarmi("parcaId") &"' and IsId = '"& siparisVarmi("IsId") &"'"
                                set siparisGuncelle = baglanti.execute(SQL)
 
                                if parcalar("birim_pb") = "TL" then
@@ -2841,8 +2981,8 @@ works properly when clicked or hovered */
                                   SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
                                   set satinalmaListesi = baglanti.execute(SQL)
                                end if
-                         end if
-                        
+                            end if   
+                         end if                        
                     end if
 
                     sonuc = parcalar("miktar") - AdetSayisi
@@ -2886,7 +3026,7 @@ works properly when clicked or hovered */
                    eksikParca = AdetSayisi - miktar
                    
                    birimFiyat = CDbl(parcalar("birim_maliyet"))
-
+                   stokAdeti = miktar
                    birim = parcalar("birim_pb")
                    toplamTL = "0.00"
                    toplamEUR = "0.00"
@@ -2906,14 +3046,13 @@ works properly when clicked or hovered */
 
                          if eksikParca > 0 then
 
-                          SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"' and IsId = '"& IsID &"'"
+                          SQL="select * from satinalma_siparis_listesi where parcaId = '"& ParcaId &"' and IsId = '"& IsID &"' and cop = 'false'"
                          set siparisVarmi = baglanti.execute(SQL)
 
                          SQL="select * from satinalma_listesi where IsId = '"& IsID &"'"
                          set siparisFormuVarmi = baglanti.execute(SQL)
 
-                         if siparisVarmi.eof then
-                            if siparisFormuVarmi.eof then
+                         if siparisFormuVarmi.eof then
                                 SQL = "SET NOCOUNT ON; insert into satinalma_listesi(IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& IsID &"', '"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
                                 set satinalmaListesi = baglanti.execute(SQL)
    
@@ -2936,12 +3075,12 @@ works properly when clicked or hovered */
                                   set satinalmaListesi = baglanti.execute(SQL)
                                   satinalmaId = siparisFormuVarmi("id")
                                end if
-                            end if
 
-                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+                         if siparisVarmi.eof then
+                            SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, stokAdeti, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& stokAdeti &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                             set satinalmaSiparisListesi = baglanti.execute(SQL)
                          else
-                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"' where parcaId = '"& siparisVarmi("parcaId") &"' and IsId = '"& siparisVarmi("IsId") &"'"
+                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"', stokAdeti = stokAdeti '"& stokAdeti &"' where parcaId = '"& siparisVarmi("parcaId") &"' and IsId = '"& siparisVarmi("IsId") &"'"
                                set siparisGuncelle = baglanti.execute(SQL)
 
                                if parcalar("birim_pb") = "TL" then
@@ -2958,8 +3097,9 @@ works properly when clicked or hovered */
                                   SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
                                   set satinalmaListesi = baglanti.execute(SQL)
                                end if
-                         end if
-                        
+                         end if  
+
+                          end if                      
                     end if
 
                     sonuc = parcalar("miktar") - AdetSayisi

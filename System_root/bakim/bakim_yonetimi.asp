@@ -74,8 +74,8 @@
         <article class="col-xs-12 ">
             <div class="card">
                 <div class="card-header">
-                    <h5>Planlanan Servis/Bakım Listesi</h5>
-                    <input type="button" style="float: right;" class="btn btn-primary" onclick="YeniTekliBakimKaydiEkle();" value="Yeni Servis/Bakım Planla" />
+                    <h5>Planlanan Periyodik/Bakım Listesi</h5>
+                    <input type="button" style="float: right;" class="btn btn-primary" onclick="YeniTekliBakimKaydiEkle();" value="Periyodik Bakım Ekleme" />
                     <input type="button" style="float: right; margin-right:15px;" class="btn btn-info" onclick="ModalBakimArama();" value="Arama Yap" />
                 </div>
                 <div class="card-block">
@@ -84,6 +84,26 @@
                             <script>
                                 $(function (){
                                     proje_bakim_kayitlarini_getir('0', 'true');
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="col-xs-12 ">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Planlanan Servis/Bakım Listesi</h5>
+                    <input type="button" style="float: right" class="btn btn-primary" onclick="YeniServisBakimKaydiEkle();" value="Servis Bakım Ekleme" />
+                </div>
+                <div class="card-block">
+                    <div class="row">
+                        <div id="servis_kayit" class="col-md-12">
+                            <script>
+                                $(function (){
+                                    servis_bakim_kayitlarini_getir();
                                 });
                             </script>
                         </div>

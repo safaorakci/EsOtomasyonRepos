@@ -893,8 +893,6 @@ function satinalmayenisatirekle(i) {
 }
 
 function parcalar_autocomplete_calistir() {
-
-
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
 
         var IsId = $(this).attr("isid");
@@ -1495,6 +1493,16 @@ function proje_bakim_kayitlarini_getir(ProjeId, Tum) {
         datatableyap();
     });
 
+}
+
+
+function servis_bakim_kayitlarini_getir() {
+
+    var data = "islem=YeniServisBakimKaydiEkle";
+    data = encodeURI(data);
+    $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+        datatableyap();
+    });
 }
 
 

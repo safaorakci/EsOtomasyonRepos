@@ -1287,7 +1287,7 @@ function is_tablo_islemler(durum) {
                     $('.stopButton').hide();
 
                     timer = new easytimer.Timer();
-                    
+
                     var Id;
 
                     $('.startButton').click(function () {
@@ -3461,7 +3461,7 @@ function izin_talep_formu(personel_id, izin_id) {
 
 function personel_giris_cikis_getir(personel_id, nesne) {
 
-    
+
     //$(nesne).parent("li").addClass("tab-current");
     setTimeout(function () {
         var data = "islem=personel_giris_cikis_getir";
@@ -5980,22 +5980,32 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&baslangic=" + baslangic;
         data += "&bitis=" + bitis;
 
-    } else if (deger == "mesai_bildirim_formu") {
+    }
+    else if (deger == "teknik_servis_formu") {
 
         data += "&personel_id=" + personel_id;
         data += "&izin_id=" + izin_id;
 
-    } else if (deger == "izin_talep_formu") {
+    }
+    else if (deger == "mesai_bildirim_formu") {
+
+        data += "&personel_id=" + personel_id;
+        data += "&izin_id=" + izin_id;
+
+    }
+    else if (deger == "izin_talep_formu") {
 
         data += "&personel_id=" + personel_id;
         data += "&izin_id=" + izin_id;
 
 
-    } else if (deger == "satinalma_formu") {
+    }
+    else if (deger == "satinalma_formu") {
 
         data += "&satinalma_id=" + personel_id;
 
-    } else if (deger == "personel_is_yuku_verimlilik") {
+    }
+    else if (deger == "personel_is_yuku_verimlilik") {
 
         var gosterim_tipi = $("#yeni_is_yuku_gosterim_tipi").val();
         var proje_id = $("#yeni_is_yuku_proje_id").val();
@@ -6007,7 +6017,8 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&baslangic=" + baslangic;
         data += "&bitis=" + bitis;
 
-    } else if (deger == "personel_performans_raporu") {
+    }
+    else if (deger == "personel_performans_raporu") {
 
         var rapor_personel_id = $("#rapor_personel_id").val();
         var baslangic_tarihi = $("#baslangic_tarihi").val();
@@ -6022,7 +6033,8 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&yeni_is_yuku_proje_id=" + yeni_is_yuku_proje_id;
 
 
-    } else if (deger == "proje_adam_saat_raporu") {
+    }
+    else if (deger == "proje_adam_saat_raporu") {
 
         var rapor_personel_id = $("#rapor_personel_id").val();
         var etiketler = $("#etiketler").val();
@@ -6036,7 +6048,8 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&baslangic=" + baslangic;
         data += "&bitis=" + bitis;
 
-    } else if (deger == "departman_adam_saat_raporu") {
+    }
+    else if (deger == "departman_adam_saat_raporu") {
 
         var etiketler = $("#etiketler").val();
         var rapor_personel_id = $("#rapor_personel_id").val();
@@ -6050,13 +6063,15 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&baslangic=" + baslangic;
         data += "&bitis=" + bitis;
 
-    } else if (deger == "proje_maliyet_raporu") {
+    }
+    else if (deger == "proje_maliyet_raporu") {
 
         var yeni_is_yuku_proje_id = $("#yeni_is_yuku_proje_id").val();
 
         data += "&yeni_is_yuku_proje_id=" + yeni_is_yuku_proje_id;
 
-    } else if (deger == "personel_adam_saat_raporu") {
+    }
+    else if (deger == "personel_adam_saat_raporu") {
 
         var rapor_personel_id = $("#rapor_personel_id").val();
         var baslangic = $("#is_yuku_donem option:selected").attr("dongu_baslangic");
@@ -6072,7 +6087,8 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&etiketler=" + etiketler;
         data += "&yeni_is_yuku_proje_id=" + yeni_is_yuku_proje_id;
 
-    } else if (deger == "nakit_akis_raporu") {
+    }
+    else if (deger == "nakit_akis_raporu") {
 
         var baslangic_tarihi = $("#baslangic_tarihi").val();
         var bitis_tarihi = $("#bitis_tarihi").val();
@@ -6080,7 +6096,8 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&baslangic_tarihi=" + baslangic_tarihi;
         data += "&bitis_tarihi=" + bitis_tarihi;
 
-    } else if (deger == "gantt_liste") {
+    }
+    else if (deger == "gantt_liste") {
 
         var gantt_proje_id = $("#gantt_proje_id").val();
         var gantt_tip = $("#gantt_tip").val();
@@ -6111,7 +6128,7 @@ function mail_gonderim_baslat(nesne) {
         data += "&ek_dosya=" + encodeURIComponent(ek_dosya);
         data = encodeURI(data);
         $(nesne).attr("disabled", "disabled").val("İşlem Yapılıyor...");
-            $("#olusturulan_belge_yeri").loadHTML({ url: "/ajax_request3/", data: data }, function () {
+        $("#olusturulan_belge_yeri").loadHTML({ url: "/ajax_request3/", data: data }, function () {
         });
     }
 }
@@ -6803,7 +6820,7 @@ function BakimdanIsEmriOlustur(projeId, bakimId, Tum, tarih) {
         else {
             day = parts[0];
         }
-        data += "&yeni_is_baslangic_tarihi=" + day + month + "-"+ parts[2];
+        data += "&yeni_is_baslangic_tarihi=" + day + month + "-" + parts[2];
         data += "&yeni_is_bitis_tarihi=" + day + month + "-" + parts[2];
     }
 
@@ -7866,7 +7883,7 @@ function senkronizasyon_tarih_degistir() {
 
 function is_ilerleme_ajanda_senkronizasyon_kaydet2(IsID, TamamlanmaID, tamamlanma_orani, onceki_oran, baslama_saati, bitirme_saati, baslama_tarihi, bitirme_tarihi, ajanda_baslik, ajanda_aciklama) {
 
-    
+
     var data = "islem=is_ilerleme_ajanda_senkronizasyon_kaydet&islem2=islem2";
     data += "&IsID=" + IsID;
     data += "&TamamlanmaID=" + TamamlanmaID;
@@ -8430,11 +8447,11 @@ function talep_fisi_onay(talep_id, deger) {
     data = encodeURI(data);
 
     $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-        if (deger =="Onaylandı") {
+        if (deger == "Onaylandı") {
         } else {
             mesaj_ver("Talep Fişleri", "Kayıt Başarıyla Reddedildi. !", "success");
         }
-        
+
     });
 
     //var saveData = $.ajax({
@@ -8487,21 +8504,10 @@ function talep_fisi_duzenle(kayit_id) {
     var data = "islem=ModalTalepDuzenle";
     data += "&kayit_id=" + kayit_id;
     data = encodeURI(data);
-    var saveData = $.ajax({
-        type: 'POST',
-        url: "/ajax_request5/",
-        data: data,
-        dataType: "text",
-        success: function () {
-            $("#modal_butonum").click();
-            $("#modal_div").loadHTML({ url: "/ajax_request5/", data: data }, function () {
-                sayfa_yuklenince();
-            });
-        }
-    });
 
-    saveData.error(function () {
-        mesaj_ver("Talep Fişleri", "Sadece sizden talep edilen 'Talep Fişlerini' Düzenleyebilirsiniz !", "danger");
+    $("#modal_butonum").click();
+    $("#modal_div").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+        sayfa_yuklenince();
     });
 }
 
@@ -8539,6 +8545,131 @@ function YeniTekliBakimKaydiEkle() {
     $("#modal_div").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         sayfa_yuklenince();
     });
-
 }
 
+function YeniServisBakimKaydiEkle() {
+
+    var data = "islem=YeniServisBakimKaydiEkle";
+    data = encodeURI(data);
+    $("#modal_butonum3").click();
+    $("#modal_div3").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        sayfa_yuklenince();
+    });
+}
+
+function ServisBakimKaydiEkle() {
+
+    var data = "islem=YeniServisBakimKaydiEkle&islem2=ekle";
+    data += "&firmaunvani=" + $("#firmaadi").val();
+    data += "&firmayetkili=" + $("#yetkilikisi").val();
+    data += "&firmatelefon=" + $("#firmatelefon").val();
+    data += "&firmaeposta=" + $("#firmaeposta").val();
+    data += "&firmaadress=" + $("#firmaadress").val();
+    data += "&firmavergidairesi=" + $("#firmavergidairesi").val();
+    data += "&firmavergino=" + $("#firmavergino").val();
+    data += "&gorevli=" + $("#firmagorevli").val();
+    data += "&parcaId=" + $("#parcalar1").attr("data");
+    data += "&adet=" + $("#musteriparcaadeti").val();
+    data += "&musteri_id=" + $("#musteri_id").val();
+    data += "&firmamakinebilgi=" + $("#firmamakinebilgi").val();
+    data += "&firmaariza=" + $("#firmaariza").val();
+    data += "&baslangic_tarihi=" + $("#baslangic_tarihi").val();
+    data += "&bitis_tarihi=" + $("#bitis_tarihi").val();
+    data += "&baslangic_saati=" + $("#baslangic_saati").val();
+    data += "&bitis_saati=" + $("#bitis_saati").val();
+    data += "&firmayapilanislemler=" + $("#firmayapilanislemler").val();
+    data += "&firmanot=" + $("#firmanot").val();
+    data += "&listeyeekle=" + $("#listeyeekle").val();
+    data = encodeURI(data);
+    if ($("#servisbakimkaydi input:not(input[type=button])").valid("valid")) {
+        $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+            mesaj_ver("Servis Bakım Formu", "Kayıt Başarıyla Eklendi.", "success");
+            $(".close").click();
+        });
+    }
+}
+
+function ServisBakimKaydiSil(kayitId) {
+    var r = confirm("Kaydı Silmek İstediğinize Emin misiniz?");
+    if (r) {
+        var data = "islem=YeniServisBakimKaydiEkle&islem2=sil";
+        data += "&kayit_id=" + kayitId;
+        data = encodeURI(data);
+        $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+            mesaj_ver("Servis Bakım Formu", "Kayıt Başarıyla Silindi", "success");
+        });
+    }
+}
+
+function ServisBakimKaydiDuzenle(kayitId) {
+
+    var data = "islem=YeniServisBakimKaydiDuzenle";
+    data += "&kayitId=" + kayitId;
+    data = encodeURI(data);
+    $("#modal_butonum3").click();
+    $("#modal_div3").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        sayfa_yuklenince();
+    });
+}
+
+function ServisBakimKaydiDuzenlemeYap(kayitId) {
+
+    var data = "islem=YeniServisBakimKaydiEkle&islem2=duzenle";
+    data += "&kayitId=" + kayitId;
+    data += "&firmaunvani=" + $("#firmaadi").val();
+    data += "&firmayetkili=" + $("#yetkilikisi").val();
+    data += "&firmatelefon=" + $("#firmatelefon").val();
+    data += "&firmaeposta=" + $("#firmaeposta").val();
+    data += "&firmaadress=" + $("#firmaadress").val();
+    data += "&firmavergidairesi=" + $("#firmavergidairesi").val();
+    data += "&firmavergino=" + $("#firmavergino").val();
+    data += "&gorevli=" + $("#firmagorevli").val();
+    data += "&parcaId=" + $("#parcalar1").attr("data");
+    data += "&adet=" + $("#musteriparcaadeti").val();
+    data += "&musteri_id=" + $("#musteri_id").val();
+    data += "&firmamakinebilgi=" + $("#firmamakinebilgi").val();
+    data += "&firmaariza=" + $("#firmaariza").val();
+    data += "&baslangic_tarihi=" + $("#baslangic_tarihi").val();
+    data += "&bitis_tarihi=" + $("#bitis_tarihi").val();
+    data += "&baslangic_saati=" + $("#baslangic_saati").val();
+    data += "&bitis_saati=" + $("#bitis_saati").val();
+    data += "&firmayapilanislemler=" + $("#firmayapilanislemler").val();
+    data += "&firmanot=" + $("#firmanot").val();
+    data += "&listeyeekle=" + $("#listeyeekle").val();
+    data = encodeURI(data);
+    if ($("#servisbakimkaydi input:not(input[type=button])").valid("valid")) {
+        $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+            mesaj_ver("Servis Bakım Formu", "Kayıt Başarıyla Eklendi.", "success");
+            $(".close").click();
+        });
+    }
+}
+
+function YeniMusteriOlustur() {
+    $("#musteriformu").slideToggle();
+}
+
+function musteribilgilerial() {
+    var ID = $("#musteri_id").val();
+    var pathname = window.location.origin;
+
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        url: pathname + "/System_Root/ajax/islem1.aspx/musteribilgilerial",
+        data: JSON.stringify({ Id: ID }),
+        dataType: "JSON",
+        error: function (xhr) {
+            console.log(xhr);
+        },
+        success: function (data) {
+            $("#musteriformu").slideDown();
+            var bilgi = jQuery.parseJSON(data.d);
+
+            $("#firmaadi").val(bilgi[0].firma_adi);
+            $("#yetkilikisi").val(bilgi[0].firma_yetkili);
+            $("#firmatelefon").val(bilgi[0].firma_telefon);
+            $("#firmaeposta").val(bilgi[0].firma_mail);
+        }
+    });
+}

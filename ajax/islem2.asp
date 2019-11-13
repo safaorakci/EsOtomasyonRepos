@@ -1446,29 +1446,39 @@
             baslangic = left(trn(request("baslangic")),10)
             bitis = left(trn(request("bitis")),10)
 
-            baslangic = cdate(right(baslangic, 2) & "." & mid(baslangic, 6,2) & "." & left(baslangic, 4))
-            bitis = cdate(right(bitis, 2) & "." & mid(bitis, 6,2) & "." & left(bitis, 4))
+            'baslangic = cdate(right(baslangic, 2) & "." & mid(baslangic, 6,2) & "." & left(baslangic, 4))
+            'bitis = cdate(right(bitis, 2) & "." & mid(bitis, 6,2) & "." & left(bitis, 4))
 
-            baslangic_saati = right(trn(request("baslangic")),5)
-            bitis_saati = right(trn(request("bitis")),5)
+            'baslangic_saati = right(trn(request("baslangic")),5)
+            'bitis_saati = right(trn(request("bitis")),5)
 
 
             SQL="select *, Isnull(IsID, 0) as is_id from ahtapot_ajanda_olay_listesi where id = '"& olay_id &"'"
+            response.Write(SQL)
             set olay = baglanti.execute(SQL)
 
             acikmi = true
+            baslanmis = false
+            if cdbl(olay("tamamlandi")) = -1 then
+               baslanmis = true
+            end if
             if cdbl(olay("is_id"))>0 then
 
                 SQL="select count(id) from ucgem_is_gorevli_durumlari where is_id = '"& olay("is_id") &"' and durum = 'true' and cop = 'false'"
                 set kactane = baglanti.execute(SQL)
-
+                
                 if cdbl(kactane(0))>1 then
                     acikmi = false
                 end if
             end if
 
             if acikmi = true then
-
+                
+             if baslanmis = false then
+        
+                ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
+                ekleyen_ip = Request.Cookies("kullanici")("kullanici_ip")
+                
                 SQL="update ucgem_is_listesi set baslangic_tarihi = '"& olay("baslangic") &"', bitis_tarihi = '"& olay("bitis") &"', baslangic_saati = '"& olay("baslangic_saati") &"', bitis_saati = '"& olay("bitis_saati") &"' where id = '"& olay("is_id") &"'"
                 set guncelle = baglanti.execute(SQL)
 
@@ -1477,18 +1487,30 @@
 
                 ana_kayit_id = olay("ana_kayit_id")
          
-                SQL="update ahtapot_ajanda_olay_listesi set baslangic = '"& baslangic &"', bitis = '"& bitis &"', baslangic_saati = '"& baslangic_saati &"', bitis_saati = '"& bitis_saati &"', ekleyen_id = '"& ekleyen_id &"', ekleyen_ip = '"& ekleyen_ip &"' where case when isnull(ana_kayit_id,0) = 0 then id else ana_kayit_id end = '"& ana_kayit_id &"'"
+                SQL="update ahtapot_ajanda_olay_listesi set baslangic = '"& baslangic &"', bitis = '"& bitis &"', ekleyen_id = '"& ekleyen_id &"', ekleyen_ip = '"& ekleyen_ip &"' where case when isnull(ana_kayit_id,0) = 0 then id else ana_kayit_id end = '"& ana_kayit_id &"'"
                 set guncelle = baglanti.execute(SQL)
-%>
-<script>
-                $(function (){
-                    mesaj_ver("Ajanda", "Kayıt Başarıyla Güncelleme", "success");
-                    $('#calendar').fullCalendar('refetchEvents');
-                    $('#calendar_gunluk').fullCalendar('refetchEvents');
-                });
-</script>
-<%
-                        else
+    %>
+        <script type="text/javascript">
+            $(function () {
+                mesaj_ver("Ajanda", "Kayıt Başarıyla Güncelleme", "success");
+                $('#calendar').fullCalendar('refetchEvents');
+                $('#calendar_gunluk').fullCalendar('refetchEvents');
+            });
+        </script>
+    <%
+        else
+    %>
+        <script type="text/javascript">
+            $(function () {
+                mesaj_ver("Ajanda", " 'Başlanmış' Bir Kaydı Güncelleyemezsiniz !", "danger");
+                $('#calendar').fullCalendar('refetchEvents');
+                $('#calendar_gunluk').fullCalendar('refetchEvents');
+            });
+        </script>
+    <%
+        end if
+
+     else
 %>
 <script>
                 $(function (){
@@ -1636,8 +1658,8 @@
 
         olay_id = trn(request("olay_id"))
         durum = trn(request("durum"))
-
-        SQL="update ahtapot_ajanda_olay_listesi set tamamlandi = '"& durum &"' where id = '"& olay_id &"'"
+        color = "rgb(46, 204, 113)"
+        SQL="update ahtapot_ajanda_olay_listesi set tamamlandi = '"& durum &"', color = '"& color &"' where id = '"& olay_id &"'"
         set guncelle = baglanti.execute(SQL)
 
         SQL="SELECT gorevli.id, olay.IsID FROM ahtapot_ajanda_olay_listesi olay JOIN dbo.ucgem_is_gorevli_durumlari gorevli ON gorevli.is_id = olay.IsID AND gorevli.gorevli_id = olay.etiket_id AND olay.etiket = 'personel' WHERE olay.id = '"& olay_id &"'"
@@ -2576,6 +2598,7 @@
 
                                                     SQL = "select id, IsID, ParcaId, (Adet - (select adet from satinalma_siparis_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"')) as KullanilanParcalar, (select adet  from     satinalma_siparis_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"') as SiparisVerilenParcalar from is_parca_listesi where ParcaId = '"& siparisparca ("parcaId") &"' and  IsID = '"& siparisparca("IsId") &"'"
                                                     set sondurum = baglanti.execute(SQL)
+                                                respo
 
                                                     SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"'"
                                                     set parcaBilgi = baglanti.execute(SQL)
