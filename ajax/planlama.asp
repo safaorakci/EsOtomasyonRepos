@@ -175,6 +175,15 @@
                         end if
 
                         if len(gorevliler)>0 then
+                            
+                            SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 2 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 3 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 4 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 5 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 7 THEN (SELECT LEFT(pazar_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) END as baslangic"
+                            start= baglanti.execute(SQL) 
+                            
+    
+                            SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' )WHEN 2 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 3 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 4 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 5 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 7 THEN (SELECT LEFT(pazar_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' )END as bitis"
+                            enddate = baglanti.execute(SQL) 
+                            
+
                             renk = "rgb(52, 152, 219)"
                             ajanda_gosterim = trn(request("planning"))
                             adi = projeCek("proje_adi") & " - " & name
@@ -182,10 +191,10 @@
                             departmanlar = "proje-" & proje_id
                             oncelik = "Normal"
                             kontrol_bildirim = "null"
-                            baslangic_saati = "08:00"
+                            baslangic_saati = start("baslangic")
                             baslangic_tarihi = start_tarih
                             bitis_tarihi = end_tarih
-                            bitis_saati = "17:00"
+                            bitis_saati = enddate("bitis")
                             durum = "true"
                             cop = "false"
                             tamamlanma_orani = 0
@@ -212,8 +221,9 @@
 
                             SQL="select id from ucgem_is_listesi where GantAdimID = '"& GantAdimID &"' and cop = 'false'"
                             set varmi = baglanti.execute(SQL)
+                            if varmi.eof then
 
-                                SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', CONVERT(date, '"& guncelleme_tarihi &"', 103), '"& guncelleme_saati &"', '"& guncelleyen &"', '"& tamamlanma_orani &"', '"& tamamlanma_tarihi &"', '"& tamamlanma_saati &"', LEFT(CONVERT(time, '"& toplam_sure &"'), 5), '"& gunluk_sure &"', '"& toplam_gun &"'); SELECT SCOPE_IDENTITY() id;"
+                                SQL="set nocount on; insert into ucgem_is_listesi(sinirlama_varmi, GantAdimID, renk, ajanda_gosterim, adi, aciklama, gorevliler, departmanlar, oncelik, kontrol_bildirim, baslangic_tarihi, baslangic_saati, bitis_tarihi, bitis_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, guncelleme_tarihi, guncelleme_saati, guncelleyen,tamamlanma_orani,tamamlanma_tarihi,tamamlanma_saati,toplam_sure,gunluk_sure,toplam_gun) values('1', '"& GantAdimID &"', '"& renk &"', '"& ajanda_gosterim &"', '"& adi &"', '"& aciklama &"', '"& gorevliler &"', '"& departmanlar &"', '"& oncelik &"', '"& kontrol_bildirim &"', CONVERT(date, '"& baslangic_tarihi &"', 103), '"& baslangic_saati &"', CONVERT(date, '"& bitis_tarihi &"', 103), '"& bitis_saati &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', CONVERT(date, '"& guncelleme_tarihi &"', 103), '"& guncelleme_saati &"', '"& guncelleyen &"', '"& tamamlanma_orani &"', CONVERT(date, '"& tamamlanma_tarihi &"',103), '"& tamamlanma_saati &"', LEFT(CONVERT(time, '"& toplam_sure &"'), 5), '"& gunluk_sure &"', '"& toplam_gun &"'); SELECT SCOPE_IDENTITY() id;"
 
                                 set isEkle = baglanti.execute(SQL)
                                  IsID = isEkle(0)
@@ -320,6 +330,7 @@
 
 
                     end if
+                  
                 else
                     yenikayit = true
                 end if
@@ -362,6 +373,14 @@
 
 
                     if len(gorevliler)>0 then
+                        
+                        SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 2 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 3 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 4 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 5 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 7 THEN (SELECT LEFT(pazar_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) END as baslangic"
+                        start= baglanti.execute(SQL) 
+                            
+    
+                        SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' )WHEN 2 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 3 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 4 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 5 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 7 THEN (SELECT LEFT(pazar_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' )END as bitis"
+                        enddate = baglanti.execute(SQL) 
+                        
 
                         renk = "rgb(52, 152, 219)"
                         ajanda_gosterim = "1"
@@ -371,10 +390,10 @@
                         departmanlar = "proje-" & proje_id
                         oncelik = "Normal"
                         kontrol_bildirim = "null"
-                        baslangic_saati = "08:00"
+                        baslangic_saati = start("baslangic")
                         baslangic_tarihi = start_tarih
                         bitis_tarihi = end_tarih
-                        bitis_saati = "17:00"
+                        bitis_saati = enddate("bitis")
                         durum = "true"
                         cop = "false"
                         tamamlanma_orani = 0
@@ -404,38 +423,9 @@
                         set kullanicicek = baglanti.execute(SQL)
 
                         ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
-                        count = 1
-    
-                        If CheckProperty(task, "assigs") Then
 
-                            for each kaynak in task.assigs
-                                    
-                                    bildirim =  kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") &" sizi "& adi & " adlı işte görevlendirdi."
-                                    tip = "is_listesi"
-                                    click = "sayfagetir(''/is_listesi/'',''jsid=4559&bildirim=true'');"
-                                    user_id = split(resourceId, "-")(count)
-                                    count = count + 1
-                                    okudumu = "0"
-                                    durum = "true"
-                                    cop = "false"
-                                    firma_kodu = kullanicicek("firma_kodu")
-                                    firma_id = kullanicicek("firma_id")
-                                    ekleyen_id = personel_id
-                                    ekleyen_ip = Request.ServerVariables("Remote_Addr")
-    
-                                    SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& Request.Cookies("kullanici")("kullanici_id") &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON;"
-                                    set ekle2 = baglanti.execute(SQL)
-
-                                    SQL="select * from ucgem_firma_kullanici_listesi where id = '"& user_id &"'"
-                                    set personelcek = baglanti.execute(SQL)
-
-                                    NetGSM_SMS personelcek("personel_telefon"), bildirim
-                            next
-                        End If
+                        'Burada Bildirim gönderen bir bölüm vardı Bilal TAŞ Tarafından silindi.
                         
-
-                        
-
                         IsID = isEkle(0)
 
                         gorevli_personeller = ""
@@ -488,7 +478,7 @@
                                                 SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate());"
                                                 set ekle2 = baglanti.execute(SQL)
 
-                                                SQL="select personel_ad + 'asd ' + personel_soyad as personel_adsoyad, * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"';"
+                                                SQL="select * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"';"
                                                 Set personelcek = baglanti.execute(SQL)
       
                                                 NetGSM_SMS personelcek("personel_telefon"), bildirim

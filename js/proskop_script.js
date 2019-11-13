@@ -113,7 +113,44 @@ function durum_guncelleme_calistir(tablo, id) {
 
 }
 
+function SiparisPopup(IsID, ParcaId, adet) {
+    swal({
+        title: "Satınalma Formu",
+        text: adet + " Adet Sipariş verilecek. Siparişi Onaylıyor Musunuz ?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn-danger",
+        cancelButtonText: "Vazgeç",
+        confirmButtonText: "Evet, Sipariş Ver.!",
+        closeOnConfirm: true,
+        closeOnCancel: true
+    },
+    function (isConfirm) {
+        if (isConfirm) {
+            //var data = "tablo=" + tablo;
+            //data += "&id=" + id;
+            //data = encodeURI(data);
+            //$("#koftiden").loadWebMethod({ url: "", data: data }, function () {
+            //    mesaj_ver("", mesaj, "success");
+            //    if ($.isFunction(fonksiyon)) {
+            //        fonksiyon(kod);
+            //    }
+            //});
 
+            is_detay_parca_sectim(IsID, ParcaId, adet);
+            //var data = "islem=is_detay_parca_sectim&islem2=ekle";
+            //data += "&IsID=" + IsID;
+            //data += "&ParcaId=" + ParcaId;
+            //data += "&Adet=" + adet;
+            //data = encodeURI(data);
+            //$("#kullanilan_parcalar" + IsID).loadHTML({ url: "/ajax_request5/", data: data }, function () {
+            //    mesaj_ver("Parçalar / Cihazlar", "Kayıt Başarıyla Eklendi", "success");
+            //});
+        }
+    });
+
+    $("button.confirm").focus();
+}
 
 function kayit_sil(tablo, id, baslik, mesaj, fonksiyon, kod) {
     swal({
@@ -2365,6 +2402,7 @@ function personel_giris_cikis_kayit(nesne, personel_id) {
             var d = new Date();
             var n = d.getFullYear();
             personel_yillik_takvimi_getir(personel_id, n);
+            $(".close").click();
         });
 
     }
@@ -2921,7 +2959,7 @@ function izin_talebi_gonder(personel_id) {
         if ($("#koftiden").html() === "ok") {
             $(".close").click();
             $("#izin_kayitlari").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-                mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Eklendi");
+                mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Eklendi","success");
             });
         }
     });
@@ -4117,6 +4155,65 @@ function ModalExcellUpload() {
     });
 }
 
+function ModalYetkiliEkle() {
+
+    var data = "islem=ModalYetkiliEkle";
+    data = encodeURI(data);
+    $("#modal_butonum").click();
+    $("#modal_div").loadHTML({ url: "islem1", data: data }, function () {
+        sayfa_yuklenince();
+    });
+
+    //var data = "islem=ModalYetkiliEkle";
+    //$("#firma_listesi").loadHTML({ url: "islem1", data: data }, function () {
+    //    datatableyap();
+
+    //    $(".yetmislik option[value=" + selectValue + "]").attr('selected', 'selected');
+    //    $(".yetmislik").trigger("change");
+    //    mesaj_ver("Firmalar", "Kayıt Başarıyla Eklendi", "success");
+    //});
+
+    //var data = "islem=ModalYetkiliEkle";
+    //data = encodeURI(data);
+    //$("#modal_butonum").click();
+    //$("#modal_div").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+    //    sayfa_yuklenince();
+    //});
+}
+
+function YöneticilerEkle() {
+    
+    var yetkili2_adi = $("#yetkili2_adi").val();
+    var yetkili2_telefon = $("#yetkili2_telefon").val();
+    var yetkili2_mail = $("#yetkili2_mail").val();
+
+    var yetkili3_adi = $("#yetkili3_adi").val();
+    var yetkili3_telefon = $("#yetkili3_telefon").val();
+    var yetkili3_mail = $("#yetkili3_mail").val();
+
+    var yetkili4_adi = $("#yetkili4_adi").val();
+    var yetkili4_telefon = $("#yetkili4_telefon").val();
+    var yetkili4_mail = $("#yetkili4_mail").val();
+
+    var data = "yetkili2_adi" + yetkili2_adi;
+    var data = "&yetkili2_telefon" + yetkili2_telefon;
+    var data = "&yetkili2_mail" + yetkili2_mail;
+
+    var data = "&yetkili3_adi" + yetkili3_adi;
+    var data = "&yetkili3_telefon" + yetkili3_telefon;
+    var data = "&yetkili3_mail" + yetkili3_mail;
+
+    var data = "&yetkili4_adi" + yetkili4_adi;
+    var data = "&yetkili4_telefon" + yetkili4_telefon;
+    var data = "&yetkili4_mail" + yetkili4_mail;
+    var data = "islem=YöneticilerEkle";
+    data = encodeURI(data);
+    $(".close").click();
+    $("#ManagersDatas").attr("yetkili2_adi", yetkili2_adi).attr("yetkili2_telefon", yetkili2_telefon).attr("yetkili2_mail", yetkili2_mail);
+    $("#ManagersDatas").attr("yetkili3_adi", yetkili3_adi).attr("yetkili3_telefon", yetkili3_telefon).attr("yetkili3_mail", yetkili3_mail);
+    $("#ManagersDatas").attr("yetkili4_adi", yetkili4_adi).attr("yetkili4_telefon", yetkili4_telefon).attr("yetkili4_mail", yetkili4_mail);
+}
+
 function StokListesiTemizle() {
 
     var r = confirm("Bütün Tabloyu Silmek İstediğinize Eminmisiniz ?");
@@ -4747,6 +4844,7 @@ function personel_bilgilerini_guncelle(personel_id) {
         var yonetici_yetkisi = $("#yonetici_yetkisi").val();
         var personel_yillik_izin_hakedis = $("#personel_yillik_izin_hakedis").val();
         var parmak_id = $("#parmak_id").val();
+        
 
         var data = "islem=personel_bilgilerini_guncelle";
         data += "&personel_id=" + personel_id;
@@ -5088,6 +5186,7 @@ function yeni_firma_ekle(yetki_kodu) {
     var firma_telefon = $("#firma_telefon").val();
     var firma_mail = $("#firma_mail").val();
     var firma_supervisor_id = $("#firma_supervisor_id").val();
+    
 
     var data = "islem=yeni_firma_ekle";
     data += "&yetki_kodu=" + yetki_kodu;
@@ -5122,6 +5221,20 @@ function firma_ekle(yetki_kodu) {
     var firma_mail = $("#firma_mail").val();
     var firma_supervisor_id = $("#firma_supervisor_id").val();
     var selectValue = $(".yetmislik").val();
+    var yetkili1_telefon = $("#yetkili_telefon").val();
+    var yetkili1_mail = $("#yetkili_mail").val();
+
+    var yetkili2_adi = $("#ManagersDatas").attr("yetkili2_adi");
+    var yetkili2_telefon = $("#ManagersDatas").attr("yetkili2_telefon");
+    var yetkili2_mail = $("#ManagersDatas").attr("yetkili2_mail");
+
+    var yetkili3_adi = $("#ManagersDatas").attr("yetkili3_adi");
+    var yetkili3_telefon = $("#ManagersDatas").attr("yetkili3_telefon");
+    var yetkili3_mail = $("#ManagersDatas").attr("yetkili3_mail");
+
+    var yetkili4_adi = $("#ManagersDatas").attr("yetkili4_adi");
+    var yetkili4_telefon = $("#ManagersDatas").attr("yetkili4_telefon");
+    var yetkili4_mail = $("#ManagersDatas").attr("yetkili4_mail");
 
     var data = "islem=firmalar&islem2=ekle";
     data += "&yetki_kodu=" + yetki_kodu;
@@ -5129,6 +5242,21 @@ function firma_ekle(yetki_kodu) {
     data += "&firma_adi=" + encodeURIComponent(firma_adi);
     data += "&firma_yetkili=" + encodeURIComponent(firma_yetkili);
     data += "&firma_telefon=" + encodeURIComponent(firma_telefon);
+    data += "&yetkili1_telefon=" + encodeURIComponent(yetkili1_telefon);
+    data += "&yetkili1_mail=" + encodeURIComponent(yetkili1_mail);
+
+    data += "&yetkili2_adi=" + encodeURIComponent(yetkili2_adi);
+    data += "&yetkili2_telefon=" + encodeURIComponent(yetkili2_telefon);
+    data += "&yetkili2_mail=" + encodeURIComponent(yetkili2_mail);
+
+    data += "&yetkili3_adi=" + encodeURIComponent(yetkili3_adi);
+    data += "&yetkili3_telefon=" + encodeURIComponent(yetkili3_telefon);
+    data += "&yetkili3_mail=" + encodeURIComponent(yetkili3_mail);
+
+    data += "&yetkili4_adi=" + encodeURIComponent(yetkili4_adi);
+    data += "&yetkili4_telefon=" + encodeURIComponent(yetkili4_telefon);
+    data += "&yetkili4_mail=" + encodeURIComponent(yetkili4_mail);
+
     data += "&firma_mail=" + encodeURIComponent(firma_mail);
     data += "&firma_supervisor_id=" + encodeURIComponent(firma_supervisor_id);
     data = encodeURI(data);
@@ -6117,8 +6245,6 @@ function mail_gonderim_baslat(nesne) {
 }
 function MailGonder(eposta, konu, mesaj, ekdosya) {
 
-    alert("buraya geldi.");
-
     var data = "islem=mail_gonderim_baslat";
     data += "&eposta=" + eposta;
     data += "&konu=" + konu;
@@ -6737,23 +6863,49 @@ function firma_bilgilerini_guncelle(firma_id) {
     if ($("#musteri_guncelleme_form input:not(input[type=button])").valid("valid")) {
         var firma_logo = $("#firma_logo").attr("filePath");
         var firma_adi = $("#firma_adi").val();
-        var firma_yetkili = $("#firma_yetkili").val();
+        var firma_yetkili = $("#yetkili1_adi").val();
         var firma_telefon = $("#firma_telefon").val();
         var firma_mail = $("#firma_mail").val();
         var firma_supervisor_id = $("#firma_supervisor_id").val();
         var taseron_saatlik_maliyet = $("#taseron_saatlik_maliyet").val();
         var taseron_maliyet_pb = $("#taseron_maliyet_pb").val();
 
+        var firma_vergi_no = $("#firma_vergi_no").val();
+        var firma_vergi_daire = $("#firma_vergi_daire").val();
+
+        var yetkili1_telefon = $("#yetkili1_telefon").val();
+        var yetkili1_mail = $("#yetkili1_mail").val();
+
         var data = "islem=firma_bilgilerini_guncelle";
         data += "&firma_id=" + firma_id;
         data += "&firma_adi=" + firma_adi;
         data += "&firma_logo=" + firma_logo;
-        data += "&firma_yetkili=" + firma_yetkili;
+        
         data += "&firma_telefon=" + firma_telefon;
         data += "&firma_mail=" + firma_mail;
         data += "&firma_supervisor_id=" + firma_supervisor_id;
         data += "&taseron_saatlik_maliyet=" + taseron_saatlik_maliyet;
         data += "&taseron_maliyet_pb=" + taseron_maliyet_pb;
+
+        data += "&firma_vergi_no=" + firma_vergi_no;
+        data += "&firma_vergi_daire=" + firma_vergi_daire;
+
+        data += "&firma_yetkili=" + firma_yetkili;
+        data += "&yetkili1_telefon=" + yetkili1_telefon;
+        data += "&yetkili1_mail=" + yetkili1_mail;
+
+        data += "&yetkili2_adi=" + $("#yetkili2_adi").val();;
+        data += "&yetkili2_telefon=" + $("#yetkili2_telefon").val();;
+        data += "&yetkili2_mail=" + $("#yetkili2_mail").val();;
+
+        data += "&yetkili3_adi=" + $("#yetkili3_adi").val();;
+        data += "&yetkili3_telefon=" + $("#yetkili3_telefon").val();;
+        data += "&yetkili3_mail=" + $("#yetkili3_mail").val();;
+
+        data += "&yetkili4_adi=" + $("#yetkili4_adi").val();;
+        data += "&yetkili4_telefon=" + $("#yetkili4_telefon").val();;
+        data += "&yetkili4_mail=" + $("#yetkili4_mail").val();;
+
         data = encodeURI(data);
         $("#koftiden").loadHTML({ url: "/ajax_request2/", data: data }, function () {
             mesaj_ver("Müşteri Bilgileri", "Kayıt Başarıyla Güncellendi", "success");
@@ -7128,12 +7280,15 @@ function is_kaydini_guncelle(IsId, buton) {
             mesaj_ver("İşler", "Kayıt Başarıyla Güncellendi", "success");
             $(".close").click();
             var data = "islem=is_detay_goster";
-            data += "&is_id=" + IsId
-            data = encodeURI(data);
-            $("#detay_row" + IsId).loadHTML({ url: "islem1", data: data, loading: false }, function () {
-                /* timeline.setSelection([IsId], {
-                     focus: true
-                 });*/
+            data += "&is_id=" + IsId;
+
+            $("#detay_row" + IsId).loadHTML({ url: "/ajax_request5/", data: data }, function () {
+                var data = "islem=is_timer_start_kaydi";
+                data += "&is_id=" + IsId;
+                $("#is_timer_list" + IsId).loadHTML({ url: "/ajax_request5/", data: data }, function () {
+
+                });
+
                 $(".easyPieChartlar").knob({
                     draw: function () {
                         // "tron" case
@@ -7165,118 +7320,253 @@ function is_kaydini_guncelle(IsId, buton) {
                     }
                 });
 
+                $('.pauseButton').hide();
+                $('.stopButton').hide();
 
+                timer = new easytimer.Timer();
+                var Id;
 
-
-                $(".yeni_slider").each(function () {
-                    var $slider = $(this);
-                    var olcu = $(this).width();
-                    $(this).noUiSlider({
-                        range: [0, 100],
-                        start: $(this).attr("start"),
-                        handles: 1,
-                        connect: true,
-                        slide: function () {
-                            var asd = $(this);
-                            clearTimeout(slider_timer);
-                            slider_timer = setTimeout(function () {
-                                var oran = parseInt(asd.find(".noUi-connect").css("left"));
-                                oran = Math.round(98 - ((olcu - oran) / olcu * 100));
-                                var newVal = oran;
-                                if (parseFloat(newVal) > 97) {
-                                    newVal = 100;
-                                }
-                                var onceki_oran = $("#easyPieChart" + $slider.attr("TamamlanmaID")).val();
-                                $("#easyPieChart" + $slider.attr("TamamlanmaID")).knob({
-                                    draw: function () {
-                                        // "tron" case
-                                        if (this.$.data('skin') == 'tron') {
-                                            this.cursorExt = 0.3;
-                                            var a = this.arc(this.cv) // Arc
-                                                ,
-                                                pa // Previous arc
-                                                , r = 1;
-                                            this.g.lineWidth = this.lineWidth;
-                                            if (this.o.displayPrevious) {
-                                                pa = this.arc(this.v);
-                                                this.g.beginPath();
-                                                this.g.strokeStyle = this.pColor;
-                                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
-                                                this.g.stroke();
-                                            }
-                                            this.g.beginPath();
-                                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
-                                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
-                                            this.g.stroke();
-                                            this.g.lineWidth = 2;
-                                            this.g.beginPath();
-                                            this.g.strokeStyle = this.o.fgColor;
-                                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
-                                            this.g.stroke();
-                                            return false;
-                                        }
-                                    }
-                                });
-
-                                /*
-                                var data = "TamamlanmaID=" + $slider.attr("TamamlanmaID");
-                                data += "&tamamlanma_orani=" + newVal;
-                                data += "&IsID=" + $slider.attr("IsID");
-                                var IsID = $slider.attr("IsID");
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/System_Root/ajax/islem1.aspx/IsDurumGuncelle",
-                                    data: JSON.stringify(QueryStringToJSON(data)),
-                                    contentType: "application/json; charset=utf-8",
-                                    dataType: "json",
-                                    success: function (response) {
-                                        if (response.d == "0") {
-                                            $.bigBox({
-                                                title: "Uyarı",
-                                                content: "Hata Oluştu",
-                                                color: "#C46A69",
-                                                icon: "fa fa-warning shake animated",
-                                                number: "1",
-                                                timeout: 6000
-                                            });
-                                        } else {
-
-                                            $("#is_chart" + IsID).css('width', response.d + '%').attr('aria-valuenow', response.d).attr("data-progressbar-value", response.d);
-
-                                            mesaj_ver("Görevler", "Kayıt Başarıyla Güncellendi", "success");
-                                        }
-                                    }, failure: function (response) {
-                                        $.bigBox({
-                                            title: "Uyarı",
-                                            content: "Hata Oluştu",
-                                            color: "#C46A69",
-                                            icon: "fa fa-warning shake animated",
-                                            number: "1",
-                                            timeout: 6000
-                                        });
-                                    }
-                                });*/
-
-                                is_ilerleme_ajanda_senkronizasyon($slider.attr("TamamlanmaID"), newVal, $slider.attr("IsID"), onceki_oran);
-
-                            }, 300);
-                        }
-                    });
-
-
-
+                $('.startButton').click(function () {
+                    $(this).attr("disabled", "disabled");
+                    $('.pauseButton').removeAttr("disabled");
+                    $('.stopButton').removeAttr("disabled");
+                    timer.start();
+                    var is_id = $(this).attr("is_id");
+                    var TamamlanmaID = $(this).attr("tamamlanmaid");
+                    var userId = $(this).attr("tamamlanmaid");
+                    is_timer_start_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues());
+                    Id = $(this).attr("user_id");
+                });
+                $('.pauseButton').click(function () {
+                    $('.pauseButton').hide();
+                    $('.startButton').show();
+                    $('.startButton').removeAttr("disabled");
+                    var baslik = $(this).attr("baslik");
+                    var aciklama = $(this).attr("aciklama");
+                    var is_id = $(this).attr("is_id");
+                    var TamamlanmaID = $(this).attr("tamamlanmaid");
+                    var userId = $(this).attr("tamamlanmaid");
+                    timer.pause();
+                    is_timer_pause_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
+                    Id = $(this).attr("user_id");
+                });
+                $('.stopButton').click(function () {
+                    timer.stop();
+                    var is_id = $(this).attr("is_id");
+                    var TamamlanmaID = $(this).attr("tamamlanmaid");
+                    var baslik = $('.pauseButton').attr("baslik");
+                    var aciklama = $('.pauseButton').attr("aciklama");
+                    var userId = $(this).attr("tamamlanmaid");
+                    is_timer_stop_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
+                    Id = $(this).attr("user_id");
                 });
 
-                fileyap();
+                timer.addEventListener('secondsUpdated', function (e) {
+                    $('#basicUsage').html(timer.getTimeValues().toString());
+                });
+
+                timer.addEventListener('started', function (e) {
+                    $('#basicUsage').html(timer.getTimeValues().toString());
+                });
 
                 setTimeout(function () {
                     $(".file").attr("placeholder", "Yeni Dosya Yükle").css("height", "25px").css("margin-top", "5px;");
                 }, 1000);
             });
+
+            
+
+            //var data = "islem=is_detay_goster";
+            //data += "&is_id=" + IsId
+            //data = encodeURI(data);
+            //$("#detay_row" + IsId).loadHTML({ url: "islem1", data: data, loading: false }, function () {
+
+
+            //    //" readonly="readonly" style="width: 38px; height: 22px; position: absolute; vertical-align: middle; margin-top: 22px; margin-left: -53px; border: 0px; background: none; font: bold 13px Arial; text-align: center; color: rgb(78, 205, 196); padding: 0px; -webkit-appearance: none;
+
+            //    /* timeline.setSelection([IsId], {
+            //         focus: true
+            //     });*/
+            //    //$(".easyPieChartlar").knob({
+            //    //    draw: function () {
+            //    //        // "tron" case
+            //    //        if (this.$.data('skin') == 'tron') {
+            //    //            this.cursorExt = 0.3;
+            //    //            var a = this.arc(this.cv) // Arc
+            //    //                ,
+            //    //                pa // Previous arc
+            //    //                , r = 1;
+            //    //            this.g.lineWidth = this.lineWidth;
+            //    //            if (this.o.displayPrevious) {
+            //    //                pa = this.arc(this.v);
+            //    //                this.g.beginPath();
+            //    //                this.g.strokeStyle = this.pColor;
+            //    //                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
+            //    //                this.g.stroke();
+            //    //            }
+            //    //            this.g.beginPath();
+            //    //            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+            //    //            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
+            //    //            this.g.stroke();
+            //    //            this.g.lineWidth = 2;
+            //    //            this.g.beginPath();
+            //    //            this.g.strokeStyle = this.o.fgColor;
+            //    //            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+            //    //            this.g.stroke();
+            //    //            return false;
+            //    //        }
+            //    //    }
+            //    //});
+
+            //    $("#detay_row" + IsId).loadHTML({ url: "/ajax_request5/", data: data }, function () {
+
+            //    });
+
+
+
+
+            //    //$(".yeni_slider").each(function () {
+            //    //    var $slider = $(this);
+            //    //    var olcu = $(this).width();
+            //    //    $(this).noUiSlider({
+            //    //        range: [0, 100],
+            //    //        start: $(this).attr("start"),
+            //    //        handles: 1,
+            //    //        connect: true,
+            //    //        slide: function () {
+            //    //            var asd = $(this);
+            //    //            clearTimeout(slider_timer);
+            //    //            slider_timer = setTimeout(function () {
+            //    //                var oran = parseInt(asd.find(".noUi-connect").css("left"));
+            //    //                oran = Math.round(98 - ((olcu - oran) / olcu * 100));
+            //    //                var newVal = oran;
+            //    //                if (parseFloat(newVal) > 97) {
+            //    //                    newVal = 100;
+            //    //                }
+            //    //                var onceki_oran = $("#easyPieChart" + $slider.attr("TamamlanmaID")).val();
+            //    //                $("#easyPieChart" + $slider.attr("TamamlanmaID")).knob({
+            //    //                    draw: function () {
+            //    //                        // "tron" case
+            //    //                        if (this.$.data('skin') == 'tron') {
+            //    //                            this.cursorExt = 0.3;
+            //    //                            var a = this.arc(this.cv) // Arc
+            //    //                                ,
+            //    //                                pa // Previous arc
+            //    //                                , r = 1;
+            //    //                            this.g.lineWidth = this.lineWidth;
+            //    //                            if (this.o.displayPrevious) {
+            //    //                                pa = this.arc(this.v);
+            //    //                                this.g.beginPath();
+            //    //                                this.g.strokeStyle = this.pColor;
+            //    //                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
+            //    //                                this.g.stroke();
+            //    //                            }
+            //    //                            this.g.beginPath();
+            //    //                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+            //    //                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
+            //    //                            this.g.stroke();
+            //    //                            this.g.lineWidth = 2;
+            //    //                            this.g.beginPath();
+            //    //                            this.g.strokeStyle = this.o.fgColor;
+            //    //                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+            //    //                            this.g.stroke();
+            //    //                            return false;
+            //    //                        }
+            //    //                    }
+            //    //                });
+
+            //    //                /*
+            //    //                var data = "TamamlanmaID=" + $slider.attr("TamamlanmaID");
+            //    //                data += "&tamamlanma_orani=" + newVal;
+            //    //                data += "&IsID=" + $slider.attr("IsID");
+            //    //                var IsID = $slider.attr("IsID");
+            //    //                $.ajax({
+            //    //                    type: "POST",
+            //    //                    url: "/System_Root/ajax/islem1.aspx/IsDurumGuncelle",
+            //    //                    data: JSON.stringify(QueryStringToJSON(data)),
+            //    //                    contentType: "application/json; charset=utf-8",
+            //    //                    dataType: "json",
+            //    //                    success: function (response) {
+            //    //                        if (response.d == "0") {
+            //    //                            $.bigBox({
+            //    //                                title: "Uyarı",
+            //    //                                content: "Hata Oluştu",
+            //    //                                color: "#C46A69",
+            //    //                                icon: "fa fa-warning shake animated",
+            //    //                                number: "1",
+            //    //                                timeout: 6000
+            //    //                            });
+            //    //                        } else {
+
+            //    //                            $("#is_chart" + IsID).css('width', response.d + '%').attr('aria-valuenow', response.d).attr("data-progressbar-value", response.d);
+
+            //    //                            mesaj_ver("Görevler", "Kayıt Başarıyla Güncellendi", "success");
+            //    //                        }
+            //    //                    }, failure: function (response) {
+            //    //                        $.bigBox({
+            //    //                            title: "Uyarı",
+            //    //                            content: "Hata Oluştu",
+            //    //                            color: "#C46A69",
+            //    //                            icon: "fa fa-warning shake animated",
+            //    //                            number: "1",
+            //    //                            timeout: 6000
+            //    //                        });
+            //    //                    }
+            //    //                });*/
+
+            //    //                is_ilerleme_ajanda_senkronizasyon($slider.attr("TamamlanmaID"), newVal, $slider.attr("IsID"), onceki_oran);
+
+            //    //            }, 300);
+            //    //        }
+            //    //    });
+
+
+
+            //    //});
+
+            //    fileyap();
+
+            //    setTimeout(function () {
+            //        $(".file").attr("placeholder", "Yeni Dosya Yükle").css("height", "25px").css("margin-top", "5px;");
+            //    }, 1000);
+            //});
         });
     }
 
 }
+
+$('.startButton').click(function () {
+    $(this).attr("disabled", "disabled");
+    $('.pauseButton').removeAttr("disabled");
+    $('.stopButton').removeAttr("disabled");
+    timer.start();
+    var is_id = $(this).attr("is_id");
+    var TamamlanmaID = $(this).attr("tamamlanmaid");
+    var userId = $(this).attr("tamamlanmaid");
+    is_timer_start_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues());
+    Id = $(this).attr("user_id");
+});
+$('.pauseButton').click(function () {
+    $('.startButton').removeAttr("disabled");
+    var baslik = $(this).attr("baslik");
+    var aciklama = $(this).attr("aciklama");
+    var is_id = $(this).attr("is_id");
+    var TamamlanmaID = $(this).attr("tamamlanmaid");
+    var userId = $(this).attr("tamamlanmaid");
+    timer.pause();
+    is_timer_pause_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
+    Id = $(this).attr("user_id");
+});
+$('.stopButton').click(function () {
+    timer.stop();
+    var is_id = $(this).attr("is_id");
+    var TamamlanmaID = $(this).attr("tamamlanmaid");
+    var baslik = $('.pauseButton').attr("baslik");
+    var aciklama = $('.pauseButton').attr("aciklama");
+    var userId = $(this).attr("tamamlanmaid");
+    is_timer_stop_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
+    Id = $(this).attr("user_id");
+});
 
 
 function isi_iptal_et(IsID) {

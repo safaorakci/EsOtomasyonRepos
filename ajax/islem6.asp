@@ -118,6 +118,15 @@
                                 <br />
                                 <%if trim(personelbilgi("yonetici_yetkisi"))="false" then  %>
                                     <script type="text/javascript">
+                                        $("#personel_ad").attr("disabled", "disabled");
+                                        $("#personel_soyad").attr("disabled", "disabled");
+                                        $("#personel_tcno").attr("disabled", "disabled");
+                                        $("#personel_dtarih").attr("disabled", "disabled");
+                                        $("#personel_eposta").attr("disabled", "disabled");
+                                        $("#personel_telefon").attr("disabled", "disabled");
+                                        $("#personel_parola").attr("disabled", "disabled");
+                                        $("#personel_resim").attr("disabled", "disabled");
+                                        $("#personel_cinsiyet").attr("disabled", "disabled");
                                         $("#personelbtn").click(function () {
                                             mesaj_ver("Personel Yetkisi", "Bu İşemi Yapmak İçin Yetkili Değilsiniz. !", "danger");
                                         });
@@ -1176,37 +1185,8 @@
     
             kayit_id = trn(request("kayit_id"))
 
-            SQL="select * from ucgem_personel_mesai_bildirimleri where id = '"& kayit_id &"'"
-            set pcek = baglanti.execute(SQL)
 
-            SQL="select * from ucgem_firma_kullanici_listesi where id= '"& pcek("personel_id") &"'"
-            set kcek = baglanti.execute(SQL)
-
-            do while not kcek.eof
-
-                bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " Mesai Bildirim Talebinizi Reddetti." & chr(13) & chr(13) 
-                tip = "is_listesi"
-                click = "CokluIsYap(''personel_detaylari'',''"& kullanicicek("id") &"'',''mesai'',0);" 
-                user_id = kcek("id")
-                okudumu = "0"
-                durum = "true"
-                cop = "false"
-                firma_kodu = request.Cookies("kullanici")("firma_kodu")
-                firma_id = request.Cookies("kullanici")("firma_id")
-                ekleyen_id = request.Cookies("kullanici")("kullanici_id")
-                ekleyen_ip = Request.ServerVariables("Remote_Addr")
-    
-                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& kcek("id") &"', @mesaj = '"& replace(bildirim, chr(13), "<br>") &"';"
-                set ekle2 = baglanti.execute(SQL)
-
-                NetGSM_SMS kcek("personel_telefon"), bildirim
-
-
-            kcek.movenext
-            loop
-
-
-            SQL="delete from ucgem_personel_mesai_bildirimleri where id = '"& kayit_id &"'"
+            SQL="UPDATE ucgem_personel_mesai_bildirimleri SET cop='true' WHERE id = '"& kayit_id &"'"
             set sil = baglanti.execute(SQL)
             
 
@@ -1619,7 +1599,7 @@
 
        personel_id = trn(request("personel_id"))
 
-       SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin')),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
+       SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and talep.cop = 'false' and talep.personel_id = kullanici.id and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin') and talep.durum = 'Onaylandi'),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
        set personel = baglanti.execute(SQL)
 
        personel_yillik_izin_hakedis = personel("personel_yillik_izin_hakedis")
@@ -3094,16 +3074,20 @@
         
             SQL="insert into talep_fisleri(baslik, oncelik, aciklama, dosya, durum, cop, firma_kodu, firma_id, ekleyen_id, talep_edilen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& baslik &"', '"& oncelik &"', '"& aciklama &"', '"& dosya &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& talep_edilen &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
-        
-            SQL="select * from ucgem_firma_kullanici_listesi where id = '"& Request.Cookies("kullanici")("kullanici_id") &"' and cop = 'false' and durum = 'true'"
-            set kcek = baglanti.execute(SQL)
 
-            SQL="select * from ucgem_firma_kullanici_listesi where id = '"& talep_edilen &"' and cop = 'false' and durum = 'true'"
-            set kcek2 = baglanti.execute(SQL)
-            
-            personelmail = kcek2("personel_eposta") 
+            SQL="SELECT TOP 1 id FROM talep_fisleri ORDER BY ekleme_tarihi DESC,ekleme_saati DESC"
+            set idcek = baglanti.execute(SQL)
 
-            do while not kcek.eof
+            for x = 0 to ubound(split(talep_edilen, ","))
+                user = split(talep_edilen, ",")(x)
+                SQL="insert into TalepFisleriGorevliler(FisID,GorevliID) values('"& idcek("id") &"', '"& user &"')"
+                set userekle = baglanti.execute(SQL)
+
+                SQL="select * from ucgem_firma_kullanici_listesi where id = '"& user &"' and cop = 'false' and durum = 'true'"
+                set kcek = baglanti.execute(SQL)
+                
+                personelmail = kcek("personel_eposta")
+                
                 bildirim = Request.Cookies("kullanici")("kullanici_adsoyad") & " "& baslik &" adlı öncelik seviyesi "& oncelik &" bir Talep Fişi Oluşturdu. Açıklama :" & aciklama
                 tip = "talep_fisleri"
                 click = "sayfagetir(''/talepler/'',''jsid=4559'');"
@@ -3116,26 +3100,24 @@
                 ekleyen_id = request.Cookies("kullanici")("kullanici_id")
                 ekleyen_ip = Request.ServerVariables("Remote_Addr")
 
-                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& talep_edilen &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& kcek("id") &"', @mesaj = '"& replace(bildirim, chr(13), "<br>") &"';"
+                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& kcek("id") &"', @mesaj = '"& replace(bildirim, chr(13), "<br>") &"';"
                 set ekle2 = baglanti.execute(SQL)
-            
-            if bildirimTuru = "SMS" then
                 
-                NetGSM_SMS kcek2("personel_telefon"), bildirim
-            elseif bildirimTuru = "MAIL" then
-                %>
-                    <script type="text/javascript">
-                        MailGonder('<%=kcek2("personel_eposta") %>', '<%=baslik %>', '<%=bildirim %>');
-                    </script>
-                <%
-            end if
-
-            kcek.movenext
-            loop
-            
-            
-
-
+                for y = 0 to ubound(split(bildirimTuru, ","))
+                    BildirimType = split(bildirimTuru, ",")(y)
+                    if BildirimType = "SMS" then
+                
+                        NetGSM_SMS kcek("personel_telefon"), bildirim
+                    elseif BildirimType = "MAIL" then
+                        %>
+                            <script type="text/javascript">
+                                MailGonder('<%=kcek("personel_eposta") %>', '<%=baslik %>', '<%=bildirim %>');
+                            </script>
+                        <%
+                    end if
+                next
+            next
+         
 
         elseif trn(request("islem2"))="sil" then
 
@@ -3233,9 +3215,12 @@
             </thead>
             <tbody>
                 <%
-                    SQL="select fis.*, kullanici.personel_ad, kullanici.personel_soyad, kul.personel_ad + ' ' + kul.personel_soyad as 'talep_edilen_adsoyad' from talep_fisleri fis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = fis.ekleyen_id join ucgem_firma_kullanici_listesi kul on kul.id = fis.talep_edilen_id where fis.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and   (fis.talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' OR fis.ekleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"') and fis.cop = 'false' order by fis.id desc"
+
+                    SQL="SELECT distinct talepler.* FROM [TalepFisleriGorevliler] TalepFisi INNER JOIN talep_fisleri talepler on TalepFisi.FisID = talepler.id where talepler.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and  (talepler.id IN (SELECT FisID FROM [dbo].[TalepFisleriGorevliler] WHERE GorevliID = '"& Request.Cookies("kullanici")("kullanici_id") &"')  OR talepler.ekleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"') and talepler.cop = 'false' order by talepler.id desc"
+                    'SQL="select fis.*, kullanici.personel_ad, kullanici.personel_soyad, kul.personel_ad + ' ' + kul.personel_soyad as 'talep_edilen_adsoyad' from talep_fisleri fis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = fis.ekleyen_id join ucgem_firma_kullanici_listesi kul on kul.id = fis.talep_edilen_id where fis.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and   (fis.talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' OR fis.ekleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"') and fis.cop = 'false' order by fis.id desc"
                     set talepler = baglanti.execute(SQL)
 
+                    
 
                     if talepler.eof then
                 %>
@@ -3247,6 +3232,9 @@
                     t = 0
                     do while not talepler.eof
                      t = t +1
+
+                    SQL="SELECT * FROM ucgem_firma_kullanici_listesi WHERE id = '"& talepler("ekleyen_id") &"' " 
+                    set kcek = baglanti.execute(SQL)
                 %>
                 <tr>
                     <td style="text-align: center; width: 25px;"><%=t %></td>
@@ -3265,9 +3253,16 @@
                     <% end if %>
                     <td><%=talepler("baslik") %></td>
                     <td><%=talepler("aciklama") %></td>
-                    <td><%=talepler("personel_ad") & " " & talepler("personel_soyad") %><br />
+                    <td><%=kcek("personel_ad") & " " & kcek("personel_soyad") %><br />
                         <%=cdate(talepler("ekleme_tarihi")) & " " & left(talepler("ekleme_saati"),5) %></td>
-                    <td><%=talepler("talep_edilen_adsoyad") %></td>
+                    <td> <%
+                            for x = 0 to ubound(split(talepler("talep_edilen_id"), ","))
+                                user = split(talepler("talep_edilen_id"), ",")(x)
+                                SQL="SELECT * FROM ucgem_firma_kullanici_listesi WHERE id = '"& user &"' " 
+                                set kcek2 = baglanti.execute(SQL)
+                                
+                        
+                        %>  <%=kcek2("personel_ad") & " " & kcek2("personel_soyad") %><br /> <%next %></td>
                     <% if trim(talepler("durum"))="İşlem Yapılıyor" then %>
                     <td style="text-align: center;">
                         <span class="label label-info">İşlem Yapılıyor</span>
@@ -3286,7 +3281,12 @@
                     </td>
                     <% end if %>
                     <td style="width: 120px;">
-                        <% if trim(talepler("talep_edilen_id")) = Request.Cookies("kullanici")("kullanici_id") then %>
+                        <% count = 0 %>
+                        <%  for x = 0 to ubound(split(talepler("talep_edilen_id"), ","))
+                                user = split(talepler("talep_edilen_id"), ",")(x) %>
+                        <% if user = Request.Cookies("kullanici")("kullanici_id") and count < 1 then 
+                            count= count +1
+                            %>
                         <button type="button" class="btn btn-mini btn-primary dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             İşlemler
                         </button>
@@ -3300,11 +3300,15 @@
                             <% end if %>
                             <a class="dropdown-item waves-effect waves-light" onclick="talep_fisi_duzenle('<%=talepler("id") %>');" href="javascript:void(0);">Düzenle</a>
                             <a class="dropdown-item waves-effect waves-light" onclick="talep_fisi_sil('<%=talepler("id") %>');" href="javascript:void(0);">Sil</a>
-                        </div>
-                            
-                        <% else %>
-                        <i class="fa fa-times-circle text-danger fa-2x"></i>
-                        <% end if %>
+                        </div>  
+                        <% else 
+                            if count < 1 then
+                            count = count + 1
+                            %>
+                        <i class="fa fas fa-ban text-dark fa-3x"></i>
+                        <% end if
+                            end if %>
+                        <%next %>
                     </td>
                 </tr>
                 <% 

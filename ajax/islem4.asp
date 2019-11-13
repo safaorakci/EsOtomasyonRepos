@@ -2148,6 +2148,8 @@
         firma_telefon = trn(request("firma_telefon"))
         firma_mail = trn(request("firma_mail"))
         firma_supervisor_id = trn(request("firma_supervisor_id"))
+        yetkili1_telefon = trn(request("yetkili1_telefon"))
+        yetkili1_mail = trn(request("yetkili1_mail"))
 
         default_parabirimi = "TL"
         cari_calisma_izni = "true"
@@ -2170,7 +2172,7 @@
         ornek_firma_id = 225
         ornek_proje_id = 451
 
-        SQL="SET NOCOUNT ON; insert into ucgem_firma_listesi(yetki_kodu, firma_logo, firma_adi, firma_yetkili, firma_telefon, firma_mail, firma_supervisor_id, default_parabirimi, cari_calisma_izni, genel_kar_tipi, genel_kar, genel_kar_pb, firma_gsm, kur_secimi, durum, cop, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, ekleyen_firma_id, ekleyen_firma_kodu) values('"& yetki_kodu &"', '"& firma_logo &"', '"& firma_adi &"', '"& firma_yetkili &"', '"& firma_telefon &"', '"& firma_mail &"', '"& firma_supervisor_id &"', '"& default_parabirimi &"', '"& cari_calisma_izni &"', '"& genel_kar_tipi &"', '"& genel_kar &"', '"& genel_kar_pb &"', '"& firma_gsm &"', '"& kur_secimi &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"', '"& ekleyen_firma_id &"', '"& ekleyen_firma_kodu &"'); SELECT SCOPE_IDENTITY() id;"
+        SQL="SET NOCOUNT ON; insert into ucgem_firma_listesi(yetki_kodu, firma_logo, firma_adi, firma_yetkili, firma_telefon, firma_mail, firma_supervisor_id, default_parabirimi, cari_calisma_izni, genel_kar_tipi, genel_kar, genel_kar_pb, firma_gsm, kur_secimi, durum, cop, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, ekleyen_firma_id, ekleyen_firma_kodu, yetkili1_telefon, yetkili1_mail) values('"& yetki_kodu &"', '"& firma_logo &"', '"& firma_adi &"', '"& firma_yetkili &"', '"& firma_telefon &"', '"& firma_mail &"', '"& firma_supervisor_id &"', '"& default_parabirimi &"', '"& cari_calisma_izni &"', '"& genel_kar_tipi &"', '"& genel_kar &"', '"& genel_kar_pb &"', '"& firma_gsm &"', '"& kur_secimi &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', '"& ekleme_tarihi &"', '"& ekleme_saati &"', '"& ekleyen_firma_id &"', '"& ekleyen_firma_kodu &"', '"& yetkili1_telefon &"', '"& yetkili1_mail &"'); SELECT SCOPE_IDENTITY() id;"
         set ekle = baglanti.execute(SQL)
 
         firma_id = ekle(0)

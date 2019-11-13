@@ -946,7 +946,6 @@ function parcalar_autocomplete_calistir() {
 
 function parcalar_autocomplete_calistir2() {
 
-
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
 
         var IsId = $(this).attr("isid");
@@ -963,7 +962,29 @@ function parcalar_autocomplete_calistir2() {
                 setTimeout(function () {
                     //$(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", ui.item.id);
                     var adet = $("#parca_adeti").val();
-                    is_detay_parca_sectim(IsId, ui.item.id, adet);
+
+                    var pathname = window.location.origin;
+
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        url: pathname + "/System_Root/ajax/islem1.aspx/CalculateParca",
+                        data: JSON.stringify({ ParcaID: ui.item.id, GirilenMiktar: adet }),
+                        dataType: "JSON",
+                        error: function (xhr) {
+                            console.log(xhr);
+                        },
+                        success: function (data) {
+                            var result = jQuery.parseJSON(data.d);
+                            console.log(result);
+                            if (result > 0) {
+                                SiparisPopup(IsId, ui.item.id, result);
+                            }
+                            if (result == 0) {
+                                is_detay_parca_sectim(IsId, ui.item.id, adet);
+                            }
+                        }
+                    });
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {

@@ -522,7 +522,6 @@
             <th data-hide="phone"><% Response.Write(LNG("Firma Kodu")); %></th>
             <th data-hide="phone"><% Response.Write(LNG("Yetkili Kişi")); %></th>
             <th data-class="expand"><% Response.Write(LNG("Firma Adı")); %></th>
-            <th data-hide="phone"><% Response.Write(LNG("Yetkili Kişi")); %></th>
             <th data-hide="phone"><% Response.Write(LNG("Telefon")); %></th>
             <th data-hide="phone"><% Response.Write(LNG("Supervisor")); %></th>
             <th style="text-align:center;"><% Response.Write(LNG("Durum")); %></th>
@@ -543,7 +542,6 @@
             <td><%# DataBinder.Eval(Container.DataItem, "musteri_kodu") %></td>
             <td><%# DataBinder.Eval(Container.DataItem, "firma_yetkili") %></td>
             <td><%# DataBinder.Eval(Container.DataItem, "firma_adi") %></td>
-            <td><%# DataBinder.Eval(Container.DataItem, "firma_yetkili") %></td>
             <td><%# DataBinder.Eval(Container.DataItem, "firma_telefon") %></td>
             <td><%# DataBinder.Eval(Container.DataItem, "supervisor") %></td>
             <td style="text-align:center;">
@@ -1410,6 +1408,141 @@
 
             
     </asp:panel>
+    <asp:panel id="modal_yonetici_ekle_panel" runat="server">
+        <div class="modal-header">
+    Yönetici Ekleme
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form id="koftiform"></form>
+<form autocomplete="off" id="yeni_parca_giris_upload" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+
+                        <div class="row">
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("2. Yetkili Kişi")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="yetkili2_adi" required class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("2. Yetkili Telefon")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67" id="yetkili2_telefon" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("2. Yetkili E-Posta")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="email" id="yetkili2_mail" class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-link" id="yetkili3ac" type="button">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                         <div class="row" id="yetkili3form" style="display:none">
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("3. Yetkili Kişi")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="yetkili3_adi" required class="form-control" />
+                                </div>
+                            </div>
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("3. Yetkili Telefon")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67" id="yetkili3_telefon" class="form-control" />
+                                </div>
+                            </div>
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("3. Yetkili E-Posta")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="email" id="yetkili3_mail" class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-link" id="yetkili4ac" type="button">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                         </div>
+
+                         <div class="row" id="yetkili4form" style="display:none">
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("4. Yetkili Kişi")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="yetkili4_adi" required class="form-control" />
+                                </div>
+                            </div>
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("4. Yetkili Telefon")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67" id="yetkili4_telefon" class="form-control" />
+                                </div>
+                            </div>
+                             <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("4. Yetkili E-Posta")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="email" id="yetkili4_mail" class="form-control" />
+
+                                </div>
+                            </div>
+                        </div>
+
+    <div class="modal-footer">
+        <input type="button" onclick="YöneticilerEkle();" class="btn btn-success btn-sm" value="Kaydet" id="Yönetici Ekle" />
+    </div>
+</form>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#yetkili3ac").click(function () {
+                    $("#yetkili3form").slideToggle();
+                });
+                $("#yetkili4ac").click(function () {
+                    $("#yetkili4form").slideToggle();
+                });
+            });
+        </script>
+
+    </asp:panel>
 
         <asp:panel id="yeni_is_ekle_panel" runat="server">
 
@@ -1994,7 +2127,7 @@
     </asp:panel>
 </form>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>--%>
 
 <script type="text/javascript">
     $(document).ready(function () {

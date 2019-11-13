@@ -13,6 +13,8 @@
         set detay = baglanti.execute(SQL)
 
 %>
+
+<link href="../js/select2.min.css" rel="stylesheet" />
 <form>
     <style>
         @media screen and (max-size:767px) {
@@ -1237,7 +1239,7 @@ works properly when clicked or hovered */
         <div class="form-group row col-sm-6">
             <label class="col-sm-12 col-form-label">Talep Edilen Kişi :</label>
             <div class="col-sm-12">
-                <select name="talep_edilen" id="talep_edilen" class="select2">
+                <select name="talep_edilen" id="talep_edilen" class="select2" multiple required>
                     <%
                     firma_id = Request.Cookies("kullanici")("firma_id")
                     SQL="select id, personel_ad + ' ' + personel_soyad as personel_ad_soyad from ucgem_firma_kullanici_listesi where firma_id = '"& firma_id &"' and durum = 'true' and cop = 'false'"
@@ -1256,8 +1258,7 @@ works properly when clicked or hovered */
         <div class="form-group row col-sm-6">
             <label class="col-sm-12 col-form-label">Kontrol ve Bildirim :</label>
             <div class="col-sm-12">
-                <select name="kontrol_select" id="kontrol_select" class="select2">
-                    <option selected="selected" disabled="disabled">Bildirim Tipi</option>
+                <select name="kontrol_select" id="kontrol_select" class="select2" multiple required>
                     <%
                     SQL="select id, adi from ucgem_bildirim_cesitleri"
                     set kontrol_select = baglanti.execute(SQL)
@@ -1386,10 +1387,42 @@ works properly when clicked or hovered */
             Response.End
                 return
         
-            end if 
+            end if
+    
+            SQL ="SELECT * FROM ucgem_is_calisma_listesi WHERE ekleyen_id = '"& ekleyen_id &"' AND is_id = '"& is_id &"' AND durum= 'true' AND cop='false' "
+            set controlbaslat = baglanti.Execute(SQL)
+
+            SQL ="SELECT * FROM ucgem_firma_kullanici_listesi WHERE id ='"& ekleyen_id &"' AND durum= 'true' AND cop='false' "
+            set kullanicicek = baglanti.Execute(SQL)
+
+            SQL ="SELECT * FROM ucgem_is_listesi WHERE id ='"& is_id &"' AND durum= 'true' AND cop='false' "
+            set iscek = baglanti.Execute(SQL)
+
+           SQL ="SELECT * FROM ucgem_firma_kullanici_listesi WHERE id ='"& iscek("ekleyen_id") &"' AND durum= 'true' AND cop='false' "
+            set yoneticicek = baglanti.Execute(SQL)
+
+            if controlbaslat.eof then
+                bildirim = kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") & " "& iscek("adi") &" Adlı İşe Başladı."
+                tip = "is_listesi"
+                click = "CokluIsYap(''is_listesi'',0,'' '',''"& is_id &"'');"
+                user_id = iscek("ekleyen_id")
+                okudumu = "0"
+                durum = "true"
+                cop = "false"
+                firma_kodu = kullanicicek("firma_kodu")
+                firma_id = kullanicicek("firma_id")
+                ekleyen_ip = Request.ServerVariables("Remote_Addr")
+    
+                SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON;"
+                set ekle2 = baglanti.execute(SQL)
+
+                NetGSM_SMS yoneticicek("personel_telefon"), bildirim
+            end if
 
             SQL="insert into ucgem_is_calisma_listesi(TamamlanmaID, is_id, baslangic, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& TamamlanmaID &"', '"& is_id &"', getdate(), '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 104), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
+
+           
 
             SQL="select * from ucgem_is_listesi where id = '"& is_id &"'"
             set iscek = baglanti.execute(SQL)
@@ -2262,7 +2295,8 @@ works properly when clicked or hovered */
                     <input id="parca_adeti" type="number" oninput="numControl();" class="form-control" style="width: 50px; text-align: center;" value="1" min="1"/>
                 </td>
                 <td style="padding-left: 10px;">
-                    <input type="text" name="aparcalar" id="aparcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control aparcalar required" style="width: 90%;" required /></td>
+                    <input type="text" name="aparcalar" id="aparcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control aparcalar required" style="width: 90%;" required />
+                </td>
             </tr>
         </table>
     </div>
@@ -2732,9 +2766,11 @@ works properly when clicked or hovered */
 
         elseif trn(request("islem2"))="ekle" then
 
-            ParcaId = trn(request("ParcaId"))
             AdetSayisi = trn(request("Adet"))
+            ParcaId = trn(request("ParcaId"))
+            IsID = trn(request("IsID"))
 
+            
             Adet = AdetSayisi
             durum = "true"
             cop = "false"
@@ -2750,6 +2786,7 @@ works properly when clicked or hovered */
 
             SQL="select * from is_parca_listesi where ParcaID = '"& ParcaId &"' and IsID = '"& IsID &"'"
             set varmi = baglanti.execute(SQL)
+
             if varmi.eof then
 
                 SQL="insert into is_parca_listesi(Adet, IsID, ParcaId, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& Adet &"', '"& IsID &"', '"& ParcaId &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
@@ -2797,10 +2834,12 @@ works properly when clicked or hovered */
 
                          if siparisVarmi.eof then
                             if siparisFormuVarmi.eof then
+
                                 SQL = "SET NOCOUNT ON; insert into satinalma_listesi(IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& IsID &"', '"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', '"& toplamTL &"', '"& toplamUSD &"', '"& toplamEUR &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
                                 set satinalmaListesi = baglanti.execute(SQL)
    
                                 satinalmaId = satinalmaListesi(0)
+
                             else
                                 if parcalar("birim_pb") = "TL" then
                                   SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where IsId = '"& siparisFormuVarmi("IsId") &"'"
@@ -3431,6 +3470,7 @@ works properly when clicked or hovered */
         personel_id = trn(request("personel_id"))
         baslangic_tarihi = trn(request("baslangic_tarihi"))
         bitis_tarihi = trn(request("bitis_tarihi"))
+        izin_turu = trn(request("turu"))
 
         SQL="select * from ucgem_firma_kullanici_listesi where id = '"& personel_id &"'"
         set personel = baglanti.execute(SQL)
@@ -3438,50 +3478,54 @@ works properly when clicked or hovered */
         personel_yillik_izin_hakedis = personel("personel_yillik_izin_hakedis")
         personel_yillik_izin = personel("personel_yillik_izin")
 
-        if isdate(personel_yillik_izin_hakedis)=true then
-            personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)
+        if izin_turu = "Ücretsiz İzin" then
+            
         else
-            personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)+1
-        end if
+            if isdate(personel_yillik_izin_hakedis)=true then
+                personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)
+            else
+                personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)+1
+            end if
 
-        if cdate(personel_yillik_izin_hakedis)>cdate(baslangic_tarihi) then
-            Response.Clear()
-%>
-<script>
-            $(function (){
-                mesaj_ver("İzin Talepleri", "İzin Hakediş Tarihiniz :  <%=cdate(personel_yillik_izin_hakedis) %> Bu tarihten öncesine izin talebinde bulunamazsınız.", "danger");
-            });
-</script>
-<%
-            Response.End
-        end if
-
-        SQL="select * from tanimlama_yasakli_izin_gunleri where (CONVERT(date, '"& baslangic_tarihi &"', 103) between baslangic_tarihi and bitis_tarihi) or  (CONVERT(date, '"& bitis_tarihi &"', 103) between baslangic_tarihi and bitis_tarihi)"
-        set cek = baglanti.execute(SQL)
-        if not cek.eof then
-            Response.Clear()
-%>
-<script>
-            $(function (){
-                mesaj_ver("İzin Talepleri", "Seçtiğiniz Tarihler İzin Kullanımına uygun değildir.", "danger");
-            });
-</script>
-<%
-            Response.End
-        end if
-
-        if cdbl(personel_yillik_izin)>0 then
-            if cdbl(personel_yillik_izin)/2 < (cdate(bitis_tarihi)-cdate(baslangic_tarihi)) then
-            Response.Clear()
-%>
-<script>
+            if cdate(personel_yillik_izin_hakedis)>cdate(baslangic_tarihi) then
+                Response.Clear()
+    %>
+    <script>
                 $(function (){
-                    mesaj_ver("İzin Talepleri", "Bir Defada İzninizin Yalnızca Yarısını Kullanabilirsiniz. İzin Taleplerinizi 1 Nisan öncesi <%=cint(cdbl(personel_yillik_izin)/2) %> gün 1 Nisan sonrası <%=cint(cdbl(personel_yillik_izin)/2) %> gün şeklinde gönderiniz.", "danger");
+                    mesaj_ver("İzin Talepleri", "İzin Hakediş Tarihiniz :  <%=cdate(personel_yillik_izin_hakedis) %> Bu tarihten öncesine izin talebinde bulunamazsınız.", "danger");
                 });
-</script>
+    </script>
+    <%
+                Response.End
+            end if
 
-<%
-            Response.End
+            SQL="select * from tanimlama_yasakli_izin_gunleri where (CONVERT(date, '"& baslangic_tarihi &"', 103) between baslangic_tarihi and bitis_tarihi) or  (CONVERT(date, '"& bitis_tarihi &"', 103) between baslangic_tarihi and bitis_tarihi)"
+            set cek = baglanti.execute(SQL)
+            if not cek.eof then
+                Response.Clear()
+    %>
+    <script>
+                $(function (){
+                    mesaj_ver("İzin Talepleri", "Seçtiğiniz Tarihler İzin Kullanımına uygun değildir.", "danger");
+                });
+    </script>
+    <%
+                Response.End
+            end if
+
+            if cdbl(personel_yillik_izin)>0 then
+                if cdbl(personel_yillik_izin)/2 < (cdate(bitis_tarihi)-cdate(baslangic_tarihi)) then
+                Response.Clear()
+    %>
+    <script>
+                    $(function (){
+                        mesaj_ver("İzin Talepleri", "Bir Defada İzninizin Yalnızca Yarısını Kullanabilirsiniz. İzin Taleplerinizi 1 Nisan öncesi <%=cint(cdbl(personel_yillik_izin)/2) %> gün 1 Nisan sonrası <%=cint(cdbl(personel_yillik_izin)/2) %> gün şeklinde gönderiniz.", "danger");
+                    });
+    </script>
+    
+    <%
+                Response.End
+                end if
             end if
         end if
         
@@ -3492,3 +3536,6 @@ works properly when clicked or hovered */
 
     
     end if %>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

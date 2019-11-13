@@ -1946,6 +1946,7 @@
         ' on error resume next
 
         ek_dosya = trn(HTMLDecode(urldecodes(request("ek_dosya"))))
+        
         e_posta = trn(request("eposta"))
         konu = trn(request("konu"))
         maill = trn(request("mesaj"))
@@ -1961,7 +1962,7 @@
 
 		Set Mail = Server.CreateObject("Persits.MailSender")
 		'Mail.Host = "mail.makrogem.com.tr"                                     ' Es-Posta sunucu adresi
-		Mail.Host = "mail.esotomasyon.com.tr"                                        ' E-Posta sunucu adresi
+		Mail.Host = "mail.esotomasyon.com.tr"                                   ' E-Posta sunucu adresi
         Mail.Port = 587
         Mail.TLS = false
 		Mail.Username = gonderici                                               ' Gönderim adresi
@@ -1974,8 +1975,14 @@
 		Mail.Body = antet_ust & maill & antet_alt                               ' Mail içeriği
 		Mail.IsHTML = True
         Mail.CharSet = "UTF-8"
-        sName = server.MapPath(ek_dosya)
-        Mail.AddAttachment sName
+        if ek_dosya = "undefined" then
+            
+        else
+            sName = server.MapPath(ek_dosya)
+            Mail.AddAttachment sName
+        End If
+
+       
 
 
 		Mail.Send

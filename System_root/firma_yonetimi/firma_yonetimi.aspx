@@ -30,7 +30,7 @@
                     <h5><% Response.Write(LNG("Firma Ekle")); %></h5>
                 </div>
                 <div class="card-block">
-
+                    <input id="ManagersDatas" type="hidden" />
                     <form autocomplete="off" id="firma_ekle_form" runat="server">
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Firma Logo")); %></label>
@@ -59,6 +59,31 @@
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
                                     <input type="text" id="firma_yetkili" required class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Yetkili Kişi Telefon")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67" id="yetkili_telefon" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Yetkili Kişi E-Posta")); %></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="email" id="yetkili_mail" class="form-control" />
+
                                 </div>
                             </div>
                         </div>
@@ -97,8 +122,10 @@
 
 
                     </form>
+                    
 
                     <div class="row modal-footer" style="margin-top: 20px;">
+                        <input type="button" style="float:left; margin-left:45px;" class="btn btn-warning" onclick="ModalYetkiliEkle();" value="Firma Yetkilisi Ekle" autocomplete="new-password">
                         <input type="button" onclick="firma_ekle('MUSTERI');" class="btn btn-primary" value="Firma Ekle" />
                     </div>
                 </div>
