@@ -148,7 +148,7 @@
                         <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border: solid 1px black;">
                                 <thead>
                                     <tr>
-                                        <th style="text-align: center; width: 10%;">Sıra No</th>
+                                        <!--<th style="text-align: center; width: 10%;">Sıra No</th>-->
                                         <th style="text-align: center; width: 10%;">Marka</th>
                                         <th style="text-align: center; width: 10%;">Kod</th>
                                         <th style="text-align: center;">Açıklama</th>
@@ -177,7 +177,7 @@
                                             k = k + 1
                                     %>   
                                     <tr>
-                                        <td style="text-align:center"><%=k %></td>
+                                        <!--<td style="text-align:center"><%=k %></td>-->
                                         <td style="text-align:center"><%=parcadetay("marka") %></td>
                                         <td style="text-align:center"><%=parcadetay("parca_kodu") %></td>
                                         <td style="text-align:center"><%=parcadetay("aciklama") %></td>

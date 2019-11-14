@@ -25,7 +25,6 @@
         set personelbilgi = baglanti.execute(SQL)
 
 %>
-
 <script type="text/javascript">
     sayfa_yuklenince();
 </script>
@@ -4588,7 +4587,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
     <form autocomplete="off" id="servisbakimkaydi" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
         <script>
            $(function (){
-               parcalar_autocomplete_calistir();
+               parcalar_autocomplete_calistir3();
            });
         </script>
         <div class="row">
@@ -4617,107 +4616,107 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             <div class="col-md-12" id="musteriformu" style="display:none; margin-top:10px">
                  <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
                     <label class="col-form-label col-md-12 font-weight-bold" style="text-align:left; margin-bottom:10px">Müşteri Bilgileri</label>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma Adı</label>
-                            <input type="text" class="form-control" id="firmaadi" placeholder="Firma Adı"/>
+                            <input type="text" class="form-control" id="firmaadi" placeholder="Firma Adı" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Yetkili Kişi</label>
-                            <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi"/>
+                            <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma Telefon</label>
-                            <input type="text" class="form-control" id="firmatelefon" placeholder="0(555) 123 45 67"/>
+                            <input type="tel" class="form-control" id="firmatelefon" placeholder="0(555) 123 45 67" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-7">
                         <div class="form-group">
                             <label class="col-from-label">Firma E-posta</label>
-                            <input class="form-control" type="email" id="firmaeposta" placeholder="example@gmail.com"/>
+                            <input class="form-control" type="email" id="firmaeposta" placeholder="example@gmail.com" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-7">
                         <div class="form-group">
                             <label class="col-from-label">Firma Adress</label>
-                            <input class="form-control" type="text" id="firmaadress" placeholder="Adress"/>
+                            <input class="form-control" type="text" id="firmaadress" placeholder="Adress" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-7">
                         <div class="form-group">
                             <label class="col-from-label">Vergi Dairesi</label>
-                            <input class="form-control" type="text" id="firmavergidairesi" placeholder="Vergi Dairesi"/>
+                            <input class="form-control" type="text" id="firmavergidairesi" placeholder="Vergi Dairesi" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-7">
                         <div class="form-group">
                             <label class="col-from-label">Vergi No</label>
-                            <input class="form-control" type="text" id="firmavergino" placeholder="Vergi No"/>
+                            <input class="form-control" type="text" id="firmavergino" placeholder="Vergi No" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-7">
                         <div class="form-group">
                             <label class="col-from-label">Makine Bilgileri</label>
-                            <input class="form-control" type="text" id="firmamakinebilgi" placeholder="Makine Bilgileri"/>
+                            <input class="form-control" type="text" id="firmamakinebilgi" placeholder="Makine Bilgileri" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-7">
                         <div class="form-group">
                             <label class="col-from-label">Bildirilen Arıza</label>
-                            <input class="form-control" type="text" id="firmaariza" placeholder="Bildirilen Arıza"/>
+                            <input class="form-control" type="text" id="firmaariza" placeholder="Bildirilen Arıza" required/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-7">
                         <div class="form-group">
                             <label>Başlangıç Tarihi</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="icon-prepend fa fa-calendar"></i>
                                 </span>
-                                <input type="text" id="baslangic_tarihi" required class="takvimyap_yeni hasDatepicker" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
+                                <input type="text" id="baslangic_tarihi" required class="takvimyap_yeni form-control" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label>Bitiş Tarihi</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="icon-prepend fa fa-calendar"></i>
                                 </span>
-                                <input type="text" id="bitis_tarihi" required class="takvimyap_yeni hasDatepicker" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
+                                <input type="text" id="bitis_tarihi" required class="takvimyap_yeni form-control" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
                             </div>
                         </div>
                     </div>
-                    <div style="padding-left:15px; width:110px">
+                    <div class="col-md-1 col-sm-3 col-xs-6" style="width:110px">
                         <label>Başlangıç Saati</label>
                         <div class="form-group">
                              <input type="text" id="baslangic_saati" required class="timepicker form-control" style="padding-left:10px" value=""/>
                         </div>
                     </div>
-                    <div style="padding-left:15px; width:110px">
+                    <div class="col-md-1 col-sm-3 col-xs-5" style="width:110px">
                         <label>Bitiş Saati</label>
                         <div class="form-group">
                              <input type="text" id="bitis_saati" required class="timepicker form-control" style="padding-left:10px" value=""/>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label class="col-from-label">Yapılan İşlemler</label>
                             <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height:100px"></textarea>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label class="col-from-label">Not</label>
                             <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height:100px"></textarea>
                         </div>
                     </div>
-                    <div class="col-md-3" style="display:none">
+                    <div class="col-md-3 col-sm-3 col-xs-3" style="display:none">
                         <div class="form-group">
                             <div class="form-check">
                                 <label class="form-check-label" style="padding-left:1px" for="listeyeekle">Müşteri Listesine Kaydet</label>
@@ -4727,20 +4726,20 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                     </div>
                 </div>
                  <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-sm-4 col-xs-4">
                         <div class="form-group">
                             <label class="font-weight-bold">Parça Adı</label>
                             <input type="text" name="parcalar" id="parcalar1" i="<1" data="0" class="form-control parcalar" />
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-sm-2">
                         <div class="form-group">
                             <label class="font-weight-bold">Adet</label>
-                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1"/>
+                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1" value="1"/>
                     </div>
                     </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5">
+                    <div class="col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-md-5 col-sm-5 col-xs-5">
                         <div class="form-group">
                             <label class="font-weight-bold">Görevli</label>
                             <select id="firmagorevli" class="form-control select2" multiple>
@@ -4757,32 +4756,19 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-12 col-lg-12">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                         <label class="col-form-label font-weight-bold" style="margin-bottom:10px">Stok Listesi</label>
                         <table class="table table-bordered table-sm table-sprited">
                             <thead>
                                 <tr>
                                     <th>Adet</th>
                                     <th>Parça</th>
-                                    <th>Ekleyen</th>
-                                    <th>Ekleme Tarihi</th>
-                                    <th>İşlem</th>
+                                    <th>Açıklama</th>
+                                    <th>Işlem</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <%
-                                    SQL = ""
-                                %>
-                                <tr>
-                                    <td colspan="5" style="text-align:center">Kayıt Bulunamadı</td>
-                                </tr>
-<!--                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>-->
+                            <tbody id="stoklist">
+
                             </tbody>
                         </table>
                     </div>
@@ -4790,7 +4776,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             </div>
         </div>
         <div class="modal-footer">
-            <input type="button" class="btn btn-primary" onclick="ServisBakimKaydiEkle();" value="Servis / Bakım Planı Kaydet" />
+            <input type="submit" class="btn btn-primary" onclick="ServisBakimKaydiEkle();" value="Servis / Bakım Planı Kaydet" />
         </div>
         <style>
             .ui-helper-hidden {
@@ -5401,7 +5387,7 @@ works properly when clicked or hovered */
                         <table class="table table-bordered table-sm table-sprited">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <!--<th>Id</th>-->
                                     <th>Parça</th>
                                     <th>Adet</th>
                                     <th>Açıklama</th>
@@ -5429,7 +5415,7 @@ works properly when clicked or hovered */
                                             k = k + 1
                                     %>   
                                     <tr>
-                                        <td style="text-align:center"><%=k %></td>
+                                        <!--<td style="text-align:center"><%=k %></td>-->
                                         <td style="text-align:center"><%=parcadetay("marka") %> - <%=parcadetay("parca_kodu") %></td>
                                         <td style="text-align:center"><%=Adet %></td>
                                         <td style="text-align:center"><%=parcadetay("aciklama") %></td>
