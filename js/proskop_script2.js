@@ -976,7 +976,7 @@ function parcalar_autocomplete_calistir2() {
                             var result = jQuery.parseJSON(data.d);
                             console.log(result);
                             if (result > 0) {
-                                SiparisPopup(IsId, ui.item.id, result);
+                                SiparisPopup(IsId, ui.item.id, result, adet);
                             }
                             if (result == 0) {
                                 is_detay_parca_sectim(IsId, ui.item.id, adet);
@@ -1041,12 +1041,131 @@ function parcalar_autocomplete_calistir2() {
     });
 }
 
-function is_detay_parca_sectim(IsID, ParcaId, adet) {
+var parcaListesi = [];
+var adet = [];
+function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
+
+    $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
+
+        var IsId = $(this).attr("isid");
+        var marka = "Marka girilmedi";
+        var aciklama = "Açıklama girilmedi";
+        var kodu = "Ürün Kodu Girilmedi";
+        var bildirim = "Kayıt Bulunamadı";
+        var durum = "Servis";
+
+        $(this).autocomplete({
+            source: "/ajax_request6/?jsid=4559&islem=parcalar_auto",
+            minLength: 2,
+            select: function (event, ui) {
+                var inpuu = $(this);
+                setTimeout(function () {
+                    parcaListesi.push(ui.item.id);
+                    adet.push($("#musteriparcaadeti").val());
+                    $(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", parcaListesi).attr("adet", adet);
+                    $("#stoklist").append("<tr id='" + ui.item.id + "'> <td>" + ui.item.kodu + "</td>" + "<td>" + ui.item.marka + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
+                    $(inpuu).val("");
+
+                    var pathname = window.location.origin;
+                    var sayi = $("#musteriparcaadeti").val();
+
+                    //$.ajax({
+                    //    type: 'POST',
+                    //    contentType: 'application/json; charset=utf-8',
+                    //    url: pathname + "/System_Root/ajax/islem1.aspx/CalculateParca",
+                    //    data: JSON.stringify({ ParcaID: ui.item.id, GirilenMiktar: sayi }),
+                    //    dataType: "JSON",
+                    //    error: function (xhr) {
+                    //        console.log(xhr);
+                    //    },
+                    //    success: function (data) {
+                    //        var result = jQuery.parseJSON(data.d);
+                    //        console.log(result);
+                    //        if (result > 0) {
+                    //            SiparisPopup(IsId, ui.item.id, result, adet, durum);
+                    //        }
+                    //        if (result == 0) {
+                    //            is_detay_parca_sectim(IsId, ui.item.id, adet, durum);
+                    //        }
+                    //    }
+                    //});
+
+                }, 100);
+            }
+        }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
+
+            if (item.kodu !== "") {
+                kodu = item.kodu;
+            }
+            else {
+                kodu = "Parça Kodu Girilmedi !";
+            }
+            if (item.marka !== "") {
+                marka = item.marka;
+            }
+            else {
+                marka = "Marka Girilmedi !";
+            }
+            if (item.aciklama !== "") {
+                aciklama = item.aciklama;
+            }
+            else {
+                aciklama = "Açıklama Boş !";
+            }
+
+            if (item.parcaadi === undefined && item.marka === undefined && item.aciklama === undefined && item.kodu === undefined) {
+                return $("<p style='Display:none'>").append("<a>" + bildirim + "</a>").appendTo(ul);
+            }
+            else {
+                return $("<li>").append("<a>" + kodu + " - " + marka + " - " + aciklama + "</a>").appendTo(ul);
+            }
+
+        };
+    });
+
+
+    $(".aparcalar:not(.yapilan)").addClass("yapilan").each(function () {
+
+        var IsId = $(this).attr("isid");
+
+        $(this).autocomplete({
+            source: "/ajax_request6/?jsid=4559&islem=parcalar_auto2",
+            minLength: 2,
+            select: function (event, ui) {
+                var inpuu = $(this);
+                setTimeout(function () {
+                    //$(inpuu).val(ui.item.kodu + " " + ui.item.marka).attr("data", ui.item.id);
+                    is_detay_parca_agaci_sectim(IsId, ui.item.id);
+                }, 100);
+            }
+        }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
+            if (item.agacadi === undefined) {
+                return $("<li style='display:none'>").append("<a> </a>").appendTo(ul);
+            } else {
+                return $("<li>").append("<a>" + item.agacadi + "</a>").appendTo(ul);
+            }
+        };
+    });
+}
+
+function ParcaSil(id) {
+    $("#" + id).remove();
+    var index = parcaListesi.indexOf(id);
+    if (index !== -1) {
+        parcaListesi.splice(index, 1);
+        adet.splice(index, 1);
+        $("#parcalar1").attr("data", parcaListesi).attr("adet", adet);
+    }
+    console.log(index);
+}
+
+function is_detay_parca_sectim(IsID, ParcaId, adet, durum) {
 
     var data = "islem=is_detay_parca_sectim&islem2=ekle";
     data += "&IsID=" + IsID;
     data += "&ParcaId=" + ParcaId;
     data += "&Adet=" + adet;
+    data += "&servis=" + durum;
     data = encodeURI(data);
     $("#kullanilan_parcalar" + IsID).loadHTML({ url: "/ajax_request5/", data: data }, function () {
         mesaj_ver("Parçalar / Cihazlar", "Kayıt Başarıyla Eklendi", "success");

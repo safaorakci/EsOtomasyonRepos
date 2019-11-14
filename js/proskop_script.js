@@ -113,7 +113,7 @@ function durum_guncelleme_calistir(tablo, id) {
 
 }
 
-function SiparisPopup(IsID, ParcaId, adet) {
+function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum) {
     swal({
         title: "Satınalma Formu",
         text: adet + " Adet Sipariş verilecek. Siparişi Onaylıyor Musunuz ?",
@@ -137,7 +137,7 @@ function SiparisPopup(IsID, ParcaId, adet) {
             //    }
             //});
 
-            is_detay_parca_sectim(IsID, ParcaId, adet);
+            is_detay_parca_sectim(IsID, ParcaId, toplamAdet, durum);
             //var data = "islem=is_detay_parca_sectim&islem2=ekle";
             //data += "&IsID=" + IsID;
             //data += "&ParcaId=" + ParcaId;
@@ -8859,7 +8859,7 @@ function ServisBakimKaydiEkle() {
     data += "&firmavergino=" + $("#firmavergino").val();
     data += "&gorevli=" + $("#firmagorevli").val();
     data += "&parcaId=" + $("#parcalar1").attr("data");
-    data += "&adet=" + $("#musteriparcaadeti").val();
+    data += "&adet=" + $("#parcalar1").attr("adet");
     data += "&musteri_id=" + $("#musteri_id").val();
     data += "&firmamakinebilgi=" + $("#firmamakinebilgi").val();
     data += "&firmaariza=" + $("#firmaariza").val();

@@ -2347,7 +2347,7 @@ works properly when clicked or hovered */
     <table class="table datatableyap table-bordered" style="width:100%">
         <thead>
             <tr>
-                <th>Id</th>
+                <th style="text-align:center">Id</th>
                 <th>Firma Ünvanı</th>
                 <th>Yetkili</th>
                 <th>Görevliler</th>
@@ -2355,12 +2355,13 @@ works properly when clicked or hovered */
                 <th>Email</th>
                 <th>Vergi Dairesi</th>
                 <th>Vergi No</th>
+                <th>Ekleme Tarihi</th>
                 <th>Işlem</th>
             </tr>
         </thead>
         <tbody>
             <%
-                SQL = "select kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen, servis.* from servis_bakim_kayitlari servis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = servis.EkleyenId where servis.Durum = 'true' and servis.Cop = 'false' order by servis.EklemeTarihi asc"
+                SQL = "select kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen, servis.* from servis_bakim_kayitlari servis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = servis.EkleyenId where servis.Durum = 'true' and servis.Cop = 'false' order by servis.EklemeTarihi desc"
                 set servisBakim = baglanti.execute(SQL)
 
                 if servisBakim.eof then
@@ -2375,7 +2376,7 @@ works properly when clicked or hovered */
                     k = k + 1
             %>
             <tr>
-                <td><%=k %></td>
+                <td style="text-align:center"><%=k %></td>
                 <td><%=servisBakim("FirmaUnvani") %></td>
                 <td><%=servisBakim("Yetkili") %></td>
                 <td> <%
@@ -2389,6 +2390,7 @@ works properly when clicked or hovered */
                 <td><%=servisBakim("Email") %></td>
                 <td><%=servisBakim("VergiDairesi") %></td>
                 <td><%=servisBakim("VergiNo") %></td>
+                <td><%=servisBakim("EklemeTarihi") %> &nbsp <%=left(servisBakim("EklemeSaati"),5) %></td>
                 <td>
                     <button type="button" class="btn btn-mini btn-primary dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             İşlemler
@@ -2908,7 +2910,6 @@ works properly when clicked or hovered */
             AdetSayisi = trn(request("Adet"))
             ParcaId = trn(request("ParcaId"))
             IsID = trn(request("IsID"))
-
             
             Adet = AdetSayisi
             durum = "true"
@@ -2935,10 +2936,11 @@ works properly when clicked or hovered */
                 SQL = "select * from parca_listesi where id = '"& ParcaId &"'"
                 set parcalar = baglanti.execute(SQL)
 
-                SQL = "select case when departmanlar like 'proje%' then SUBSTRING(departmanlar,7, LEN(CHARINDEX(',', departmanlar)-CHARINDEX(',', departmanlar))) else '1' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
+                SQL = "select adi, case when departmanlar like 'proje%' then SUBSTRING(departmanlar,7, LEN(CHARINDEX(',', departmanlar)-CHARINDEX(',', departmanlar))) else '1' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
                 set isListesi = baglanti.execute(SQL)
 
                 projeID = isListesi("ProjeID")
+                baslik = isListesi("adi")
             
                 miktar = parcalar("miktar") - parcalar("minumum_miktar")
                 if miktar < AdetSayisi then
@@ -2998,7 +3000,7 @@ works properly when clicked or hovered */
                                   set satinalmaListesi = baglanti.execute(SQL)
                                   satinalmaId = siparisFormuVarmi("id")
                                end if
-                            
+                            end if                            
                          if siparisVarmi.eof then
                             SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, stokAdeti, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& stokAdeti &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                             set satinalmaSiparisListesi = baglanti.execute(SQL)
@@ -3055,10 +3057,11 @@ works properly when clicked or hovered */
                SQL = "select * from parca_listesi where id = '"& ParcaId &"'"
                 set parcalar = baglanti.execute(SQL)
 
-               SQL = "select case when  departmanlar like 'proje%' then SUBSTRING(departmanlar,7, LEN(CHARINDEX(',', departmanlar)-CHARINDEX(',', departmanlar))) else '0' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
+               SQL = "select adi, case when departmanlar like 'proje%' then SUBSTRING(departmanlar,7, LEN(CHARINDEX(',', departmanlar)-CHARINDEX(',', departmanlar))) else '0' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
                 set isListesi = baglanti.execute(SQL)
 
                 projeID= isListesi("ProjeID")
+                baslik = isListesi("adi")
 
                 miktar = parcalar("miktar") - parcalar("minumum_miktar")
                 if miktar < AdetSayisi then
@@ -3119,7 +3122,7 @@ works properly when clicked or hovered */
                             SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, stokAdeti, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& stokAdeti &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
                             set satinalmaSiparisListesi = baglanti.execute(SQL)
                          else
-                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"', stokAdeti = stokAdeti '"& stokAdeti &"' where parcaId = '"& siparisVarmi("parcaId") &"' and IsId = '"& siparisVarmi("IsId") &"'"
+                               SQL = "update satinalma_siparis_listesi set adet = adet + '"& AdetSayisi &"', stokAdeti = stokAdeti + '"& stokAdeti &"' where parcaId = '"& siparisVarmi("parcaId") &"' and IsId = '"& siparisVarmi("IsId") &"'"
                                set siparisGuncelle = baglanti.execute(SQL)
 
                                if parcalar("birim_pb") = "TL" then
@@ -3674,7 +3677,6 @@ works properly when clicked or hovered */
         Response.Write "ok"
         Response.End()
 
-    
     end if %>
 
 

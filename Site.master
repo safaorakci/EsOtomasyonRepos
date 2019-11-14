@@ -37,7 +37,7 @@
     <link rel="stylesheet" type="text/css" href="/js/select2.min.css" />
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="/js/NumberFormat154.js"></script>
-    <link href="css/animatedIcon.css" rel="stylesheet" />
+    <link href="css/font-awesome-animation.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="theme-loader">
@@ -710,6 +710,7 @@
     <script src="/js/jquery.maskMoney.js"></script>
     <script src="/js/components/print/jquery.printPage.js"></script>
     <script src="/js/easytimer/easytimer.min.js"></script>
+    <script src="../js/bootstrap-formhelpers.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     <script type="text/javascript">
