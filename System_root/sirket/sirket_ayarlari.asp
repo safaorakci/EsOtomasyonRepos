@@ -5,7 +5,7 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
-    SQL="select isnull(firma.firma_tema, 1) as firma_tema2, firma.*, sehir.sehir from ucgem_firma_listesi firma left join tanimlama_destinasyon_sehir sehir on sehir.id = firma.firma_sehir where firma.id = '"& Request.Cookies("kullanici")("firma_id") &"'"
+    SQL="select isnull(firma.firma_tema, 1) as firma_tema2, firma.*, sehir.sehir, LEFT(firma.haftaici_baslangic_saati,5) as haftaici_baslangic_saati, LEFT(firma.haftaici_bitis_saati,5) as haftaici_bitis_saati , LEFT(firma.cumartesi_baslangic_saati,5) as cumartesi_baslangic_saati, LEFT(firma.cumartesi_bitis_saati,5) as cumartesi_bitis_saati , LEFT(firma.pazar_baslangic_saati,5) as pazar_baslangic_saati, LEFT(firma.pazar_bitis_saati,5) as pazar_bitis_saati from ucgem_firma_listesi firma left join tanimlama_destinasyon_sehir sehir on sehir.id = firma.firma_sehir where firma.id = '"& Request.Cookies("kullanici")("firma_id") &"'"
     set firma = baglanti.execute(SQL)
 
 %>
@@ -50,6 +50,78 @@
                                 <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" yol="firma_logo/" class="form-control" />
                             </div>
                         </div>
+                         <div class="row">
+                            
+                            <div class="col-sm-6 col-lg-6">
+                                <label class="col-form-label"><%=LNG("Haftaiçi Başlangıç Saati")%></label>
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="haftaici_baslangic" value="<%=firma("haftaici_baslangic_saati") %>" class="form-control" />
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-lg-6">
+                                <label class="col-form-label"><%=LNG("Haftaiçi Bitiş Saati")%></label>
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="haftaici_bitis" value="<%=firma("haftaici_bitis_saati") %>" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-sm-6 col-lg-6">
+                                <label class="col-form-label"><%=LNG("Cumartesi Başlangıç Saati")%></label>
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="cumartesi_baslangic" value="<%=firma("cumartesi_baslangic_saati") %>" class="form-control" />
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-lg-6">
+                                <label class="col-form-label"><%=LNG("Cumartesi Bitiş Saati")%></label>
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="cumartes_bitis" value="<%=firma("cumartesi_bitis_saati") %>" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                         <div class="row">
+                            
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-sm-6 col-lg-6">
+                                <label class="col-form-label"><%=LNG("Pazar Başlangıç Saati")%></label>
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="pazar_baslangic" value="<%=firma("pazar_baslangic_saati") %>" class="form-control" />
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-lg-6">
+                                <label class="col-form-label"><%=LNG("Pazar Bitiş Saati")%></label>
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="pazar_bitis" value="<%=firma("pazar_bitis_saati") %>" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                         <div class="row">
+                            
+                        </div>
                     </div>
 
 
@@ -80,7 +152,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="display:none;">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Firma Şehir")%></label>
                             <div class="col-sm-12 col-lg-12">
                                 <select name="firma_sehir" class="select2" onchange="sirket_sehir_sectim_bolge_getir(this.value);" id="firma_sehir">
@@ -111,7 +183,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="display:none;">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Firma İlçe")%></label>
                             <div class="col-sm-12 col-lg-12" id="ilce_yeri">
                                 <select name="firma_ilce" id="firma_ilce" class="select2">

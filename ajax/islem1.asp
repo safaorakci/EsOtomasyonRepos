@@ -78,16 +78,25 @@
         firma_logo = trn(request("firma_logo"))
         firma_adi = trn(request("firma_adi"))
         firma_yetkili = trn(request("firma_yetkili"))
-        firma_sehir = trn(request("firma_sehir"))
-        firma_bolge = trn(request("firma_ilce"))
+        'firma_sehir = trn(request("firma_sehir"))
+        'firma_bolge = trn(request("firma_ilce"))
+        'firma_sehir = '"& firma_sehir &"', firma_bolge = '"& firma_bolge &"',
         firma_adres = trn(request("firma_adres"))
         firma_telefon = trn(request("firma_telefon"))
         firma_gsm = trn(request("firma_gsm"))
         firma_vergi_daire = trn(request("firma_vergi_daire"))
         firma_vergi_no = trn(request("firma_vergi_no"))
         firma_tema  = trn(request("firma_tema"))
+        
+        haftaici_baslangic = trn(request("haftaici_baslangic"))
+        haftaici_bitis = trn(request("haftaici_bitis"))
+        cumartesi_baslangic = trn(request("cumartesi_baslangic"))
+        cumartes_bitis = trn(request("cumartes_bitis"))
+        pazar_baslangic = trn(request("pazar_baslangic"))
+        pazar_bitis  = trn(request("pazar_bitis"))
 
-        SQL="update ucgem_firma_listesi set firma_tema = '"& firma_tema &"', firma_logo = '"& firma_logo &"', firma_adi = '"& firma_adi &"', firma_yetkili = '"& firma_yetkili &"', firma_sehir = '"& firma_sehir &"', firma_bolge = '"& firma_bolge &"', firma_adres = '"& firma_adres &"', firma_telefon = '"& firma_telefon &"', firma_gsm = '"& firma_gsm &"', firma_vergi_daire = '"& firma_vergi_daire &"', firma_vergi_no = '"& firma_vergi_no &"' where id = '"& kayit_id &"'"
+        SQL="update ucgem_firma_listesi set firma_tema = '"& firma_tema &"', firma_logo = '"& firma_logo &"', firma_adi = '"& firma_adi &"', firma_yetkili = '"& firma_yetkili &"', firma_adres = '"& firma_adres &"', firma_telefon = '"& firma_telefon &"', firma_gsm = '"& firma_gsm &"', firma_vergi_daire = '"& firma_vergi_daire &"', firma_vergi_no = '"& firma_vergi_no &"', haftaici_baslangic_saati = '"& haftaici_baslangic &"', haftaici_bitis_saati = '"& haftaici_bitis &"', cumartesi_baslangic_saati = '"& cumartesi_baslangic &"', cumartesi_bitis_saati = '"& cumartes_bitis &"', pazar_baslangic_saati = '"& pazar_baslangic &"', pazar_bitis_saati = '"& pazar_bitis &"' where id = '"& kayit_id &"'"
+        Response.Write(SQL)
         set guncelle = baglanti.execute(SQL)
 
     
@@ -2814,7 +2823,7 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" id="firma_telefon" class="form-control" value="<%=firma("firma_telefon") %>" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
+                                    <input type="text" id="firma_telefon" class="form-control" value="<%=firma("firma_telefon") %>" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67" >
                                 </div>
                             </div>
                         </div>
@@ -2914,7 +2923,7 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" id="yetkili1_telefon" value="<%=firma("yetkili1_telefon") %>" class="form-control" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
+                                    <input type="tel" id="yetkili1_telefon" value="<%=firma("yetkili1_telefon") %>" class="form-control" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
                             </div>
                         </div>
                     </div>
@@ -2925,7 +2934,7 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" id="yetkili1_mail" class="form-control" value="<%=firma("yetkili1_mail") %>" required >
+                                    <input type="mail" id="yetkili1_mail" class="form-control" value="<%=firma("yetkili1_mail") %>" required >
                             </div>
                         </div>
                     </div>
@@ -2971,7 +2980,7 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" id="yetkili2_mail" class="form-control" value="<%=firma("yetkili2_mail") %>"  >
+                                    <input type="mail" id="yetkili2_mail" class="form-control" value="<%=firma("yetkili2_mail") %>"  >
                             </div>
                         </div>
                     </div>
@@ -3018,7 +3027,7 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" id="yetkili3_mail" class="form-control" value="<%=firma("yetkili3_mail") %>" >
+                                    <input type="mail" id="yetkili3_mail" class="form-control" value="<%=firma("yetkili3_mail") %>" >
                             </div>
                         </div>
                     </div>

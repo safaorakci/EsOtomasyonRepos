@@ -3145,12 +3145,7 @@
             talep_id = trn(request("talep_id"))
             deger = trn(request("deger"))
 
-            SQL = "select * from talep_fisleri where id = '"& talep_id &"' and talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"'"
-            set kontrol = baglanti.execute(SQL)
-    %>
-    <div> </div>
-    <%
-            SQL="update talep_fisleri set durum = '"& deger &"' where id = '"& talep_id &"' and talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"'"
+            SQL="update talep_fisleri set durum = '"& deger &"' where id = '"& talep_id &"'"
             set guncelle = baglanti.execute(SQL)
 
             SQL="select * from talep_fisleri where id = '"& talep_id &"'"
@@ -3249,13 +3244,16 @@
                     <td><%=kcek("personel_ad") & " " & kcek("personel_soyad") %><br />
                         <%=cdate(talepler("ekleme_tarihi")) & " " & left(talepler("ekleme_saati"),5) %></td>
                     <td> <%
-                            for x = 0 to ubound(split(talepler("talep_edilen_id"), ","))
-                                user = split(talepler("talep_edilen_id"), ",")(x)
-                                SQL="SELECT * FROM ucgem_firma_kullanici_listesi WHERE id = '"& user &"' " 
+                           SQL="SELECT * FROM TalepFisleriGorevliler WHERE FisID = '"& talepler("id") &"' "
+                           set talepFisiGorevliler = baglanti.execute(SQL)
+                            
+                            do while not talepFisiGorevliler.eof
+                                SQL="SELECT * FROM ucgem_firma_kullanici_listesi WHERE id = '"& talepFisiGorevliler("GorevliID") &"' "
                                 set kcek2 = baglanti.execute(SQL)
                                 
-                        
-                        %>  <%=kcek2("personel_ad") & " " & kcek2("personel_soyad") %><br /> <%next %></td>
+                        %>  <%=kcek2("personel_ad") & " " & kcek2("personel_soyad") %><br />
+                        <% talepFisiGorevliler.movenext
+                            loop %></td>
                     <% if trim(talepler("durum"))="İşlem Yapılıyor" then %>
                     <td style="text-align: center;">
                         <span class="label label-info">İşlem Yapılıyor</span>
@@ -3273,35 +3271,45 @@
                         <span class="label label-success">Onaylandi</span>
                     </td>
                     <% end if %>
+
                     <td style="width: 120px;">
-                        <% count = 0 %>
-                        <%  for x = 0 to ubound(split(talepler("talep_edilen_id"), ","))
-                                user = split(talepler("talep_edilen_id"), ",")(x) %>
-                        <% if user = Request.Cookies("kullanici")("kullanici_id") and count < 1 then 
-                            count= count +1
+                        
+                        <%
+                            isCheck = false
+                            SQL="SELECT * FROM TalepFisleriGorevliler WHERE FisID = '"& talepler("id") &"' "
+                            set talepGorevliler = baglanti.execute(SQL)
+
+                            do while not talepGorevliler.eof
+                                if InStr( talepGorevliler("GorevliID") , Request.Cookies("kullanici")("kullanici_id")) > 0   then
+                                    isCheck = true
+                                end if
+
+                            talepGorevliler.movenext
+                            loop
+                            
+                            if isCheck then
                             %>
-                        <button type="button" class="btn btn-mini btn-primary dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            İşlemler
-                        </button>
-                        <div class="dropdown-menu">
-                            <% if trim(talepler("durum"))="Onaylandı" or trim(talepler("durum"))="Reddedildi" then %>
-                            <% else %>
-                            <a class="dropdown-item waves-effect waves-light" onclick="TalebiIseDonustur('<%=talepler("id") %>');" href="javascript:void(0);">Talebi İş Emrine Dönüştür</a>
-                            <% end if %>
-                            <% if trim(talepler("durum"))="Onay Bekliyor" then %>
-                            <a class="dropdown-item waves-effect waves-light" onclick="talep_fisi_onay('<%=talepler("id") %>', 'Reddedildi');" href="javascript:void(0);">Reddet</a>
-                            <% end if %>
-                            <a class="dropdown-item waves-effect waves-light" onclick="talep_fisi_duzenle('<%=talepler("id") %>');" href="javascript:void(0);">Düzenle</a>
-                            <a class="dropdown-item waves-effect waves-light" onclick="talep_fisi_sil('<%=talepler("id") %>');" href="javascript:void(0);">Sil</a>
-                        </div>  
-                        <% else 
-                            if count < 1 then
-                            count = count + 1
+                            <button  type="button" class="btn btn-mini btn-primary dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    İşlemler 
+                            </button>
+                            <div class="dropdown-menu">
+                                <% if trim(talepler("durum"))="Onaylandı" or trim(talepler("durum"))="Reddedildi" then %>
+                                <% else %>
+                                <a class="dropdown-item waves-effect waves-light" onclick="TalebiIseDonustur('<%=talepler("id") %>');" href="javascript:void(0);">Talebi İş Emrine Dönüştür</a>
+                                <% end if %>
+                                <% if trim(talepler("durum"))="Onay Bekliyor" then %>
+                                <a class="dropdown-item waves-effect waves-light" onclick="talep_fisi_onay('<%=talepler("id") %>', 'Reddedildi');" href="javascript:void(0);">Reddet</a>
+                                <% end if %>
+                                <a class="dropdown-item waves-effect waves-light" onclick="talep_fisi_duzenle('<%=talepler("id") %>');" href="javascript:void(0);">Düzenle</a>
+                                <a class="dropdown-item waves-effect waves-light" onclick="talep_fisi_sil('<%=talepler("id") %>');" href="javascript:void(0);">Sil</a>
+                            </div>
+                             <%
+                            else
                             %>
-                        <i class="fa fas fa-ban text-dark fa-3x"></i>
-                        <% end if
-                            end if %>
-                        <%next %>
+                                <i id="iconforbidden" class="fa fas fa-ban fa-3x" style="color: darkred" title="Yekiniz Yok !"></i>
+                            <%
+                           end if
+                        %>
                     </td>
                 </tr>
                 <% 

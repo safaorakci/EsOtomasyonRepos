@@ -1298,7 +1298,7 @@ works properly when clicked or hovered */
 
         kayit_id = trn(request("kayit_id"))
 
-        SQL="select * from talep_fisleri where id = '"& kayit_id &"' and talep_edilen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"'"
+        SQL="select * from talep_fisleri where id = '"& kayit_id &"'"
         set talepcek = baglanti.execute(SQL)
 
 %>
@@ -2998,6 +2998,7 @@ works properly when clicked or hovered */
                                   set satinalmaListesi = baglanti.execute(SQL)
                                   satinalmaId = siparisFormuVarmi("id")
                                end if
+                            end if
                             
                          if siparisVarmi.eof then
                             SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, stokAdeti, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& satinalmaId &"', '"& IsID &"', '"& ParcaId &"', '"& birimFiyat &"', '"& birim &"', '"& eksikParca &"', '"& stokAdeti &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
@@ -3674,7 +3675,6 @@ works properly when clicked or hovered */
         Response.Write "ok"
         Response.End()
 
-    
     end if %>
 
 

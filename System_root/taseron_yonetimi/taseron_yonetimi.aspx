@@ -90,6 +90,7 @@
                     <h5><% Response.Write(LNG("Tedarikçi Ekle")); %></h5>
                 </div>
                 <div class="card-block">
+                    <input id="ManagersDatas" type="hidden" />
                     <form autocomplete="off" id="firma_ekle_form" runat="server">
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Firma Logo")); %></label>

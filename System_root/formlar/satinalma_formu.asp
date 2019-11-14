@@ -43,7 +43,7 @@
             </tr>
             <tr>
                 <td style="height: 40px;">Satınalma Adı : <%=satinalma("baslik") %></td>
-                <td>Öncelik : <%=satinalma("oncelik") %></td>
+                <td>Öncelik : </td>
             </tr>
             <tr>
                 <td style="height: 40px;">Tedarikçi : <%=satinalma("firma_adi") %></td>

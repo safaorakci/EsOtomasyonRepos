@@ -2138,8 +2138,8 @@ function firma_bilgilerimi_guncelle() {
         var firma_logo = $("#firma_logo").attr("filePath");
         var firma_adi = $("#firma_adi").val();
         var firma_yetkili = $("#firma_yetkili").val();
-        var firma_sehir = $("#firma_sehir").val();
-        var firma_ilce = $("#firma_ilce").val();
+        //var firma_sehir = $("#firma_sehir").val();
+        //var firma_ilce = $("#firma_ilce").val();
         var firma_adres = $("#firma_adres").val();
         var firma_telefon = $("#firma_telefon").val();
         var firma_gsm = $("#firma_gsm").val();
@@ -2147,19 +2147,36 @@ function firma_bilgilerimi_guncelle() {
         var firma_vergi_no = $("#firma_vergi_no").val();
         var firma_tema = $("#firma_tema").val();
 
+        var haftaici_baslangic = $("#haftaici_baslangic").val();
+        var haftaici_bitis = $("#haftaici_bitis").val();
+
+        var cumartesi_baslangic = $("#cumartesi_baslangic").val();
+        var cumartes_bitis = $("#cumartes_bitis").val();
+
+        var pazar_baslangic = $("#pazar_baslangic").val();
+        var pazar_bitis = $("#pazar_bitis").val();
+
 
         var data = "islem=firma_bilgilerimi_guncelle";
         data += "&firma_tema=" + firma_tema;
         data += "&firma_logo=" + firma_logo;
         data += "&firma_adi=" + firma_adi;
         data += "&firma_yetkili=" + firma_yetkili;
-        data += "&firma_sehir=" + firma_sehir;
-        data += "&firma_ilce=" + firma_ilce;
+        //data += "&firma_sehir=" + firma_sehir;
+        //data += "&firma_ilce=" + firma_ilce;
         data += "&firma_adres=" + firma_adres;
         data += "&firma_telefon=" + firma_telefon;
         data += "&firma_gsm=" + firma_gsm;
         data += "&firma_vergi_daire=" + firma_vergi_daire;
         data += "&firma_vergi_no=" + firma_vergi_no;
+
+        data += "&haftaici_baslangic=" + haftaici_baslangic;
+        data += "&haftaici_bitis=" + haftaici_bitis;
+        data += "&cumartesi_baslangic=" + cumartesi_baslangic;
+        data += "&cumartes_bitis=" + cumartes_bitis;
+        data += "&pazar_baslangic=" + pazar_baslangic;
+        data += "&pazar_bitis=" + pazar_bitis;
+
         data = encodeURI(data);
         $("#koftiden").loadHTML({ url: "/ajax_request/", data: data }, function () {
             mesaj_ver("Firma Bilgileri", "Kayıt Başarıyla Güncellendi", "success");
