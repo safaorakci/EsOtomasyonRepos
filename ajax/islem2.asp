@@ -627,6 +627,7 @@
 
         firma_id = trn(request("firma_id"))
         firma_logo = trn(request("firma_logo"))
+        firma_adres = trn(request("firma_adres"))
         
         firma_telefon = trn(request("firma_telefon"))
         firma_mail = trn(request("firma_mail"))
@@ -657,7 +658,8 @@
         yetkili4_telefon = trn(request("yetkili4_telefon"))
         yetkili4_mail = trn(request("yetkili4_mail"))
 
-        SQL="update ucgem_firma_listesi set firma_adi = '"& firma_adi &"', taseron_saatlik_maliyet = CAST('"& taseron_saatlik_maliyet &"' AS DECIMAL(18, 4)) , taseron_maliyet_pb = '"& taseron_maliyet_pb &"', firma_logo = '" & firma_logo & "', firma_yetkili = '" & firma_yetkili & "', firma_telefon = '" & firma_telefon & "', firma_mail = '" & firma_mail & "', firma_supervisor_id = '" & firma_supervisor_id & "', firma_vergi_no = '" & firma_vergi_no & "' , firma_vergi_daire = '" & firma_vergi_daire & "', yetkili1_telefon = '" & yetkili1_telefon & "', yetkili1_mail = '" & yetkili1_mail & "', yetkili2_adi = '" & yetkili2_adi & "', yetkili2_telefon = '" & yetkili2_telefon & "', yetkili2_mail = '" & yetkili2_mail & "', yetkili3_adi = '" & yetkili3_adi & "', yetkili3_telefon = '" & yetkili3_telefon & "', yetkili3_mail = '" & yetkili3_mail & "', yetkili4_adi = '" & yetkili4_adi & "', yetkili4_telefon = '" & yetkili4_telefon & "', yetkili4_mail = '" & yetkili4_mail & "'   where id = '"& firma_id &"'"
+        SQL="update ucgem_firma_listesi set firma_adi = '"& firma_adi &"', taseron_saatlik_maliyet = CAST('"& taseron_saatlik_maliyet &"' AS DECIMAL(18, 4)) , taseron_maliyet_pb = '"& taseron_maliyet_pb &"', firma_logo = '" & firma_logo & "', firma_yetkili = '" & firma_yetkili & "', firma_telefon = '" & firma_telefon & "', firma_adres = '" & firma_adres & "', firma_mail = '" & firma_mail & "', firma_supervisor_id = '" & firma_supervisor_id & "', firma_vergi_no = '" & firma_vergi_no & "' , firma_vergi_daire = '" & firma_vergi_daire & "', yetkili1_telefon = '" & yetkili1_telefon & "', yetkili1_mail = '" & yetkili1_mail & "', yetkili2_adi = '" & yetkili2_adi & "', yetkili2_telefon = '" & yetkili2_telefon & "', yetkili2_mail = '" & yetkili2_mail & "', yetkili3_adi = '" & yetkili3_adi & "', yetkili3_telefon = '" & yetkili3_telefon & "', yetkili3_mail = '" & yetkili3_mail & "', yetkili4_adi = '" & yetkili4_adi & "', yetkili4_telefon = '" & yetkili4_telefon & "', yetkili4_mail = '" & yetkili4_mail & "'   where id = '"& firma_id &"'"
+        Response.Write(SQL)
         set guncelle = baglanti.execute(SQL)
 
     elseif trn(request("islem"))="cari_detay_tabela_getir" then

@@ -192,17 +192,6 @@ public class upload : IHttpHandler
                         }
                         File.WriteAllText(HttpContext.Current.Server.MapPath("log.txt"), logText);
 
-                        //string path = @"C:\Users\MAKROGEM\source\repos\safaorakci\EsOtomasyonRepos";
-
-                        //createText = { "Hello" };
-                        //File.WriteAllLines(path, createText);
-
-
-                        //using (SqlBulkCopy sqlBulk = new SqlBulkCopy(strConnection))
-                        //{
-                        //    sqlBulk.DestinationTableName = "[dbo].[parca_listesi]";
-                        //    sqlBulk.WriteToServer(dReader);
-                        //}
                     }
                 }
             }

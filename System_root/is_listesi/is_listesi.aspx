@@ -281,7 +281,7 @@
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs tabs is_tab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" onclick="is_listesi('tum');" data-toggle="tab" href="#tum_isler_ust" role="tab"><i class="fa fa-lg fa-cubes" style="color: black;"></i><% Response.Write(LNG("Tümü")); %></a>
+                                        <a class="nav-link active" onclick="is_listesi('tum');" data-toggle="tab" href="#tum_isler_ust" role="tab"><i class="fa fa-lg fa-cubes" style="color: black;"></i><% Response.Write(LNG("Tamamlanmamış")); %></a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" onclick="is_listesi('geciken');" data-toggle="tab" href="#geciken_isler_ust" role="tab"><i class="fa fa-lg fa-frown-o" style="color: red;"></i><% Response.Write(LNG("Gecikenler")); %></a>
