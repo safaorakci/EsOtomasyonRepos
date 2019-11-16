@@ -3009,13 +3009,12 @@
 
         Response.AddHeader "Content-Type", "application/json"
 
-        SQL="SELECT top 20  parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu ORDER BY parca.parca_adi asc;"
-
+        SQL="SELECT top 20  parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet ORDER BY parca.parca_adi asc;"
         set parca = baglanti.execute(SQL)
 
         Response.Write "["
         do while not parca.eof
-    %>{"id":<%=parca("id") %>,"parcaadi":"<%=parca("parca_adi") %>","kodu":"<%=parca("parca_kodu") %>","marka":"<%=parca("marka") %>","aciklama":"<%=parca("aciklama") %>","kategori":"<%=parca("kategori_adi") %>"},<%
+    %>{"id":<%=parca("id") %>,"parcaadi":"<%=parca("parca_adi") %>","kodu":"<%=parca("parca_kodu") %>","marka":"<%=parca("marka") %>","aciklama":"<%=parca("aciklama") %>","kategori":"<%=parca("kategori_adi") %>","maliyet":"<%=parca("birim_maliyet") %>"},<%
         parca.movenext
         loop
 

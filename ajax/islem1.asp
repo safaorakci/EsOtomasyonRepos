@@ -2838,6 +2838,17 @@
                                 </div>
                             </div>
                         </div>
+                         <div class="row">
+                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Firma Adres")%></label>
+                            <div class="col-sm-12 col-lg-12">
+                                <div class="input-group input-group-primary">
+                                    <span class="input-group-addon">
+                                        <i class="icon-prepend fa fa-user"></i>
+                                    </span>
+                                    <input type="text" id="firma_adres" class="form-control" value="<%=firma("firma_adres") %>" >
+                                </div>
+                            </div>
+                        </div>
                         
                         <div class="row" <% if not trim(firma("yetki_kodu"))="TASERON" then %> style="display: none;" <% end if %>>
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Taşeron Saatlik Maliyet")%></label>

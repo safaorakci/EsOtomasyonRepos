@@ -894,7 +894,7 @@ function satinalmayenisatirekle(i) {
 
 function parcalar_autocomplete_calistir() {
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
-
+        
         var IsId = $(this).attr("isid");
         var marka = "Marka girilmedi";
         var aciklama = "Açıklama girilmedi";
@@ -908,6 +908,8 @@ function parcalar_autocomplete_calistir() {
                 var inpuu = $(this);
                 setTimeout(function () {
                     $(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", ui.item.id);
+                    console.log($(inpuu).attr("i"));
+                    $("#maliyet" + $(inpuu).attr("i")).val(ui.item.maliyet);
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {

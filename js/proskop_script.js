@@ -6901,8 +6901,9 @@ function firma_bilgilerini_guncelle(firma_id) {
         var firma_telefon = $("#firma_telefon").val();
         var firma_mail = $("#firma_mail").val();
         var firma_supervisor_id = $("#firma_supervisor_id").val();
-        var taseron_saatlik_maliyet = $("#taseron_saatlik_maliyet").val();
+        var taseron_saatlik_maliyet = $("#taseron_saatlik_maliyet").val().replace("₺", "").replace(" ", "");
         var taseron_maliyet_pb = $("#taseron_maliyet_pb").val();
+        var firma_adres = $("#firma_adres").val();
 
         var firma_vergi_no = $("#firma_vergi_no").val();
         var firma_vergi_daire = $("#firma_vergi_daire").val();
@@ -6914,6 +6915,7 @@ function firma_bilgilerini_guncelle(firma_id) {
         data += "&firma_id=" + firma_id;
         data += "&firma_adi=" + firma_adi;
         data += "&firma_logo=" + firma_logo;
+        data += "&firma_adres=" + firma_adres;
         
         data += "&firma_telefon=" + firma_telefon;
         data += "&firma_mail=" + firma_mail;
