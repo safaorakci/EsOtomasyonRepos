@@ -1063,7 +1063,12 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
                     parcaListesi.push(ui.item.id);
                     adet.push($("#musteriparcaadeti").val());
                     $(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", parcaListesi).attr("adet", adet);
-                    $("#stoklist").append("<tr id='" + ui.item.id + "'> <td>" + ui.item.kodu + "</td>" + "<td>" + ui.item.marka + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
+                    if ($("#parcalarId").val() !== null) {
+                        $("#parcalarId").val($("#parcalarId").val() + "," + ui.item.id);
+                        $("#parcalarId").attr("adet", $("#parcalarId").attr("adet") + "," + $("#musteriparcaadeti").val());
+                    }
+                    else { $("#parcalarId").val(parcaListesi); }
+                    $("#stoklist").append("<tr id='" + ui.item.id + "'> <td>" + ui.item.kodu + " " + ui.item.marka + "</td>" + "<td>" + $("#musteriparcaadeti").val() + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
                     $(inpuu).val("");
 
                     var pathname = window.location.origin;
@@ -1156,7 +1161,6 @@ function ParcaSil(id) {
         adet.splice(index, 1);
         $("#parcalar1").attr("data", parcaListesi).attr("adet", adet);
     }
-    console.log(index);
 }
 
 function is_detay_parca_sectim(IsID, ParcaId, adet, durum) {

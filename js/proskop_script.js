@@ -125,29 +125,29 @@ function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum) {
         closeOnConfirm: true,
         closeOnCancel: true
     },
-    function (isConfirm) {
-        if (isConfirm) {
-            //var data = "tablo=" + tablo;
-            //data += "&id=" + id;
-            //data = encodeURI(data);
-            //$("#koftiden").loadWebMethod({ url: "", data: data }, function () {
-            //    mesaj_ver("", mesaj, "success");
-            //    if ($.isFunction(fonksiyon)) {
-            //        fonksiyon(kod);
-            //    }
-            //});
+        function (isConfirm) {
+            if (isConfirm) {
+                //var data = "tablo=" + tablo;
+                //data += "&id=" + id;
+                //data = encodeURI(data);
+                //$("#koftiden").loadWebMethod({ url: "", data: data }, function () {
+                //    mesaj_ver("", mesaj, "success");
+                //    if ($.isFunction(fonksiyon)) {
+                //        fonksiyon(kod);
+                //    }
+                //});
 
-            is_detay_parca_sectim(IsID, ParcaId, toplamAdet, durum);
-            //var data = "islem=is_detay_parca_sectim&islem2=ekle";
-            //data += "&IsID=" + IsID;
-            //data += "&ParcaId=" + ParcaId;
-            //data += "&Adet=" + adet;
-            //data = encodeURI(data);
-            //$("#kullanilan_parcalar" + IsID).loadHTML({ url: "/ajax_request5/", data: data }, function () {
-            //    mesaj_ver("Parçalar / Cihazlar", "Kayıt Başarıyla Eklendi", "success");
-            //});
-        }
-    });
+                is_detay_parca_sectim(IsID, ParcaId, toplamAdet, durum);
+                //var data = "islem=is_detay_parca_sectim&islem2=ekle";
+                //data += "&IsID=" + IsID;
+                //data += "&ParcaId=" + ParcaId;
+                //data += "&Adet=" + adet;
+                //data = encodeURI(data);
+                //$("#kullanilan_parcalar" + IsID).loadHTML({ url: "/ajax_request5/", data: data }, function () {
+                //    mesaj_ver("Parçalar / Cihazlar", "Kayıt Başarıyla Eklendi", "success");
+                //});
+            }
+        });
 
     $("button.confirm").focus();
 }
@@ -2976,7 +2976,7 @@ function izin_talebi_gonder(personel_id) {
         if ($("#koftiden").html() === "ok") {
             $(".close").click();
             $("#izin_kayitlari").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-                mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Eklendi","success");
+                mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Eklendi", "success");
             });
         }
     });
@@ -4199,7 +4199,7 @@ function ModalYetkiliEkle() {
 }
 
 function YöneticilerEkle() {
-    
+
     var yetkili2_adi = $("#yetkili2_adi").val();
     var yetkili2_telefon = $("#yetkili2_telefon").val();
     var yetkili2_mail = $("#yetkili2_mail").val();
@@ -4861,7 +4861,7 @@ function personel_bilgilerini_guncelle(personel_id) {
         var yonetici_yetkisi = $("#yonetici_yetkisi").val();
         var personel_yillik_izin_hakedis = $("#personel_yillik_izin_hakedis").val();
         var parmak_id = $("#parmak_id").val();
-        
+
 
         var data = "islem=personel_bilgilerini_guncelle";
         data += "&personel_id=" + personel_id;
@@ -5203,7 +5203,7 @@ function yeni_firma_ekle(yetki_kodu) {
     var firma_telefon = $("#firma_telefon").val();
     var firma_mail = $("#firma_mail").val();
     var firma_supervisor_id = $("#firma_supervisor_id").val();
-    
+
 
     var data = "islem=yeni_firma_ekle";
     data += "&yetki_kodu=" + yetki_kodu;
@@ -6914,7 +6914,7 @@ function firma_bilgilerini_guncelle(firma_id) {
         data += "&firma_id=" + firma_id;
         data += "&firma_adi=" + firma_adi;
         data += "&firma_logo=" + firma_logo;
-        
+
         data += "&firma_telefon=" + firma_telefon;
         data += "&firma_mail=" + firma_mail;
         data += "&firma_supervisor_id=" + firma_supervisor_id;
@@ -7408,7 +7408,7 @@ function is_kaydini_guncelle(IsId, buton) {
                 }, 1000);
             });
 
-            
+
 
             //var data = "islem=is_detay_goster";
             //data += "&is_id=" + IsId
@@ -8886,7 +8886,7 @@ function ServisBakimKaydiEkle() {
     data += "&bitis_saati=" + $("#bitis_saati").val();
     data += "&firmayapilanislemler=" + $("#firmayapilanislemler").val();
     data += "&firmanot=" + $("#firmanot").val();
-    data += "&listeyeekle=" + $("#listeyeekle").val();
+    data += "&listeyeekle=" + $("#listeyeekle").is(":checked");
     data = encodeURI(data);
     if ($("#servisbakimkaydi input:not(input[type=button])").valid("valid")) {
         $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
@@ -8894,6 +8894,7 @@ function ServisBakimKaydiEkle() {
             $(".close").click();
         });
     }
+    else { mesaj_ver("Servis Bakım Formu", "Lütfen tüm zorunlu alanları doldurunuz .", "danger"); }
 }
 
 function ServisBakimKaydiSil(kayitId) {
@@ -8919,6 +8920,19 @@ function ServisBakimKaydiDuzenle(kayitId) {
     });
 }
 
+function parcaDuzenle(id) {
+    $("#" + id).remove();
+    var parcalarId = $("#parcalarId").val().split(",");
+    var adet = $("#parcalarId").attr("adet").split(",");
+    var index = parcalarId.indexOf(id);
+    if (index !== -1) {
+        parcalarId.splice(index, 1);
+        adet.splice(index, 1);
+        $("#parcalarId").val(parcalarId);
+        $("#parcalarId").attr("adet", adet);
+    }
+}
+
 function ServisBakimKaydiDuzenlemeYap(kayitId) {
 
     var data = "islem=YeniServisBakimKaydiEkle&islem2=duzenle";
@@ -8931,8 +8945,8 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
     data += "&firmavergidairesi=" + $("#firmavergidairesi").val();
     data += "&firmavergino=" + $("#firmavergino").val();
     data += "&gorevli=" + $("#firmagorevli").val();
-    data += "&parcaId=" + $("#parcalar1").attr("data");
-    data += "&adet=" + $("#musteriparcaadeti").val();
+    data += "&parcaId=" + $("#parcalarId").val();
+    data += "&adet=" + $("#parcalarId").attr("adet");
     data += "&musteri_id=" + $("#musteri_id").val();
     data += "&firmamakinebilgi=" + $("#firmamakinebilgi").val();
     data += "&firmaariza=" + $("#firmaariza").val();
@@ -8942,7 +8956,7 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
     data += "&bitis_saati=" + $("#bitis_saati").val();
     data += "&firmayapilanislemler=" + $("#firmayapilanislemler").val();
     data += "&firmanot=" + $("#firmanot").val();
-    data += "&listeyeekle=" + $("#listeyeekle").val();
+    data += "&listeyeekle=" + $("#listeyeekle").is(":checked");
     data = encodeURI(data);
     if ($("#servisbakimkaydi input:not(input[type=button])").valid("valid")) {
         $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
@@ -8950,15 +8964,20 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
             $(".close").click();
         });
     }
+    else { mesaj_ver("Servis Bakım Formu", "Lütfen tüm zorunlu alanları doldurunuz .", "danger"); }
 }
 
 function YeniMusteriOlustur() {
-    $("#musteriformu").slideToggle();
+    $("#musteriformu").slideDown("slow");
+    $("#tabloyaekle").show();
+    //$("#musteri_id").attr("disabled");
 }
 
 function musteribilgilerial() {
     var ID = $("#musteri_id").val();
     var pathname = window.location.origin;
+    $("#textyetkili").hide();
+    $("#selectyetkili").show();
 
     $.ajax({
         type: 'POST',
@@ -8977,6 +8996,11 @@ function musteribilgilerial() {
             $("#yetkilikisi").val(bilgi[0].firma_yetkili);
             $("#firmatelefon").val(bilgi[0].firma_telefon);
             $("#firmaeposta").val(bilgi[0].firma_mail);
+            $("#firmavergidairesi").val(bilgi[0].firma_vergi_daire);
+            $("#firmaadress").val(bilgi[0].firma_adres);
+            $("#firmavergino").val(bilgi[0].firma_vergi_no);
+            $("#selectyetkilikisi").children().remove().end().append("<option value='" + bilgi[0].firma_yetkili + "'>" + bilgi[0].firma_yetkili + "</option>" + "<option value='" + bilgi[0].yetkili2_adi + "'>" + bilgi[0].yetkili2_adi + "</option>" + "<option value='" + bilgi[0].yetkili3_adi + "'>" + bilgi[0].yetkili3_adi + "</option>" + "<option value='" + bilgi[0].yetkili4_adi + "'>" + bilgi[0].yetkili4_adi + "</option>");
+            $(".yetiskinselect option[value=" + $("#yetkilikisi").val() + "]").attr('selected', 'selected');
         }
     });
 }

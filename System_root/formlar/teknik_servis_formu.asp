@@ -15,6 +15,11 @@
     SQL = "select LEFT(servis.BaslangicSaati,5) as Baslangic, LEFT(servis.BitisSaati,5) as Bitis, servis.* from servis_bakim_kayitlari servis where Durum = 'true' and Cop = 'false' and id = '"& form_id &"'"
     set servisformu = baglanti.execute(SQL)
 
+    if servisformu("FirmaId") > 0 then
+        SQL = "select * from ucgem_firma_listesi where id = '"& servisformu("FirmaId") &"'"
+        set firmaBilgileri = baglanti.execute(SQL)
+    end if
+    
 %>
 <html lang="tr">
 <head>
@@ -53,7 +58,13 @@
                                 <tr>
                                     <td rowspan="1" colspan="3" style="height: 50px;"> 
                                         <center>
-                                            <%=servisformu("Adress") %> &nbsp; <%=servisformu("Telefon") %> &nbsp; <%=servisformu("Email") %>
+                                            <%
+                                                if servisformu("FirmaId") > 0 then
+                                            %>
+                                                <%=firmaBilgileri("firma_adres") %> <br /> <%=firmaBilgileri("firma_telefon") %> &nbsp; <%=firmaBilgileri("firma_mail") %>
+                                            <% else %>
+                                                <%=servisformu("Adress") %> <br /> <%=servisformu("Telefon") %> &nbsp; <%=servisformu("Email") %>
+                                            <% end if %>
                                         </center>
                                     </td>
                                 </tr>
