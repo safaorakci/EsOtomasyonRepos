@@ -98,7 +98,7 @@ function is_timer_pause_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
 
 function is_timer_stop_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
 
-    
+
 
     var baslangic_tarihi = $("#sonacikkayit" + is_id).attr("baslangic_tarihi");
     var baslama_saati = $("#sonacikkayit" + is_id).attr("baslangic_saati");
@@ -894,7 +894,7 @@ function satinalmayenisatirekle(i) {
 
 function parcalar_autocomplete_calistir() {
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
-        
+
         var IsId = $(this).attr("isid");
         var marka = "Marka girilmedi";
         var aciklama = "Açıklama girilmedi";
@@ -1043,18 +1043,22 @@ function parcalar_autocomplete_calistir2() {
     });
 }
 
-var parcaListesi = [];
-var adet = [];
+var SPparcaListesi = [];
+var SPadet = [];
+
+var STparcaListesi = [];
+var STadet = [];
 function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
 
     $(".parcalar:not(.yapilan)").addClass("yapilan").each(function () {
 
-        var IsId = $(this).attr("isid");
+        var IsId = "0";
         var marka = "Marka girilmedi";
         var aciklama = "Açıklama girilmedi";
         var kodu = "Ürün Kodu Girilmedi";
         var bildirim = "Kayıt Bulunamadı";
-        var durum = "Servis";
+        var durum = "servis";
+        var v = 0;
 
         $(this).autocomplete({
             source: "/ajax_request6/?jsid=4559&islem=parcalar_auto",
@@ -1062,19 +1066,41 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
             select: function (event, ui) {
                 var inpuu = $(this);
                 setTimeout(function () {
-                    parcaListesi.push(ui.item.id);
-                    adet.push($("#musteriparcaadeti").val());
-                    $(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", parcaListesi).attr("adet", adet);
-                    if ($("#parcalarId").val() !== null) {
-                        $("#parcalarId").val($("#parcalarId").val() + "," + ui.item.id);
-                        $("#parcalarId").attr("adet", $("#parcalarId").attr("adet") + "," + $("#musteriparcaadeti").val());
-                    }
-                    else { $("#parcalarId").val(parcaListesi); }
-                    $("#stoklist").append("<tr id='" + ui.item.id + "'> <td>" + ui.item.kodu + " " + ui.item.marka + "</td>" + "<td>" + $("#musteriparcaadeti").val() + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
+                    SPparcaListesi.push(ui.item.id);
+                    SPadet.push($("#musteriparcaadeti").val());
+                    STparcaListesi.push(ui.item.id);
+                    STadet.push($("#musteriparcaadeti").val());
+                    $(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", SPparcaListesi).attr("adet", SPadet);
+
                     $(inpuu).val("");
 
                     var pathname = window.location.origin;
                     var sayi = $("#musteriparcaadeti").val();
+
+                    //parcalarId
+
+                    if ($("#parcalarId").attr("parcaid") != "") {
+                        $("#parcalarId").attr("parcaid", $("#parcalarId").attr("parcaId") + "," + ui.item.id);
+                        $("#parcalarId").attr("adet", $("#parcalarId").attr("adet") + "," + $("#musteriparcaadeti").val());
+                        $("#parcalarId").attr("sayi", "birdenfazla").attr("index", "ekleme");
+                    }
+                    else { $("#parcalarId").attr("parcaId", SPparcaListesi); $("#parcalarId").attr("adet", SPadet); $("#parcalarId").attr("sayi", "tek").attr("index", "ekleme"); }
+
+                    if ($("#parcalarId").attr("sonradaneklenenparca") != "") {
+                        $("#parcalarId").attr("sonradaneklenenparca", $("#parcalarId").attr("sonradaneklenenparca") + "," + ui.item.id).attr("sonradaneklenenadet", $("#parcalarId").attr("sonradaneklenenadet") + "," + $("#musteriparcaadeti").val()).attr("sonradaneklenensayi", "birdenfazla");
+                    }
+                    else { $("#parcalarId").attr("sonradaneklenenparca", ui.item.id).attr("sonradaneklenenadet", + $("#musteriparcaadeti").val()).attr("sonradaneklenensayi", "tek"); }
+
+                    if ($("#servisparca").attr("parcaid") != "") {
+                        $("#servisparca").attr("parcaid", $("#servisparca").attr("parcaid") + "," + ui.item.id);
+                        $("#servisparca").attr("adet", $("#servisparca").attr("adet") + "," + $("#musteriparcaadeti").val());
+                        $("#servisparca").attr("sayi", "birdenfazla");
+                    }
+                    else { $("#servisparca").attr("parcaId", SPparcaListesi); $("#servisparca").attr("adet", SPadet); $("#servisparca").attr("sayi", "tek"); }
+
+                    //+ "<td  style='width:170px'>" + "<span class='label label-success' style='font-size: 100%; padding: 5px; display: inline;'> Stoktan Kullanıldı </span>" + "</td>" 
+
+                    $("#stoklist").append("<tr id='" + ui.item.id + "'> <td>" + ui.item.marka + " - " + ui.item.kodu + "</td>" + "<td>" + $("#musteriparcaadeti").val() + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
 
                     //$.ajax({
                     //    type: 'POST',
@@ -1087,12 +1113,21 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
                     //    },
                     //    success: function (data) {
                     //        var result = jQuery.parseJSON(data.d);
-                    //        console.log(result);
                     //        if (result > 0) {
-                    //            SiparisPopup(IsId, ui.item.id, result, adet, durum);
+                    //            SiparisPopup(IsId, ui.item.id, result, parcaAdet, durum, ui.item.kodu, ui.item.marka, ui.item.aciklama);
                     //        }
                     //        if (result == 0) {
-                    //            is_detay_parca_sectim(IsId, ui.item.id, adet, durum);
+                    //            var parcaAdet = $("#musteriparcaadeti").val();
+                    //            $("#stoklist").append("<tr id='" + ui.item.id + "'> <td>" + ui.item.kodu + " " + ui.item.marka + "</td>" + "<td>" + $("#musteriparcaadeti").val() + "</td>" + "<td  style='width:170px'>" + "<span class='label label-success' style='font-size: 100%; padding: 5px; display: inline;'> Stoktan Kullanıldı </span>" + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ", "+ v +");'>Sil</button>" + "</td> </tr>");
+
+                    //            //servis_formu_parca_sectim(ui.item.id, adet);
+
+                    //            if ($("#siparisformu").attr("stokparcaid") != "") {
+                    //                $("#siparisformu").attr("stokparcaid", $("#siparisformu").attr("stokparcaid") + "," + ui.item.id);
+                    //                $("#siparisformu").attr("stokadet", $("#siparisformu").attr("stokadet") + "," + $("#musteriparcaadeti").val());
+                    //            }
+                    //            else { $("#siparisformu").attr("stokparcaid", ui.item.id); $("#siparisformu").attr("stokadet", parcaAdet); }
+
                     //        }
                     //    }
                     //});
@@ -1153,16 +1188,79 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
             }
         };
     });
+
+    SPparcaListesi = [];
+    SPadet = [];
+
+    STparcaListesi = [];
+    STadet = [];
 }
 
-function ParcaSil(id) {
+function ParcaSil(id, durum) {
+
     $("#" + id).remove();
-    var index = parcaListesi.indexOf(id);
-    if (index !== -1) {
-        parcaListesi.splice(index, 1);
-        adet.splice(index, 1);
-        $("#parcalar1").attr("data", parcaListesi).attr("adet", adet);
+
+    if ($("#servisparca").attr("parcaid") !== undefined) {
+        var servisparca = $("#servisparca").attr("parcaid").split(",");
+        var servisadet = $("#servisparca").attr("adet").split(",");
+        var index1 = servisparca.indexOf(id.toString());
+        if (index1 !== -1) {
+
+            servisparca.splice(index1, 1);
+            servisadet.splice(index1, 1);
+            $("#servisparca").attr("parcaid", servisparca).attr("adet", servisadet);
+
+            if ($("#servisparca").attr("parcaid").indexOf(",") === -1) {
+                $("#servisparca").attr("sayi", "tek");
+            }
+
+            if ($("#servisparca").attr("parcaid") === "") {
+                $("#servisparca").attr("sayi", "");
+            }
+        }
     }
+
+    if ($("#parcalarId").attr("parcaid") !== undefined) {
+
+        var parcalarId = $("#parcalarId").attr("parcaid").split(",");
+        var adet = $("#parcalarId").attr("adet").split(",");
+
+        var index = parcalarId.indexOf(id.toString());
+        if (index !== -1) {
+            parcalarId.splice(index, 1);
+            adet.splice(index, 1);
+
+            $("#parcalarId").attr("parcaid", parcalarId);
+            $("#parcalarId").attr("adet", adet);
+
+            var sonradanEklenenParca = $("#parcalarId").attr("sonradaneklenenparca").split(",");
+            var sonradanEklenenAdet = $("#parcalarId").attr("sonradaneklenenadet").split(",");
+            index2 = sonradanEklenenParca.indexOf(id.toString());
+            if (index2 !== -1) {
+                sonradanEklenenParca.splice(index2, 1);
+                sonradanEklenenAdet.splice(index2, 1);
+
+                $("#parcalarId").attr("sonradaneklenenparca", sonradanEklenenParca);
+                $("#parcalarId").attr("sonradaneklenenadet", sonradanEklenenAdet);
+
+                if ($("#parcalarId").attr("sonradaneklenenparca").indexOf(",") === -1) {
+                    $("#parcalarId").attr("sonradaneklenensayi", "tek");
+                }
+            }
+           
+            if ($("#parcalarId").attr("sonradaneklenenparca") === "") {
+                $("#parcalarId").attr("sayi", "");
+                $("#parcalarId").attr("index", "");
+            }
+        }
+    }
+
+    //var index3 = STparcaListesi.indexOf(id);
+    //if (index3 !== -1) {
+    //    STparcaListesi.splice(index3, 1);
+    //    STadet.splice(index3, 1);
+    //    $("#siparisformu").attr("stokparcaid", STparcaListesi).attr("stokadet", STadet);
+    //}
 }
 
 function is_detay_parca_sectim(IsID, ParcaId, adet, durum) {
@@ -1176,7 +1274,27 @@ function is_detay_parca_sectim(IsID, ParcaId, adet, durum) {
     $("#kullanilan_parcalar" + IsID).loadHTML({ url: "/ajax_request5/", data: data }, function () {
         mesaj_ver("Parçalar / Cihazlar", "Kayıt Başarıyla Eklendi", "success");
     });
+}
 
+function servis_formu_stok() {
+    var data = "islem=servis_bakim_stok&islem2=kontrol";
+    data += "&ParcaId=" + $("#servisparca").attr("ParcaId");
+    data += "&Adet=" + $("#servisparca").attr("Adet");
+    data = encodeURI(data);
+    $("#servisformParcalar").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+        mesaj_ver("Servis Bakım Formu", "Kayıt Başarıyla Eklendi", "success");
+    });
+}
+
+function servis_formu_parca_sectim(ParcaId, toplamAdet) {
+
+    var data = "islem=servis_bakim_parca_ekle&islem2=ekle";
+    data += "&ParcaId=" + ParcaId;
+    data += "&Adet=" + toplamAdet;
+    data = encodeURI(data);
+    $("#servisformParcalar").loadHTML({ url: "/ajax_request5/", data: data }, function () {
+        mesaj_ver("Servis Bakım Formu", "Kayıt Başarıyla Eklendi", "success");
+    });
 }
 
 function is_detay_parca_agaci_sectim(IsID, AgacId) {
@@ -1226,6 +1344,18 @@ function KullanilanParcaSil(IsID, KayitID) {
         var data = "islem=is_detay_parca_sectim&islem2=sil";
         data += "&IsID=" + IsID;
         data += "&KayitID=" + KayitID;
+        data = encodeURI(data);
+        $("#kullanilan_parcalar" + IsID).loadHTML({ url: "/ajax_request5/", data: data }, function () {
+            mesaj_ver("Parçalar / Cihazlar", "Kayıt Başarıyla Silindi", "success");
+        });
+    }
+}
+
+function IsParcaListesiListeTemizle(IsID) {
+    var r = confirm("Listeyi Temizlemek istediğinize eminmisiniz. ?");
+    if (r) {
+        var data = "islem=is_detay_parca_sectim&islem2=listetemizle";
+        data += "&IsID=" + IsID;
         data = encodeURI(data);
         $("#kullanilan_parcalar" + IsID).loadHTML({ url: "/ajax_request5/", data: data }, function () {
             mesaj_ver("Parçalar / Cihazlar", "Kayıt Başarıyla Silindi", "success");
@@ -1647,7 +1777,7 @@ function servis_bakim_kayitlarini_getir() {
     var data = "islem=YeniServisBakimKaydiEkle";
     data = encodeURI(data);
     $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
-        datatableyap();
+
     });
 }
 

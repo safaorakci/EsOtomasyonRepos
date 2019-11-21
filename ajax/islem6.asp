@@ -3504,7 +3504,7 @@
 
                         SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id  where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' "& sorgu_str &" order by satinalma.id desc"
                     else
-                        SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
+                        SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id left join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
                     
                     end if
                     set satinalma = baglanti.execute(SQL)
@@ -4596,7 +4596,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                     <option disabled selected>Müşteri Seç
                     </option>
                     <%
-                        SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where durum = 'true' and cop = 'false'"
+                        SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where yetki_kodu = 'MUSTERI' and durum = 'true' and cop = 'false'"
                         set musteri = baglanti.execute(SQL)
                         do while not musteri.eof
                     %>
@@ -4722,11 +4722,11 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                         </div>
                     </div>
                 </div>
-                 <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
+                 <div class="row" style="border-top:1px solid #dedede; padding-top: 10px; id="parcaTable">
                     <div class="col-md-4 col-sm-4 col-xs-8">
                         <div class="form-group">
                             <label class="font-weight-bold">Parça Adı</label>
-                            <input type="text" name="parcalar" id="parcalar1" i="<1" data="0" class="form-control parcalar" />
+                            <input type="text" name="parcalar" form_id="" id="parcalar1" i="<1" data="0" class="form-control parcalar" />
                         </div>
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-4">
@@ -4734,8 +4734,8 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                             <label class="font-weight-bold">Adet</label>
                             <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1" value="1"/>
                     </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                 </div>
+                 <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="font-weight-bold">Görevli</label>
                             <select id="firmagorevli" class="form-control select2" multiple required>
@@ -4751,14 +4751,15 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                                 %>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                 </div>
+                 <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                         <label class="col-form-label font-weight-bold" style="margin-bottom:10px">Stok Listesi</label>
-                        <table class="table table-bordered table-sm table-sprited">
+                        <table id="servisformParcalar" class="table table-bordered table-sm table-sprited">
                             <thead>
                                 <tr>
                                     <th>Parça</th>
                                     <th>Adet</th>
+                                    <!--<th>Sipariş Durumu</th>-->
                                     <th>Açıklama</th>
                                     <th>Işlem</th>
                                 </tr>
@@ -4778,7 +4779,9 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                     <input type="checkbox" class="form-check-input" style="margin-left: 10px; margin-top: 3px; cursor:pointer" id="listeyeekle">
                 </div>
             </div>
-            <input type="submit" class="btn btn-primary" onclick="ServisBakimKaydiEkle();" value="Servis / Bakım Planı Kaydet" />
+            <input type="hidden" id="servisparca" parcaId="" adet="" />
+            <input type="hidden" id="siparisformu" siparisparcaid="" stokparcaid="" />
+            <input type="submit" class="btn btn-primary" onclick="ServisBakimKaydiEkle();" value="Servis Ekle" />
         </div>
         <style>
             .ui-helper-hidden {
@@ -5199,7 +5202,8 @@ works properly when clicked or hovered */
             $("#musteriformu").slideDown();
         });
 
-        if ($("#musteri_id").val() !== "") {
+        $("#musteri_id option[value=" + '<%=formduzenle("FirmaId") %>' + "]").attr('selected', 'selected');
+        if ($("#musteri_id").val().length > 0) {
             $("#musteri_id").trigger("change");
         }
     </script>
@@ -5209,7 +5213,7 @@ works properly when clicked or hovered */
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-            <form autocomplete="off" id="servisbakimkaydi" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+            <form autocomplete="off" id="servisbakimduzenle" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
         <script>
            $(function (){
                parcalar_autocomplete_calistir3();
@@ -5219,10 +5223,9 @@ works properly when clicked or hovered */
             <label class="col-sm-11  col-lg-11 col-form-label"><%=LNG("Müşteri")%></label>
             <div class="col-sm-11 col-lg-11">
                 <select id="musteri_id" name="musteri" class="select2" onchange="musteribilgilerial();">
-                    <option disabled selected>Müşteri Seç
-                    </option>
+                    <option disabled selected>Müşteri Seç</option>
                     <%
-                        SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where durum = 'true' and cop = 'false'"
+                        SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where yetki_kodu = 'MUSTERI' and durum = 'true' and cop = 'false'"
                         set musteri = baglanti.execute(SQL)
                         do while not musteri.eof
                     %>
@@ -5244,63 +5247,61 @@ works properly when clicked or hovered */
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma Adı</label>
-                            <input type="text" class="form-control" id="firmaadi" placeholder="Firma Adı" value="<%=formduzenle("FirmaUnvani") %>"/>
+                            <input type="text" class="form-control" id="firmaadi" placeholder="Firma Adı" value="<%=formduzenle("FirmaUnvani") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12" id="textyetkili">
                         <div class="form-group">
                             <label class="col-from-label">Yetkili Kişi</label>
-                            <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi" value="<%=formduzenle("Yetkili") %>"/>
+                            <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi" value="<%=formduzenle("Yetkili") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12" id="selectyetkili" style="display:none">
                         <div class="form-group">
                             <label class="col-from-label">Yetkili Kişi</label>
-                            <select class="form-control yetiskinselect" id="selectyetkilikisi">
-                                <option value="<%=formduzenle("Yetkili") %>"><%=formduzenle("Yetkili") %></option>
-                            </select>
+                            <select class="form-control yetiskinselect" id="selectyetkilikisi" required></select>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label class="col-from-label">Firma Telefon</label>
-                            <input type="text" class="form-control" id="firmatelefon" placeholder="0(555) 123 45 67" value="<%=formduzenle("Telefon") %>"/>
+                            <label class="col-from-label">Yetkili Telefon</label>
+                            <input type="text" class="form-control" id="firmatelefon" placeholder="0(555) 123 45 67" value="<%=formduzenle("Telefon") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label class="col-from-label">Firma E-posta</label>
-                            <input class="form-control" type="email" id="firmaeposta" placeholder="example@gmail.com" value="<%=formduzenle("Email") %>"/>
+                            <label class="col-from-label">Yetkili E-posta</label>
+                            <input class="form-control" type="email" id="firmaeposta" placeholder="example@gmail.com" value="<%=formduzenle("Email") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma Adress</label>
-                            <input class="form-control" type="text" id="firmaadress" placeholder="Adress" value="<%=formduzenle("Adress") %>"/>
+                            <input class="form-control" type="text" id="firmaadress" placeholder="Adress" value="<%=formduzenle("Adress") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Vergi Dairesi</label>
-                            <input class="form-control" type="text" id="firmavergidairesi" placeholder="Vergi Dairesi" value="<%=formduzenle("VergiDairesi") %>"/>
+                            <input class="form-control" type="text" id="firmavergidairesi" placeholder="Vergi Dairesi" value="<%=formduzenle("VergiDairesi") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Vergi No</label>
-                            <input class="form-control" type="text" id="firmavergino" placeholder="Vergi No" value="<%=formduzenle("VergiNo") %>"/>
+                            <input class="form-control" type="text" id="firmavergino" placeholder="Vergi No" value="<%=formduzenle("VergiNo") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Makine Bilgileri</label>
-                            <input class="form-control" type="text" id="firmamakinebilgi" placeholder="Makine Bilgileri" value="<%=formduzenle("MakinaBilgileri") %>"/>
+                            <input class="form-control" type="text" id="firmamakinebilgi" placeholder="Makine Bilgileri" value="<%=formduzenle("MakinaBilgileri") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Bildirilen Arıza</label>
-                            <input class="form-control" type="text" id="firmaariza" placeholder="Bildirilen Arıza" value="<%=formduzenle("BildirilenAriza") %>"/>
+                            <input class="form-control" type="text" id="firmaariza" placeholder="Bildirilen Arıza" value="<%=formduzenle("BildirilenAriza") %>" required/>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -5374,7 +5375,7 @@ works properly when clicked or hovered */
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="font-weight-bold">Görevli</label>
-                            <select id="firmagorevli" class="form-control select2" multiple>
+                            <select id="firmagorevli" class="form-control select2" multiple required>
                                 <%
                                     SQL = "select id, personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'"
                                     set kullanicilar = baglanti.execute(SQL)
@@ -5417,11 +5418,11 @@ works properly when clicked or hovered */
                                         </tr>
                                     <%
                                         end if
-
+                                        parcaID = formduzenle("ParcaId")
                                         for x = 0 to ubound(split(formduzenle("ParcaId"), ","))
-                                        id = split(formduzenle("ParcaId"), ",")(x)
-                                        Adet = split(formduzenle("Adet"), ",")(x)
-
+                                            id = split(formduzenle("ParcaId"), ",")(x)
+                                            Adet = split(formduzenle("Adet"), ",")(x)
+                                           
                                         SQL = "select * from parca_listesi where durum = 'true' and cop = 'false' and id = '"& id &"'"
                                         set parcadetay = baglanti.execute(SQL)
 
@@ -5440,10 +5441,10 @@ works properly when clicked or hovered */
                                         parcadetay.movenext 
                                         loop
                                     %>
-                                    <% next %>
+                                <% next %>
                             </tbody>
                         </table>
-                        <input type="hidden" id="parcalarId" adet="<%=formduzenle("Adet") %>" value="<%=formduzenle("ParcaId") %>""/>
+                        <input type="hidden" id="parcalarId" adet="<%=formduzenle("Adet") %>" parcaId="<%=formduzenle("ParcaId") %>" delparcaid="" deladet="" sonradaneklenenparca="" sonradaneklenenadet=""/>
                     </div>
                 </div>
             </div>

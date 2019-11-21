@@ -15,10 +15,11 @@
     SQL = "select LEFT(servis.BaslangicSaati,5) as Baslangic, LEFT(servis.BitisSaati,5) as Bitis, servis.* from servis_bakim_kayitlari servis where Durum = 'true' and Cop = 'false' and id = '"& form_id &"'"
     set servisformu = baglanti.execute(SQL)
 
-    if servisformu("FirmaId") > 0 then
-        SQL = "select * from ucgem_firma_listesi where id = '"& servisformu("FirmaId") &"'"
-        set firmaBilgileri = baglanti.execute(SQL)
-    end if
+    SQL = "SELECT ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 2)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, servis.EklemeTarihi)),3,2) + RIGHT('00' + SUBSTRING(CONVERT(NVARCHAR(10), servis.id),1,4), 3 )  AS seri_no FROM servis_bakim_kayitlari servis WHERE id = '"& form_id &"'"
+    set seriNo = baglanti.execute(SQL)
+
+    SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+    set firmaBilgileri = baglanti.execute(SQL)
     
 %>
 <html lang="tr">
@@ -49,7 +50,9 @@
                                         </center>
                                     </td>
                                     <td> Seri No : </td>
-                                    <td> ES19001 </td>
+                                    <td> 
+                                        <%=seriNo("seri_no") %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Tarih</td>
@@ -58,13 +61,7 @@
                                 <tr>
                                     <td rowspan="1" colspan="3" style="height: 50px;"> 
                                         <center>
-                                            <%
-                                                if servisformu("FirmaId") > 0 then
-                                            %>
-                                                <%=firmaBilgileri("firma_adres") %> <br /> <%=firmaBilgileri("firma_telefon") %> &nbsp; <%=firmaBilgileri("firma_mail") %>
-                                            <% else %>
-                                                <%=servisformu("Adress") %> <br /> <%=servisformu("Telefon") %> &nbsp; <%=servisformu("Email") %>
-                                            <% end if %>
+                                            <%=firmaBilgileri("firma_adres") %> <br /> <%=firmaBilgileri("firma_telefon") %> &nbsp; <%=firmaBilgileri("firma_mail") %>
                                         </center>
                                     </td>
                                 </tr>
