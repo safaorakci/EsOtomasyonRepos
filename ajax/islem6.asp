@@ -4593,14 +4593,14 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             <label class="col-sm-11  col-lg-11 col-form-label"><%=LNG("Müşteri")%></label>
             <div class="col-sm-11 col-lg-11">
                 <select id="musteri_id" name="musteri" class="select2" onchange="musteribilgilerial();">
-                    <option disabled selected>Müşteri Seç...
+                    <option disabled selected>Müşteri Seç
                     </option>
                     <%
                         SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where durum = 'true' and cop = 'false'"
                         set musteri = baglanti.execute(SQL)
                         do while not musteri.eof
                     %>
-                    <option value="<%=musteri("id") %>"><%=musteri("firma_adi") %> - <%=musteri("firma_yetkili") %></option>
+                    <option value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
                     <%
                         musteri.movenext
                         loop
@@ -4621,10 +4621,16 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                             <input type="text" class="form-control" id="firmaadi" placeholder="Firma Adı" required/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-3 col-sm-6 col-xs-12" id="textyetkili">
                         <div class="form-group">
                             <label class="col-from-label">Yetkili Kişi</label>
                             <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi" required/>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12" id="selectyetkili" style="display:none">
+                        <div class="form-group">
+                            <label class="col-from-label">Yetkili Kişi</label>
+                            <select class="form-control" id="selectyetkilikisi" required ></select>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -4633,121 +4639,112 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                             <input type="tel" class="form-control" id="firmatelefon" placeholder="0(555) 123 45 67" required/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-7">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma E-posta</label>
                             <input class="form-control" type="email" id="firmaeposta" placeholder="example@gmail.com" required/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-7">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma Adress</label>
                             <input class="form-control" type="text" id="firmaadress" placeholder="Adress" required/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-7">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Vergi Dairesi</label>
                             <input class="form-control" type="text" id="firmavergidairesi" placeholder="Vergi Dairesi" required/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-7">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Vergi No</label>
                             <input class="form-control" type="text" id="firmavergino" placeholder="Vergi No" required/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-7">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Makine Bilgileri</label>
                             <input class="form-control" type="text" id="firmamakinebilgi" placeholder="Makine Bilgileri" required/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-7">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Bildirilen Arıza</label>
                             <input class="form-control" type="text" id="firmaariza" placeholder="Bildirilen Arıza" required/>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-7">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label>Başlangıç Tarihi</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="icon-prepend fa fa-calendar"></i>
                                 </span>
-                                <input type="text" id="baslangic_tarihi" required class="takvimyap_yeni form-control" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
+                                <input type="text" id="baslangic_tarihi" required class="takvimyap form-control" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label>Bitiş Tarihi</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="icon-prepend fa fa-calendar"></i>
                                 </span>
-                                <input type="text" id="bitis_tarihi" required class="takvimyap_yeni form-control" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
+                                <input type="text" id="bitis_tarihi" required class="takvimyap form-control" style="padding-left:10px"  value="<%Response.Write Date()%>"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-1 col-sm-3 col-xs-6" style="width:110px">
+                    <div class="col-md-2 col-sm-6 col-xs-12" style="max-width:12.5% !important; padding-right:5px">
                         <label>Başlangıç Saati</label>
                         <div class="form-group">
                              <input type="text" id="baslangic_saati" required class="timepicker form-control" style="padding-left:10px" value=""/>
                         </div>
                     </div>
-                    <div class="col-md-1 col-sm-3 col-xs-5" style="width:110px">
+                    <div class="col-md-2 col-sm-6 col-xs-6" style="max-width:12.5% !important; padding-left:5px">
                         <label>Bitiş Saati</label>
                         <div class="form-group">
                              <input type="text" id="bitis_saati" required class="timepicker form-control" style="padding-left:10px" value=""/>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Yapılan İşlemler</label>
                             <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height:100px"></textarea>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Not</label>
                             <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height:100px"></textarea>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-3 col-xs-3" style="display:none">
-                        <div class="form-group">
-                            <div class="form-check">
-                                <label class="form-check-label" style="padding-left:1px" for="listeyeekle">Müşteri Listesine Kaydet</label>
-                                <input type="checkbox" class="form-check-input" style="margin-left: 10px; margin-top: 3px;" id="listeyeekle">
-                            </div>
-                        </div>
-                    </div>
                 </div>
                  <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
-                    <div class="col-md-4 col-sm-4 col-xs-4">
+                    <div class="col-md-4 col-sm-4 col-xs-8">
                         <div class="form-group">
                             <label class="font-weight-bold">Parça Adı</label>
                             <input type="text" name="parcalar" id="parcalar1" i="<1" data="0" class="form-control parcalar" />
                         </div>
                     </div>
-                    <div class="col-md-2 col-sm-2">
+                    <div class="col-md-2 col-sm-2 col-xs-4">
                         <div class="form-group">
                             <label class="font-weight-bold">Adet</label>
                             <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1" value="1"/>
                     </div>
                     </div>
-                    <div class="col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-md-5 col-sm-5 col-xs-5">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="font-weight-bold">Görevli</label>
-                            <select id="firmagorevli" class="form-control select2" multiple>
+                            <select id="firmagorevli" class="form-control select2" multiple required>
                                 <%
                                     SQL = "select id, personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'"
                                     set kullanicilar = baglanti.execute(SQL)
                                     do while not kullanicilar.eof
                                 %>
-                                    <option value="<%=kullanicilar("id") %>""><%=kullanicilar("adsoyad") %></option>
+                                    <option value="<%=kullanicilar("id") %>"><%=kullanicilar("adsoyad") %></option>
                                 <%
                                     kullanicilar.movenext
                                     loop        
@@ -4760,8 +4757,8 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                         <table class="table table-bordered table-sm table-sprited">
                             <thead>
                                 <tr>
-                                    <th>Adet</th>
                                     <th>Parça</th>
+                                    <th>Adet</th>
                                     <th>Açıklama</th>
                                     <th>Işlem</th>
                                 </tr>
@@ -4775,6 +4772,12 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             </div>
         </div>
         <div class="modal-footer">
+            <div class="form-group" style="margin-right: 35px; margin-top: auto; margin-bottom: auto; display:none" id="tabloyaekle">
+                <div class="form-check">
+                    <label class="form-check-label" style="padding-left:1px" for="listeyeekle">Müşteri Listesine Kaydet</label>
+                    <input type="checkbox" class="form-check-input" style="margin-left: 10px; margin-top: 3px; cursor:pointer" id="listeyeekle">
+                </div>
+            </div>
             <input type="submit" class="btn btn-primary" onclick="ServisBakimKaydiEkle();" value="Servis / Bakım Planı Kaydet" />
         </div>
         <style>
@@ -5195,6 +5198,10 @@ works properly when clicked or hovered */
         $(document).ready(function () {
             $("#musteriformu").slideDown();
         });
+
+        if ($("#musteri_id").val() !== "") {
+            $("#musteri_id").trigger("change");
+        }
     </script>
             <div class="modal-header">
         Servis Bakım Düzenle
@@ -5205,21 +5212,21 @@ works properly when clicked or hovered */
             <form autocomplete="off" id="servisbakimkaydi" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
         <script>
            $(function (){
-               parcalar_autocomplete_calistir();
+               parcalar_autocomplete_calistir3();
            });
         </script>
         <div class="row">
             <label class="col-sm-11  col-lg-11 col-form-label"><%=LNG("Müşteri")%></label>
             <div class="col-sm-11 col-lg-11">
                 <select id="musteri_id" name="musteri" class="select2" onchange="musteribilgilerial();">
-                    <option disabled selected>Müşteri Seç...
+                    <option disabled selected>Müşteri Seç
                     </option>
                     <%
                         SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where durum = 'true' and cop = 'false'"
                         set musteri = baglanti.execute(SQL)
                         do while not musteri.eof
                     %>
-                    <option <%if formduzenle("FirmaId") = musteri("id") then %> selected="selected" <%end if %> value="<%=musteri("id") %>"><%=musteri("firma_adi") %> - <%=musteri("firma_yetkili") %></option>
+                    <option <%if formduzenle("FirmaId") = musteri("id") then %> selected="selected" <%end if %> value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
                     <%
                         musteri.movenext
                         loop
@@ -5234,107 +5241,115 @@ works properly when clicked or hovered */
             <div class="col-md-12" id="musteriformu" style="display:none; margin-top:10px">
                  <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
                     <label class="col-form-label col-md-12 font-weight-bold" style="text-align:left; margin-bottom:10px">Müşteri Bilgileri</label>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma Adı</label>
                             <input type="text" class="form-control" id="firmaadi" placeholder="Firma Adı" value="<%=formduzenle("FirmaUnvani") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12" id="textyetkili">
                         <div class="form-group">
                             <label class="col-from-label">Yetkili Kişi</label>
                             <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi" value="<%=formduzenle("Yetkili") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12" id="selectyetkili" style="display:none">
+                        <div class="form-group">
+                            <label class="col-from-label">Yetkili Kişi</label>
+                            <select class="form-control yetiskinselect" id="selectyetkilikisi">
+                                <option value="<%=formduzenle("Yetkili") %>"><%=formduzenle("Yetkili") %></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma Telefon</label>
                             <input type="text" class="form-control" id="firmatelefon" placeholder="0(555) 123 45 67" value="<%=formduzenle("Telefon") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma E-posta</label>
                             <input class="form-control" type="email" id="firmaeposta" placeholder="example@gmail.com" value="<%=formduzenle("Email") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Firma Adress</label>
                             <input class="form-control" type="text" id="firmaadress" placeholder="Adress" value="<%=formduzenle("Adress") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Vergi Dairesi</label>
                             <input class="form-control" type="text" id="firmavergidairesi" placeholder="Vergi Dairesi" value="<%=formduzenle("VergiDairesi") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Vergi No</label>
                             <input class="form-control" type="text" id="firmavergino" placeholder="Vergi No" value="<%=formduzenle("VergiNo") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Makine Bilgileri</label>
                             <input class="form-control" type="text" id="firmamakinebilgi" placeholder="Makine Bilgileri" value="<%=formduzenle("MakinaBilgileri") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Bildirilen Arıza</label>
                             <input class="form-control" type="text" id="firmaariza" placeholder="Bildirilen Arıza" value="<%=formduzenle("BildirilenAriza") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label>Başlangıç Tarihi</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="icon-prepend fa fa-calendar"></i>
                                 </span>
-                                <input type="text" id="baslangic_tarihi" required class="takvimyap_yeni hasDatepicker" style="padding-left:10px" value="<%=formatNumber(DAY(formduzenle("BaslangicTarihi")),2)%>.<%=formatNumber(MONTH(formduzenle("BaslangicTarihi")),2)%>.<%=YEAR(formduzenle("BaslangicTarihi"))%>"/>
+                                <input type="text" id="baslangic_tarihi" required class="takvimyap form-control" style="padding-left:10px" value="<%=formatNumber(DAY(formduzenle("BaslangicTarihi")),2)%>.<%=formatNumber(MONTH(formduzenle("BaslangicTarihi")),2)%>.<%=YEAR(formduzenle("BaslangicTarihi"))%>"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label>Bitiş Tarihi</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="icon-prepend fa fa-calendar"></i>
                                 </span>
-                                <input type="text" id="bitis_tarihi" required class="takvimyap_yeni hasDatepicker" style="padding-left:10px" value="<%=formatNumber(DAY(formduzenle("BitisTarihi")),2)%>.<%=formatNumber(MONTH(formduzenle("BitisTarihi")),2)%>.<%=YEAR(formduzenle("BitisTarihi"))%>"/>
+                                <input type="text" id="bitis_tarihi" required class="takvimyap form-control" style="padding-left:10px" value="<%=formatNumber(DAY(formduzenle("BitisTarihi")),2)%>.<%=formatNumber(MONTH(formduzenle("BitisTarihi")),2)%>.<%=YEAR(formduzenle("BitisTarihi"))%>"/>
                             </div>
                         </div>
                     </div>
-                    <div style="padding-left:15px; width:110px">
+                    <div class="col-md-2 col-sm-6 col-xs-12" style="max-width:12.5% !important; padding-right:5px">
                         <label>Başlangıç Saati</label>
                         <div class="form-group">
                              <input type="text" id="baslangic_saati" required class="timepicker form-control" style="padding-left:10px" value="<%=formduzenle("BaslangicSaati") %>"/>
                         </div>
                     </div>
-                    <div style="padding-left:15px; width:110px">
+                    <div class="col-md-2 col-sm-6 col-xs-12" style="max-width:12.5% !important; padding-left:5px">
                         <label>Bitiş Saati</label>
                         <div class="form-group">
                              <input type="text" id="bitis_saati" required class="timepicker form-control" style="padding-left:10px" value="<%=formduzenle("BitisSaati") %>"/>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="col-from-label">Yapılan İşlemler</label>
                             <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height:100px"><%=formduzenle("YapilanIslemler") %></textarea>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-sm-6 col-sx-12">
                         <div class="form-group">
                             <label class="col-from-label">Not</label>
                             <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height:100px"><%=formduzenle("FormNot") %></textarea>
                         </div>
                     </div>
-                    <div class="col-md-3" style="display:none">
+                    <div class="col-md-3 col-md-6 col-xs-12" style="display:none">
                         <div class="form-group">
                             <div class="form-check">
                                 <label class="form-check-label" style="padding-left:1px" for="listeyeekle">Müşteri Listesine Kaydet</label>
@@ -5344,20 +5359,19 @@ works properly when clicked or hovered */
                     </div>
                 </div>
                  <div class="row" style="border-top:1px solid #dedede; padding-top: 10px">
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-sm-4 col-xs-8">
                         <div class="form-group">
                             <label class="font-weight-bold">Parça Adı</label>
-                            <input type="text" name="parcalar" id="parcalar1" i="<1" data="" class="form-control parcalar" />
+                            <input type="text" name="parcalar" id="parcalar1" i="1" data="" class="form-control parcalar" />
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-sm-2 col-xs-4">
                         <div class="form-group">
                             <label class="font-weight-bold">Adet</label>
-                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1"/>
+                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1" value="1"/>
                         </div>
                     </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="font-weight-bold">Görevli</label>
                             <select id="firmagorevli" class="form-control select2" multiple>
@@ -5365,15 +5379,16 @@ works properly when clicked or hovered */
                                     SQL = "select id, personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'"
                                     set kullanicilar = baglanti.execute(SQL)
                                     do while not kullanicilar.eof
-                                %>
 
-                                <%
+                                    state = ""
                                     for x = 0 to ubound(split(formduzenle("Gorevliler"), ","))
                                     user = split(formduzenle("Gorevliler"), ",")(x)
-                                %>  
-                                    <option <%if CStr(user) = CStr(kullanicilar("id")) then %> selected="selected" <%end if %> value="<%=kullanicilar("id") %>"><%=kullanicilar("adsoyad") %></option>
-                                <% next %>
-                                    
+                                        if CStr(user) = CStr(kullanicilar("id")) then
+                                            state = "selected"
+                                        end if
+                                    next
+                                %>
+                                    <option <%=state%> value="<%=kullanicilar("id") %>"> <%=kullanicilar("adsoyad") %> </option>
                                 <%
                                     kullanicilar.movenext
                                     loop        
@@ -5381,7 +5396,7 @@ works properly when clicked or hovered */
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-12 col-lg-12">
+                    <div class="col-md-12 col-sm-12 col-lg-12">
                         <label class="col-form-label font-weight-bold" style="margin-bottom:10px">Stok Listesi</label>
                         <table class="table table-bordered table-sm table-sprited">
                             <thead>
@@ -5390,9 +5405,10 @@ works properly when clicked or hovered */
                                     <th>Parça</th>
                                     <th>Adet</th>
                                     <th>Açıklama</th>
+                                    <th>Işlem</th>
                                 </tr>
                             </thead>
-                            <tbody> 
+                            <tbody id="stoklist"> 
                                     <%  
                                         if formduzenle.eof then 
                                     %>
@@ -5412,12 +5428,13 @@ works properly when clicked or hovered */
                                         k = 0
                                         do while not parcadetay.eof
                                             k = k + 1
-                                    %>   
-                                    <tr>
+                                    %>
+                                    <tr id="<%=parcadetay("id") %>">
                                         <!--<td style="text-align:center"><%=k %></td>-->
-                                        <td style="text-align:center"><%=parcadetay("marka") %> - <%=parcadetay("parca_kodu") %></td>
-                                        <td style="text-align:center"><%=Adet %></td>
-                                        <td style="text-align:center"><%=parcadetay("aciklama") %></td>
+                                        <td><%=parcadetay("marka") %> - <%=parcadetay("parca_kodu") %></td>
+                                        <td><%=Adet %></td>
+                                        <td><%=parcadetay("aciklama") %></td>
+                                        <td><button type="button" onclick="parcaDuzenle('<%=parcadetay("id")%>');" class="btn btn-danger btn-mini">Sil</button></td>
                                     </tr>
                                     <% 
                                         parcadetay.movenext 
@@ -5426,12 +5443,13 @@ works properly when clicked or hovered */
                                     <% next %>
                             </tbody>
                         </table>
+                        <input type="hidden" id="parcalarId" adet="<%=formduzenle("Adet") %>" value="<%=formduzenle("ParcaId") %>""/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" onclick="ServisBakimKaydiDuzenlemeYap(<%=kayitId%>);">Servis / Bakım Planı Kaydet</button>
+            <button class="btn btn-primary" onclick="ServisBakimKaydiDuzenlemeYap(<%=kayitId%>);">Servis / Bakım Planı Düzenle</button>
         </div>
         <style>
             .ui-helper-hidden {

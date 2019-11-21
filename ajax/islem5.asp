@@ -2284,6 +2284,9 @@ works properly when clicked or hovered */
             parcaId = trn(request("parcaId"))
             adet = trn(request("adet"))
             musteri_id = trn(request("musteri_id"))
+            if musteri_id = "null" then
+                musteri_id = 0
+            end if
 
             firmamakinebilgi = trn(request("firmamakinebilgi"))
             firmaariza = trn(request("firmaariza"))
@@ -2303,8 +2306,22 @@ works properly when clicked or hovered */
             durum = "true"
             cop = "false"
 
-            SQL = "insert into servis_bakim_kayitlari (FirmaId, FirmaUnvani, Yetkili, Adress, Email, Telefon, VergiDairesi, VergiNo, Durum, Cop, EkleyenId, EkleyenIp, EklemeTarihi, EklemeSaati, Gorevliler, ParcaId, Adet, MakinaBilgileri, BildirilenAriza, BaslangicTarihi, BitisTarihi, BaslangicSaati, BitisSaati, YapilanIslemler, FormNot) values('"& musteri_id &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmaeposta &"', '"& firmatelefon &"', '"& firmavergidairesi &"', '"& firmavergino &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), CONVERT(time, '"& ekleme_saati &"'), '"& gorevli &"', '"& parcaId &"', '"& adet &"', '"& firmamakinebilgi &"', '"& firmaariza &"', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), CONVERT(time, '"& baslangic_saati &"'), CONVERT(time, '"& bitis_saati &"'), '"& firmayapilanislemler &"', '"& firmanot &"')"
-            set servisekle = baglanti.execute(SQL)
+            if listeyeekle = "true" then
+                yetki_kodu = "MUSTERI"
+                firma_hid = Request.Cookies("kullanici")("firma_id")
+                SQL = "insert into ucgem_firma_listesi (yetki_kodu, firma_adi, firma_yetkili, firma_adres, firma_telefon, firma_mail) values('"& yetki_kodu &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmatelefon &"', '"& firmaeposta &"')"
+                set yenimusteri = baglanti.execute(SQL)
+
+                SQL = "select top 1 * from ucgem_firma_listesi order by id desc"
+                set firmabilgisi = baglanti.execute(SQL)
+
+                SQL = "insert into servis_bakim_kayitlari (FirmaId, FirmaUnvani, Yetkili, Adress, Email, Telefon, VergiDairesi, VergiNo, Durum, Cop, EkleyenId, EkleyenIp, EklemeTarihi, EklemeSaati, Gorevliler, ParcaId, Adet, MakinaBilgileri, BildirilenAriza, BaslangicTarihi, BitisTarihi, BaslangicSaati, BitisSaati, YapilanIslemler, FormNot) values('"& firmabilgisi("id") &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmaeposta &"', '"& firmatelefon &"', '"& firmavergidairesi &"', '"& firmavergino &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), CONVERT(time, '"& ekleme_saati &"'), '"& gorevli &"', '"& parcaId &"', '"& adet &"', '"& firmamakinebilgi &"', '"& firmaariza &"', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), CONVERT(time, '"& baslangic_saati &"'), CONVERT(time, '"& bitis_saati &"'), '"& firmayapilanislemler &"', '"& firmanot &"')"
+                set servisekle = baglanti.execute(SQL)
+            
+            else
+                SQL = "insert into servis_bakim_kayitlari (FirmaId, FirmaUnvani, Yetkili, Adress, Email, Telefon, VergiDairesi, VergiNo, Durum, Cop, EkleyenId, EkleyenIp, EklemeTarihi, EklemeSaati, Gorevliler, ParcaId, Adet, MakinaBilgileri, BildirilenAriza, BaslangicTarihi, BitisTarihi, BaslangicSaati, BitisSaati, YapilanIslemler, FormNot) values('"& musteri_id &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmaeposta &"', '"& firmatelefon &"', '"& firmavergidairesi &"', '"& firmavergino &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), CONVERT(time, '"& ekleme_saati &"'), '"& gorevli &"', '"& parcaId &"', '"& adet &"', '"& firmamakinebilgi &"', '"& firmaariza &"', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), CONVERT(time, '"& baslangic_saati &"'), CONVERT(time, '"& bitis_saati &"'), '"& firmayapilanislemler &"', '"& firmanot &"')"
+                set servisekle = baglanti.execute(SQL)
+            end if
 
         elseif trn(request("islem2"))="sil" then
             kayitId = trn(request("kayit_id"))
@@ -2319,12 +2336,17 @@ works properly when clicked or hovered */
             firmayetkili = trn(request("firmayetkili"))
             firmatelefon = trn(request("firmatelefon"))
             firmaeposta = trn(request("firmaeposta"))
-
+            
+            firmavergidairesi = trn(request("firmavergidairesi"))
+            firmaadress = trn(request("firmaadress"))
             firmavergino = trn(request("firmavergino"))
             listeyeekle = trn(request("listeyeekle"))
             gorevli = trn(request("gorevli"))
             parcaId = trn(request("parcaId"))
             adet = trn(request("adet"))
+            if parcaId = "" then
+               adet = ""
+            end if
             musteri_id = trn(request("musteri_id"))
 
             firmamakinebilgi = trn(request("firmamakinebilgi"))
@@ -2337,7 +2359,7 @@ works properly when clicked or hovered */
             firmanot = trn(request("firmanot"))
             kayitId = trn(request("kayitId"))
 
-            SQL = "update servis_bakim_kayitlari set FirmaId = '"& musteri_id &"', FirmaUnvani = '"& firmaunvani &"', Yetkili = '"& firmayetkili &"', Adress = '"& firmaadress &"', Email = '"& firmaeposta &"', Telefon = '"& firmatelefon &"', VergiDairesi = '"& firmavergidairesi &"', VergiNo = '"& firmavergino &"', Gorevliler = '"& gorevli &"', ParcaId = ParcaId +','+'"& parcaId &"', Adet = Adet +','+'"& adet &"', MakinaBilgileri = '"& firmamakinebilgi &"', BildirilenAriza = '"& firmaariza &"', BaslangicTarihi = CONVERT(date, '"& baslangic_tarihi &"', 103), BitisTarihi = CONVERT(date, '"& bitis_tarihi &"', 103), BaslangicSaati = CONVERT(time, '"& baslangic_saati &"'), BitisSaati = CONVERT(time, '"& bitis_saati &"'), YapilanIslemler = '"& firmayapilanislemler &"', FormNot = '"& firmanot &"' where id = '"& kayitId &"'"
+            SQL = "update servis_bakim_kayitlari set FirmaId = '"& musteri_id &"', FirmaUnvani = '"& firmaunvani &"', Yetkili = '"& firmayetkili &"', Adress = '"& firmaadress &"', Email = '"& firmaeposta &"', Telefon = '"& firmatelefon &"', VergiDairesi = '"& firmavergidairesi &"', VergiNo = '"& firmavergino &"', Gorevliler = '"& gorevli &"', ParcaId = '"& parcaId &"', Adet = '"& adet &"', MakinaBilgileri = '"& firmamakinebilgi &"', BildirilenAriza = '"& firmaariza &"', BaslangicTarihi = CONVERT(date, '"& baslangic_tarihi &"', 103), BitisTarihi = CONVERT(date, '"& bitis_tarihi &"', 103), BaslangicSaati = CONVERT(time, '"& baslangic_saati &"'), BitisSaati = CONVERT(time, '"& bitis_saati &"'), YapilanIslemler = '"& firmayapilanislemler &"', FormNot = '"& firmanot &"' where id = '"& kayitId &"'"
             set formguncelle = baglanti.execute(SQL)
         end if
 
@@ -2367,7 +2389,7 @@ works properly when clicked or hovered */
                 if servisBakim.eof then
             %>
                 <tr>
-                    <td colspan="9" style="text-align:center">Kayıt Bulunamadı</td>
+                    <td colspan="10" style="text-align:center">Kayıt Bulunamadı</td>
                 </tr>
             <%
                 end if
@@ -2390,7 +2412,7 @@ works properly when clicked or hovered */
                 <td><%=servisBakim("Email") %></td>
                 <td><%=servisBakim("VergiDairesi") %></td>
                 <td><%=servisBakim("VergiNo") %></td>
-                <td><%=servisBakim("EklemeTarihi") %> &nbsp <%=left(servisBakim("EklemeSaati"),5) %></td>
+                <td><%=servisBakim("EklemeTarihi") %> <!--&nbsp <%=left(servisBakim("EklemeSaati"),5) %>--></td>
                 <td>
                     <button type="button" class="btn btn-mini btn-primary dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             İşlemler
