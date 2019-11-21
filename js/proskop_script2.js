@@ -976,11 +976,10 @@ function parcalar_autocomplete_calistir2() {
                         },
                         success: function (data) {
                             var result = jQuery.parseJSON(data.d);
-                            console.log(result);
-                            if (result > 0) {
-                                SiparisPopup(IsId, ui.item.id, result, adet);
+                            if (result.Durum == 0) {
+                                SiparisPopup(IsId, ui.item.id, result.Sayi, adet);
                             }
-                            if (result == 0) {
+                            if (result.Durum == 1) {
                                 is_detay_parca_sectim(IsId, ui.item.id, adet);
                             }
                         }
@@ -1161,13 +1160,14 @@ function ParcaSil(id) {
     console.log(index);
 }
 
-function is_detay_parca_sectim(IsID, ParcaId, adet, durum) {
+function is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet) {
 
     var data = "islem=is_detay_parca_sectim&islem2=ekle";
     data += "&IsID=" + IsID;
     data += "&ParcaId=" + ParcaId;
     data += "&Adet=" + adet;
-    data += "&servis=" + durum;
+    data += "&ToplamAdet=" + toplamAdet;
+    //data += "&servis=" + durum;
     data = encodeURI(data);
     $("#kullanilan_parcalar" + IsID).loadHTML({ url: "/ajax_request5/", data: data }, function () {
         mesaj_ver("Parçalar / Cihazlar", "Kayıt Başarıyla Eklendi", "success");

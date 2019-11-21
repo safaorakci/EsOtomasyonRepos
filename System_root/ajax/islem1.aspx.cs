@@ -1698,15 +1698,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                 is_gorunum yeniis = new is_gorunum();
                 yeniis.id = Convert.ToInt32(item["id"]);
-                ayarlar.cmd.CommandText = "with cte as (SELECT case when(select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = " + yeniis.id + " and etiket_id = 72 and not color = 'rgb(52, 152, 219)') = 0 then '00:00' else dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH(NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' AND olay.tamamlandi = 1)) end AS harcanan, gorevli.toplam_sure, gorevli.tamamlanma_orani, gorevli.id FROM ucgem_is_gorevli_durumlari gorevli WITH(NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH(NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = " + yeniis.id + " ) " +
-                    "SELECT " +
-                    "CASE " +
-                    "WHEN (SUM(tamamlanma_orani) / COUNT(id)) = 100 THEN 100 " +
-                    "WHEN CONVERT(decimal(5,2), (CONVERT(int, SUM(datediff(MINUTE, 0, CONVERT(time, harcanan))))), 114) = 0 THEN 0 " +
-                    "WHEN CONVERT(decimal(5, 2), CONVERT(int, SUM(datediff(MINUTE, 0, CONVERT(time, toplam_sure)))), 114) = 0 THEN 0 " +
-                    "WHEN CONVERT(decimal(5,2), (CONVERT(int, SUM(datediff(MINUTE, 0, CONVERT(time, harcanan))))), 114) > CONVERT(decimal(5, 2), SUM(datediff(MINUTE, 0, CONVERT(time, toplam_sure))), 114) THEN 90 " +
-                    "WHEN CONVERT(int, (SUM(tamamlanma_orani) / COUNT(id))) > 50 AND CONVERT(int, (SUM(tamamlanma_orani) / COUNT(id))) < 100 THEN CONVERT(decimal(5, 2), (CONVERT(int, SUM(datediff(MINUTE, 0, CONVERT(time, harcanan))), 114)) / CONVERT(decimal(5, 2), SUM(datediff(MINUTE, 0, CONVERT(time, toplam_sure))), 114)) * 100 " +
-                    "ELSE CONVERT(decimal(5, 2), (CONVERT(int, SUM(datediff(MINUTE, 0, CONVERT(time, harcanan))), 114) / CONVERT(decimal(5, 2), SUM(datediff(MINUTE, 0, CONVERT(time, toplam_sure))), 114)) * 100) END as ortalama from cte";
+                ayarlar.cmd.CommandText = "with cte as ( SELECT case when(select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = " + yeniis.id + " and etiket_id = 72 and not color = 'rgb(52, 152, 219)') = 0 then '00:00' else dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH(NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' AND olay.tamamlandi = 1)) end AS harcanan, gorevli.toplam_sure, gorevli.tamamlanma_orani, gorevli.id FROM ucgem_is_gorevli_durumlari gorevli WITH(NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH(NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = " + yeniis.id + ") SELECT CASE WHEN(SUM(tamamlanma_orani) / COUNT(id)) = 100 THEN 100 WHEN CONVERT(decimal(5,2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))))), 114) = 0 THEN 0WHEN CONVERT(decimal(5, 2), CONVERT(int, SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2)))), 114) = 0 THEN 0WHEN CONVERT(decimal(5,2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))))), 114) > CONVERT(decimal(5, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114) THEN 90WHEN CONVERT(int, (SUM(tamamlanma_orani) / COUNT(id))) > 50 AND CONVERT(int, (SUM(tamamlanma_orani) / COUNT(id))) < 100 THEN CONVERT(decimal(5, 2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))), 114)) / CONVERT(decimal(5, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114)) *100 ELSE CONVERT(decimal(5, 2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))), 114) / CONVERT(decimal(5, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114)) * 100) END as ortalama from cte";
                 SqlDataAdapter dataReader = new SqlDataAdapter(ayarlar.cmd);
                 DataSet dataSet = new DataSet();
                 dataReader.Fill(dataSet);
@@ -2265,11 +2257,11 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                                 if (Personel["personel_telefon"].ToString().Length > 5)
                                 {
-                                    ayarlar.NetGSM_SMS(Personel["personel_telefon"].ToString(), SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Dürttü !.");
+                                    ayarlar.NetGSM_SMS(Personel["personel_telefon"].ToString(), SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Uyardı !.");
                                 }
 
                                 Exception except;
-                                bool result = Pushover.SendNotification(ayarlar.PushOverAppKey, Personel["PushUserKey"].ToString(), "ÜÇGEM MEKANİK A.Ş ERP SYTEM", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Dürttü !.", Priority.Normal, PushoverSound.DeviceDefault, String.Empty, "http://erp.ucgem.com", "http://erp.ucgem.com", 60, 3600, out except);
+                                bool result = Pushover.SendNotification(ayarlar.PushOverAppKey, Personel["PushUserKey"].ToString(), "ÜÇGEM MEKANİK A.Ş ERP SYTEM", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Uyardı !.", Priority.Normal, PushoverSound.DeviceDefault, String.Empty, "http://erp.ucgem.com", "http://erp.ucgem.com", 60, 3600, out except);
                             }
 
                         }
@@ -4390,6 +4382,13 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         }
     }
 
+    public class CalculateResult
+    {
+        public int Sayi { get; set; }
+        public int Durum { get; set; }
+    }
+    
+
     [WebMethod]
     public static string CalculateParca(int ParcaID, int GirilenMiktar)
     {
@@ -4406,13 +4405,21 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         int miktar = Convert.ToInt32( dt.Rows[0].ItemArray[10]);
         int minimummiktar = Convert.ToInt32( dt.Rows[0].ItemArray[12]);
         Fark = miktar - minimummiktar;
-        if (GirilenMiktar > Fark)
-        {
-            return JsonConvert.SerializeObject(GirilenMiktar-Fark);
-        }
         ayarlar.cnn.Close();
-
-        return JsonConvert.SerializeObject(0);
+        if ((GirilenMiktar + minimummiktar) > miktar)
+        {
+            CalculateResult result = new CalculateResult();
+            result.Sayi = (GirilenMiktar + minimummiktar) - miktar;
+            result.Durum = 0;
+            return JsonConvert.SerializeObject(result);
+        }
+        else
+        {
+            CalculateResult result = new CalculateResult();
+            result.Sayi = GirilenMiktar;
+            result.Durum = 1;
+            return JsonConvert.SerializeObject(result);
+        }
     }
 
 

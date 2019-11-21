@@ -113,7 +113,7 @@ function durum_guncelleme_calistir(tablo, id) {
 
 }
 
-function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum) {
+function SiparisPopup(IsID, ParcaId, adet, toplamAdet) {
     swal({
         title: "Satınalma Formu",
         text: adet + " Adet Sipariş verilecek. Siparişi Onaylıyor Musunuz ?",
@@ -137,7 +137,7 @@ function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum) {
             //    }
             //});
 
-            is_detay_parca_sectim(IsID, ParcaId, toplamAdet, durum);
+            is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet);
             //var data = "islem=is_detay_parca_sectim&islem2=ekle";
             //data += "&IsID=" + IsID;
             //data += "&ParcaId=" + ParcaId;
@@ -7642,7 +7642,7 @@ function is_personel_durt(PersonelID, IsID) {
     var data = "IsID=" + IsID;
     data += "&PersonelID=" + PersonelID;
     $("#koftiden").loadWebMethod({ url: "/System_Root/ajax/islem1.aspx/IsPersonelDurt", data: data }, function () {
-        mesaj_ver("Personel", "Dürtme İşlemi Başarılı !", "success");
+        mesaj_ver("Personel", "Uyarma İşlemi Başarılı !", "success");
     });
 }
 
