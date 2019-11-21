@@ -156,7 +156,7 @@ function SiparisPopup(IsID, ParcaId, adet, toplamAdet) {
 
                     //<span class="label label-warning" style="font-size: 100%; padding: 5px; display: inline;">Islem Bekliyor</span>
 
-                } else { is_detay_parca_sectim(IsID, ParcaId, toplamAdet, durum); }
+                } else { is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet); }
                 //var data = "islem=is_detay_parca_sectim&islem2=ekle";
                 //data += "&IsID=" + IsID;
                 //data += "&ParcaId=" + ParcaId;
