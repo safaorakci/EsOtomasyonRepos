@@ -113,7 +113,7 @@ function durum_guncelleme_calistir(tablo, id) {
 
 }
 
-function SiparisPopup(IsID, ParcaId, adet, toplamAdet) {
+function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum) {
     swal({
         title: "Satınalma Formu",
         text: adet + " Adet Sipariş verilecek. Siparişi Onaylıyor Musunuz ?",
