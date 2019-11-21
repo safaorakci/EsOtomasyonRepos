@@ -3339,6 +3339,22 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         return JsonConvert.SerializeObject(dt);
     }
 
+    //[WebMethod]
+    //public static string yetkilibilgilerial(string Ad)
+    //{
+    //    ayarlar.baglan();
+    //    ayarlar.cmd.CommandText = @"select * from ucgem_firma_listesi where id = " + Ad + "";
+    //    ayarlar.cmd.ExecuteNonQuery();
+    //    ayarlar.cnn.Close();
+
+    //    SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+    //    DataTable dt = new DataTable();
+    //    sda.Fill(dt);
+    //    ayarlar.cnn.Close();
+
+    //    return JsonConvert.SerializeObject(dt);
+    //}
+
     public void yeni_is_ekle()
     {
         string baslangic_tarihi = "";

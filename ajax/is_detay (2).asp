@@ -20,7 +20,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <title><% Response.Write(LNG("Es Otomasyon | Süreç Yönetimi")) %></title>
+    <title><% Response.Write(LNG("ESFLW")) %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="cache-control" content="max-age=0" />

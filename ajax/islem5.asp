@@ -13,7 +13,6 @@
         set detay = baglanti.execute(SQL)
 
 %>
-
 <link href="../js/select2.min.css" rel="stylesheet" />
 <form>
     <style>
@@ -276,7 +275,7 @@
                                
 
                             </div>-->
-                            
+
                             <div class="col-xs-1 hidden-xs" style="padding-top: 5px;">
                                 <input id="easyPieChart<%=gorevli("id") %>" type="text" class="dial easyPieChartlar" value="<%=gorevli("tamamlanmorani") %>" data-width="68" data-height="75" data-linecap="round" data-displayprevious="true" data-displayinput="true" data-readonly="true" data-fgcolor="#4ECDC4">
                             </div>
@@ -1494,7 +1493,7 @@ works properly when clicked or hovered */
                 <%
                     if isnull(calisma("bitis"))=false then  
                 %>
-                    <%=cdate(left(calisma("bitis"),10)) %> &nbsp; <%=calisma("bitisSaat") %>
+                <%=cdate(left(calisma("bitis"),10)) %> &nbsp; <%=calisma("bitisSaat") %>
                 <% 
                     else
                     girdimi = true
@@ -1537,13 +1536,12 @@ works properly when clicked or hovered */
 %>
 <input type="hidden" id="sonacikkayit<%=is_id %>" baslangic_tarihi="<%=cdate(baslangic_tarihi) %>" baslangic_saati="<%=baslangic_saati %>" />
 <script type="text/javascript">
-    $(function ()
-    {
+    $(function () {
         timer.start({ precision: 'seconds', startValues: { seconds: <%=saniye %> }});
 
-        $('.startButton').hide();
-        $('.pauseButton').show();
-        $('.stopButton').show();
+    $('.startButton').hide();
+    $('.pauseButton').show();
+    $('.stopButton').show();
     });
 </script>
 <% count = count + 1 %>
@@ -1642,6 +1640,7 @@ works properly when clicked or hovered */
 
 %>
 <div class="card" style="padding: 15px;">
+
 
     <div class="row">
         <div class="col-md-4">
@@ -2257,7 +2256,7 @@ works properly when clicked or hovered */
             <td><%=cdate(bakim("ekleme_tarihi")) %>&nbsp;<%=left(bakim("ekleme_saati"),5) %></td>
             <td style="width: 10px;">
 
-                <input type="button" class="btn btn-primary btn-mini" value="<%=LNG("İş Emri Oluştur")%>" onclick="BakimdanIsEmriOlustur('<%=bakim("proje_id") %>', '<%=bakim("id") %>', '<%=Tum %>','<%=cdate(bakim("tarih")) %>');" />
+                <input type="button" class="btn btn-primary btn-mini" value="<%=LNG("İş Emri Oluştur")%>" onclick="BakimdanIsEmriOlustur('<%=bakim("proje_id") %>', '<%=bakim("id") %>', '<%=Tum %>', '<%=cdate(bakim("tarih")) %>');" />
                 <input type="button" class="btn btn-danger btn-mini" value="<%=LNG("Sil")%>" onclick="ProjeBakimKaydiSil('<%=bakim("proje_id") %>', '<%=bakim("id") %>', '<%=Tum %>');" />
 
             </td>
@@ -2281,13 +2280,23 @@ works properly when clicked or hovered */
             firmavergino = trn(request("firmavergino"))
             listeyeekle = trn(request("listeyeekle"))
             gorevli = trn(request("gorevli"))
-            parcaId = trn(request("parcaId"))
-            adet = trn(request("adet"))
+            'parcaId = trn(request("parcaId"))
+            'adet = trn(request("adet"))
             musteri_id = trn(request("musteri_id"))
             if musteri_id = "null" then
                 musteri_id = 0
             end if
 
+            siparisdurumu = trn(request("siparisdurumu"))
+            siparisparcaid = trn(request("siparisparcaid"))
+            siparisadet = trn(request("siparisadet"))
+            stokparcaid = trn(request("stokparcaid"))
+            stokadet = trn(request("stokadet"))
+
+            sayi = trn(request("sayi"))
+            ParcaId = trn(request("ParcaId"))
+            Adet = trn(request("Adet"))
+            
             firmamakinebilgi = trn(request("firmamakinebilgi"))
             firmaariza = trn(request("firmaariza"))
             baslangic_tarihi = trn(request("baslangic_tarihi"))
@@ -2305,7 +2314,37 @@ works properly when clicked or hovered */
             ekleme_saati = time
             durum = "true"
             cop = "false"
+            oncelik = "Normal"
+            satinalmaDurum = "Onay Bekliyor"
+            baslik = "Servis Formu"
 
+            if sayi = "birdenfazla" then
+
+                for y = 0 to ubound(split(ParcaId, ","))
+                    bolunmusId = split(ParcaId, ",")(y)
+                    bolunmusAdet = split(Adet, ",")(y)
+
+                    SQL = "select * from parca_listesi where id = '"& bolunmusId &"'"
+                    set stokkontrol = baglanti.execute(SQL)
+
+                    if stokkontrol("miktar") > "0" then
+                        SQL = "update parca_listesi set miktar = miktar - '"& bolunmusAdet &"' where id = '"& bolunmusId &"'"
+                        set stokGuncelle = baglanti.execute(SQL)
+                    end if
+                    
+                next
+
+            else
+        
+                    SQL = "select * from parca_listesi where id = '"& ParcaId &"'"
+                    set stokkontrol = baglanti.execute(SQL)
+                    if stokkontrol("miktar") > 0 then
+                        SQL = "update parca_listesi set miktar = miktar - '"& Adet &"' where id = '"& ParcaId &"'"
+                        set stokGuncelle = baglanti.execute(SQL)
+                    end if
+                
+            end if
+                
             if listeyeekle = "true" then
                 yetki_kodu = "MUSTERI"
                 firma_hid = Request.Cookies("kullanici")("firma_id")
@@ -2315,20 +2354,138 @@ works properly when clicked or hovered */
                 SQL = "select top 1 * from ucgem_firma_listesi order by id desc"
                 set firmabilgisi = baglanti.execute(SQL)
 
-                SQL = "insert into servis_bakim_kayitlari (FirmaId, FirmaUnvani, Yetkili, Adress, Email, Telefon, VergiDairesi, VergiNo, Durum, Cop, EkleyenId, EkleyenIp, EklemeTarihi, EklemeSaati, Gorevliler, ParcaId, Adet, MakinaBilgileri, BildirilenAriza, BaslangicTarihi, BitisTarihi, BaslangicSaati, BitisSaati, YapilanIslemler, FormNot) values('"& firmabilgisi("id") &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmaeposta &"', '"& firmatelefon &"', '"& firmavergidairesi &"', '"& firmavergino &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), CONVERT(time, '"& ekleme_saati &"'), '"& gorevli &"', '"& parcaId &"', '"& adet &"', '"& firmamakinebilgi &"', '"& firmaariza &"', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), CONVERT(time, '"& baslangic_saati &"'), CONVERT(time, '"& bitis_saati &"'), '"& firmayapilanislemler &"', '"& firmanot &"')"
+                SQL = "SET NOCOUNT ON; insert into servis_bakim_kayitlari (FirmaId, FirmaUnvani, Yetkili, Adress, Email, Telefon, VergiDairesi, VergiNo, Durum, Cop, EkleyenId, EkleyenIp, EklemeTarihi, EklemeSaati, Gorevliler, ParcaId, Adet, MakinaBilgileri, BildirilenAriza, BaslangicTarihi, BitisTarihi, BaslangicSaati, BitisSaati, YapilanIslemler, FormNot) values('"& firmabilgisi("id") &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmaeposta &"', '"& firmatelefon &"', '"& firmavergidairesi &"', '"& firmavergino &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), CONVERT(time, '"& ekleme_saati &"'), '"& gorevli &"', '"& parcaId &"', '"& adet &"', '"& firmamakinebilgi &"', '"& firmaariza &"', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), CONVERT(time, '"& baslangic_saati &"'), CONVERT(time, '"& bitis_saati &"'), '"& firmayapilanislemler &"', '"& firmanot &"'); select SCOPE_IDENTITY();"
                 set servisekle = baglanti.execute(SQL)
             
             else
-                SQL = "insert into servis_bakim_kayitlari (FirmaId, FirmaUnvani, Yetkili, Adress, Email, Telefon, VergiDairesi, VergiNo, Durum, Cop, EkleyenId, EkleyenIp, EklemeTarihi, EklemeSaati, Gorevliler, ParcaId, Adet, MakinaBilgileri, BildirilenAriza, BaslangicTarihi, BitisTarihi, BaslangicSaati, BitisSaati, YapilanIslemler, FormNot) values('"& musteri_id &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmaeposta &"', '"& firmatelefon &"', '"& firmavergidairesi &"', '"& firmavergino &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), CONVERT(time, '"& ekleme_saati &"'), '"& gorevli &"', '"& parcaId &"', '"& adet &"', '"& firmamakinebilgi &"', '"& firmaariza &"', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), CONVERT(time, '"& baslangic_saati &"'), CONVERT(time, '"& bitis_saati &"'), '"& firmayapilanislemler &"', '"& firmanot &"')"
+                SQL = "SET NOCOUNT ON; insert into servis_bakim_kayitlari (FirmaId, FirmaUnvani, Yetkili, Adress, Email, Telefon, VergiDairesi, VergiNo, Durum, Cop, EkleyenId, EkleyenIp, EklemeTarihi, EklemeSaati, Gorevliler, ParcaId, Adet, MakinaBilgileri, BildirilenAriza, BaslangicTarihi, BitisTarihi, BaslangicSaati, BitisSaati, YapilanIslemler, FormNot) values('"& musteri_id &"', '"& firmaunvani &"', '"& firmayetkili &"', '"& firmaadress &"', '"& firmaeposta &"', '"& firmatelefon &"', '"& firmavergidairesi &"', '"& firmavergino &"', '"& durum &"', '"& cop &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), CONVERT(time, '"& ekleme_saati &"'), '"& gorevli &"', '"& ParcaId &"', '"& Adet &"', '"& firmamakinebilgi &"', '"& firmaariza &"', CONVERT(date, '"& baslangic_tarihi &"', 103), CONVERT(date, '"& bitis_tarihi &"', 103), CONVERT(time, '"& baslangic_saati &"'), CONVERT(time, '"& bitis_saati &"'), '"& firmayapilanislemler &"', '"& firmanot &"'); select SCOPE_IDENTITY();"
                 set servisekle = baglanti.execute(SQL)
             end if
+                formId = servisekle(0)
+    
+            if siparisdurumu = "var" then
+
+               SQL = "select * from satinalma_listesi where formId = '"& formId &"'"
+               set siparisVarmi = baglanti.execute(SQL)
+  
+               for x = 0 to ubound(split(siparisparcaid, ","))
+                    parcaid = split(siparisparcaid, ",")(x)
+                    adet = split(siparisadet, ",")(x)
+
+                    SQL = "select * from parca_listesi where id = '"& parcaid &"'"
+                    set parcalar = baglanti.execute(SQL)
+
+                    birimFiyat = CDbl(parcalar("birim_maliyet"))
+
+                    birim = ""
+                    if parcalar("birim_pb") = "" then
+                       birim = "TL"
+                    else
+                       birim = parcalar("birim_pb")
+                    end if
+
+                    toplamTL = "0.00"
+                    toplamEUR = "0.00"
+                    toplamUSD = "0.00"
+                    
+                    if parcalar("birim_pb") = "TL" then
+                          birim = "TL"
+                          toplamTL = CDbl(birimFiyat * adet)
+                    end if
+                    if parcalar("birim_pb") = "USD" then
+                          birim = "USD"
+                          toplamUSD = CDbl(birimFiyat * adet)
+                    end if
+                    if parcalar("birim_pb") = "EUR" then
+                          birim = "EUR"
+                          toplamEUR = CDbl(birim_Fiyat * adet)
+                    end if
+               next
+                               
+
+
+               if siparisVarmi.eof then
+                  SQL = "SET NOCOUNT ON; insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, aciklama, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, toplamtl, toplamusd, toplameur, formId) values('"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci_id &"', '"& proje_id &"', '"& aciklama &"', '"& satinalmaDurum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& toplamtl &"', '"& toplamusd &"', '"& toplameur &"', '"& formId &"'); SELECT SCOPE_IDENTITY() id;"
+                  set siparisFormu = baglanti.execute(SQL)
+                  siparisId = siparisFormu(0)
+               else
+
+                  if parcalar("birim_pb") = "TL" then
+                    SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where IsId = '"& siparisVarmi("formId") &"'"
+                    set satinalmaListesi = baglanti.execute(SQL)
+                    satinalmaId = siparisFormuVarmi("id")
+                  end if
+                 
+                  if parcalar("birim_pb") = "USD" then
+                    SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where IsId = '"& siparisVarmi("formId") &"'"
+                    set satinalmaListesi = baglanti.execute(SQL)
+                    satinalmaId = siparisFormuVarmi("id")
+                  end if
+                 
+                  if parcalar("birim_pb") = "EUR" then
+                    SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where IsId = '"& siparisVarmi("formId") &"'"
+                    set satinalmaListesi = baglanti.execute(SQL)
+                    satinalmaId = siparisFormuVarmi("id")
+                  end if
+
+              end if
+               siparisparcaid = trn(request("siparisparcaid"))
+               'if siparisparcaid.IndexOf(",") > -1 then
+                  for x = 0 to ubound(split(siparisparcaid, ","))
+                      parcaid = split(siparisparcaid, ",")(x)
+                      adet = split(siparisadet, ",")(x)
+                    
+                      SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& siparisId &"' and durum = 'true' and cop = 'false'"
+                      set siparisVarmi = baglanti.execute(SQL)
+                    
+                      if siparisVarmi.eof then
+                         SQL = "insert into satinalma_siparis_listesi(SatinalmaId, IsId, parcaId, maliyet, pb, adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, formId) values('"& siparisId &"', NULL, '"& parcaid &"', '"& birimFiyat &"', '"& birim &"', '"& adet &"', '"& durum &"', '"& cop &"', '"& firma_id &"','"& ekleyen_id &"','"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& formId &"')"
+                         set satinalmaSiparisListesi = baglanti.execute(SQL)
+                      else
+                         if parcalar("birim_pb") = "TL" then
+                            SQL = "update satinalma_listesi set toplamtl = toplamtl + '"& toplamTL &"' where formId = '"& siparisVarmi("formId") &"'"
+                            set satinalmaListesi = baglanti.execute(SQL)
+                         end if
+
+                         if parcalar("birim_pb") = "USD" then
+                            SQL = "update satinalma_listesi set toplamusd = toplamusd + '"& toplamUSD &"' where formId = '"& siparisVarmi("formId") &"'"
+                            set satinalmaListesi = baglanti.execute(SQL)
+                         end if
+                         
+                         if parcalar("birim_pb") = "EUR" then
+                            SQL = "update satinalma_listesi set toplameur = toplameur + '"& toplamEUR &"' where formId = '"& siparisVarmi("formId") &"'"
+                            set satinalmaListesi = baglanti.execute(SQL)
+                         end if
+                     end if 
+                 next
+                'else
+
+
+            'end if
+    end if
 
         elseif trn(request("islem2"))="sil" then
+
+            firma_kodu = Request.Cookies("kullanici")("firma_kodu")
+            firma_id = Request.Cookies("kullanici")("firma_id")
+            ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
+            ekleyen_ip = Request.ServerVariables("Remote_Addr")
             kayitId = trn(request("kayit_id"))
             cop = "true"
 
             SQL = "update servis_bakim_kayitlari set Cop = '"& cop &"' where id = '"& kayitId &"'"
             set servissil = baglanti.execute(SQL)
+    
+            SQL = "select * from servis_bakim_kayitlari where id = '"& kayitId &"' and Cop = 'true'"
+            set silinenKayit = baglanti.execute(SQL)
+            for x = 0 to ubound(split(silinenKayit("ParcaId"), ","))
+                parcaid = split(silinenKayit("ParcaId"), ",")(x)
+                adet = split(silinenKayit("Adet"), ",")(x)
+                
+                SQL = "update parca_listesi set miktar = miktar + '"& adet &"' where id = '"& parcaid &"'"
+                set stokArttir = baglanti.execute(SQL)
+            next
+                
 
         elseif trn(request("islem2"))="duzenle" then
 
@@ -2342,12 +2499,11 @@ works properly when clicked or hovered */
             firmavergino = trn(request("firmavergino"))
             listeyeekle = trn(request("listeyeekle"))
             gorevli = trn(request("gorevli"))
-            parcaId = trn(request("parcaId"))
-            adet = trn(request("adet"))
-            if parcaId = "" then
-               adet = ""
-            end if
+
             musteri_id = trn(request("musteri_id"))
+            if musteri_id = "null" then
+                musteri_id = 0
+            end if
 
             firmamakinebilgi = trn(request("firmamakinebilgi"))
             firmaariza = trn(request("firmaariza"))
@@ -2359,88 +2515,292 @@ works properly when clicked or hovered */
             firmanot = trn(request("firmanot"))
             kayitId = trn(request("kayitId"))
 
+            parcaId = trn(request("parcaId"))
+            adet = trn(request("adet"))
+
+            sayi = trn(request("sayi"))
+            delparcaid = trn(request("delparcaid"))
+            deladet = trn(request("deladet"))
+            index = trn(request("index"))
+            index2 = trn(request("index2"))
+
+            sonradaneklenenparca = trn(request("sonradaneklenenparca"))
+            sonradaneklenenadet = trn(request("sonradaneklenenadet"))
+            sonradaneklenensayi = trn(request("sonradaneklenensayi"))
+
+            'if delparcaid = "" then
+            '    if NOT IsNull(sonradaneklenenparca) then
+            '        parcaId = "," & sonradaneklenenparca
+            '        adet = "," & sonradaneklenenadet
+            '    end if
+            'end if
+            
             SQL = "update servis_bakim_kayitlari set FirmaId = '"& musteri_id &"', FirmaUnvani = '"& firmaunvani &"', Yetkili = '"& firmayetkili &"', Adress = '"& firmaadress &"', Email = '"& firmaeposta &"', Telefon = '"& firmatelefon &"', VergiDairesi = '"& firmavergidairesi &"', VergiNo = '"& firmavergino &"', Gorevliler = '"& gorevli &"', ParcaId = '"& parcaId &"', Adet = '"& adet &"', MakinaBilgileri = '"& firmamakinebilgi &"', BildirilenAriza = '"& firmaariza &"', BaslangicTarihi = CONVERT(date, '"& baslangic_tarihi &"', 103), BitisTarihi = CONVERT(date, '"& bitis_tarihi &"', 103), BaslangicSaati = CONVERT(time, '"& baslangic_saati &"'), BitisSaati = CONVERT(time, '"& bitis_saati &"'), YapilanIslemler = '"& firmayapilanislemler &"', FormNot = '"& firmanot &"' where id = '"& kayitId &"'"
             set formguncelle = baglanti.execute(SQL)
+            
+
+            if index = "ekleme" then
+                if sonradaneklenensayi = "birdenfazla" then
+
+                for y = 0 to ubound(split(sonradaneklenenparca, ","))
+                    bolunmusParcaId = split(sonradaneklenenparca, ",")(y)
+                    bolunmusParcaAdet = split(sonradaneklenenadet, ",")(y)
+
+                    SQL = "select * from parca_listesi where id = '"& bolunmusParcaId &"'"
+                    set kontrol = baglanti.execute(SQL)
+
+                    if kontrol("miktar") > 0 then
+                        SQL = "update parca_listesi set miktar = miktar - '"& bolunmusParcaAdet &"' where id = '"& bolunmusParcaId &"'"
+                        set stokGuncelle = baglanti.execute(SQL)   
+                    end if
+                next
+            else
+                    SQL = "select * from parca_listesi where id = '"& sonradaneklenenparca &"'"
+                    set kontrol = baglanti.execute(SQL)
+                    if kontrol("miktar") > 0 then
+                        SQL = "update parca_listesi set miktar = miktar - '"& sonradaneklenenadet &"' where id = '"& sonradaneklenenparca &"'"
+                        set stokGuncelle = baglanti.execute(SQL)
+                    end if
+
+                end if
+            end if
+
+            if index2 = "silme" then
+                if sayi = "birdenfazla" then
+
+                for y = 0 to ubound(split(delparcaid, ","))
+                    bolunmusParcaId1 = split(delparcaid, ",")(y)
+                    bolunmusParcaAdet1 = split(deladet, ",")(y)
+
+                    SQL = "update parca_listesi set miktar = miktar + '"& bolunmusParcaAdet1 &"' where id = '"& bolunmusParcaId1 &"'"
+                    set stokGuncelle = baglanti.execute(SQL)
+                next
+            else
+                    SQL = "update parca_listesi set miktar = miktar + '"& deladet &"' where id = '"& delparcaid &"'"
+                    set stokGuncelle = baglanti.execute(SQL)
+            end if
+            end if
         end if
 
     SQL = "select * from servis_bakim_kayitlari where Durum = 'true' and Cop = 'false'"
     set servisbakim = baglanti.execute(SQL)
 %>
-    <table class="table datatableyap table-bordered" style="width:100%">
-        <thead>
-            <tr>
-                <th style="text-align:center">Id</th>
-                <th>Firma Ünvanı</th>
-                <th>Yetkili</th>
-                <th>Görevliler</th>
-                <th>Adress</th>
-                <th>Email</th>
-                <th>Vergi Dairesi</th>
-                <th>Vergi No</th>
-                <th>Ekleme Tarihi</th>
-                <th>Işlem</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                SQL = "select kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen, servis.* from servis_bakim_kayitlari servis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = servis.EkleyenId where servis.Durum = 'true' and servis.Cop = 'false' order by servis.EklemeTarihi desc"
+
+<table id="tblServisBakim" class="table table-bordered" style="width: 100%">
+    <thead>
+        <tr style="display:none">
+            <th></th>
+            <th>
+                <select class="select2 form-control" id="firma">
+                    <option value="" selected>Tümü</option>
+                </select></th>
+            <th>
+                <select class="select2 form-control" id="yetkili">
+                    <option value="" selected>Tümü</option>
+                </select></th>
+            <th>
+                <select class="select2 form-control" id="gorevli">
+                    <option value="" selected>Tümü</option>
+                </select></th>
+            <th>
+                <select class="select2 form-control" id="adress">
+                    <option value="" selected>Tümü</option>
+                </select></th>
+            <th>
+                <select class="select2 form-control" id="tarih">
+                    <option value="" selected>Tümü</option>
+                </select></th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>Id</th>
+            <th>Firma Ünvanı</th>
+            <th>Yetkili</th>
+            <th>Görevliler</th>
+            <th>Adress</th>
+            <th>Ekleme Tarihi</th>
+            <th>Işlem</th>
+        </tr>
+    </thead>
+    <tbody id="congress">
+        <%
+                SQL = "select kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen, servis.* from servis_bakim_kayitlari servis join ucgem_firma_kullanici_listesi kullanici on kullanici.id = servis.EkleyenId where servis.Durum = 'true' and servis.Cop = 'false' order by servis.id desc"
                 set servisBakim = baglanti.execute(SQL)
 
                 if servisBakim.eof then
-            %>
-                <tr>
-                    <td colspan="10" style="text-align:center">Kayıt Bulunamadı</td>
-                </tr>
-            <%
+        %>
+        <tr>
+            <td colspan="10" style="text-align: center">Kayıt Bulunamadı</td>
+        </tr>
+        <%
                 end if
                 k = 0
                 do while not servisBakim.eof
                     k = k + 1
-            %>
-            <tr>
-                <td style="text-align:center"><%=k %></td>
-                <td><%=servisBakim("FirmaUnvani") %></td>
-                <td><%=servisBakim("Yetkili") %></td>
-                <td> <%
+        %>
+        <tr>
+            <td><%=k %></td>
+            <td><%=servisBakim("FirmaUnvani") %></td>
+            <td><%=servisBakim("Yetkili") %></td>
+            <td><%
                             for x = 0 to ubound(split(servisBakim("Gorevliler"), ","))
                                 user = split(servisBakim("Gorevliler"), ",")(x)
                                 SQL="SELECT * FROM ucgem_firma_kullanici_listesi WHERE id = '"& user &"' " 
                                 set kcek2 = baglanti.execute(SQL)  
-                      %>  <%=kcek2("personel_ad") & " " & kcek2("personel_soyad") %><br /> <%next %>
-                </td>
-                <td><%=servisBakim("Adress") %></td>
-                <td><%=servisBakim("Email") %></td>
-                <td><%=servisBakim("VergiDairesi") %></td>
-                <td><%=servisBakim("VergiNo") %></td>
-                <td><%=servisBakim("EklemeTarihi") %> <!--&nbsp <%=left(servisBakim("EklemeSaati"),5) %>--></td>
-                <td>
-                    <button type="button" class="btn btn-mini btn-primary dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            İşlemler
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item waves-effect waves-light" onclick="rapor_pdf_indir('teknik_servis_formu', '<%=Request.Cookies("kullanici")("kullanici_id") %>', '<%=servisBakim("id") %>');" href="javascript:void(0);">Servis Formu Oluştur</a>
-                            <a class="dropdown-item waves-effect waves-light" onclick="ServisBakimKaydiDuzenle(<%=servisBakim("id") %>);" href="javascript:void(0);">Düzenle</a>
-                            <a class="dropdown-item waves-effect waves-light" onclick="ServisBakimKaydiSil(<%=servisBakim("id") %>);" href="javascript:void(0);">Sil</a>
-                        </div>
-                </td>
-            </tr>
-            <%
+            %>  <%=kcek2("personel_ad") & " " & kcek2("personel_soyad") %><br />
+                <%next %>
+            </td>
+            <td><%=servisBakim("Adress") %></td>
+
+            <td><%=servisBakim("EklemeTarihi") %></td>
+            <td>
+                <button type="button" class="btn btn-mini btn-primary dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    İşlemler
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item waves-effect waves-light" onclick="rapor_pdf_indir('teknik_servis_formu', '<%=Request.Cookies("kullanici")("kullanici_id") %>', '<%=servisBakim("id") %>');" href="javascript:void(0);">Servis Formu Oluştur</a>
+                    <a class="dropdown-item waves-effect waves-light" onclick="ServisBakimKaydiDuzenle(<%=servisBakim("id") %>, <%=servisBakim("FirmaId") %>);" href="javascript:void(0);">Düzenle</a>
+                    <a class="dropdown-item waves-effect waves-light" onclick="ServisBakimKaydiSil(<%=servisBakim("id") %>);" href="javascript:void(0);">Sil</a>
+                </div>
+            </td>
+        </tr>
+        <%
                 servisBakim.movenext
                 loop
-            %>
-        </tbody>
-    </table>
-<%
+        %>
+    </tbody>
+</table>
+<script type="text/javascript">
+    var firma = [];
+    var yetkili = [];
+    var gorevli = [];
+    var adress = [];
+    var tarih = [];
+
+    function unique(list) {
+        var result = [];
+        $.each(list, function (i, e) {
+            if ($.inArray(e, result) == -1) result.push(e);
+        });
+        return result;
+    }
+
+    $("#tblServisBakim tr:gt(0)").each(function () {
+        var this_row = $(this);
+
+        firma.push($.trim(this_row.find('td:eq(1)').html()));
+        yetkili.push($.trim(this_row.find('td:eq(2)').html()));
+        gorevli.push($.trim(this_row.find('td:eq(3)').html()));
+        adress.push($.trim(this_row.find('td:eq(4)').html()));
+        tarih.push($.trim(this_row.find('td:eq(5)').html()));
+    });
+
+    $.each(unique(firma), function (index, value) {
+        if (value !== "") {
+            $("#firma").append("<option> " + value + " </option>");
+        }
+    });
+    $.each(unique(yetkili), function (index, value) {
+        if (value !== "") {
+            $("#yetkili").append("<option> " + value + " </option>");
+        }
+    });
+    $.each(unique(gorevli), function (index, value) {
+        if (value !== "") {
+            $("#gorevli").append("<option> " + value + " </option>");
+        }
+    });
+    $.each(unique(adress), function (index, value) {
+        if (value !== "") {
+            $("#adress").append("<option> " + value + " </option>");
+        }
+    });
+    $.each(unique(tarih), function (index, value) {
+        if (value !== "") {
+            $("#tarih").append("<option> " + value + " </option>");
+        }
+    });
+
+
+
+    $(document).ready(function () {
+        $("#firma").on("change", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tblServisBakim tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#yetkili").on("change", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tblServisBakim tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#gorevli").on("change", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tblServisBakim tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#adress").on("change", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tblServisBakim tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#tarih").on("change", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tblServisBakim tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(document).ready(function () {
+
+        var $table = $('#tblServisBakim');
+        //$table.find('thead tr').filter(':eq(1),:eq(2)').css('visibility', 'visible').each(function () {
+        //    var title = $(this).text();
+        //    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+        //});
+        // Setup - add a text input to each footer cell
+        $('#tblServisBakim thead tr').clone(true).appendTo('#tblServisBakim thead');
+        $('#tblServisBakim thead tr:eq(1) th').each(function (i) {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="' + title + '" />');
+
+            $('input', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+        var table = $('#tblServisBakim').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true
+        });
+    });
+
+</script>
+<%   
     elseif trn(request("islem"))="parcalar_ve_iscilik_getir" then
 
         IsID = trn(request("IsID"))
 
 %>
-<script>
-    $(function (){
+<script type="text/javascript">
+    $(function () {
         parcalar_autocomplete_calistir2('<%=IsID %>');
         is_detay_kullanilan_parca_getir('<%=IsID %>');
+
     });
+
+
+
 </script>
 <div class="row">
     <div class="col-md-12">
@@ -2455,7 +2815,7 @@ works properly when clicked or hovered */
                     <input type="text" name="parcalar" id="parcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control parcalar required" style="width: 90%;" required />
                 </td>
                 <td>
-                    <input id="parca_adeti" type="number" onkeyup="numControl();" class="form-control" style="width: 50px; text-align: center;" value="1" min="1"/>
+                    <input id="parca_adeti" type="number" onkeyup="numControl();" class="form-control" style="width: 50px; text-align: center;" value="1" min="1" />
                 </td>
                 <td style="padding-left: 10px;">
                     <input type="text" name="aparcalar" id="aparcalar1" isid="<%=IsID %>" i="1" data="0" class="form-control aparcalar required" style="width: 90%;" required />
@@ -2477,7 +2837,7 @@ works properly when clicked or hovered */
 <div class="row">
     <div class="col-md-12">
         <h5 style="font-size: 14px; margin-bottom: 10px; font-weight: bold;">KULLANILAN PARÇALAR</h5>
-        <div id="kullanilan_parcalar<%=IsID %>">
+        <div id="kullanilan_parcalar<%=IsID %>" style="width:99% !important">
         </div>
     </div>
 </div>
@@ -3192,9 +3552,36 @@ works properly when clicked or hovered */
         elseif trn(request("islem2"))="sil" then
 
             KayitID = trn(request("KayitID"))
+            IsId = trn(request("IsID"))
+            SQL = "select * from is_parca_listesi where id = '"& KayitID &"' and IsID = '"& IsId &"'"
+            set silinecekKayit = baglanti.execute(SQL)
 
-            SQL="delete from is_parca_listesi where id = '"& KayitID &"'"
+            if not silinecekKayit.eof then
+                SQL = "update parca_listesi set miktar = miktar + '"& silinecekKayit("Adet") &"' where id = '"& silinecekKayit("ParcaId") &"'"
+                set stokGuncelle = baglanti.execute(SQL)
+            end if 
+
+            SQL="delete from is_parca_listesi where id = '"& KayitID &"' and IsID = '"& IsId &"'"
             set sil = baglanti.execute(SQL)
+        
+        elseif trn(request("islem2"))="listetemizle" then
+
+            'KayitID = trn(request("KayitID"))
+            IsId = trn(request("IsID"))
+
+            SQL = "select * from is_parca_listesi where IsID = '"& IsId &"'"
+            set parcakontrol = baglanti.execute(SQL)
+
+            if not parcakontrol.eof then
+                do while not parcakontrol.eof
+                    SQL = "update parca_listesi set miktar = miktar + '"& parcakontrol("Adet") &"' where id = '"& parcakontrol("ParcaId") &"'"
+                    set guncellenenStok = baglanti.execute(SQL)
+
+                    SQL = "delete from is_parca_listesi where IsID = '"& IsId &"'"
+                    set silinenParcalar = baglanti.execute(SQL)
+                parcakontrol.movenext
+                loop
+            end if
 
         end if
 
@@ -3206,11 +3593,13 @@ works properly when clicked or hovered */
     <br />
     <center>Kullanılan Parça Kaydı Bulunamadı</center>
     <br />
+    
 </div>
 <%
             else
 
 %>
+<button type="button" class="btn btn-danger btn-mini" onclick="IsParcaListesiListeTemizle('<%=IsID %>');" style="float:right; margin-bottom:5px">Listeyi Temizle</button>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -3652,13 +4041,13 @@ works properly when clicked or hovered */
 
             if cdate(personel_yillik_izin_hakedis)>cdate(baslangic_tarihi) then
                 Response.Clear()
-    %>
-    <script>
+%>
+<script>
                 $(function (){
                     mesaj_ver("İzin Talepleri", "İzin Hakediş Tarihiniz :  <%=cdate(personel_yillik_izin_hakedis) %> Bu tarihten öncesine izin talebinde bulunamazsınız.", "danger");
                 });
-    </script>
-    <%
+</script>
+<%
                 Response.End
             end if
 
@@ -3666,27 +4055,27 @@ works properly when clicked or hovered */
             set cek = baglanti.execute(SQL)
             if not cek.eof then
                 Response.Clear()
-    %>
-    <script>
+%>
+<script>
                 $(function (){
                     mesaj_ver("İzin Talepleri", "Seçtiğiniz Tarihler İzin Kullanımına uygun değildir.", "danger");
                 });
-    </script>
-    <%
+</script>
+<%
                 Response.End
             end if
 
             if cdbl(personel_yillik_izin)>0 then
                 if cdbl(personel_yillik_izin)/2 < (cdate(bitis_tarihi)-cdate(baslangic_tarihi)) then
                 Response.Clear()
-    %>
-    <script>
+%>
+<script>
                     $(function (){
                         mesaj_ver("İzin Talepleri", "Bir Defada İzninizin Yalnızca Yarısını Kullanabilirsiniz. İzin Taleplerinizi 1 Nisan öncesi <%=cint(cdbl(personel_yillik_izin)/2) %> gün 1 Nisan sonrası <%=cint(cdbl(personel_yillik_izin)/2) %> gün şeklinde gönderiniz.", "danger");
                     });
-    </script>
-    
-    <%
+</script>
+
+<%
                 Response.End
                 end if
             end if
