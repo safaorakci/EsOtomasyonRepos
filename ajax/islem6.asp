@@ -3574,9 +3574,18 @@
                     <%else%>
                     <td><%=satinalma("proje")%></td>
                     <%end if %>
-                    <td><%=formatnumber(satinalma("toplamtl"),2) %> TL - 
-                        <%=formatnumber(satinalma("toplamusd"),2) %> USD - 
-                        <%=formatnumber(satinalma("toplameur"),2) %> EUR</td>
+                    <td>
+                        <% if not formatnumber(satinalma("toplamtl"),2) = "00" then %>
+                            <%=formatnumber(satinalma("toplamtl"),2) %> TL
+                        <% end if  %>
+                        <% if not formatnumber(satinalma("toplamusd"),2) = "00" then %>
+                        -
+                            <%=formatnumber(satinalma("toplamusd"),2) %> USD
+                        <% end if  %>
+                        <% if not formatnumber(satinalma("toplameur"),2) = "00" then %>
+                            -
+                            <%=formatnumber(satinalma("toplameur"),2) %> EUR
+                        <% end if  %></td>
                     <td><%=satinalma("ekleyen") %><br />
                         <%=cdate(satinalma("ekleme_tarihi")) %></td>
                     <% if trim(satinalma("durum"))="Siparis Edildi" then %>
@@ -3600,7 +3609,8 @@
                     <td class="dropdown" style="width: 10px;">
                         <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
                         <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
-                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('satinalma_formu', '<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="fa fa-download"></i>İndir</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('satinalma_formu', '<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="fa fa-download"></i>S.Alma Form İndir</a>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_indir('teklif_formu', '<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="fa fa-download"></i>Teklif Form İndir</a>
                             <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_yazdir('satinalma_formu','<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="fa fa-print"></i>Yazdır</a>
                             <a class="dropdown-item" href="javascript:void(0);" onclick="rapor_pdf_gonder('satinalma_formu','<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="fa fa-send"></i>Gönder</a>
                             <a class="dropdown-item" href="javascript:void(0);" onclick="satinalma_kayitduzenle('<%=satinalma("id") %>', '<%=satinalma("IsId") %>');"><i class="icofont icofont-edit"></i>Düzenle</a>

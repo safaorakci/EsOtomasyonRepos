@@ -6220,10 +6220,13 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
 
         data += "&personel_id=" + personel_id;
         data += "&izin_id=" + izin_id;
-
-
     }
     else if (deger == "satinalma_formu") {
+
+        data += "&satinalma_id=" + personel_id;
+
+    }
+    else if (deger == "teklif_formu") {
 
         data += "&satinalma_id=" + personel_id;
 
