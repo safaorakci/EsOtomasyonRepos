@@ -72,6 +72,7 @@
                     $("#islerTableRespon").appendTo("mob", "true");
                     $("#xs-visible").show();
                     $(".isCalismaList").css("margin-top", "0px");
+                    $("#yeniservisformu").css("margin-top", "10px");
                 }
             });
         </script>
@@ -499,11 +500,18 @@
 
     </div>
 
-
     <div class="row">
-        <label class="col-sm-12 col-form-label">Barcode :</label>
-        <div class="col-sm-12">
+        <label class="col-sm-12 col-md-6 col-form-label">Barcode :</label>
+        <label class="col-sm-12 col-md-6 col-form-label">Birim :</label>
+        <div class="col-sm-12 col-md-6">
             <input type="text" id="barcode" class="form-control" />
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <select class="form-control" id="birim" style="padding:6px; height:35px">
+                <option value="KİLOGRAM">KİLOGRAM</option>
+                <option value="METRE">METRE</option>
+                <option value="ADET">ADET</option>
+            </select>
         </div>
     </div>
     <div class="modal-footer">
@@ -608,9 +616,17 @@
 
 
     <div class="row">
-        <label class="col-sm-12 col-form-label">Barcode :</label>
-        <div class="col-sm-12">
+        <label class="col-sm-12 col-md-6 col-form-label">Barcode :</label>
+        <label class="col-sm-12 col-md-6 col-form-label">Birim :</label>
+        <div class="col-sm-12 col-md-6">
             <input type="text" id="barcode" value="<%=parca("barcode") %>" class="form-control" />
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <select class="form-control" id="birim" style="padding:6px; height:35px">
+                <option <%if trim(parca("birim")) = "KİLOGRAM" then %> selected="selected" <%end if %> value="KİLOGRAM">KİLOGRAM</option>
+                <option <%if trim(parca("birim")) = "METRE" then %> selected="selected" <%end if %> value="METRE">METRE</option>
+                <option <%if trim(parca("birim")) = "ADET" then %> selected="selected" <%end if %> value="ADET">ADET</option>
+            </select>
         </div>
     </div>
     <div class="modal-footer">
@@ -1832,7 +1848,7 @@ works properly when clicked or hovered */
             <h5>Planlanan Servis/Bakım Listesi</h5>
             <hr />
             <div>
-                <table id="tblServisBakim" class="table table-bordered table-sprited" style="width: 100%">
+                <table id="tblServisBakim" class="table table-bordered table-sprited text-nowrap" style="width: 100%">
                     <thead>
                         <tr style="display: none">
                             <th></th>
@@ -2857,7 +2873,7 @@ works properly when clicked or hovered */
     set servisbakim = baglanti.execute(SQL)
 %>
 
-<table id="tblServisBakim" class="table table-bordered" style="width: 100%">
+<table id="tblServisBakim" class="table table-bordered text-nowrap" style="width: 100%">
     <thead>
         <tr style="display: none">
             <th></th>
@@ -4167,8 +4183,8 @@ works properly when clicked or hovered */
 
 
     <div class="row">
-        <label class="col-sm-12 col-form-label">Barcode :</label>
-        <div class="col-sm-12">
+        <label class="col-sm-12 col-md-12 col-form-label">Barcode :</label>
+        <div class="col-sm-12 col-md-12">
             <input type="text" id="barcode" class="form-control" />
         </div>
     </div>

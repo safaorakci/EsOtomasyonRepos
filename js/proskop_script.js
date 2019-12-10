@@ -4405,6 +4405,7 @@ function parca_guncelle(kayit_id) {
     var aciklama = $("#aciklama").val();
     var birim_maliyet = $("#birim_maliyet").val();
     var birim_pb = $("#birim_pb").val();
+    var birim = $("#birim").val();
     var miktar = $("#miktar").val();
     var minumum_miktar = $("#minumum_miktar").val();
     var barcode = $("#barcode").val();
@@ -4419,6 +4420,7 @@ function parca_guncelle(kayit_id) {
     data += "&aciklama=" + aciklama;
     data += "&birim_maliyet=" + birim_maliyet;
     data += "&birim_pb=" + birim_pb;
+    data += "&birim=" + birim;
     data += "&miktar=" + miktar;
     data += "&minumum_miktar=" + minumum_miktar;
     data += "&barcode=" + barcode;
@@ -4440,6 +4442,7 @@ function yeni_parca_ekle() {
     var aciklama = $("#aciklama").val();
     var birim_maliyet = $("#birim_maliyet").val();
     var birim_pb = $("#birim_pb").val();
+    var birim = $("#birim").val();
     var miktar = $("#miktar").val();
     var minumum_miktar = $("#minumum_miktar").val();
     var barcode = $("#barcode").val();
@@ -4453,6 +4456,7 @@ function yeni_parca_ekle() {
     data += "&aciklama=" + aciklama;
     data += "&birim_maliyet=" + birim_maliyet;
     data += "&birim_pb=" + birim_pb;
+    data += "&birim=" + birim;
     data += "&miktar=" + miktar;
     data += "&minumum_miktar=" + minumum_miktar;
     data += "&barcode=" + barcode;
@@ -6677,7 +6681,7 @@ function is_yuku_gosterim_proje_sectim(baslangic, bitis) {
     data += "&gosterim_tipi=" + gosterim_tipi;
     data = encodeURI(data);
     $("#is_yuku_donus2").loadHTML({ url: "/ajax_request2/", data: data }, function () {
-
+        //sayfa_yuklenince();
     });
 }
 

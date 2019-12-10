@@ -2482,6 +2482,7 @@
             aciklama = trn(request("aciklama"))
             birim_maliyet = trn(request("birim_maliyet"))
             birim_pb = trn(request("birim_pb"))
+            birim = trn(request("birim"))
             miktar = trn(request("miktar"))
             minumum_miktar = trn(request("minumum_miktar"))
             barcode = trn(request("barcode"))
@@ -2502,7 +2503,7 @@
             minumum_miktar = NoktalamaDegis(minumum_miktar)
 
 
-            SQL="insert into parca_listesi(parca_kodu, parca_resmi, marka, parca_adi, kategori, aciklama, birim_maliyet, birim_pb, miktar, minumum_miktar, barcode, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& kodu &"', '"& parca_resmi &"', '"& marka &"', '"& parca_adi &"', '"& kategori &"', '"& aciklama &"', '"& birim_maliyet &"', '"& birim_pb &"', '"& miktar &"', '"& minumum_miktar &"', '"& barcode &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
+            SQL="insert into parca_listesi(parca_kodu, parca_resmi, marka, parca_adi, kategori, aciklama, birim_maliyet, birim_pb, birim, miktar, minumum_miktar, barcode, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& kodu &"', '"& parca_resmi &"', '"& marka &"', '"& parca_adi &"', '"& kategori &"', '"& aciklama &"', '"& birim_maliyet &"', '"& birim_pb &"', '"& birim &"', '"& miktar &"', '"& minumum_miktar &"', '"& barcode &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set ekle = baglanti.execute(SQL)
 
         
@@ -2519,13 +2520,18 @@
             aciklama = trn(request("aciklama"))
             birim_maliyet = trn(request("birim_maliyet"))
             birim_pb = trn(request("birim_pb"))
+            birim = trn(request("birim"))
             miktar = trn(request("miktar"))
             minumum_miktar = trn(request("minumum_miktar"))
             barcode = trn(request("barcode"))
             kodu = trn(request("kodu"))
 
-            SQL="update parca_listesi set parca_kodu = '"& kodu &"', parca_resmi = '"& parca_resmi &"', marka = '"& marka &"', parca_adi = '"& parca_adi &"', kategori = '"& kategori &"', aciklama = '"& aciklama &"', birim_maliyet = '"& birim_maliyet &"', birim_pb = '"& birim_pb &"', miktar = '"& miktar &"', minumum_miktar = '"& minumum_miktar &"', barcode = '"& barcode &"' where id = '"& kayit_id &"'"
+            birim_maliyet = Replace(birim_maliyet,",",".")
+
+            SQL="update parca_listesi set parca_kodu = '"& kodu &"', parca_resmi = '"& parca_resmi &"', marka = '"& marka &"', parca_adi = '"& parca_adi &"', kategori = '"& kategori &"', aciklama = '"& aciklama &"', birim_maliyet = '"& birim_maliyet &"', birim_pb = '"& birim_pb &"', birim = '"& birim &"', miktar = '"& miktar &"', minumum_miktar = '"& minumum_miktar &"', barcode = '"& barcode &"' where id = '"& kayit_id &"'"
+        'response.Write(SQL)
             set guncelle = baglanti.execute(SQL)
+        
 
 
         elseif trn(request("islem2"))="sil" then
@@ -3731,7 +3737,7 @@
                         </thead>
                         <tbody id="satinalma_parcalistesi">
                             <%
-                            SQL="SELECT parca.parca_adi + ' - ' + parca.marka AS parcaadi, * FROM satinalma_siparis_listesi siparis JOIN parca_listesi parca ON parca.id = siparis.parcaId where SatinalmaId = '"& kayit("id") &"' and siparis.cop = 'false'" 
+                            SQL="SELECT parca.parca_kodu + ' - ' + parca.marka + ' - ' + parca.aciklama AS parcaadi, * FROM satinalma_siparis_listesi siparis JOIN parca_listesi parca ON parca.id = siparis.parcaId where SatinalmaId = '"& kayit("id") &"' and siparis.cop = 'false'" 
                             set siparis = baglanti.execute(SQL)
                                 'response.Write(SQL)
                             do while not siparis.eof
@@ -3800,7 +3806,7 @@
             <div class="col-sm-12">
                 <select name="satinalma_durum" id="satinalma_durum" class="select2">
                     <option <% if trim(kayit("durum"))="Sipariş Edildi" then %> selected="selected" <% end if %> value="Sipariş Edildi">Sipariş Edildi</option>
-                    <option <% if trim(kayit("durum"))="İptal Edildi" then %> selected="selected" <% end if %> value="İptal Edildi">İptal Edildi</option>
+                    <option <% if trim(kayit("durum"))="Iptal Edildi" then %> selected="selected" <% end if %> value="İptal Edildi">İptal Edildi</option>
                     <option <% if trim(kayit("durum"))="Tamamlandı" then %> selected="selected" <% end if %> value="Tamamlandı">Tamamlandı</option>
                     <option <% if trim(kayit("durum"))="Onay Bekliyor" then %> selected="selected" <% end if %> value="Onay Bekliyor">Onay Bekliyor</option>
                 </select>
@@ -4623,6 +4629,11 @@ elseif trn(request("islem"))="uretim_sablonlari" then
             $(function () {
                 parcalar_autocomplete_calistir3();
             });
+
+            if ($(window).width() < 500) {
+                $("#baslangicDiv").removeAttr("style");
+                $("#bitisDiv").removeAttr("style");
+            }
         </script>
         <div class="row">
             <label class="col-sm-11  col-lg-11 col-form-label"><%=LNG("Müşteri")%></label>
@@ -4731,13 +4742,13 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2 col-sm-6 col-xs-12" style="max-width: 12.5% !important; padding-right: 5px">
+                    <div class="col-md-2 col-sm-6 col-xs-6" id="baslangicDiv" style="max-width: 12.5% !important; padding-right: 5px">
                         <label>Başlangıç Saati</label>
                         <div class="form-group">
                             <input type="text" id="baslangic_saati" required class="timepicker form-control" style="padding-left: 10px" value="" />
                         </div>
                     </div>
-                    <div class="col-md-2 col-sm-6 col-xs-6" style="max-width: 12.5% !important; padding-left: 5px">
+                    <div class="col-md-2 col-sm-6 col-xs-6" id="bitisDiv" style="max-width: 12.5% !important; padding-left: 5px">
                         <label>Bitiş Saati</label>
                         <div class="form-group">
                             <input type="text" id="bitis_saati" required class="timepicker form-control" style="padding-left: 10px" value="" />

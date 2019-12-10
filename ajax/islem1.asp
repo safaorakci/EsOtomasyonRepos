@@ -3494,7 +3494,7 @@
                             </div>
                             <div class="col-md-3">
                                 <%=LNG("Proje")%><br />
-                                <select name="yeni_is_yuku_proje_id" class="select2" id="yeni_is_yuku_proje_id" class="select2" onchange="firma_rapor_is_yuku_gosterim_proje_sectim('<%=firma_id %>','<%=cdate(dongu_baslangic) %>', '<%=cdate(dongu_bitis) %>');">
+                                <select name="yeni_is_yuku_proje_id" class="select2" id="yeni_is_yuku_proje_id" onchange="firma_rapor_is_yuku_gosterim_proje_sectim('<%=firma_id %>','<%=cdate(dongu_baslangic) %>', '<%=cdate(dongu_bitis) %>');">
                                     <option value="0"><%=LNG("Tüm Projeler")%></option>
                                     <%
                         SQL="select id, proje_adi from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' order by proje_adi asc"
@@ -5898,7 +5898,7 @@
     
     proje_id = trn(request("proje_id"))
 
-    SQL="select id, proje_adi, santiye_durum_id from ucgem_proje_listesi where id = '"& proje_id &"'"
+    SQL="select id, proje_adi, santiye_durum_id from ucgem_proje_listesi where id = '"& proje_id &"' and cop = 'false'"
     set proje_cek = baglanti.execute(SQL)
 
      SQL="select * from ahtapot_proje_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false'"

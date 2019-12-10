@@ -80,7 +80,7 @@
                 </div>
                 <div class="card-block">
                     <div class="row">
-                        <div id="servis_kayit_donus" class="col-md-12">
+                        <div id="servis_kayit_donus" class="table-responsive col-md-12">
                             <script>
                                 $(function (){
                                     proje_bakim_kayitlarini_getir('0', 'true');
@@ -96,11 +96,11 @@
             <div class="card">
                 <div class="card-header">
                     <h5>Planlanan Servis/Bakım Listesi</h5>
-                    <input type="button" style="float: right" class="btn btn-primary" onclick="YeniServisBakimKaydiEkle();" value="Teknik Servis Ekle" />
+                    <input type="button" style="float: right" id="yeniservisformu" class="btn btn-primary" onclick="YeniServisBakimKaydiEkle();" value="Teknik Servis Ekle" />
                 </div>
                 <div class="card-block">
                     <div class="row">
-                        <div id="servis_kayit" class="col-md-12">
+                        <div id="servis_kayit" class="table-responsive col-md-12">
                             <script>
                                 $(function (){
                                     servis_bakim_kayitlarini_getir();
