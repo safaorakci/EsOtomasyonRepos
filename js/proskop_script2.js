@@ -880,16 +880,18 @@ function satinalmayenisatirsil(i) {
     $("#satinalmasatir" + i).remove();
 }
 
+var j = 0;
 function satinalmayenisatirekle(i) {
 
     i++;
-    $("#parcasayisi").val(i);
+    j += i;
 
-    var str = '<tr id="satinalmasatir' + i + '"><td><input type="text" name="parcalar" id="parcalar' + i + '" i="' + i + '" data="0" class="form-control parcalar required" required /> </td> <td> <div class="row"> <div class="col-sm-6" style="text-align: right; padding-right: 0;"> <input type="text" class="form-control maliyetler required" required name="maliyet" id="maliyet' + i + '" onkeyup="satinalmasiparishesapkitap();" style="height: 38px;" /> </div> <div class="col-sm-6" style="padding-left: 15px; text-align: left;"> <select onchange="satinalmasiparishesapkitap();" class="form-control yapilan paralar" name="paralar" id="paralar' + i + '"> <option value="TL">TL</option> <option value="USD">USD</option> <option value="EUR">EUR</option> </select> </div> </div> </td> <td style="padding-left: 15px;"> <input type="text" class="form-control adetler required" required onkeyup="satinalmasiparishesapkitap();" name="adet" id="adet' + i + '" style="height: 38px;" /></td> <th style="width: 25px; padding-left: 10px;"><a href="javascript:void(0);" onclick="satinalmayenisatirsil(' + i + ');"> <img src="/img/abort.png" /></a></th> </tr>';
+    $("#parcasayisi").val(j);
+
+    var str = '<tr id="satinalmasatir' + j + '"><td><input type="text" name="parcalar" id="parcalar' + j + '" i="' + j + '" data="0" class="form-control parcalar required" required /> </td> <td> <div class="row"> <div class="col-sm-6" style="text-align: right; padding-right: 0;"> <input type="text" class="form-control maliyetler required" required name="maliyet" id="maliyet' + j + '" onkeyup="satinalmasiparishesapkitap();" style="height: 38px;" /> </div> <div class="col-sm-6" style="padding-left: 15px; text-align: left;"> <select onchange="satinalmasiparishesapkitap();" class="form-control yapilan paralar" name="paralar" id="paralar' + j + '"> <option value="TL">TL</option> <option value="USD">USD</option> <option value="EUR">EUR</option> </select> </div> </div> </td> <td style="padding-left: 15px;"> <input type="text" class="form-control adetler required" required onkeyup="satinalmasiparishesapkitap();" name="adet" id="adet' + j + '" style="height: 38px;" /></td> <th style="width: 25px; padding-left: 10px;"><a href="javascript:void(0);" onclick="satinalmayenisatirsil(' + j + ');"> <img src="/img/abort.png" /></a></th> </tr>';
 
     $("#satinalma_parcalistesi").append(str);
     parcalar_autocomplete_calistir();
-
 }
 
 function parcalar_autocomplete_calistir() {
@@ -937,7 +939,7 @@ function parcalar_autocomplete_calistir() {
                 return $("<p style='Display:none'>").append("<a>" + bildirim + "</a>").appendTo(ul);
             }
             else {
-                return $("<li>").append("<a>" + kodu + " " + marka + " " + aciklama + "</a>").appendTo(ul);
+                return $("<li>").append("<a>" + kodu + " - " + marka + " - " + aciklama + "</a>").appendTo(ul);
             }
         };
     });
@@ -1067,8 +1069,8 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
                 setTimeout(function () {
                     SPparcaListesi.push(ui.item.id);
                     SPadet.push($("#musteriparcaadeti").val());
-                    STparcaListesi.push(ui.item.id);
-                    STadet.push($("#musteriparcaadeti").val());
+                    //STparcaListesi.push(ui.item.id);
+                    //STadet.push($("#musteriparcaadeti").val());
                     $(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", SPparcaListesi).attr("adet", SPadet);
 
                     $(inpuu).val("");
@@ -1191,8 +1193,8 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
     SPparcaListesi = [];
     SPadet = [];
 
-    STparcaListesi = [];
-    STadet = [];
+    //STparcaListesi = [];
+    //STadet = [];
 }
 
 function ParcaSil(id, durum) {
@@ -1207,6 +1209,8 @@ function ParcaSil(id, durum) {
 
             servisparca.splice(index1, 1);
             servisadet.splice(index1, 1);
+            SPparcaListesi.splice(index, 1);
+            SPadet.splice(index, 1);
             $("#servisparca").attr("parcaid", servisparca).attr("adet", servisadet);
 
             if ($("#servisparca").attr("parcaid").indexOf(",") === -1) {

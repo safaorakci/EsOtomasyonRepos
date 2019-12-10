@@ -825,7 +825,7 @@ div.DTTT_collection a.DTTT_button, div.DTTT_collection button.DTTT_button, div.D
     }
 
 table.has-columns-hidden > tbody > tr > td > span.responsiveExpander {
-    background: url(/img/plus.png) no-repeat 5px center;
+    /*background: url(/img/plus.png) no-repeat 5px center;*/
     padding-right: 10px;
     cursor: pointer;
 }

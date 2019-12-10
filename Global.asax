@@ -66,12 +66,10 @@
         routes.Add("santiye_durumRoote", new Route("santiye_durum", new SimpleRouteHandler("~/System_Root/tanimlamalar/santiye_durum/santiye_durum.aspx")));
         routes.Add("yonetim_firma_listesi", new Route("yonetim_firma_listesi", new SimpleRouteHandler("~/System_Root/yonetim/firma_yonetimi.aspx")));
         
-
         for (int i = 0; i < SiteSettings.SupportedLanguages.Length; i++)
         {
             routes.Add("languageRoute" + i, new Route("" + SiteSettings.SupportedLanguages[i], new SimpleRouteHandler("~/Default.aspx")));
         }
-
     }
 
 </script>

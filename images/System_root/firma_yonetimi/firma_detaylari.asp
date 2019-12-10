@@ -40,7 +40,11 @@
                             <div class="card-block user-info" style="bottom: -30px;">
                                 <div class="media-left">
                                     <a href="#" class="profile-image">
-                                        <img class="user-img img-radius" src="<%=firma("firma_logo") %>" style="width: 140px;" alt="user-img">
+                                           <% if firma("firma_logo") = "undefined" or (firma("firma_logo")) = null then %>
+                                                <img class="user-img img-radius" src="/img/taseron_logo.jpg" style="width: 140px!important; height:149px!important;">
+                                           <%else %>
+                                                <img class="user-img img-radius" src="<%=firma("firma_logo") %>" style="width: 140px!important; height:149px!important;">
+                                           <%end if %>
                                     </a>
                                 </div>
                             </div>

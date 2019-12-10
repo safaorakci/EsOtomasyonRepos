@@ -4,7 +4,7 @@
 <html lang="tr">
 <head>
     <%--bismillahirrahmanirrahim--%>
-    <title><% Response.Write(LNG("ESFLW | Süreç Yönetimi")); %></title>
+    <title><% Response.Write(LNG("Proskop | Süreç Yönetimi")); %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="cache-control" content="max-age=0" />
@@ -38,6 +38,7 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="/js/NumberFormat154.js"></script>
     <link href="css/font-awesome-animation.min.css" rel="stylesheet" />
+
 </head>
 <body>
     <div class="theme-loader">
@@ -68,7 +69,7 @@
                             </div>
                         </div>
                         <a href="/default.aspx">
-                            <img class="img-fluid" style="max-height: 50px;" src="/images/proyeni_logo.png" />
+                            <img class="img-fluid" style="max-height: 50px;" src="/images/ahtapot_buyuk2.png" />
                         </a>
                         <a class="mobile-options">
                             <i class="ti-more"></i>
@@ -254,7 +255,7 @@
                 </div>
             </div>
             Sistemden Çıkmak İstediğinize Emin misiniz
-            <div class="pcoded-main-container" id="firstDiv" style="margin-top: 42px !important">
+            <div class="container-fuild" id="firstDiv" style="margin-top:42px; min-height: calc(100vh - 56px);">
                 <div class="pcoded-wrapper">
                     <nav class="pcoded-navbar">
                         <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
@@ -452,7 +453,7 @@
                                         <% } %>
                                         <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",87,") > 0)
                                             {%>
-                                        <li class=" ">
+                                        <li style="display:none" class=" ">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/departman_adam_saat_raporu/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext"><% Response.Write(LNG("Departman Adam-Saat Raporu")); %></span>
@@ -753,6 +754,13 @@
             sayfagetir('/anasayfa/', 'jsid=4559');
             // sayfagetir('/santiye_detay/','jsid=4559&id=16&departman_id=6');
         });
+    </script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                if ($(window).width() < 500) {
+                    $("#mobile-collapse").trigger("click");
+                }
+            });
     </script>
 
     <button id="modal_butonum" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow"></button>

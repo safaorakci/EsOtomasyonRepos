@@ -4444,6 +4444,18 @@ a[data-toggle="lightbox"] .img-fluid {
         max-width: 100%;
     }
 
+    #userPhoto {
+        height: 250px !important;
+    }
+
+    #isDetayButon {
+        display:none;
+    }
+
+    #isDetayDiv {
+        display:block !important;
+    }
+
     .col-md-auto {
         -webkit-box-flex: 0;
         -ms-flex: 0 0 auto;
@@ -23840,8 +23852,21 @@ span.value {
         margin-top: 56px !important;
     }
 
+    .online {
+        min-width: 40px !important;
+    }
+
+    #basicUsage {
+        font-size: 25px !important;
+        width: 105px !important;
+    }
+
+    .startButton{
+        
+    }
+
     .card-title {
-        font-size: 18px;
+        font-size: 11px;
         font-weight: 600;
         margin-bottom: 5px;
     }

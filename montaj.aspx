@@ -67,13 +67,6 @@
                                     <div class="auth-box">
                                         <div class="row" id="login1">
                                             <div class="col-md-6 col-xl-3 user">
-                                                <div class="card bg-c-blue order-card user">
-                                                    <img class="userImg" src="/files/assets/images/SalihŞahin.jpg" height="200" />
-                                                    <p class="m-b-0 ">Salih Şahin</p>
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6 col-xl-3 user">
                                                 <div class="card bg-c-green order-card user">
                                                     <img class="userImg" src="/files/assets/images/OsmanMamedov.jpg" height="200" />
                                                     <p class="m-b-0">Osman Mamedov</p>

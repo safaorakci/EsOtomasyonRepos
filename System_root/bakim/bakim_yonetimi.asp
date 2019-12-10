@@ -96,7 +96,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5>Planlanan Servis/Bakım Listesi</h5>
-                    <input type="button" style="float: right" class="btn btn-primary" onclick="YeniServisBakimKaydiEkle();" value="Servis Bakım Ekleme" />
+                    <input type="button" style="float: right" class="btn btn-primary" onclick="YeniServisBakimKaydiEkle();" value="Teknik Servis Ekle" />
                 </div>
                 <div class="card-block">
                     <div class="row">

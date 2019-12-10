@@ -353,12 +353,7 @@ function is_listesi_timeline_calistir2(baslangic_tarihi, bitis_tarihi) {
     vis_items = new vis.DataSet();
     $(function () {
 
-
         var className = ['primarykutu', 'inversekutu', 'dangerkutu', 'infokutu', 'warningkutu', 'successkutu'];
-
-
-
-
 
 
         var order = 0;
@@ -1004,13 +999,22 @@ function is_tablo_islemler(durum) {
         if (eldeki_sayi < 200) {
             eldeki_sayi = 200;
         }
-        $(".tablo_is_adi").css("width", eldeki_sayi);
+        if ($("body").width() < 500) {
+            $(".tablo_is_adi").css("width", "150px");
+        } else {
+            $(".tablo_is_adi").css("width", eldeki_sayi);
+        }
     }
     else {
 
-        if ($("body").width() < 500) { }
+        if ($(window).width() <= 500) {
+            //console.log("if'e girdi");
+            $(".tablo_is_adi").css("width", "150px");
+            //console.log("div genişliği : " + $(".tablo_is_adi").width());
+        }
         else {
-            console.log($("#tablo_customize").val());
+            //console.log("else girdi");
+            //console.log($("#tablo_customize").val());
             var eldeki_sayi1 = $("body").width() - ($(".card").width() + ($("#tablo_customize").val().length * 107) + 600);
             if (eldeki_sayi1 < 200) {
                 eldeki_sayi1 = 200;
@@ -1126,9 +1130,10 @@ function is_tablo_islemler(durum) {
         if ($("#is_kayit_yok").attr("varmi") != "yok") {
             table = $('#example').DataTable({
                 "ordering": true,
+                "autoWidth": false,
                 "bSortCellsTop": true,
                 "bVisible": false,
-                "responsive": true,
+                "responsive": false,
                 "lengthMenu": [[10, 25, 50], [10, 25, 50]],
                 initComplete: function () {
 
@@ -1487,16 +1492,9 @@ function is_tablo_islemler(durum) {
                                     */
 
                                     is_ilerleme_ajanda_senkronizasyon($slider.attr("TamamlanmaID"), newVal, $slider.attr("IsID"), onceki_oran);
-
-
-
-
                                 }, 300);
                             }
                         });
-
-
-
                     });
 
                     fileyap();
@@ -1505,8 +1503,6 @@ function is_tablo_islemler(durum) {
                         $(".file").attr("placeholder", "Yeni Dosya Yükle").css("height", "25px").css("margin-top", "5px;");
                     }, 1000);
                 });
-
-
             }
         });
     }
@@ -1522,12 +1518,16 @@ function is_tablo_islemler(durum) {
             if (eldeki_sayi < 500) {
                 eldeki_sayi = 500;
             }
-            $(".tablo_is_adi").css("width", eldeki_sayi);
+            if ($(window).width() > 500) {
+                $(".tablo_is_adi").css("width", eldeki_sayi);
+            } else {
+                $(".tablo_is_adi").css("width", 150);
+            }
 
         } else {
 
             if ($("body").width() < 500) {
-                $(".tablo_is_adi").css("width", 500);
+                $(".tablo_is_adi").css("width", 150);
             } else {
                 var eldeki_sayi = $("body").width() - ($(".card").width() + ($("#tablo_customize").val().length * 107) + 600);
                 if (eldeki_sayi < 500) {
@@ -1551,19 +1551,28 @@ function is_tablo_islemler(durum) {
                         if (eldeki_sayi < 500) {
                             eldeki_sayi = 500;
                         }
-                        $(".tablo_is_adi").css("width", eldeki_sayi);
+                        if ($(window).width() > 500) {
+                            $(".tablo_is_adi").css("width", eldeki_sayi);
+                        }
+                        else {
+                            $(".tablo_is_adi").css("width", 150);
+                        }
                     } else {
 
                         if ($("body").width() < 500) {
-                            $(".tablo_is_adi").css("width", 500);
+                            $(".tablo_is_adi").css("width", 150);
                         } else {
                             var eldeki_sayi = $("body").width() - ($(".card").width() + ($("#tablo_customize").val().length * 107) + 600);
                             if (eldeki_sayi < 500) {
                                 eldeki_sayi = 500;
                             }
-                            $(".tablo_is_adi").css("width", eldeki_sayi);
+                            if ($(window).width() > 500) {
+                                $(".tablo_is_adi").css("width", eldeki_sayi);
+                            }
+                            else {
+                                $(".tablo_is_adi").css("width", 150);
+                            }
                         }
-
                     }
                 }, 100);
             }
@@ -1600,10 +1609,6 @@ function is_tablo_islemler(durum) {
         $(".mobil_hide").hide();
         $("#birnumara").remove();
     }
-
-
-
-
 }
 
 var ilkmi = false;
@@ -1647,10 +1652,8 @@ function is_listesi(durum) {
         $("#" + durum + "_isler_loading").show();
 
         $("#" + durum + "_isler").loadHTML({ url: "islem1", data: data }, function () {
-
             sayfa_yuklenince();
             is_tablo_islemler(durum);
-
         });
     }
 }
@@ -1836,7 +1839,7 @@ function diff(start, end) {
     diff -= hours * 1000 * 60 * 60;
     var minutes = Math.floor(diff / 1000 / 60);
 
-    return (hours < 9 ? "0" : "") + hours + ":" + (minutes < 9 ? "0" : "") + minutes;
+    return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 9 ? "0" : "") + minutes;
 }
 
 var sure;
@@ -1880,8 +1883,60 @@ function yeni_is_ekle_sure_hesap() {
                                     birkere = true;
                                 }
                                 $("#yeni_is_gunluk_ortalama_calisma").val(parseFloat(parseFloat(saat) + parseFloat(oran)).toFixed(2));
-                                if (birkere = true) {
+                                if (birkere == true) {
                                     yeni_is_ekle_sure_hesap();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }, 500);
+}
+
+
+function duzenle_is_ekle_sure_hesap() {
+
+    clearTimeout(sure);
+    sure = setTimeout(function () {
+        var tarih2 = $("#dyeni_is_bitis_tarihi").val().replace("-", ".");
+        var tarih = $("#dyeni_is_baslangic_tarihi").val().replace("-", ".");
+        if (tarih2.length == 10 && tarih.length == 10) {
+            var fark = Date.gunfark(tarih2, tarih) + 1;
+            var yeni_is_gunluk_ortalama_calisma = $("#dyeni_is_gunluk_ortalama_calisma").val();
+            yeni_is_gunluk_ortalama_calisma = yeni_is_gunluk_ortalama_calisma.replace(",", ".");
+            if (IsNumeric(fark)) {
+                if (IsNumeric(yeni_is_gunluk_ortalama_calisma)) {
+
+                    $("#dgunluk_gun_hesap_yeri").html(fark + " gün");
+
+                    var gun_sayisi = fark;
+                    var toplam_saat = parseFloat(yeni_is_gunluk_ortalama_calisma) * parseFloat(gun_sayisi);
+                    if (toplam_saat == NaN) {
+                        toplam_saat = 0;
+                    }
+
+                    toplam_saat = parseFloat(Math.round(toplam_saat * 100) / 100).toFixed(2);
+                    $("#dyeni_is_toplam_calisma").val(toplam_saat);
+
+                    if (parseInt(fark) == 1) {
+
+                        if ($("#dyeni_is_baslangic_saati").val().length == 5 && $("#dyeni_is_bitis_saati").val().length == 5) {
+
+                            if (diff($("#dyeni_is_baslangic_saati").val(), $("#dyeni_is_bitis_saati").val()).length == 5) {
+
+                                var saat = diff($("#dyeni_is_baslangic_saati").val(), $("#dyeni_is_bitis_saati").val()).split(":")[0];
+                                var dakika = diff($("#dyeni_is_baslangic_saati").val(), $("#dyeni_is_bitis_saati").val()).split(":")[1];
+
+                                var oran = parseFloat(parseFloat(dakika) / 60);
+                                var birkere = false;
+                                if (parseFloat(parseFloat(saat) + parseFloat(oran)).toFixed(2) != $("#yeni_is_gunluk_ortalama_calisma").val()) {
+                                    birkere = true;
+                                }
+                                $("#dyeni_is_gunluk_ortalama_calisma").val(parseFloat(parseFloat(saat) + parseFloat(oran)).toFixed(2));
+                                if (birkere == true) {
+                                    duzenle_is_ekle_sure_hesap();
                                 }
                             }
                         }
@@ -2522,7 +2577,7 @@ function profil_personel_mesai_kayitlarini_getir(personel_id) {
 
 
 function personel_calisma_form_kaydet(personel_id) {
-    if ($("#personel_calisma_form input[type=text],textarea").valid("valid")) {
+    if ($("#personel_calisma_form input[type=text]").valid("valid")) {
         var gun1 = "false";
         if ($("#gun1").attr("checked") == "checked") {
             gun1 = "true";
@@ -3461,6 +3516,16 @@ function profil_personel_mesai_getir(personel_id, nesne) {
     }, 200);
 }
 
+function profil_personel_dosya_getir(personel_id, nesne) {
+    $(".personel_tablar").html("");
+    $(".nav-link_yeni").removeClass("tab-current");
+    $(nesne).parent("li").addClass("tab-current");
+
+    setTimeout(function () {
+        file_depo_getir("dosyalar", "personel", personel_id);
+    }, 200);
+}
+
 function personel_izin_talep_onayla(personel_id, kayit_id, durum) {
 
     var data = "islem=personel_izin_talep_onayla";
@@ -3697,7 +3762,7 @@ function proje_is_listesi_getir(proje_id, nesne) {
         data += "&proje_id=" + proje_id;
         data = encodeURI(data);
         $("#is_listesi_tab").show().loadHTML({ url: "/ajax_request/", data: data }, function () {
-            is_listesi_etiket("proje", proje_id);
+            is_listesi_etiket("proje", proje_id, "", "proje");
         });
     }, 200);
 }
@@ -4421,7 +4486,6 @@ function personel_dosyalari_getir(personel_id, nesne) {
     setTimeout(function () {
         file_depo_getir("dosyalar", "personel", personel_id);
     }, 200);
-
 }
 
 
@@ -4484,15 +4548,11 @@ function personel_is_listesi_getir(personel_id, nesne) {
         data = encodeURI(data);
         $("#is_listesi_panel").loadHTML({ url: "/ajax_request/", data: data }, function () {
             is_listesi_etiket("personel", personel_id);
-
         });
-
-
     }, 200);
-
 }
 
-function is_listesi_etiket(etiket_tip, etiket, stok) {
+function is_listesi_etiket(etiket_tip, etiket, stok, yer) {
 
     var adi = "";
     var durum = "0";
@@ -4532,7 +4592,9 @@ function is_listesi_etiket(etiket_tip, etiket, stok) {
 
     var data = "islem=is_listesi";
     data += "&stok=" + stok;
+    data += "&yer=" + yer;
     data += "&parcaId=" + etiket;
+    data += "&projeId=" + etiket;
     data += "&durum=";
     data += "&tip=";
     data += "&adi=" + adi;
@@ -4870,7 +4932,7 @@ function personel_bilgilerini_guncelle(personel_id) {
         var departmanlar = $("#departmanlar").val();
         var gorevler = $("#gorevler").val();
         var personel_parola = $("#personel_parola").val();
-        var personel_saatlik_maliyet = $("#personel_saatlik_maliyet").val();
+        var personel_saatlik_maliyet = $("#personel_saatlik_maliyet").val().replace("₺", "").replace(" ", "");
         var personel_maliyet_pb = $("#personel_maliyet_pb").val();
         var personel_tcno = $("#personel_tcno").val();
         var personel_yillik_izin = $("#personel_yillik_izin").val();
@@ -5517,7 +5579,7 @@ function chat_yenile(IsID) {
     if ($("#ChatBody" + IsID + ":visible").length > 0) {
         chat_timer = setTimeout(function () {
             is_yazisma_yeni_goster(IsID);
-        }, parseFloat(1000));
+        }, parseFloat(60000));
     } else {
         clearTimeout(chat_timer);
     }
@@ -7273,7 +7335,8 @@ function is_kaydini_guncelle(IsId, buton) {
 
     var adi = encodeURIComponent($("#dyeni_is_adi").val());
     var aciklama = encodeURIComponent($("#dyeni_is_aciklama").val());
-    var gorevliler = encodeURIComponent($("#dyeni_is_gorevliler").val());
+    var gorevliler = $("#dyeni_is_gorevliler").val();
+    var gorevliId = $("#gorevlilerId").val();
     var departmanlar = encodeURIComponent($("#dyeni_is_departmanlar").val());
     var oncelik = encodeURIComponent($("#dyeni_is_oncelik").val());
     var kontrol_bildirim = encodeURIComponent($("#dyeni_is_kontrol_bildirim").val());
@@ -7310,6 +7373,7 @@ function is_kaydini_guncelle(IsId, buton) {
     data += "&adi=" + adi;
     data += "&aciklama=" + aciklama;
     data += "&gorevliler=" + gorevliler;
+    data += "&gorevliId=" + gorevliId;
     data += "&departmanlar=" + departmanlar;
     data += "&oncelik=" + oncelik;
     data += "&kontrol_bildirim=" + kontrol_bildirim;
@@ -8880,6 +8944,7 @@ function YeniServisBakimKaydiEkle() {
     $("#modal_div3").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         sayfa_yuklenince();
     });
+    $("#musteri_id").addClass("yapilan").select2();
 }
 
 function ServisBakimKaydiEkle() {
@@ -8910,6 +8975,7 @@ function ServisBakimKaydiEkle() {
     data += "&Adet=" + $("#servisparca").attr("adet");
 
     data += "&musteri_id=" + $("#musteri_id").val();
+    data += "&proje_id=" + $("#proje-bilgi").val();
     data += "&firmamakinebilgi=" + $("#firmamakinebilgi").val();
     data += "&firmaariza=" + $("#firmaariza").val();
     data += "&baslangic_tarihi=" + $("#baslangic_tarihi").val();
@@ -8961,18 +9027,21 @@ function parcaDuzenle(id) {
     $("#" + id).remove();
     var parcalarId = $("#parcalarId").attr("parcaid").split(",");
     var adet = $("#parcalarId").attr("adet").split(",");
+    var stokadet = $("#parcalarId").attr("stokadet").split(",");
     var index = parcalarId.indexOf(id);
     if (index !== -1) {
         var silinenParca = parcalarId.splice(index, 1);
         var silinenAdet = adet.splice(index, 1);
+        var silinenstokadet = stokadet.splice(index, 1);
 
         $("#parcalarId").attr("parcaid", parcalarId);
         $("#parcalarId").attr("adet", adet);
+        $("#parcalarId").attr("stokadet", stokadet);
 
         if ($("#parcalarId").attr("delparcaid") != "") {
-            $("#parcalarId").attr("delParcaId", $("#parcalarId").attr("delParcaId") + "," + silinenParca).attr("delAdet", $("#parcalarId").attr("delAdet") + "," + silinenAdet).attr("sayi", "birdenfazla").attr("index2", "silme");
+            $("#parcalarId").attr("delParcaId", $("#parcalarId").attr("delParcaId") + "," + silinenParca).attr("delAdet", $("#parcalarId").attr("delAdet") + "," + silinenAdet).attr("depstokadet", $("#parcalarId").attr("delstokadet") + "," + silinenstokadet).attr("sayi", "birdenfazla").attr("index2", "silme");
         }
-        else { $("#parcalarId").attr("delParcaId", silinenParca).attr("delAdet", silinenAdet).attr("sayi", "tek").attr("index2", "silme"); }
+        else { $("#parcalarId").attr("delParcaId", silinenParca).attr("delAdet", silinenAdet).attr("delstokadet", silinenstokadet).attr("sayi", "tek").attr("index2", "silme"); }
     }
 
     //var parcaId = $("#siparisformu").attr("siparisparcaid").split(",");
@@ -9016,16 +9085,19 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
     data += "&gorevli=" + $("#firmagorevli").val();
     data += "&parcaId=" + $("#parcalarId").attr("parcaId");
     data += "&adet=" + $("#parcalarId").attr("adet");
+    data += "&stokadet=" + $("#parcalarId").attr("stokadet");
 
     data += "&index=" + $("#parcalarId").attr("index");
     data += "&index2=" + $("#parcalarId").attr("index2");
     data += "&sayi=" + $("#parcalarId").attr("sayi");
     data += "&delparcaid=" + $("#parcalarId").attr("delparcaid");
     data += "&deladet=" + $("#parcalarId").attr("deladet");
+    data += "&delstokadet=" + $("#parcalarId").attr("delstokadet");
     data += "&sonradaneklenenparca=" + $("#parcalarId").attr("sonradaneklenenparca");
     data += "&sonradaneklenenadet=" + $("#parcalarId").attr("sonradaneklenenadet");
     data += "&sonradaneklenensayi=" + $("#parcalarId").attr("sonradaneklenensayi");
     data += "&musteri_id=" + $("#musteri_id").val();
+    data += "&proje_id=" + $("#proje-bilgi").val();
     data += "&firmamakinebilgi=" + $("#firmamakinebilgi").val();
     data += "&firmaariza=" + $("#firmaariza").val();
     data += "&baslangic_tarihi=" + $("#baslangic_tarihi").val();

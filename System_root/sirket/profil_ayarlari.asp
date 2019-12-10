@@ -16,20 +16,31 @@
     end if
 
 %>
+<script type="text/javascript">
+    if ($(window).width() < 500) {
+        $("#mobilGorunum").css("padding-left", "0px");
+        $("#userCardBlock").css("height", "140px");
+        $("#userGorunum").css("margin-left", "-40px").css("margin-top", "-29px");
+        $("#userPhoto").css("width", "120px").css("height", "119px");
+    }
+    else {
+        $("#userPhoto").css("width", "140px").css("height", "149px !important");
+    }
+</script>
 <div class="page-body breadcrumb-page">
     <div class="card page-header p-0">
-        <div class="card-block front-icon-breadcrumb row align-items-end">
+        <div class="card-block front-icon-breadcrumb row align-items-end" id="userCardBlock">
             <div class="breadcrumb-header col">
                 <div class="big-icon">
-                    <div class="card-block user-info" style=" bottom: -73px;">
+                    <div class="card-block user-info" id="userGorunum" style=" bottom: -73px;">
                         <div class="media-left">
                             <a href="#" class="profile-image">
-                                <img class="user-img img-radius" src="<%=personel_resim %>" style="width: 140px!important; height:149px!important;">
+                                <img class="user-img img-radius" src="<%=personel_resim %>" id="userPhoto" style="width: 140px; height:149px !important">
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="d-inline-block" style="padding-left: 175px;">
+                <div id="mobilGorunum" class="d-inline-block" style="padding-left: 175px;">
                     <h5 style="font-size: 15px;"><%=personel("personel_ad") & " " & personel("personel_soyad") %></h5>
                     <span><%=personel("gorev_adi") %></span>
                 </div>
@@ -49,6 +60,7 @@
                     <li class="nav-link_yeni"><a href="#giris_cikis" onclick="profil_personel_giris_cikis_getir('<%=personel_id %>', this);" class="icon icon-box"><span><%=LNG("Giriş-Çıkış Bilgileri")%></span></a></li>
                     <li class="nav-link_yeni"><a href="#izin_bilgileri" onclick="profil_personel_izin_getir('<%=personel_id %>', this);" class="icon icon-display"><span><%=LNG("İzin Bilgileri")%></span></a></li>
                     <li class="nav-link_yeni"><a href="#mesai_bilgileri" onclick="profil_personel_mesai_getir('<%=personel_id %>', this);" class="icon icon-upload"><span><%=LNG("Mesai Bilgileri")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#dosyalar" onclick="profil_personel_dosya_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Dosyalar")%></span></a></li>
                     <li class="nav-link_yeni"><a href="#bordrolar" onclick="profil_personel_bordro_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Bordrolarım")%></span></a></li>
                 </ul>
             </nav>
@@ -59,6 +71,7 @@
                 <section id="giris_cikis" class="personel_tablar"></section>
                 <section id="izin_bilgileri" class="personel_tablar"></section>
                 <section id="mesai_bilgileri" class="personel_tablar"></section>
+                <section id="dosyalar" class="personel_tablar"></section>
                 <section id="bordrolar" class="personel_tablar"></section>
             </div>
         </div>

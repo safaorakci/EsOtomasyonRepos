@@ -468,7 +468,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         }
 
         dyeni_is_aciklama.Text = iss["aciklama"].ToString();
-        dyeni_is_baslangic_tarihi.Text = basday + "-"+ basmonth + "-"+ Convert.ToDateTime(iss["baslangic_tarihi"]).Year; 
+        dyeni_is_baslangic_tarihi.Text = basday + "-" + basmonth + "-" + Convert.ToDateTime(iss["baslangic_tarihi"]).Year;
         dyeni_is_baslangic_saati.Text = iss["baslangic_saati"].ToString().Trim().Substring(0, 5);
         dyeni_is_bitis_tarihi.Text = bitday + "-" + bitmonth + "-" + Convert.ToDateTime(iss["bitis_tarihi"]).Year;
         dyeni_is_bitis_saati.Text = iss["bitis_saati"].ToString().Trim().Substring(0, 5);
@@ -526,6 +526,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             if (("asd," + iss["gorevliler"].ToString() + ",asd").IndexOf("," + item["id"] + ",") > 0)
             {
                 litem.Selected = true;
+                gorevlilerId.Value = iss["gorevliler"].ToString();
             }
             else
             {
@@ -1183,11 +1184,15 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         try
         {
             string stok = "";
+            string yer = "";
             int parcaId;
             string durum = Request.Form["durum"].ToString();
             if (Request.Form["stok"] != null)
                 stok = Request.Form["stok"].ToString();
             parcaId = Convert.ToInt32(Request.Form["parcaId"]);
+            if (Request.Form["yer"] != null)
+                yer = Request.Form["yer"].ToString();
+            int projeId = Convert.ToInt32(Request.Form["projeId"]);
 
             string sql_str = "";
             string sql_string = "";
@@ -1195,6 +1200,12 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string tum_sql_str = "";
             string gdurum_str = "";
             string iptal_str = "";
+            string yer_str = "";
+
+            if (yer.ToString() == "proje")
+            {
+                yer_str = " and SUBSTRING((select value from string_split(isler.departmanlar, ',') where value like '%proje%'), CHARINDEX('-', (select value from string_split(isler.departmanlar, ',') where value like '%proje%')) + 1, 10) = " + projeId + " and isler.departmanlar != ''";
+            }
 
             if (durum == "iptal")
             {
@@ -1264,7 +1275,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                 if (stok != "Stok")
                 {
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,4), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler, case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, " + sql_string + " (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.firma_id = @firma_id " + sql_str + " and isler.cop = 'false' " + iptal_str + " order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,4), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler, case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, " + sql_string + " (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id where isler.firma_id = @firma_id " + sql_str + " and isler.cop = 'false' " + yer_str + " " + iptal_str + " order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
                 }
                 else
                 {
@@ -1294,7 +1305,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             {
                 if (stok != "Stok")
                 {
-                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,4), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, " + sql_string + " (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler  etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id " + tum_sql_str + " join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where  isler.firma_id = @firma_id " + sql_str + " and ( ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value =  CONVERT(NVARCHAR(50),@kullanici_id) ) > 0) or isler.ekleyen_id = @kullanici_id or ((SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') WHERE value =  CONVERT(NVARCHAR(50),departman2.id) ) > 0) ) " + gdurum_str + " and isler.cop = 'false' " + iptal_str + " GROUP BY isler.id, isler.renk, isler.departmanlar, isler.durum,isler.tamamlanma_orani,isler.bitis_tarihi,isler.bitis_saati,isler.gorevliler, ekleyen.personel_ad, ekleyen.personel_soyad, isler.adi, isler.aciklama, isler.oncelik, isler.kontrol_bildirim, isler.baslangic_tarihi, isler.baslangic_saati, isler.cop, isler.firma_kodu, isler.firma_id, isler.ekleyen_id, isler.ekleyen_ip, isler.ekleme_tarihi, isler.ekleme_saati, isler.silen_id, isler.silen_ip, isler.silme_tarihi, isler.silme_saati, isler.tamamlanma_tarihi, isler.tamamlanma_saati, isler.guncelleme_tarihi, isler.guncelleme_saati, isler.guncelleyen, isler.ajanda_gosterim, isler.GantAdimID, isler.toplam_sure, isler.gunluk_sure, isler.toplam_gun, isler.sinirlama_varmi, isler.is_tipi order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
+                    ayarlar.cmd.CommandText = "select ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 3)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, isler.ekleme_tarihi)),3,2) + RIGHT('0'+CONVERT(NVARCHAR(10), DATEPART(MONTH, isler.ekleme_tarihi)), 2) + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), isler.id),1,4), 4 )  AS is_kodu, isnull(isler.renk, '') as renk, Replace(Replace( STUFF(((select '~<span class=\"hiddenspan\">' + replace(replace(etiket.adi, '(', ''), ')','') + '</span>' from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, ''), '&lt;', '<'), '&gt;', '>') hidden_etiketler,  case when isler.durum = 'false' then 'İPTAL' when ISNULL(isler.tamamlanma_orani,0)= 100 then 'BİTTİ' when getdate() > convert(datetime, isler.bitis_tarihi) + CONVERT(datetime, isler.bitis_saati) then 'GECİKTİ' when ISNULL(isler.tamamlanma_orani,0)= 0 then 'BEKLİYOR' when ISNULL(isler.tamamlanma_orani,0)< 100 then 'DEVAM EDİYOR' end as is_durum, " + sql_string + " (select CONVERT(nvarchar(50), kullanici.id) + '~' + isnull(kullanici.personel_resim,'') + '~' + isnull(kullanici.personel_ad,'') + ' ' + isnull(kullanici.personel_soyad,'') + '|' from ucgem_firma_kullanici_listesi kullanici with(nolock) where (SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value = CONVERT(NVARCHAR(50), kullanici.id) ) > 0 for xml path('')) as gorevli_personeller, STUFF(((select '~' + etiket.adi from etiketler  etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(isler.departmanlar, '') + ',')>0 for xml path(''))), 1, 1, '') as departman_isimleri, ekleyen.personel_ad + ' ' + ekleyen.personel_soyad as ekleyen_adsoyad, isler.* from ucgem_is_listesi isler with(nolock) join ucgem_firma_kullanici_listesi ekleyen with(nolock) on ekleyen.id = isler.ekleyen_id " + tum_sql_str + " join ucgem_firma_kullanici_listesi kullanici with(nolock) on kullanici.id = @kullanici_id left join tanimlama_departman_listesi departman2 with(nolock) on (SELECT COUNT(value) FROM STRING_SPLIT(isler.departmanlar, ',') WHERE value =  'departman-' + CONVERT(NVARCHAR(50), departman2.id) ) > 0 where  isler.firma_id = @firma_id " + sql_str + " and ( ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value =  CONVERT(NVARCHAR(50),@kullanici_id) ) > 0) or isler.ekleyen_id = @kullanici_id or ((SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') WHERE value =  CONVERT(NVARCHAR(50),departman2.id) ) > 0) ) " + gdurum_str + " and isler.cop = 'false' " + yer_str + " " + iptal_str + " GROUP BY isler.id, isler.renk, isler.departmanlar, isler.durum,isler.tamamlanma_orani,isler.bitis_tarihi,isler.bitis_saati,isler.gorevliler, ekleyen.personel_ad, ekleyen.personel_soyad, isler.adi, isler.aciklama, isler.oncelik, isler.kontrol_bildirim, isler.baslangic_tarihi, isler.baslangic_saati, isler.cop, isler.firma_kodu, isler.firma_id, isler.ekleyen_id, isler.ekleyen_ip, isler.ekleme_tarihi, isler.ekleme_saati, isler.silen_id, isler.silen_ip, isler.silme_tarihi, isler.silme_saati, isler.tamamlanma_tarihi, isler.tamamlanma_saati, isler.guncelleme_tarihi, isler.guncelleme_saati, isler.guncelleyen, isler.ajanda_gosterim, isler.GantAdimID, isler.toplam_sure, isler.gunluk_sure, isler.toplam_gun, isler.sinirlama_varmi, isler.is_tipi order by (convert(datetime, isler.guncelleme_tarihi) + convert(datetime, isler.guncelleme_saati)) desc;";
                 }
                 else
                 {
@@ -1617,6 +1628,8 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             gorunum.tablo_durum = false;
             gorunum.tablo_oncelik = false;
 
+
+
             bool selected_durum = false;
             if (style_class.IndexOf("gorevliler") > 0)
             {
@@ -1684,7 +1697,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
 
             List<is_gorunum> isler = new List<is_gorunum>();
-
             if (ds.Tables[0].Rows.Count == 0)
                 isler_is_yok_panel.Visible = true;
             else
@@ -1698,7 +1710,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                 is_gorunum yeniis = new is_gorunum();
                 yeniis.id = Convert.ToInt32(item["id"]);
-                ayarlar.cmd.CommandText = "with cte as ( SELECT case when(select COUNT(id) from ahtapot_ajanda_olay_listesi WHERE IsID = " + yeniis.id + " and etiket_id = 72 and not color = 'rgb(52, 152, 219)') = 0 then '00:00' else dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH(NOLOCK) WHERE olay.IsID = gorevli.is_id and olay.etiket = 'personel' and olay.etiket_id = gorevli.gorevli_id AND olay.durum = 'true' AND olay.cop = 'false' AND olay.tamamlandi = 1)) end AS harcanan, gorevli.toplam_sure, gorevli.tamamlanma_orani, gorevli.id FROM ucgem_is_gorevli_durumlari gorevli WITH(NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH(NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = " + yeniis.id + ") SELECT CASE WHEN(SUM(tamamlanma_orani) / COUNT(id)) = 100 THEN 100 WHEN CONVERT(decimal(5,2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))))), 114) = 0 THEN 0 WHEN CONVERT(decimal(5, 2), CONVERT(int, SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2)))), 114) = 0 THEN 0 WHEN CONVERT(decimal(5,2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))))), 114) > CONVERT(decimal(5, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114) THEN 90 WHEN CONVERT(int, (SUM(tamamlanma_orani) / COUNT(id))) > 50 AND CONVERT(int, (SUM(tamamlanma_orani) / COUNT(id))) < 100 THEN CONVERT(decimal(5, 2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))), 114)) / CONVERT(decimal(5, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114)) *100 ELSE CONVERT(decimal(5, 2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))), 114) / CONVERT(decimal(5, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114)) * 100) END as ortalama from cte";
+                ayarlar.cmd.CommandText = "with cte as ( SELECT case when(select COUNT(id) from ucgem_is_calisma_listesi WHERE is_id = " + yeniis.id + " and ekleyen_id = gorevli.gorevli_id ) = 0 then '00:00' else dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic), CONVERT(DATETIME, calisma.bitis)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH(NOLOCK) WHERE calisma.is_id = gorevli.is_id and calisma.ekleyen_id = gorevli.gorevli_id AND calisma.durum = 'true' AND calisma.cop = 'false')) end AS harcanan, gorevli.toplam_sure, gorevli.tamamlanma_orani, gorevli.id FROM ucgem_is_gorevli_durumlari gorevli WITH(NOLOCK) JOIN ucgem_firma_kullanici_listesi kullanici WITH(NOLOCK) ON kullanici.id = gorevli.gorevli_id JOIN ucgem_is_listesi iss ON iss.id = gorevli.is_id WHERE gorevli.is_id = " + yeniis.id + " ) SELECT CASE WHEN(SUM(tamamlanma_orani) / COUNT(id)) = 100 THEN 100 WHEN CONVERT(decimal(15,2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))))), 114) = 0 THEN 0 WHEN CONVERT(decimal(15,2), CONVERT(int, SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2)))), 114) = 0 THEN 0 WHEN CONVERT(decimal(15,2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))))), 114) > CONVERT(decimal(15, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114) THEN 90 WHEN CONVERT(int, (SUM(tamamlanma_orani) / COUNT(id))) > 50 AND CONVERT(int, (SUM(tamamlanma_orani) / COUNT(id))) < 100 THEN CONVERT(decimal(15,2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))), 114)) / CONVERT(decimal(15, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114)) * 100 ELSE CONVERT(decimal(15,2), (CONVERT(int, SUM(CONVERT(int, LEFT(harcanan, CHARINDEX(':', harcanan) - 1)) * 60 + CONVERT(int, RIGHT(harcanan, 2))), 114) / CONVERT(decimal(15, 2), SUM(CONVERT(int, LEFT(toplam_sure, CHARINDEX(':', toplam_sure) - 1)) * 60 + CONVERT(int, RIGHT(toplam_sure, 2))), 114)) * 100) END as ortalama from cte";
                 SqlDataAdapter dataReader = new SqlDataAdapter(ayarlar.cmd);
                 DataSet dataSet = new DataSet();
                 dataReader.Fill(dataSet);
@@ -2242,7 +2254,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
                                 ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate())";
-                                ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Dürttü !.");
+                                ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Uyardı !.");
                                 ayarlar.cmd.Parameters.Add("tip", "is_listesi");
                                 ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
                                 ayarlar.cmd.Parameters.Add("user_id", gorevliID);
@@ -2462,8 +2474,17 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
 
     [WebMethod(EnableSession = true)]
-    public static string IsGuncelle(int IsID, string adi, string aciklama, string gorevliler, string departmanlar, string oncelik, string kontrol_bildirim, string baslangic_tarihi, string baslangic_saati, string bitis_tarihi, string bitis_saati, string renk, string ajanda_gosterim, string gunluk_sure, string toplam_sure, string toplam_gun, int sinirlama_varmi, string is_tipi)
+    public static string IsGuncelle(int IsID, string adi, string aciklama, string gorevliler, string gorevliId, string departmanlar, string oncelik, string kontrol_bildirim, string baslangic_tarihi, string baslangic_saati, string bitis_tarihi, string bitis_saati, string renk, string ajanda_gosterim, string gunluk_sure, string toplam_sure, string toplam_gun, int sinirlama_varmi, string is_tipi)
     {
+        string[] id = new string[gorevliId.Split(',').Length];
+        for (int i = 0; i < gorevliId.Split(',').Length; i++)
+        {
+            foreach (var item in UIHelper.trn(gorevliId).Split(','))
+            {
+                id[i] = item;
+            }
+        }
+        bool state = false;
         string durum = "true";
         try
         {
@@ -2508,13 +2529,29 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                         {
                             ayarlar.baglan();
                             ayarlar.cmd.Parameters.Clear();
-                            ayarlar.cmd.CommandText = "select isnull(count(id),0) as varmi from ucgem_is_gorevli_durumlari where is_id = @is_id and gorevli_id = @gorevli_id;";
+                            ayarlar.cmd.CommandText = "select isnull(count(id),0) as varmi from ucgem_is_gorevli_durumlari where is_id = @is_id and gorevli_id = @gorevli_id";
                             ayarlar.cmd.Parameters.Add("is_id", IsID);
                             ayarlar.cmd.Parameters.Add("gorevli_id", gorevliID);
-                            int varmi = Convert.ToInt32(ayarlar.cmd.ExecuteNonQuery());
+                            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(ayarlar.cmd);
+                            DataSet dataSet = new DataSet();
+                            sqlDataAdapter.Fill(dataSet);
+
+                            DataRow dataRow = dataSet.Tables[0].Rows[0];
+                            int varmi = Convert.ToInt32(dataRow["varmi"].ToString());
 
                             if (varmi == 0)
                             {
+                                if (id.Length == 1)
+                                {
+                                    ayarlar.baglan();
+                                    ayarlar.cmd.Parameters.Clear();
+                                    ayarlar.cmd.CommandText = "delete from ucgem_is_gorevli_durumlari where is_id = @is_id and gorevli_id = @gorevli_id";
+                                    ayarlar.cmd.Parameters.Add("is_id", IsID);
+                                    ayarlar.cmd.Parameters.Add("gorevli_id", gorevliId);
+                                    ayarlar.cmd.ExecuteNonQuery();
+                                }
+
+                                state = true;
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
                                 ayarlar.cmd.CommandText = "insert into ucgem_is_gorevli_durumlari(is_id, gorevli_id, tamamlanma_orani, tamamlanma_tarihi, tamamlanma_saati, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, gunluk_sure, toplam_sure, toplam_gun) values(@is_id, @gorevli_id, @tamamlanma_orani, getdate(), getdate(), @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate(), @gunluk_sure, @toplam_sure, @toplam_gun);";
@@ -2536,14 +2573,42 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                             }
                             else
                             {
-                                ayarlar.baglan();
-                                ayarlar.cmd.Parameters.Clear();
-                                ayarlar.cmd.CommandText = "update ucgem_is_gorevli_durumlari set gunluk_sure = @gunluk_sure, toplam_sure = @toplam_sure, toplam_gun = @toplam_gun where id = @ID ";
-                                ayarlar.cmd.Parameters.Add("ID", varmi);
-                                ayarlar.cmd.Parameters.Add("gunluk_sure", gunluk_sure);
-                                ayarlar.cmd.Parameters.Add("toplam_sure", toplam_sure);
-                                ayarlar.cmd.Parameters.Add("toplam_gun", toplam_gun);
-                                ayarlar.cmd.ExecuteNonQuery();
+                                foreach (var gorevId in UIHelper.trn(gorevliId).Split(','))
+                                {
+                                    if (gorevId.Length > 0)
+                                    {
+                                        if (ayarlar.IsNumeric(gorevId))
+                                        {
+                                            if (Convert.ToInt32(gorevId) > 0)
+                                            {
+                                                if (gorevliID != gorevId)
+                                                {
+                                                    if (state != true)
+                                                    {
+                                                        ayarlar.baglan();
+                                                        ayarlar.cmd.Parameters.Clear();
+                                                        ayarlar.cmd.CommandText = "delete from ucgem_is_gorevli_durumlari where is_id = @is_id and gorevli_id = @gorevli_id";
+                                                        ayarlar.cmd.Parameters.Add("is_id", IsID);
+                                                        ayarlar.cmd.Parameters.Add("gorevli_id", gorevId);
+                                                        ayarlar.cmd.ExecuteNonQuery();
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ayarlar.baglan();
+                                                    ayarlar.cmd.Parameters.Clear();
+                                                    ayarlar.cmd.CommandText = "update ucgem_is_gorevli_durumlari set gorevli_id = @gorevli_id, gunluk_sure = @gunluk_sure, toplam_sure = @toplam_sure, toplam_gun = @toplam_gun where is_id = @is_id and gorevli_id = @gorevli_id";
+                                                    ayarlar.cmd.Parameters.Add("is_id", IsID);
+                                                    ayarlar.cmd.Parameters.Add("gunluk_sure", gunluk_sure);
+                                                    ayarlar.cmd.Parameters.Add("toplam_sure", toplam_sure);
+                                                    ayarlar.cmd.Parameters.Add("toplam_gun", toplam_gun);
+                                                    ayarlar.cmd.Parameters.Add("gorevli_id", gorevId);
+                                                    ayarlar.cmd.ExecuteNonQuery();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
 
@@ -2592,7 +2657,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                             DataRow Personel = PersonelBilgileriGetir(gorevliID);
                             adi = UIHelper.trn(adi);
 
-                            if (Personel["PushUserKey"].ToString().Length > 10)
+                            if (Personel["PushUserKey"].ToString() != null)
                             {
                                 string yeni_adi = adi.ToString();
 
@@ -2601,23 +2666,24 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                     yeni_adi.ToString().Substring(0, 100);
                                 }
 
-
-
-                                ayarlar.baglan();
-                                ayarlar.cmd.Parameters.Clear();
-                                ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = @user_id, @mesaj = @bildirim;";
-                                ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.");
-                                ayarlar.cmd.Parameters.Add("tip", "is_listesi");
-                                ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
-                                ayarlar.cmd.Parameters.Add("user_id", gorevliID);
-                                ayarlar.cmd.Parameters.Add("okudumu", "False");
-                                ayarlar.cmd.Parameters.Add("durum", "true");
-                                ayarlar.cmd.Parameters.Add("cop", "false");
-                                ayarlar.cmd.Parameters.Add("firma_kodu", SessionManager.CurrentUser.firma_kodu);
-                                ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
-                                ayarlar.cmd.Parameters.Add("ekleyen_id", SessionManager.CurrentUser.ekleyen_id);
-                                ayarlar.cmd.Parameters.Add("ekleyen_ip", HttpContext.Current.Request.ServerVariables["Remote_Addr"]);
-                                ayarlar.cmd.ExecuteNonQuery();
+                                if (state == true)
+                                {
+                                    ayarlar.baglan();
+                                    ayarlar.cmd.Parameters.Clear();
+                                    ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate());";
+                                    ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.");
+                                    ayarlar.cmd.Parameters.Add("tip", "is_listesi");
+                                    ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
+                                    ayarlar.cmd.Parameters.Add("user_id", gorevliID);
+                                    ayarlar.cmd.Parameters.Add("okudumu", "False");
+                                    ayarlar.cmd.Parameters.Add("durum", "true");
+                                    ayarlar.cmd.Parameters.Add("cop", "false");
+                                    ayarlar.cmd.Parameters.Add("firma_kodu", SessionManager.CurrentUser.firma_kodu);
+                                    ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
+                                    ayarlar.cmd.Parameters.Add("ekleyen_id", SessionManager.CurrentUser.ekleyen_id);
+                                    ayarlar.cmd.Parameters.Add("ekleyen_ip", HttpContext.Current.Request.ServerVariables["Remote_Addr"]);
+                                    ayarlar.cmd.ExecuteNonQuery();
+                                }
 
                                 if (Personel["personel_telefon"].ToString().Length > 5)
                                 {
@@ -3994,7 +4060,11 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "SET NOCOUNT ON; insert into ucgem_proje_listesi(guncelleme_tarihi, guncelleme_saati, guncelleyen_id, proje_departmanlari, santiye_durum_id, proje_adi, proje_firma_id, enlem, boylam, supervisor_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(getdate(), getdate(), @ekleyen_id, @proje_departmanlari, @santiye_durum_id, @proje_adi, @proje_firma_id, @enlem, @boylam, @supervisor_id, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate()); SELECT SCOPE_IDENTITY() id;";
+            ayarlar.cmd.CommandText = "select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy,getdate())),3, 3) + '' + CONVERT(varchar(50), DATEPART(MM, GETDATE())) + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), proje.id + 1),1,4), 4) from ucgem_proje_listesi proje where proje.durum = 'true' and proje.cop = 'false' order by id desc";
+            int proje_Id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "SET NOCOUNT ON; insert into ucgem_proje_listesi(guncelleme_tarihi, guncelleme_saati, guncelleyen_id, proje_departmanlari, santiye_durum_id, proje_adi, proje_firma_id, enlem, boylam, supervisor_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, proje_kodu) values(getdate(), getdate(), @ekleyen_id, @proje_departmanlari, @santiye_durum_id, @proje_adi, @proje_firma_id, @enlem, @boylam, @supervisor_id, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate(), @proje_Id); SELECT SCOPE_IDENTITY() id;";
             ayarlar.cmd.Parameters.Add("proje_departmanlari", proje_departmanlari);
             ayarlar.cmd.Parameters.Add("santiye_durum_id", santiye_durum_id);
             ayarlar.cmd.Parameters.Add("proje_adi", proje_adi);
@@ -4008,18 +4078,16 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
             ayarlar.cmd.Parameters.Add("ekleyen_id", SessionManager.CurrentUser.ekleyen_id);
             ayarlar.cmd.Parameters.Add("ekleyen_ip", Request.ServerVariables["Remote_Addr"]);
+            ayarlar.cmd.Parameters.Add("proje_Id", proje_Id);
             int proje_id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
 
+            //string proje_kodu = "ESP" + DateTime.Now.Year.ToString().Substring(0, 2) + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + "000" + proje_id.ToString();
 
-
-            string proje_kodu = "ESP" + DateTime.Now.Year.ToString().Substring(0, 2) + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + "000" + proje_id.ToString();
-
-
-            ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "update ucgem_proje_listesi set proje_kodu = @proje_kodu where id = @proje_id;";
-            ayarlar.cmd.Parameters.Add("proje_kodu", proje_kodu);
-            ayarlar.cmd.Parameters.Add("proje_id", proje_id);
-            ayarlar.cmd.ExecuteNonQuery();
+            //ayarlar.cmd.Parameters.Clear();
+            //ayarlar.cmd.CommandText = "update ucgem_proje_listesi set proje_kodu = @proje_kodu where id = @proje_id;";
+            //ayarlar.cmd.Parameters.Add("proje_kodu", proje_kodu);
+            //ayarlar.cmd.Parameters.Add("proje_id", proje_id);
+            //ayarlar.cmd.ExecuteNonQuery();
 
 
             if (uretim_sablon_id != 0)
@@ -4087,7 +4155,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string yetkili1_telefon = UIHelper.trn(Request.Form["yetkili1_telefon"].ToString());
             string yetkili1_mail = UIHelper.trn(Request.Form["yetkili1_mail"].ToString());
 
-            
+
             //string yetkili2_telefon = UIHelper.trn(Request.Form["yetkili2_telefon"].ToString());
             //string yetkili2_mail = UIHelper.trn(Request.Form["yetkili2_mail"].ToString());
 
@@ -4106,7 +4174,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             ayarlar.cmd.Parameters.Add("firma_logo", firma_logo);
             ayarlar.cmd.Parameters.Add("firma_adi", firma_adi);
             ayarlar.cmd.Parameters.Add("firma_yetkili", firma_yetkili);
-            ayarlar.cmd.Parameters.Add("firma_telefon", firma_telefon); 
+            ayarlar.cmd.Parameters.Add("firma_telefon", firma_telefon);
             ayarlar.cmd.Parameters.Add("yetkili1_telefon", yetkili1_telefon);
             ayarlar.cmd.Parameters.Add("yetkili1_mail", yetkili1_mail);
             ayarlar.cmd.Parameters.Add("firma_mail", firma_mail);
@@ -4127,7 +4195,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             ayarlar.cmd.Parameters.Add("ekleyen_firma_kodu", SessionManager.CurrentUser.firma_kodu);
             ayarlar.cmd.Parameters.Add("ekleyen_firma_id", SessionManager.CurrentUser.firma_id);
 
-            
+
 
             if (Request.Form["yetkili2_adi"].ToString() == "undefined")
             {
@@ -4403,7 +4471,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         public int Sayi { get; set; }
         public int Durum { get; set; }
     }
-    
+
 
     [WebMethod]
     public static string CalculateParca(int ParcaID, int GirilenMiktar)
@@ -4412,14 +4480,14 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         int Fark = 0;
         ayarlar.cmd.CommandText = @"select * from parca_listesi where id = " + ParcaID + "";
         ayarlar.cmd.ExecuteNonQuery();
-        
+
 
 
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
         DataTable dt = new DataTable();
         sda.Fill(dt);
-        int miktar = Convert.ToInt32( dt.Rows[0].ItemArray[10]);
-        int minimummiktar = Convert.ToInt32( dt.Rows[0].ItemArray[12]);
+        int miktar = Convert.ToInt32(dt.Rows[0].ItemArray[10]);
+        int minimummiktar = Convert.ToInt32(dt.Rows[0].ItemArray[12]);
         Fark = miktar - minimummiktar;
         ayarlar.cnn.Close();
         if ((GirilenMiktar + minimummiktar) > miktar)

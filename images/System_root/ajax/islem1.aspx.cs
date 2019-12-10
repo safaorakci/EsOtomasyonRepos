@@ -1477,9 +1477,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         else
             isler_isvar_panel.Visible = true;
 
-
-
-
         foreach (DataRow item in ds.Tables[0].Rows)
         {
 
@@ -1591,10 +1588,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         SqlDataAdapter sda_tablo = new SqlDataAdapter(ayarlar.cmd);
         DataSet ds_tablo = new DataSet();
         sda_tablo.Fill(ds_tablo);*/
-
-
-
-
 
         isler_repeater.DataSource = isler;
         isler_repeater.ItemCreated += isler_repeater_ItemCreated;
@@ -2032,7 +2025,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
                                 ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = @user_id, @mesaj = @bildirim;";
-                                ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Dürttü !.");
+                                ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Uyardı !.");
                                 ayarlar.cmd.Parameters.Add("tip", "is_listesi");
                                 ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
                                 ayarlar.cmd.Parameters.Add("user_id", gorevliID);
@@ -2049,7 +2042,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
 
                                 Exception except;
-                                bool result = Pushover.SendNotification(ayarlar.PushOverAppKey, Personel["PushUserKey"].ToString(), "ÜÇGEM MEKANİK A.Ş ERP SYTEM", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Dürttü !.", Priority.Normal, PushoverSound.DeviceDefault, String.Empty, "http://erp.ucgem.com", "http://erp.ucgem.com", 60, 3600, out except);
+                                bool result = Pushover.SendNotification(ayarlar.PushOverAppKey, Personel["PushUserKey"].ToString(), "ÜÇGEM MEKANİK A.Ş ERP SYTEM", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı iş için Uyardı !.", Priority.Normal, PushoverSound.DeviceDefault, String.Empty, "http://erp.ucgem.com", "http://erp.ucgem.com", 60, 3600, out except);
                             }
 
                         }

@@ -330,11 +330,10 @@ function sayfagetir(sayfa, data) {
                 $(".mobile-menu").click();
             }
             if (window.innerWidth.innerWidth < 1025) {
-
                 $('.pcoded-navbar').removeClass('show-menu');
             }
         }
-    })
+    });
 
     var yer = data.indexOf("uyari");
     if (yer > 0) {

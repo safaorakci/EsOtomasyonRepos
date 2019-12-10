@@ -279,7 +279,7 @@
                             <div class="col-lg-12 col-xl-12">
 
                                 <!-- Nav tabs -->
-                                <ul class="nav nav-tabs tabs is_tab" role="tablist">
+                                <ul class="nav nav-tabs tabs is_tab" role="tablist" style="text-align-last: justify">
                                     <li class="nav-item">
                                         <a class="nav-link active" onclick="is_listesi('tum');" data-toggle="tab" href="#tum_isler_ust" role="tab"><i class="fa fa-lg fa-cubes" style="color: black;"></i><% Response.Write(LNG("Tamamlanmamış")); %></a>
                                     </li>

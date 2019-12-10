@@ -5,7 +5,7 @@
 <html lang="tr-TR">
 
 <head>
-    <title> ESFLW | Süreç Yönetimi </title>
+    <title>Proskop | Süreç Yönetimi </title>
     <!--[if lt IE 10]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -46,14 +46,14 @@
     <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12 col-sm-12 col-lg-12 col-xs-12">
                     <div class="signin-card card-block auth-body mr-auto ml-auto" id="userbody">
 
                         <form method="post" onsubmit="login_kontrol(); return false;" id="login-form" class="smart-form client-form" novalidate="novalidate">
                             <div class="text-center">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <img src="/images/esotomasyon_logo.png" style="height: 60px; margin-top: 15px;" />
+                                        <img src="/images/ahtapot_buyuk2.png" style="height: 60px; margin-top: 15px;" />
                                     </div>
                                 </div>
 
@@ -62,7 +62,7 @@
                                 <p class="text-inverse b-b-default text-left p-b-5">Hoş geldiniz, e-posta ve parolanız ile güvenli giriş yapabilirsiniz.</p>
                                 <div class="input-group">
                                     <input type="email" id="email" name="email" class="form-control" placeholder="E-Posta">
-                                    <input id="adsoyad" style="text-align:center; display:none" readonly class="form-control"/>
+                                    <input id="adsoyad" style="text-align: center; display: none" readonly class="form-control" />
                                 </div>
                                 <div class="input-group">
                                     <input type="password" name="password" id="password" class="form-control" placeholder="Parola">
@@ -98,8 +98,9 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="row bg-light p-3" id="logincard" style="display:none; overflow-y:scroll; height:650px; margin-right:auto; margin-left:auto; width:1010px">
-
+                        <div class="col-xs-12 pt-1 col-sm-12 col-md-12 bg-light" id="loginBody" style="display: none; overflow-y: scroll; margin-left: auto; margin-right: auto">
+                            <div class="row" id="logincard" style="max-height: 645px">
+                            </div>
                         </div>
                         <div class="col-md-12" style="display: none;">
                             <p class="text-inverse m-t-25 text-center" style="color: white;">Yeni bir hesap mı açmak istiyorsunuz? <a href="javascript:void(0);">Buraya tıklayın!</a></p>
@@ -192,21 +193,23 @@
     <script type="text/javascript">
         $("#DesktopLogin").click(function () {
             $("#loginone").hide();
-            $("#logincard").show();
+            $("#loginBody").show();
             $("#userbody").removeClass("auth-body");
+            if ($(window).width() < 768) {
+                $("#logincard").css("max-height", "540px !important");
+            }
         });
     </script>
 
     <script type="text/javascript">
         function userLogin(id) {
             $("#loginone").show();
-            $("#logincard").hide();
+            $("#loginBody").hide();
             $("#userbody").addClass("auth-body");
             $("#email").val($("#useremail" + id).val());
             $("#email").hide(); //isteğe bağlı
             $("#adsoyad").show();
             $("#adsoyad").val($("#AdSoyad" + id).text());
-
         }
     </script>
 </body>

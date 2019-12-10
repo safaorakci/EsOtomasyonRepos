@@ -3531,9 +3531,7 @@
         SQL="select * from ucgem_firma_kullanici_listesi where id = '"& personel_id &"' and firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
         set personel = baglanti.execute(SQL)
 
-        
-        
-
+       
 %>
 <div class="card">
     <div class="card-header">
@@ -5205,6 +5203,7 @@
         parmak_id = trn(request("parmak_id"))
 
         SQL="update ucgem_firma_kullanici_listesi set parmak_id = '"& parmak_id &"', personel_yillik_izin_hakedis = CONVERT(date, '"& personel_yillik_izin_hakedis &"', 103), yonetici_yetkisi = '"& yonetici_yetkisi &"', personel_yillik_izin = '"& personel_yillik_izin &"', personel_saatlik_maliyet = '"& personel_saatlik_maliyet &"', personel_maliyet_pb = '"& personel_maliyet_pb &"', personel_resim = '"& personel_resim &"', personel_ad = '"& personel_ad &"', personel_soyad = '"& personel_soyad &"', personel_dtarih = CONVERT(date, '"& personel_dtarih &"', 103), personel_cinsiyet = '"& personel_cinsiyet &"', personel_eposta = '"& personel_eposta &"', personel_telefon = '"& personel_telefon &"', departmanlar = '"& departmanlar &"', gorevler = '"& gorevler &"', personel_parola = '"& personel_parola &"', tcno = '"& personel_tcno &"' where id = '"& personel_id &"' and firma_id = '"& request.Cookies("kullanici")("firma_id") &"'; EXEC MailGonderBildirim @personel_id = '"+ personel_id +"', @mesaj = 'Esflw Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://otomasyon.esflw.com>http://otomasyon.esflw.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : " + personel_parola + "<br><br>';"
+    response.Write(SQL)
         set guncelle = baglanti.execute(SQL)
 
 

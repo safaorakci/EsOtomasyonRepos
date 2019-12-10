@@ -76,7 +76,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5>Talep Fişleri</h5>
-                    <input type="button" style="float: right;" class="btn btn-primary" onclick="ModalTalepEkle();" value="Yeni Talep Fişi Oluştur" />
+                    <input type="button" id="yenitalepfisiekle" style="float: right;" class="btn btn-primary" onclick="ModalTalepEkle();" value="Yeni Talep Fişi Oluştur" />
                 </div>
                 <div class="card-block">
                     <div class="row">

@@ -98,7 +98,7 @@
 
     </asp:panel>
     <asp:panel id="dosya_listesi_panel" runat="server">
-        <table class="table table-bordered">
+        <table class="table table-bordered text-nowrap">
 			<thead>
 				<tr>
 					<th style="width:20px; text-align:center;">ID</th>
@@ -131,7 +131,6 @@
 				</asp:panel>								
 			</tbody>
 		</table>
-
     </asp:panel>
     <asp:panel id="kurlar_panel" runat="server">
         <asp:HiddenField ID="dolar_gelen" runat="server"></asp:HiddenField>
@@ -231,6 +230,7 @@
                                    <asp:ListBox ID="dyeni_is_gorevliler" runat="server"></asp:ListBox>
                                 </div>
                             </div>
+                            <input type="hidden" id="gorevlilerId" runat="server"/>
                             <div class="col-sm-6">
                                 <label class="col-form-label"><% Response.Write(LNG("Etiketler")); %></label>
                                 <div class="">
@@ -285,7 +285,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <asp:TextBox id="dyeni_is_baslangic_tarihi" onkeyup="dyeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" runat="server"></asp:TextBox>
+                                            <asp:TextBox id="dyeni_is_baslangic_tarihi" onkeyup="duzenle_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -296,7 +296,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <asp:TextBox id="dyeni_is_baslangic_saati" required class="timepicker" style="padding-left:10px; max-width:55px;" runat="server"></asp:TextBox>
+                                            <asp:TextBox id="dyeni_is_baslangic_saati" onkeyup="duzenle_is_ekle_sure_hesap();" required class="timepicker" style="padding-left:10px; max-width:55px;" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -319,7 +319,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <asp:TextBox id="dyeni_is_bitis_tarihi" onkeyup="dyeni_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" runat="server"></asp:TextBox>
+                                            <asp:TextBox id="dyeni_is_bitis_tarihi" onkeyup="duzenle_is_ekle_sure_hesap();" required class="takvimyap_yeni" style="padding-left:10px; max-width:110px;" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -330,7 +330,7 @@
                                             <span class="input-group-addon">
                                                 <i class="icon-prepend fa fa-calendar"></i>
                                             </span>
-                                            <asp:TextBox runat="server" id="dyeni_is_bitis_saati" style="padding-left:10px; max-width:55px;" required class="timepicker"></asp:TextBox>
+                                            <asp:TextBox runat="server" id="dyeni_is_bitis_saati" onkeyup="duzenle_is_ekle_sure_hesap();" style="padding-left:10px; max-width:55px;" required class="timepicker"></asp:TextBox>
                                         </div>
                                     </div>
                                 </div>
@@ -1205,7 +1205,7 @@
 
         <asp:panel id="is_listesi_panel" runat="server">
         <div id="lineer_kopyalanan" style="display:none;"></div>
-        <div class="mobil_hide"  data-hide="phone" style="    width: 200px; float: right; margin-right: 250px; margin-bottom: -51px;  z-index: 13;  position: relative; padding-top: 10px;">
+        <div class="mobil_hide"  data-hide="phone" style="width: 200px; float: right; margin-right: 250px; margin-bottom: -51px;  z-index: 13;  position: relative; padding-top: 10px;">
             <asp:ListBox name="tablo_customize" id="tablo_customize" multiple="multiple" runat="server"></asp:ListBox>
         </div><% gorunum gorunum = gorunum_al(); %>
         <script>
@@ -1213,8 +1213,8 @@
                 is_listesi_timeline_calistir2();
             });
         </script>
-        <div class="dt-responsive table-responsive">
-         <table id="example" class="nowrap display projects-table responsive table table-striped table-bordered table-hover dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+        <div id="islerTableRespon" class="dt-responsive table-responsive">
+         <table id="example" class="nowrap display projects-table responsive table table-striped table-bordered table-hover dataTable no-footer" cellspacing="0"  role="grid" aria-describedby="example_info" style="width: 100%;">
                                     <thead>
                                         <tr id="birnumara" class="alttaki">
                                             <th sira="1" data-hide="phone" class="sortyeri"></th>
@@ -1256,7 +1256,8 @@
                                         <tr class="details-control-tr" id="<%# DataBinder.Eval(Container.DataItem, "id") %>" role="row">
                                             <td class=" details-control" data-order="<%# DataBinder.Eval(Container.DataItem, "guncelleme_tarihi_order") %>"><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "id") %></span></td>
 
-                                            <td class="sorting_1"><div class="tablo_is_adi"><%# DataBinder.Eval(Container.DataItem, "adi") %></div>
+                                            <td class="sorting_1">
+                                                <div class="tablo_is_adi"><%# DataBinder.Eval(Container.DataItem, "adi") %></div>
                                                 <span style="float:right; margin-top:-30px; text-align:right;">İş Kodu :<br /><strong><%# DataBinder.Eval(Container.DataItem, "is_kodu") %></strong></span>
                                             </td>
 
@@ -1288,7 +1289,7 @@
                                             <td class="tablo_ekleyen <%# DataBinder.Eval(Container.DataItem, "tablo_ekleyen") %>" data-order="<%# DataBinder.Eval(Container.DataItem, "ekleme_tarihi_order") %>"><div><%# DataBinder.Eval(Container.DataItem, "ekleyen_adsoyad") %><br /><strong><%# DataBinder.Eval(Container.DataItem, "ekleme_tarihi") %><br /><%# DataBinder.Eval(Container.DataItem, "ekleme_saati") %></strong><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "ekleyen_adsoyad") %></span></div></td>
 
                                             <td class="label-<%# DataBinder.Eval(Container.DataItem, "is_durum_class") %> tablo_durum <%# DataBinder.Eval(Container.DataItem, "tablo_durum") %>">
-                                                <div>
+                                                <div id="isDurum">
                                                 <span class="label label-<%# DataBinder.Eval(Container.DataItem, "is_durum_class") %> arkaplansiz"><%# DataBinder.Eval(Container.DataItem, "is_durum") %></span>
                                                     <span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "is_durum") %></span>
                                                 </div>
@@ -1300,7 +1301,7 @@
                                     </tbody>
                                 </table>
             </div>
-    </asp:panel>
+        </asp:panel>
 
         <asp:panel id="is_ara_panel" runat="server">
         <div class="modal-header"> 
@@ -1640,7 +1641,7 @@
                                 </div>
                             </div></div>
 
-                                                     <div class="row">
+                              <div class="row">
 
                                  <div class="col-md-12">
                                     <div class="col-sm-12" style="vertical-align: bottom; padding-left: 0; padding-top: 10px; ">

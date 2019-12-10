@@ -89,8 +89,9 @@
         </thead>
         <tbody>
             <%
-                SQL="set datefirst 1;SELECT mesai.id as idd, CASE WHEN mesai.giris_tipi = 1 THEN DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai.tarih) = 1 THEN kullanici.gun1_saat1 WHEN DATEPART(dw, mesai.tarih) = 2 THEN kullanici.gun2_saat1 WHEN DATEPART(dw, mesai.tarih) = 3 THEN kullanici.gun3_saat1 WHEN DATEPART(dw, mesai.tarih) = 4 THEN kullanici.gun4_saat1 WHEN DATEPART(dw, mesai.tarih) = 5 THEN kullanici.gun5_saat1 WHEN DATEPART(dw, mesai.tarih) = 6 THEN kullanici.gun6_saat1 WHEN DATEPART(dw, mesai.tarih) = 7 THEN kullanici.gun7_saat1 END, '00:00' ) ) ), CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, mesai.saat) ) ELSE DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai.tarih) = 1 THEN kullanici.gun1_saat2 WHEN DATEPART(dw, mesai.tarih) = 2 THEN kullanici.gun2_saat2 WHEN DATEPART(dw, mesai.tarih) = 3 THEN kullanici.gun3_saat2 WHEN DATEPART(dw, mesai.tarih) = 4 THEN kullanici.gun4_saat2 WHEN DATEPART(dw, mesai.tarih) = 5 THEN kullanici.gun5_saat2 WHEN DATEPART(dw, mesai.tarih) = 6 THEN kullanici.gun6_saat2 WHEN DATEPART(dw, mesai.tarih) = 7 THEN kullanici.gun7_saat2 END, '00:00' ) ) ), CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, mesai.saat) ) END AS fark, * FROM ucgem_personel_mesai_girisleri mesai JOIN ucgem_firma_kullanici_listesi kullanici ON kullanici.id = mesai.personel_id WHERE mesai.personel_id = '"& personel_id &"' AND mesai.cop = 'false' ORDER BY mesai.id DESC;"
+                SQL="set datefirst 1;SELECT mesai.id as form_id, CASE WHEN mesai.giris_tipi = 1 THEN DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai.tarih) = 1 THEN kullanici.gun1_saat1 WHEN DATEPART(dw, mesai.tarih) = 2 THEN kullanici.gun2_saat1 WHEN DATEPART(dw, mesai.tarih) = 3 THEN kullanici.gun3_saat1 WHEN DATEPART(dw, mesai.tarih) = 4 THEN kullanici.gun4_saat1 WHEN DATEPART(dw, mesai.tarih) = 5 THEN kullanici.gun5_saat1 WHEN DATEPART(dw, mesai.tarih) = 6 THEN kullanici.gun6_saat1 WHEN DATEPART(dw, mesai.tarih) = 7 THEN kullanici.gun7_saat1 END, '00:00' ) ) ), CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, mesai.saat) ) ELSE DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai.tarih) = 1 THEN kullanici.gun1_saat2 WHEN DATEPART(dw, mesai.tarih) = 2 THEN kullanici.gun2_saat2 WHEN DATEPART(dw, mesai.tarih) = 3 THEN kullanici.gun3_saat2 WHEN DATEPART(dw, mesai.tarih) = 4 THEN kullanici.gun4_saat2 WHEN DATEPART(dw, mesai.tarih) = 5 THEN kullanici.gun5_saat2 WHEN DATEPART(dw, mesai.tarih) = 6 THEN kullanici.gun6_saat2 WHEN DATEPART(dw, mesai.tarih) = 7 THEN kullanici.gun7_saat2 END, '00:00' ) ) ), CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, mesai.saat) ) END AS fark, * FROM ucgem_personel_mesai_girisleri mesai JOIN ucgem_firma_kullanici_listesi kullanici ON kullanici.id = mesai.personel_id WHERE mesai.personel_id = '"& personel_id &"' AND mesai.cop = 'false' ORDER BY mesai.tarih DESC;"
                 set giris = baglanti.execute(SQL)
+                'response.Write(SQL)
                 if giris.eof then
             %>
             <tr>
@@ -99,9 +100,10 @@
             <%
                 end if
                 do while not giris.eof
+                k = k + 1
             %>
             <tr>
-                <td><%=giris("idd") %></td>
+                <td><%=k %></td>
                 <td><%=day(cdate(giris("tarih"))) %>&nbsp;<%=monthname(month(cdate(giris("tarih")))) %>&nbsp;<%=year(cdate(giris("tarih"))) %>&nbsp;<%=weekdayname(weekday(cdate(giris("tarih")))) %></td>
                 <td><%=left(giris("saat"),5) %></td>
                 <td><% if trim(giris("giris_tipi"))="2" then %><%=LNG("İzin")%><% elseif trim(giris("giris_tipi"))="1" then %><%=LNG("Giriş")%><% else %><%=LNG("Çıkış")%><% end if %></td>
@@ -122,8 +124,8 @@
                                 <span class="sr-only"><%=LNG("İşlemler")%></span>
                             </button>
                             <div class="dropdown-menu">
-                                <!--<a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_duzenle('<%=personel_id %>', '<%=giris("idd") %>');"><%=LNG("Kaydı Düzenle")%></a>-->
-                                <a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_sil('<%=personel_id %>', '<%=giris("idd") %>');"><%=LNG("Kaydı Sil")%></a>
+                                <!--<a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_duzenle('<%=personel_id %>', '<%=giris("form_id") %>');"><%=LNG("Kaydı Düzenle")%></a>-->
+                                <a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_sil('<%=personel_id %>', '<%=giris("form_id") %>');"><%=LNG("Kaydı Sil")%></a>
                             </div>
                         </div>
                     </div>
@@ -574,7 +576,7 @@
         end if
 
 %>
-<div class="dt-responsive table-responsive">
+<div class="dt-responsive table-responsive" style="padding-bottom:85px">
     <table id="new-cons" class="table table-striped table-bordered table-hover" width="100%">
         <thead>
             <tr>
@@ -658,15 +660,15 @@
 
     yetkiliSorgu = ""
     if (trn(request("yetkili2_adi"))="") then
-       yetkiliSorgu = yetkiliSorgu & ", yetkili2_adi = NULL, yetkili2_telefon = NULL, yetkili2_mail = NULL' "
+       yetkiliSorgu = yetkiliSorgu & ", yetkili2_adi = NULL, yetkili2_telefon = NULL, yetkili2_mail = NULL"
     else
         yetkiliSorgu = yetkiliSorgu & ", yetkili2_adi = '" & yetkili2_adi & "', yetkili2_telefon = '" & yetkili2_telefon & "', yetkili2_mail = '" & yetkili2_mail & "' "
     end if
 
     if (trn(request("yetkili3_adi"))="") then
-       yetkiliSorgu = yetkiliSorgu & ", yetkili3_adi = NULL, yetkili3_telefon = NULL, yetkili3_mail = NULL "
+       yetkiliSorgu = yetkiliSorgu & ", yetkili3_adi = NULL, yetkili3_telefon = NULL, yetkili3_mail = NULL"
     else
-        yetkiliSorgu = yetkiliSorgu & ", yetkili3_adi = '" & yetkili3_adi & "', yetkili3_telefon = '" & yetkili3_telefon & "', yetkili3_mail = '" & yetkili3_mail & "' "
+        yetkiliSorgu = yetkiliSorgu & ", yetkili3_adi = '" & yetkili3_adi & "', yetkili3_telefon = '" & yetkili3_telefon & "', yetkili3_mail = '" & yetkili3_mail & "'"
     end if
 
    if (trn(request("yetkili4_adi"))="") then
@@ -2444,11 +2446,13 @@
     %>
     <div class="col-lg-12 col-xl-4" style="display: none">
         <h5 style="font-size: 15px; line-height: 35px;"><%=LNG("Bütçe Hesapları")%>
-            <button id="edit-btn" style="margin-top: 0;" type="button" onclick="proje_butce_hesabi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Bütçe Hesabı Ekle")%></button></h5>
+            <button id="edit-btn" style="margin-top: 0" type="button" onclick="proje_butce_hesabi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Bütçe Hesabı Ekle")%></button>
+        </h5>
         <div>
             <%
                 sql="SELECT ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'TL'),0) AS gerceklesen_tl, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'USD'),0) AS gerceklesen_usd, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'EUR'),0) AS gerceklesen_eur, * FROM ahtapot_proje_butce_listesi butce WHERE butce.proje_id = '"& proje_id &"' AND butce.cop = 'false';"
                 set butce = baglanti.execute(SQL)
+
             %>
 
             <div class="dt-responsive table-responsive">
@@ -2586,27 +2590,36 @@
 
     <div class="col-lg-12 col-xl-12">
         <h5 style="font-size: 15px; line-height: 35px;"><%=LNG("Proje Giderleri")%>
-            <button id="edit-btn" style="margin-top: -5px;" type="button" onclick="yeni_satinalma_kaydi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Yeni Satın Alma Ekle")%></button></h5>
+            <button id="edit-btn" style="margin-top: -5px; display:none" type="button" onclick="yeni_satinalma_kaydi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Yeni Satın Alma Ekle")%></button></h5>
         <div>
             <%
-                SQL="select id, IsId, sum(toplamtl) as toplamTL from satinalma_listesi where proje_id = '"& proje_id &"' group by id, IsId"
+                SQL="select id, IsId, sum(toplamtl) as toplamTL from satinalma_listesi where proje_id = '"& proje_id &"' and durum != 'Iptal Edildi' group by id, IsId"
+                'response.Write(SQL & "- ")
                 set satinalmaformu = baglanti.execute(SQL)
 
-                SQL = "DECLARE @id int; set @id='"& proje_id &"';IF EXISTS(select id from satinalma_listesi	where proje_id = @id) begin select id from satinalma_listesi where proje_id = @id END else begin select 0 as id end"
+                SQL = "DECLARE @id int; set @id='"& proje_id &"'; IF EXISTS(select id from satinalma_listesi where proje_id = @id) begin select id from satinalma_listesi where proje_id = @id and durum != 'Iptal Edildi' END else begin select 0 as id end"
+                'response.Write(SQL & "- ")
                 set sapariskontrol = baglanti.execute(SQL)
 
-                SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& sapariskontrol("id") &"'"
-                set siparisparca = baglanti.execute(SQL)
+                if sapariskontrol.eof then
+                    
+                else
+                    SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& sapariskontrol("id") &"' and cop = 'false'"
+                    'response.Write(SQL & " - ")
+                    set siparisparca = baglanti.execute(SQL)
 
-                SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& sapariskontrol("id") &"'"
-                set eksikparca = baglanti.execute(SQL)
+                    SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& sapariskontrol("id") &"' and cop = 'false'"
+                    'response.Write(SQL & " - ")
+                    set eksikparca = baglanti.execute(SQL)
+                end if
+
             %>
             <div class="dt-responsive table-responsive">
                 <table id="new-cons2" class="<% if satinalmaformu.eof then %>kayityok<% end if %> table table-striped table-bordered table-hover" width="100%">
                     <thead>
                         <tr>
                             <th colspan="1">Sipariş Formları</th>
-                            <th style="width: 300px; text-align: right;"><%=LNG("Toplam Maliyet")%></th>
+                            <th style="width: 115px;"><%=LNG("Toplam Maliyet")%></th>
                             <th>Dosya</th>
                         </tr>
                     </thead>
@@ -2623,43 +2636,49 @@
                         %>
                         <tr>
                             <td class="text-left">
-                                <a class="btn-link ml-2 mb-2" id="siparisparca" style="cursor: pointer"><i id="sipico" class="fa fa-plus mr-1"></i>Sipariş Edilen Parçalar</a>
-                                    <div class="col-md-6" id="siparisDetay" style="display: none">
+                                <a class="btn-link ml-2 mb-2" id="siparisparca<%=satinalmaformu("id") %>" onclick="siparisDetayAc(<%=satinalmaformu("id") %>)"; style="cursor: pointer"><i id="sipico" class="fa fa-plus mr-2"></i>Sipariş Edilen Parçalar</a>
+                                    <div class="col-md-6" id="siparisDetay<%=satinalmaformu("id") %>" style="display: none">
                                          <table class="table table-sm table-bordered ml-4 mt-3 mb-3">
                                             <thead>
                                                 <tr>
-                                                    <th>Parça Kodu</th>
-                                                    <th>Sayısı</th>
+                                                    <th>Parça</th>
+                                                    <th>Marka</th>
+                                                    <th>Açıklama</th>
+                                                    <th>Adet</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <% if siparisparca.eof then %>
-                                            <p class="ml-4 mt-3 mb-2">Kayıt Bulunamadı</p>
-                                            <%
-                                                    end if
-                                                    do while not siparisparca.eof
-
-                                                    SQL = "select id, IsID, ParcaId, (Adet - (select adet from satinalma_siparis_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"')) as KullanilanParcalar, (select adet  from     satinalma_siparis_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"') as SiparisVerilenParcalar from is_parca_listesi where ParcaId = '"& siparisparca ("parcaId") &"' and  IsID = '"& siparisparca("IsId") &"'"
-                                                    set sondurum = baglanti.execute(SQL)
-                                                respo
-
-                                                    SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"'"
-                                                    set parcaBilgi = baglanti.execute(SQL)
+                                            <% 
+                                                if siparisparca.eof then 
                                             %>
-                                                            <tr>
-                                                                <td><%=parcaBilgi("parca_kodu") %></td>
-                                                                <td><%=sondurum("SiparisVerilenParcalar") %></td>
-                                                            </tr>
+                                                <p class="ml-4 mt-3 mb-2">Kayıt Bulunamadı</p>
                                             <%
-                                                    siparisparca.movenext
-                                                    loop
+                                                end if
+                                                do while not siparisparca.eof
+
+                                                SQL = "select id, IsID, ParcaId, StoktanKullanilanAdet, SiparisVerilenAdet from is_parca_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"'"
+                                                'response.Write(SQL)
+                                                set sondurum = baglanti.execute(SQL)
+
+                                                SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"'"
+                                                set parcaBilgi = baglanti.execute(SQL)
+                                            %>
+                                                <tr>
+                                                    <td><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
+                                                    <td><%=parcaBilgi("marka") %></td>
+                                                    <td><%=parcaBilgi("aciklama") %></td>
+                                                    <td><%=sondurum("SiparisVerilenAdet") %></td>
+                                                </tr>
+                                            <%
+                                                 siparisparca.movenext
+                                                 loop
                                             %>
                                             </tbody>
                                            </table>
                                     </div>
                             </td>
                             <td>
-                                   <span class="label-warning text-dark" style="float:right; padding:2px 10px; margin-right:0px; font-weight:bold">
+                                   <span class="label-warning text-dark" style="padding:2px 10px; margin-right:0px; font-weight:bold">
                                        <%=formatnumber(satinalmaformu("toplamTL"),2) %> TL
                                    </span>
                             </td>
@@ -2674,13 +2693,15 @@
                         </tr>
                         <tr>
                             <td colspan="3" class="text-left">
-                                <a class="btn-link ml-2" id="kullanilanparca" style="cursor:pointer"><i id="satico" class="fa fa-plus mr-1"></i> Kullanılan Parçalar</a>
-                                    <div class="col-md-6" id="kullanilandetay" style="display:none">
+                                <a class="btn-link ml-2" id="kullanilanparca<%=satinalmaformu("id") %>" onclick="parcaDetayAc(<%=satinalmaformu("id") %>);" style="cursor:pointer"><i id="satico" class="fa fa-plus mr-2"></i> Kullanılan Parçalar</a>
+                                    <div class="col-md-6" id="kullanilandetay<%=satinalmaformu("id") %>" style="display:none">
                                         <table class="table table-bordered table-sm  ml-4 mt-3 mb-3">
                                             <thead>
                                                 <tr>
-                                                    <th>Parça Kodu</th>
-                                                    <th>Sayısı</th>
+                                                    <th>Parça</th>
+                                                    <th>Marka</th>
+                                                    <th>Açıklama</th>
+                                                    <th>Adet</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -2692,20 +2713,23 @@
                                                     end if
                                                     do while not eksikparca.eof
 
-                                                    SQL = "select id, IsID, ParcaId, (Adet - (select adet from satinalma_siparis_listesi where ParcaId = '"& eksikparca("parcaId") &"' and IsID = '"& eksikparca("IsId") &"')) as KullanilanParcalar, (select adet from        satinalma_siparis_listesi where ParcaId = '"& eksikparca("parcaId") &"' and IsID = '"& eksikparca("IsId") &"') as SiparisVerilenParcalar from is_parca_listesi where ParcaId = '"& eksikparca("parcaId") &"' and     IsID =  '"& eksikparca("IsId") &"'"
+                                                    SQL = "select id, Adet, IsID, ParcaId, StoktanKullanilanAdet, SiparisVerilenAdet from is_parca_listesi where ParcaId = '"& eksikparca("parcaId") &"' and IsID = '"& eksikparca("IsId") &"'"
+                                                    'response.Write(SQL)
                                                     set sondurum = baglanti.execute(SQL)
 
                                                     SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"'"
                                                     set parcaBilgi = baglanti.execute(SQL)
 
-                                                    if sondurum("KullanilanParcalar") > 0 then
+                                                    'if sondurum("StoktanKullanilanAdet") > 0 then
                                                 %>
                                                     <tr>
-                                                        <td><%=parcaBilgi("parca_kodu") %></td>
-                                                        <td><%=sondurum("KullanilanParcalar") %></td>
+                                                        <td><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
+                                                        <td><%=parcaBilgi("marka") %></td>
+                                                        <td><%=parcaBilgi("aciklama") %></td>
+                                                        <td><%=sondurum("Adet") %></td>
                                                     </tr>
                                                 <%
-                                                    end if
+                                                    'end if
                                                     eksikparca.movenext
                                                     loop
                                                 %>
@@ -2728,14 +2752,12 @@
         $("#btn-detay").click(function () {
             $("#parcadetay").slideToggle();
         });
-
-        $("#siparisparca").click(function () {
-            $("#siparisDetay").slideToggle();
-        });
-
-        $("#kullanilanparca").click(function () {
-            $("#kullanilandetay").slideToggle();
-        });
+        function siparisDetayAc(id) {
+            $("#siparisDetay" + id).slideToggle();
+        }
+        function parcaDetayAc(id) {
+            $("#kullanilandetay" + id).slideToggle();
+        }
 
     </script>
 

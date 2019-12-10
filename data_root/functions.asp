@@ -239,6 +239,30 @@
             eldeki_dakika = "0" & cint(eldeki_dakika)
         end if
         DakikadanSaatYap = eldeki_saat & ":" & eldeki_dakika
+
+    End Function
+
+    Function ConvertHourToMinute(Deger)
+
+        Deger = replace(Deger, ":", ",")
+
+        if isnumeric(Deger)=false then
+            Deger = 0
+        end if
+
+        hours = Deger \ 60
+        minutes = Deger mod 60
+
+        eldeki_saat = hours
+        eldeki_dakika = minutes
+
+        if cint(eldeki_saat)<10 then
+            eldeki_saat = "0" & cint(eldeki_saat)
+        end if
+        if cint(eldeki_dakika)<10 then
+            eldeki_dakika = "0" & cint(eldeki_dakika)
+        end if
+        ConvertHourToMinute = eldeki_saat & ":" & eldeki_dakika
     End Function
 
     function toHourMin(minutes)

@@ -1,0 +1,141 @@
+USE [ProskopV2Dev]
+GO
+/****** Object:  StoredProcedure [dbo].[ProjeAdamSaatCetveliRapor]    Script Date: 28.11.2019 15:24:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+	ALTER PROC [dbo].[ProjeAdamSaatCetveliRapor]
+	(
+	    @proje_id INT,
+	    @firma_id INT,
+	    @baslangic NVARCHAR(15),
+	    @bitis NVARCHAR(15),
+		@rapor_personel_id INT,
+		@etiketler NVARCHAR(50)
+
+	)
+	AS
+	BEGIN
+	
+	    /*
+			EXEC dbo.ProjeAdamSaatCetveli @proje_id = 16, @firma_id = 1, @baslangic = '11.09.2018', @bitis = '15.09.2020';
+	
+			DECLARE @proje_id INT = 16;
+			DECLARE @firma_id INT = 1;
+			DECLARE @baslangic DATE = '11.09.2018';
+			DECLARE @bitis DATE = '15.09.2018';
+			
+		*/
+	
+	
+	    SET NOCOUNT ON;
+	
+	
+	    CREATE TABLE #adam_saat_sonuclar
+	    (
+	        id INT,
+	        tip NVARCHAR(50),
+	        kaynak NVARCHAR(50),
+	        number INT,
+	        tarih DATE,
+	        saat DECIMAL(18,2),
+	        maliyet_tutari DECIMAL(18, 2),
+	        pb NVARCHAR(10)
+	    );
+	
+	
+	    INSERT INTO #adam_saat_sonuclar
+	    (
+	        id,
+	        tip,
+	        kaynak,
+	        number,
+	        tarih,
+	        saat,
+	        maliyet_tutari,
+	        pb
+	    )
+	    SELECT gosterge.id,
+	           gosterge.tip,
+	           gosterge.kaynak,
+	           spt.number,
+	           DATEADD(DAY, number, CONVERT(date, @baslangic,103)) AS tarih,
+	           ISNULL(hesaplama.saat, 0) AS saat,
+	           ISNULL(   CASE
+	                         WHEN gosterge.tip = 'PERSONEL' THEN
+	                             CONVERT(DECIMAL(18, 2), (hesaplama.saat) * ISNULL(kullanici.personel_saatlik_maliyet, 0))
+	                         WHEN gosterge.tip = 'TASERON' THEN
+	                             CONVERT(DECIMAL(18, 2), (hesaplama.saat) * ISNULL(firma.taseron_saatlik_maliyet, 0))
+	                     END,
+	                     0
+	                 ) AS maliyet_tutari,
+	           CASE
+	               WHEN gosterge.tip = 'PERSONEL' THEN
+	                   ISNULL(kullanici.personel_maliyet_pb, 'TL')
+	               WHEN gosterge.tip = 'TASERON' THEN
+	                   ISNULL(firma.taseron_maliyet_pb, 'TL')
+	           END AS pb
+	    FROM gantt_kaynaklar gosterge
+	        JOIN master..spt_values spt
+	            ON spt.type = 'P'
+	               AND DATEADD(DAY, number, CONVERT(date, @baslangic,103)) <= CONVERT(date, @bitis,103)
+	        LEFT JOIN
+	        (
+	            SELECT kaynak.tip,
+	                   kaynak.id,
+	                   olay.baslangic AS baslangic,
+	                   SUM((DATEDIFF(
+	                                    n,
+	                                    CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati),
+	                                    CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)
+	                                )
+	                       ) * 0.016667
+	                      ) AS saat
+	            FROM dbo.gantt_kaynaklar kaynak
+	                JOIN ahtapot_ajanda_olay_listesi olay
+	                    ON olay.etiket = kaynak.tip
+	                       AND olay.etiket_id = kaynak.id
+
+						   AND (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(10), @proje_id) ) =  CASE WHEN @proje_id = 0 THEN 0 ELSE 1 END
+						   AND (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = @etiketler ) = CASE WHEN @etiketler = '0' THEN 0 ELSE 1 end
+	                       AND olay.durum = 'true'
+	                       AND olay.cop = 'false'
+	                       AND olay.tamamlandi = 1
+	            GROUP BY kaynak.tip,
+	                     kaynak.id,
+	                     olay.baslangic
+	        ) hesaplama
+	            ON hesaplama.id = gosterge.id
+	               AND hesaplama.tip = gosterge.tip
+	               AND DATEADD(DAY, number, CONVERT(date, @baslangic,103)) = hesaplama.baslangic
+	        LEFT JOIN dbo.ucgem_firma_kullanici_listesi kullanici
+	            ON kullanici.id = gosterge.id
+	        LEFT JOIN dbo.ucgem_firma_listesi firma
+	            ON firma.id = gosterge.id
+	    WHERE gosterge.firma_id = @firma_id
+		AND gosterge.tip = CASE WHEN @rapor_personel_id = 0 THEN gosterge.tip ELSE  'PERSONEL' END 
+		AND gosterge.id = CASE WHEN @rapor_personel_id = 0 THEN gosterge.id ELSE  @rapor_personel_id END 
+
+		GROUP BY gosterge.id, gosterge.tip, gosterge.kaynak, spt.number, hesaplama.saat, kullanici.personel_saatlik_maliyet, firma.taseron_saatlik_maliyet, kullanici.personel_maliyet_pb, firma.taseron_maliyet_pb
+	    ORDER BY gosterge.tip,
+	             gosterge.id,
+	             spt.number ASC;
+	
+	
+				 SELECT
+				 
+				 (SELECT COUNT(id) FROM #adam_saat_sonuclar) AS adet,
+				 (SELECT COUNT(DISTINCT kaynak) FROM #adam_saat_sonuclar) AS kaynak_adet,
+				 (SELECT sum(saat) FROM #adam_saat_sonuclar WHERE id = sonuc.id AND tip = sonuc.tip) AS kaynak_toplam_saat,
+				 (SELECT sum(maliyet_tutari) FROM #adam_saat_sonuclar WHERE id = sonuc.id AND tip = sonuc.tip) AS kaynak_toplam_maliyet
+	
+	
+	
+				  ,sonuc.* FROM #adam_saat_sonuclar sonuc ORDER BY sonuc.tip, sonuc.id, sonuc.number;
+	
+			DROP TABLE #adam_saat_sonuclar;
+	
+	
+	END;
