@@ -3549,7 +3549,34 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select id, adi, tip, grup from etiketler where firma_id = @firma_id order by adi asc";
+        ayarlar.cmd.CommandText = "select id,proje_adi, proje_kodu, firma_id from ucgem_proje_listesi where cop = 'false' order by id desc";
+        ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
+        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(ayarlar.cmd);
+        DataSet dataSet = new DataSet();
+        sqlDataAdapter.Fill(dataSet);
+
+        foreach (DataRow dataRow in dataSet.Tables[0].Rows)
+        {
+            ListItem items = new ListItem();
+            items.Text = dataRow["proje_adi"].ToString() + "-" + dataRow["proje_kodu"].ToString();
+            items.Value = "proje" + "-" + dataRow["id"].ToString();
+            items.Attributes.Add("tip", "proje");
+            items.Attributes.Add("optiongroup", "Projeler");
+
+            if (proje_id != "")
+            {
+                if (dataRow["id"].ToString() == proje_id)
+                {
+                    items.Selected = true;
+                }
+            }
+
+            yeni_is_etiketler.Items.Add(items);
+        }
+
+        ayarlar.baglan();
+        ayarlar.cmd.Parameters.Clear();
+        ayarlar.cmd.CommandText = "select id, adi, tip, grup from etiketler where firma_id = @firma_id and tip != 'proje' order by adi asc";
         ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda2 = new SqlDataAdapter(ayarlar.cmd);
         DataSet ds2 = new DataSet();
@@ -3564,15 +3591,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             items.Value = item["tip"].ToString() + "-" + item["id"].ToString();
             items.Attributes.Add("tip", item["tip"].ToString());
             items.Attributes.Add("optiongroup", item["grup"].ToString());
-
-            if (proje_id != "")
-            {
-                if (item["tip"].ToString() == "proje" && item["id"].ToString() == proje_id)
-                {
-                    items.Selected = true;
-                }
-            }
-
 
 
             if (departman_id != "")

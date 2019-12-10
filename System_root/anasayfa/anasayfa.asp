@@ -86,10 +86,6 @@
 </script>
 
 <div class="page-body">
-
-
-
-
     <style>
         .okunmadi {
             background-color: #edf6ff;
@@ -256,7 +252,7 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-4">
                                 <%=LNG("İş Yükü Gösterim Tipi:")%><br />
-                                <select name="yeni_is_yuku_gosterim_tipi" onchange="is_yuku_gosterim_proje_sectim('<%=cdate(dongu_baslangic) %>', '<%=cdate(dongu_bitis) %>');" id="yeni_is_yuku_gosterim_tipi" class="select2" >
+                                <select name="yeni_is_yuku_gosterim_tipi" onchange="is_yuku_gosterim_proje_sectim('<%=cdate(dongu_baslangic) %>', '<%=cdate(dongu_bitis) %>');" id="yeni_is_yuku_gosterim_tipi" class="select2">
                                     <option value="0"><%=LNG("Günlük İş Sayıları")%></option>
                                     <option value="1"><%=LNG("Günlük İş Saatleri")%></option>
                                 </select>
@@ -264,20 +260,20 @@
                             <div class="col-sm-12 col-md-4">
                                 <%=LNG("Proje:")%><br />
                                 <select name="yeni_is_yuku_proje_id" id="yeni_is_yuku_proje_id" onchange="is_yuku_gosterim_proje_sectim('<%=cdate(dongu_baslangic) %>', '<%=cdate(dongu_bitis) %>');" class="select2">
-                                            <option value="0"><%=LNG("Tüm Projeler")%></option>
-                                            <%
+                                    <option selected value="0"><%=LNG("Tüm Projeler")%></option>
+                                    <%
                                                 SQL="select id, proje_adi from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' order by proje_adi asc"
                                                 set proje = baglanti.execute(SQL)
                                                 do while not proje.eof
-                                            %>
-                                            <option value="<%=proje("id") %>"><%=proje("proje_adi") %></option>
-                                            <%
+                                    %>
+                                    <option value="<%=proje("id") %>"><%=proje("proje_adi") %></option>
+                                    <%
                                                 proje.movenext
                                                 loop
-                                            %>
-                                        </select>
+                                    %>
+                                </select>
                             </div>
-                            <div class="col-sm-12 col-md-1" style="display:none;">
+                            <div class="col-sm-12 col-md-1" style="display: none;">
                                 <input type="button" onclick="isyuku_timeline_calistir();" class="btn btn-mini btn-rnd btn-primary" value="Timeline" />
                             </div>
                         </div>
@@ -383,17 +379,19 @@
         <div class="col-md-12 col-lg-7">
             <div class="card">
                 <div class="card-header">
-                    <h5><%=LNG("Proje İlerleme Durumları")%></h5>
-                    <div style="float: right; margin-bottom: 0;">
-                        <table>
-                            <tr>
-                                <td><%=LNG("Proje")%> </td>
-                                <td style="width: 30px;">:</td>
-                                <td style="width: 200px; padding-right: 15px;">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5><%=LNG("Proje İlerleme Durumları")%></h5>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-3" style="display:flex"><span style="align-self: center;">Proje</span></div>
+                                <div class="col-md-9">
                                     <select name="rapor_proje_ilerleme_proje_id" onchange="anasayfa_proje_durum_bilgisi_getir(this.value);" id="rapor_proje_ilerleme_proje_id" class="select2">
                                         <%
-                                            SQL="select id, proje_adi from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false'"
+                                            SQL="select id, proje_adi from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' and proje_firma_id != 0"
                                             set projeler = baglanti.execute(SQL)
+                                            'response.Write(SQL)
 
                                             ilk_proje_id = 0
                                             do while not projeler.eof
@@ -406,7 +404,17 @@
                                             projeler.movenext
                                             loop
                                         %>
-                                    </select></td>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="float: right; margin-bottom: 0;">
+                        <table>
+                            <tr>
+                                <td></td>
+                                <td style="width: 30px;"></td>
+                                <td style="width: 200px; padding-right: 15px;"></td>
                             </tr>
                         </table>
                     </div>

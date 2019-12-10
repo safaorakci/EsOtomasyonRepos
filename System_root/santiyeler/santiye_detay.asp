@@ -12,7 +12,7 @@
 
     SQL="select firma.firma_adi, * from ucgem_proje_listesi proje join ucgem_firma_listesi firma on firma.id = proje.proje_firma_id where proje.id = '"& proje_id &"'"
     set firma = baglanti.execute(SQL)
-   
+    'response.Write(SQL)
 %>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -32,18 +32,26 @@
                     <div class="card-block user-info" style="bottom: -73px; width: 70%;">
                         <div class="media-left">
                             <a href="#" class="profile-image">
-                                <% if firma("firma_logo") = "undefined" or (firma("firma_logo")) = null then %>
-                                <img class="user-img img-radius" src="/img/taseron_logo.jpg" style="width: 140px!important; height: 149px!important;">
+                                <%if not firma.eof then %>
+                                    <% if firma("firma_logo") = "undefined" or (firma("firma_logo")) = null then %>
+                                        <img class="user-img img-radius" src="/img/taseron_logo.jpg" style="width: 140px!important; height: 149px!important;">
+                                    <%else %>
+                                        <img class="user-img img-radius" src="<%=firma("firma_logo") %>" style="width: 140px!important; height: 149px!important;">
+                                    <%end if %>
                                 <%else %>
-                                <img class="user-img img-radius" src="<%=firma("firma_logo") %>" style="width: 140px!important; height: 149px!important;">
+                                    <img class="user-img img-radius" src="/img/taseron_logo.jpg" style="width: 140px!important; height: 149px!important;">
                                 <%end if %>
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="d-inline-block" style="padding-left: 175px;">
-                    <h5 style="font-size: 15px;"><%=firma("proje_adi") %></h5>
-                    <span><%=firma("firma_adi") %></span>
+                    <%if not firma.eof then %>
+                        <h5 style="font-size: 15px;"><%=firma("proje_adi") %></h5>
+                        <span><%=firma("firma_adi") %></span>
+                    <%else %>
+                        
+                    <%end if %>
                 </div>
 
                 <span style="float: right;">
