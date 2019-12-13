@@ -2619,7 +2619,7 @@
 
                     SQL="SELECT * FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY parca.id ) AS RowNum, parca.*, kat.kategori_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad as adsoyad, isnull((SELECT COUNT(*) from  is_parca_listesi WHERE cop = 'false' AND ParcaId= parca.id ),0) kullanilan from parca_listesi parca join tanimlama_kategori_listesi kat on kat.id = parca.kategori join ucgem_firma_kullanici_listesi kullanici on kullanici.id = parca.ekleyen_id where parca.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and parca.cop = 'false' "& arama_str &" ) AS RowConstrainedResult WHERE RowNum >= "& cdbl(nereden) &" AND RowNum <= "& kacadet &" ORDER BY RowNum"
                     set parca = baglanti.execute(SQL)
-
+                    'response.Write(SQL)
                     if parca.eof then
                 %>
                 <tr>
@@ -2801,6 +2801,16 @@
             SQL="update parca_grup_listesi set grup_adi = '"& grup_adi &"', parcalar = '"& parcalar &"' where id = '"& grup_id &"'"
             set guncelle = baglanti.execute(SQL)
 
+        elseif trn(request("islem2")) = "agacgrubuguncelle" then
+
+            parca_id = trn(request("parca_id"))
+            grup_id = trn(request("grup_id"))
+            adet = trn(request("adet"))
+
+            SQL = "update parca_grup_listesi set adet = '"& adet &"' where id = '"& grup_id &"'"
+            set grupGuncelle = baglanti.execute(SQL)
+        'response.Write(SQL)
+
         elseif trn(request("islem2"))="sil" then
 
             kayit_id = trn(request("kayit_id"))
@@ -2858,6 +2868,7 @@
         set grup = baglanti.execute(SQL)
 
         parcalar = trim(grup("parcalar"))
+        'response.Write(parcalar)
 
     %>
     <div class="modal-header">
@@ -2884,14 +2895,14 @@
             <div class="col-sm-12">
                 <script>
                    $(function (){
-                        $('.parcalarr').select2({
+                        $(".parcalarr").select2({
                             ajax: {
                                 url: '/ajax_request6/?jsid=4559&islem=parcalar_auto',
                                 dataType: 'json',
                                 delay: 250,
                                 data: function (params) {
                                     return {
-                                        q: params.term,
+                                        term: params.term,
                                         page: params.page
                                     };
                                 },
@@ -2912,14 +2923,14 @@
 
                     
                     function formatRepo(repo) {
-
+                        console.log(repo);
+                   
                         if (repo.loading) return repo.text;
-
                         var markup = '<div class="select2-result-repository clearfix" style="padding:0;">' +
-                            '<div class="select2-result-repository__meta" style="margin-left:15px;">' +
+                            '<div class="select2-result-repository__meta">' +
                             '<div class="select2-result-repository__title">' + repo.parcaadi + ' (' + repo.marka + ')' + '</div>';
 
-                        markup += '<div class="select2-result-repository__statistics" style="margin-top:-8px;">' +
+                        markup += '<div class="select2-result-repository__statistics">' +
                             '<div class="select2-result-repository__stargazers">' + repo.aciklama + '</div>' +        
                             '<div class="select2-result-repository__forks">' + repo.kategori + '</div>' +
                             '</div>' +
@@ -2929,17 +2940,18 @@
                     }
 
                     function formatRepoSelection(repo) {
-                        return repo.parcaadi || repo.id;
+                        return repo.text || repo.kodu;
                     }
 
                 </script>
                 <select name="parcalar[]" multiple="multiple" class="parcalarr" id="parcalar">
                     <%
-                        SQL="select top 10 * from parca_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and dbo.iceriyormu('"& parcalar &"', id)=1"
+                        SQL="select top 50 * from parca_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and dbo.iceriyormu('"& parcalar &"', id)=1"
                         set parca = baglanti.execute(SQL)
+                        'response.Write(SQL)
                         do while not parca.eof
                     %>
-                    <option selected value="<%=parca("id") %>" data-selected-><%=parca("parca_adi") %></option>
+                        <option selected value="<%=parca("id") %>"> <%=parca("parca_kodu") %> </option>
                     <%
                         parca.movenext
                         loop
@@ -2980,7 +2992,8 @@
     elseif trn(request("islem"))="grup_detay_getir" then
 
         grup_id = trn(request("grup_id"))
-
+        count = 0
+        durum = ""
         SQL="select * from parca_grup_listesi where id = '"& grup_id &"'"
         set grup = baglanti.execute(SQL)
 
@@ -2990,23 +3003,40 @@
         <input type="button" class="btn btn-danger btn-mini" onclick="grubu_sil('<%=grup("id") %>');" value="Grubu Sil" />&nbsp;<input type="button" class="btn btn-success btn-mini" onclick="gruba_parca_ekle('<%=grup("id") %>');" value="Gruba Parça Ekle" /><br />
         <br />
     </span>
-    <table class="table">
+    <div id="grup_listesi<%=grup_id %>">
+        <table class="table table-bordered">
         <thead>
             <tr>
                 <th style="width: 45px;">Id</th>
                 <th>Parça</th>
                 <th>Marka</th>
                 <th>Açıklama</th>
+                <th>Adet</th>
             </tr>
         </thead>
         <tbody>
             <% 
+                SQL = "select * from string_split((select adet from parca_grup_listesi where id = '"& grup_id &"'), ',')"
+                set grup_parca = baglanti.execute(SQL)
+
+                if grup_parca.eof then
+                    
+                end if
+                Dim parcaAdet(15)
+                do while not grup_parca.eof
+                    count = count + 1
+                    parcaAdet(count) = grup_parca(0)
+                grup_parca.movenext
+                loop
+
                 SQL="select * from parca_listesi where dbo.iceriyormu('"& trim(grup("parcalar")) &"', id)=1"
+                'response.Write(SQL)
                 set parca = baglanti.execute(SQL)
                 if parca.eof then
+                durum = "style='display:none'"
             %>
             <tr>
-                <td colspan="2" style="text-align: center;">Bu Gruba Tanımlanan Parça Bulunamadı</td>
+                <td colspan="5" style="text-align: center;">Bu Gruba Tanımlanan Parça Bulunamadı</td>
             </tr>
             <%
                 end if
@@ -3015,10 +3045,11 @@
                     p = p + 1
             %>
             <tr>
-                <td style="padding: 1px!important; width: 30px;"><%=p %></td>
-                <td style="padding: 1px!important;"><%=parca("parca_adi") %></td>
-                <td style="padding: 1px!important;"><%=parca("marka") %></td>
-                <td style="padding: 1px!important;"><%=parca("aciklama") %></td>
+                <td style="width: 30px;"><%=p %></td>
+                <td><%=parca("parca_adi") %></td>
+                <td><%=parca("marka") %></td>
+                <td><%=parca("aciklama") %></td>
+                <td><input type="number" min="1" style="width:50px" value="<%=parcaAdet(p) %>" id="count<%=grup("id") %><%=p %>" parca_id="<%=parca("id") %>""/></td>
             </tr>
             <% 
                 parca.movenext
@@ -3026,6 +3057,10 @@
             %>
         </tbody>
     </table>
+    </div>
+    <span style="float: right;">
+        <input type="button" class="btn btn-info btn-mini" onclick="adet_kaydi_guncelle('<%=grup("id") %>', '<%=p %>');" value="Kayıtları Güncelle" <%=durum %> />
+    </span>
     <%
     elseif trn(request("islem"))="parcalar_auto" then
         
@@ -3035,12 +3070,12 @@
 
         Response.AddHeader "Content-Type", "application/json"
 
-        SQL="SELECT top 20  parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet ORDER BY parca.parca_adi asc;"
+        SQL="SELECT top 20 parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet ORDER BY parca.parca_adi asc;"
         set parca = baglanti.execute(SQL)
 
         Response.Write "["
         do while not parca.eof
-    %>{"id":<%=parca("id") %>,"parcaadi":"<%=parca("parca_adi") %>","kodu":"<%=parca("parca_kodu") %>","marka":"<%=parca("marka") %>","aciklama":"<%=parca("aciklama") %>","kategori":"<%=parca("kategori_adi") %>","maliyet":"<%=parca("birim_maliyet") %>"},<%
+    %>{"id":<%=parca("id") %>,"parcaadi":"<%=parca("parca_adi") %>","kodu":"<%=parca("parca_kodu") %>","kod_marka":"<%=parca("parca_kodu") %>-<%=parca("marka") %>","marka":"<%=parca("marka") %>","aciklama":"<%=parca("aciklama") %>","kategori":"<%=parca("kategori_adi") %>","maliyet":"<%=parca("birim_maliyet") %>"},<%
         parca.movenext
         loop
 
@@ -5242,7 +5277,7 @@ works properly when clicked or hovered */
         <script src="/js/jquery-ui.js"></script>
         <script type="text/javascript">
 
-        </script>
+</script>
     </form>
     <%
         elseif trn(request("islem"))="YeniServisBakimKaydiDuzenle" then

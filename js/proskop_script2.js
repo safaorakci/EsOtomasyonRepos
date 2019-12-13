@@ -846,9 +846,35 @@ function gruba_parca_kayit(grup_id) {
     data += "&parcalar=" + parcalar;
     data = encodeURI(data);
     $("#urun_agac_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
-
+        $(".close").click();
+        mesaj_ver("Ürün Ağacı", "Kayıt Başarıyla Güncellendi", "success");
     });
+}
 
+function adet_kaydi_guncelle(grup_id, count) {
+    var parcaId = "";
+    var data = "islem=urun_grup_listesi&islem2=agacgrubuguncelle";
+    data += "&grup_id=" + grup_id;
+    data += "&adet=";
+    for (var i = 1; i <= count; i++) {
+        $("#count" + grup_id +""+ i).each(function () {
+            var Adet = $(this).val();
+            if (i === 1) {
+                parcaId = $(this).attr("parca_id");
+                data += Adet;
+            }
+            else {
+                parcaId += "," + $(this).attr("parca_id");
+                data += "," + Adet;
+            }
+        });
+    }
+    data += "&parca_id=" + parcaId;
+    data = encodeURI(data);
+    $("#urun_agac_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        mesaj_ver("Ürün Ağacı", "Kayıtlarlar Başarıyla Güncellendi", "success");
+        //grup_detay_getir(grup_id).click();
+    });
 }
 
 function gruba_parca_ekle(grup_id) {
@@ -964,14 +990,14 @@ function parcalar_autocomplete_calistir2() {
                 setTimeout(function () {
                     //$(inpuu).val(ui.item.kodu + " " + ui.item.marka + " " + ui.item.aciklama).attr("data", ui.item.id);
                     var adet = $("#parca_adeti").val();
-
+                    var durum = 0;
                     var pathname = window.location.origin;
 
                     $.ajax({
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
                         url: pathname + "/System_Root/ajax/islem1.aspx/CalculateParca",
-                        data: JSON.stringify({ ParcaID: ui.item.id, GirilenMiktar: adet }),
+                        data: JSON.stringify({ ParcaID: ui.item.id, GirilenMiktar: adet, parcaDurum: durum }),
                         dataType: "JSON",
                         error: function (xhr) {
                             console.log(xhr);
@@ -979,13 +1005,14 @@ function parcalar_autocomplete_calistir2() {
                         success: function (data) {
                             var result = jQuery.parseJSON(data.d);
                             if (result.Durum == 0) {
-                                SiparisPopup(IsId, ui.item.id, result.Sayi, adet);
+                                SiparisPopup(IsId, ui.item.id, parseInt(result.Sayi), adet, durum, result.Parca);
                             }
                             if (result.Durum == 1) {
                                 is_detay_parca_sectim(IsId, ui.item.id, adet, 0);
                             }
                         }
                     });
+
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {
@@ -1031,7 +1058,29 @@ function parcalar_autocomplete_calistir2() {
                 var inpuu = $(this);
                 setTimeout(function () {
                     //$(inpuu).val(ui.item.kodu + " " + ui.item.marka).attr("data", ui.item.id);
-                    is_detay_parca_agaci_sectim(IsId, ui.item.id);
+                    var pathname = window.location.origin;
+                    var durum = 1;
+                    var adet = 0;
+                    //is_detay_parca_agaci_sectim(IsId, ui.item.id);
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        url: pathname + "/System_Root/ajax/islem1.aspx/CalculateParca",
+                        data: JSON.stringify({ ParcaID: ui.item.id, GirilenMiktar: adet, parcaDurum: durum }),
+                        dataType: "JSON",
+                        error: function (xhr) {
+                            console.log(xhr);
+                        },
+                        success: function (data) {
+                            var result = jQuery.parseJSON(data.d);
+                            if (result.Durum == 2) {
+                                SiparisPopup(IsId, ui.item.id, result.Sayi, adet, durum, result.Parca);
+                            }
+                            if (result.Durum == 1) {
+                                is_detay_parca_agaci_sectim(IsId, ui.item.id);
+                            }
+                        }
+                    });
                 }, 100);
             }
         }).autocomplete().data("uiAutocomplete")._renderItem = function (ul, item) {

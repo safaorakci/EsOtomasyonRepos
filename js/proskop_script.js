@@ -113,10 +113,19 @@ function durum_guncelleme_calistir(tablo, id) {
 
 }
 
-function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum) {
+function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum, parcaBilgisi) {
+
+    var stParca = "";
+    var arrParca = parcaBilgisi.split(',');
+    var arrAdet = adet.toString().split(',');
+
+    for (var i = 0; i < arrParca.length; i++) {
+        stParca += " " + arrParca[i] + " " + arrAdet[i] + " Adet | ";
+    }
+
     swal({
         title: "Satınalma Formu",
-        text: adet + " Adet Sipariş verilecek. Siparişi Onaylıyor Musunuz ?",
+        text: stParca + ": Sipariş verilecek. Siparişi Onaylıyor Musunuz ?",
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -156,7 +165,10 @@ function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum) {
 
                     //<span class="label label-warning" style="font-size: 100%; padding: 5px; display: inline;">Islem Bekliyor</span>
 
-                } else { is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet); }
+                }
+                else if (durum === 1)
+                { is_detay_parca_agaci_sectim(IsID, ParcaId); }
+                else { is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet); }
                 //var data = "islem=is_detay_parca_sectim&islem2=ekle";
                 //data += "&IsID=" + IsID;
                 //data += "&ParcaId=" + ParcaId;
@@ -4551,7 +4563,7 @@ function personel_is_listesi_getir(personel_id, nesne) {
         data += "&personel_id=" + personel_id;
         data = encodeURI(data);
         $("#is_listesi_panel").loadHTML({ url: "/ajax_request/", data: data }, function () {
-            is_listesi_etiket("personel", personel_id);
+            is_listesi_etiket("personel", personel_id, "", "personelIsleri");
         });
     }, 200);
 }

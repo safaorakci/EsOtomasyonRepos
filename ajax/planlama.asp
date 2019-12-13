@@ -176,14 +176,11 @@
 
                         if len(gorevliler)>0 then
                             
-                            SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 2 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 3 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 4 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 5 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 7 THEN (SELECT LEFT(pazar_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) END as baslangic"
+                            SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 2 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 3 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 4 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 5 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 6 THEN (SELECT LEFT(cumartesi_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 7 THEN (SELECT LEFT(pazar_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) END as baslangic "
                             set start = baglanti.execute(SQL) 
-                            response.Write(SQL)
     
-                            SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' )WHEN 2 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 3 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 4 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 5 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 7 THEN (SELECT LEFT(pazar_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' )END as bitis"
-                            set enddate = baglanti.execute(SQL)
-                            response.Write(SQL)
-                            
+                            SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1)WHEN 2 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 3 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 4 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 5 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) WHEN 7 THEN (SELECT LEFT(pazar_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' and id = 1) END as bitis"
+                            set enddate = baglanti.execute(SQL)                            
 
                             renk = "rgb(52, 152, 219)"
                             ajanda_gosterim = trn(request("planning"))
@@ -232,7 +229,6 @@
 
                                 SQL="update ucgem_is_listesi  set durum = 'true',adi = '"& adi &"', aciklama = '"& aciklama &"', gorevliler = '"& gorevliler &"', departmanlar = '"& departmanlar &"', baslangic_tarihi = CONVERT(date, '"& baslangic_tarihi &"', 103), baslangic_saati = '"& baslangic_saati &"', bitis_tarihi = CONVERT(date, '"& bitis_tarihi &"', 103), bitis_saati = '"& bitis_saati &"', guncelleme_tarihi = CONVERT(date, '"& guncelleme_tarihi &"', 103), guncelleme_saati = '"& guncelleme_saati &"', guncelleyen = '"& guncelleyen  &"', ajanda_gosterim = '"& ajanda_gosterim  &"', toplam_sure = LEFT('"& toplam_sure &"', 6), gunluk_sure ='"& gunluk_sure &"', toplam_gun = '"& toplam_gun &"' where id = '"& varmi("id") &"'"
                                 set guncelle = baglanti.execute(SQL)
-                                'response.Write(SQL)
                                 IsID = varmi("id")
 
                             end if

@@ -18,9 +18,6 @@ public partial class login : System.Web.UI.Page
     {
         string kontrol_donus = "false";
 
-
-
-
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
         ayarlar.cmd.CommandText = "select isnull(gorev.yetkili_sayfalar,1) as yetkili_sayfalar , kullanici.*, firma.firma_hid, firma.id as firma_id from ucgem_firma_kullanici_listesi kullanici join ucgem_firma_listesi firma on firma.id = kullanici.firma_id join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.durum = 'true' and kullanici.cop = 'false' and kullanici.personel_eposta = @email and kullanici.personel_parola = @password;";
