@@ -121,6 +121,8 @@
         Server.Execute("/System_root/formlar/mesai_bildirim_formu.asp")
     elseif gp(3) = "satinalma_formu" then
         Server.Execute("/System_root/formlar/satinalma_formu.asp")
+    elseif gp(3) = "teklif_formu" then
+        Server.Execute("/System_root/formlar/teklif_formu.asp")
     elseif gp(3) = "teknik_servis_formu" then
         Server.Execute("/System_root/formlar/teknik_servis_formu.asp")
     elseif gp(3) = "teknik_servis_formu2" then

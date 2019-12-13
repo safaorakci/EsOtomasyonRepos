@@ -1668,7 +1668,7 @@
 %>
 <div class="card">
     <div class="card-block" style="padding: 0;">
-        <div id="visualization">
+        <div id="visualization" style="display:none;">
             <div class="visualizationmenu" style="display: none;">
                 <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
                     <button type="button" value="250" id="toggleZoomMode" class="btn btn-primary btn-sm waves-effect waves-light"><i class="fa fa-arrows-v"></i></button>
@@ -4673,7 +4673,7 @@ maliyetler = maliyetler & NoktalamaDegis(cdbl(cetvel("saat"))/60) & ","
             padding-top: 0 !important;
         }
     </style>
-    <div id="visualization"></div>
+    <div id="visualization" style="display:none;"></div>
     <script>
 
         $(function (){

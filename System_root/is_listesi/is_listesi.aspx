@@ -240,7 +240,7 @@
             </div>
         </div>
     </div>
-    <div id="is_listesi_takvim_yeri">
+    <div id="is_listesi_takvim_yeri" style="display:none;">
         <div class="card">
             <div class="card-block" style="padding: 0; min-height: 250px;">
                 <div id="visualization">
