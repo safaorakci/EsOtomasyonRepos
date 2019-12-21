@@ -80,7 +80,7 @@
             </thead>
         <tbody>
             <% 
-                SQL="select siparis.*, parca.parca_kodu, parca.marka, parca.parca_adi, parca.aciklama as paciklama from satinalma_siparis_listesi siparis join parca_listesi parca on parca.id= siparis.parcaId where siparis.SatinalmaId = '"& satinalma_id &"' and siparis.cop = 'false' order by siparis.id asc"
+                SQL="select siparis.*, parca.parca_kodu, parca.marka, parca.parca_adi, parca.minumum_miktar, parca.aciklama as paciklama from satinalma_siparis_listesi siparis join parca_listesi parca on parca.id= siparis.parcaId where siparis.SatinalmaId = '"& satinalma_id &"' and siparis.cop = 'false' order by siparis.id asc"
                 set cek = baglanti.execute(SQL)
                 x = 0
                 do while not cek.eof
@@ -91,7 +91,7 @@
                 <td style="padding-left:5px"><%=cek("parca_kodu") %></td>
                 <td style="padding-left:5px"><%=cek("marka") %></td>
                 <td style="padding-left:5px"><%=cek("parca_adi") & " - " & cek("paciklama") %></td>
-                <td style="padding-left:5px"><%=cek("adet") %> ADET</td>
+                <td style="padding-left:5px"><%=CInt(cek("adet") - cek("minumum_miktar")) %> ADET</td>
             </tr>
             <% cek.movenext
                loop

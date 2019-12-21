@@ -531,7 +531,7 @@
     <tbody>
         <asp:Panel ID="firmalar_kayityok_panel" runat="server">
         <tr>
-            <td colspan="7" style="text-align:center; vertical-align: middle;"><% Response.Write(LNG("Kayıt Yok")); %></td>
+            <td colspan="8" style="text-align:center; vertical-align: middle;"><% Response.Write(LNG("Kayıt Yok")); %></td>
         </tr>
        </asp:Panel>
         <asp:Panel ID="firmalar_kayitvar_panel" runat="server">
@@ -759,7 +759,7 @@
             <asp:Repeater ID="santiye_durum_repeater" runat="server">
                 <ItemTemplate>
                     <tr>
-            <td class="idler" id="<%# DataBinder.Eval(Container.DataItem, "id") %>"><%# DataBinder.Eval(Container.DataItem, "sirano") %></td>
+            <td class="idler" id="<%# DataBinder.Eval(Container.DataItem, "id") %>"><%# DataBinder.Eval(Container.DataItem, "sira") %></td>
             <td><%# DataBinder.Eval(Container.DataItem, "durum_adi") %></td>
             <td style="text-align:center;">
                <asp:Label runat="server" ID="str2santiye_label">

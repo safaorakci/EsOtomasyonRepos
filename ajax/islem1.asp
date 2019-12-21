@@ -5203,13 +5203,9 @@
         parmak_id = trn(request("parmak_id"))
 
         SQL="update ucgem_firma_kullanici_listesi set parmak_id = '"& parmak_id &"', personel_yillik_izin_hakedis = CONVERT(date, '"& personel_yillik_izin_hakedis &"', 103), yonetici_yetkisi = '"& yonetici_yetkisi &"', personel_yillik_izin = '"& personel_yillik_izin &"', personel_saatlik_maliyet = '"& personel_saatlik_maliyet &"', personel_maliyet_pb = '"& personel_maliyet_pb &"', personel_resim = '"& personel_resim &"', personel_ad = '"& personel_ad &"', personel_soyad = '"& personel_soyad &"', personel_dtarih = CONVERT(date, '"& personel_dtarih &"', 103), personel_cinsiyet = '"& personel_cinsiyet &"', personel_eposta = '"& personel_eposta &"', personel_telefon = '"& personel_telefon &"', departmanlar = '"& departmanlar &"', gorevler = '"& gorevler &"', personel_parola = '"& personel_parola &"', tcno = '"& personel_tcno &"' where id = '"& personel_id &"' and firma_id = '"& request.Cookies("kullanici")("firma_id") &"'; EXEC MailGonderBildirim @personel_id = '"+ personel_id +"', @mesaj = 'Esflw Hesap Bilgileriniz;<br><br>Sistem Giriş Url : <a href=http://otomasyon.esflw.com>http://otomasyon.esflw.com</a><br>E-Posta : " + personel_eposta + "<br>Parola : " + personel_parola + "<br><br>';"
-    response.Write(SQL)
         set guncelle = baglanti.execute(SQL)
 
-
         NetGSM_SMS personel_telefon,  "Esflw Hesap Bilgileriniz; \n Sistem Giriş Url : http://otomasyon.esflw.com \n E-Posta : " + personel_eposta + "\n Parola : " + personel_parola
-
-
 
     elseif trn(request("islem"))="kendi_personel_bilgilerini_guncelle" then
 
@@ -5901,7 +5897,11 @@
     SQL="select id, proje_adi, santiye_durum_id from ucgem_proje_listesi where id = '"& proje_id &"' and cop = 'false'"
     set proje_cek = baglanti.execute(SQL)
 
-     SQL="select * from ahtapot_proje_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false'"
+    if proje_id = "" or proje_id = null then
+        proje_id = 0
+    end if
+
+    SQL="select * from ahtapot_proje_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false'"
     set adim = baglanti.execute(SQL)
 
     if adim.eof then
@@ -5913,11 +5913,11 @@
 <br />
 <br />
 <br />
-<center><%=proje_cek("proje_adi") %> <%=LNG("için tanımlananan proje planlaması bulunamadı.")%></center>
+<center><%if not proje_cek.eof then %> <%=proje_cek("proje_adi") %> için <%else disable="style='display:none'" %> <%end if %> <%=LNG("tanımlananan proje planlaması bulunamadı.")%></center>
 <br />
 <br />
 <br />
-<center><input type="button" onclick="sayfagetir('/santiye_detay/', 'jsid=4559&id=<%=proje_id%>&departman_id=<%=santiye_durum_id%>');" value="<%=LNG("Proje Detayı")%>" class="btn btn-primary" /></center>
+<center><input type="button" <%=disable %> onclick="sayfagetir('/santiye_detay/', 'jsid=4559&id=<%=proje_id%>&departman_id=<%=santiye_durum_id%>');" value="<%=LNG("Proje Detayı")%>" class="btn btn-primary" /></center>
 <br />
 <br />
 <br />

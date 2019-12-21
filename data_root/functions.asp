@@ -311,25 +311,28 @@
 
     Function NetGSM_SMS(numara, mesaj)
 
-        xml ="<?xml version='1.0' encoding='UTF-8'?>" & _
-        "<mainbody>" & _
-        "<header>" & _
-        "<company>NETGSM</company>" & _
-        "<usercode>8508406149</usercode>" & _
-        "<password>W3KF5XRT</password>" & _
-        "<startdate></startdate>" & _
-        "<stopdate></stopdate>" & _
-        "<type>1:n</type>" & _
-        "<msgheader>ESOTOMASYON</msgheader>" & _
-        "</header>" & _
-        "<body>" & _
-        "<msg><![CDATA[" & mesaj & "]]></msg>" & _
-        "<no>"& numara &"</no>" & _
-        "</body>" & _
-        "</mainbody>"
+        SQL = "select ISNULL(sms_entegrasyon, 0) as sms_entegrasyon from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+        set sms_control = baglanti.execute(SQL)
 
+        if sms_control("sms_entegrasyon") = "Doğru" or sms_control("sms_entegrasyon") = "True" then
+            xml ="<?xml version='1.0' encoding='UTF-8'?>" & _
+            "<mainbody>" & _
+            "<header>" & _
+            "<company>NETGSM</company>" & _
+            "<usercode>8508406149</usercode>" & _
+            "<password>W3KF5XRT</password>" & _
+            "<startdate></startdate>" & _
+            "<stopdate></stopdate>" & _
+            "<type>1:n</type>" & _
+            "<msgheader>ESOTOMASYON</msgheader>" & _
+            "</header>" & _
+            "<body>" & _
+            "<msg><![CDATA[" & mesaj & "]]></msg>" & _
+            "<no>"& numara &"</no>" & _
+            "</body>" & _
+            "</mainbody>"
+        end if
         cevap = GETHTTPXML("http://api.netgsm.com.tr/xmlbulkhttppost.asp",xml)
-
         'Response.Write cevap
 
     End Function

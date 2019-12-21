@@ -1186,12 +1186,16 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string stok = "";
             string yer = "";
             int parcaId;
+            int personelId = 0;
             string durum = Request.Form["durum"].ToString();
             if (Request.Form["stok"] != null)
                 stok = Request.Form["stok"].ToString();
             parcaId = Convert.ToInt32(Request.Form["parcaId"]);
             if (Request.Form["yer"] != null)
+            {
                 yer = Request.Form["yer"].ToString();
+                personelId = Convert.ToInt32(Request.Form["personelId"].ToString());
+            }
             int projeId = Convert.ToInt32(Request.Form["projeId"]);
 
             string sql_str = "";
@@ -1275,7 +1279,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                 if (yer.ToString() == "personelIsleri")
                 {
-                    yer_str = " and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value =  CONVERT(NVARCHAR(50), " + UserID + ") ) > 0) or isler.ekleyen_id = " + UserID + " ";
+                    yer_str = " and ((SELECT COUNT(value) FROM STRING_SPLIT(isler.gorevliler, ',') WHERE value =  CONVERT(NVARCHAR(50), " + personelId + ") ) > 0) or isler.ekleyen_id = " + personelId + " ";
                 }
 
                 if (stok != "Stok")
@@ -2493,6 +2497,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             }
         }
         bool state = false;
+        bool bildirim = false;
         string durum = "true";
         try
         {
@@ -2599,7 +2604,10 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                                         ayarlar.cmd.Parameters.Add("is_id", IsID);
                                                         ayarlar.cmd.Parameters.Add("gorevli_id", gorevId);
                                                         ayarlar.cmd.ExecuteNonQuery();
+                                                        bildirim = true;
                                                     }
+                                                    else
+                                                        bildirim = false;
                                                 }
                                                 else
                                                 {
@@ -2674,12 +2682,12 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                     yeni_adi.ToString().Substring(0, 100);
                                 }
 
-                                if (state == true)
-                                {
+                                //if (bildirim == false)
+                                //{
                                     ayarlar.baglan();
                                     ayarlar.cmd.Parameters.Clear();
                                     ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate());";
-                                    ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.");
+                                    ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + "'" + yeni_adi + "' adlı işti düzenledi.");
                                     ayarlar.cmd.Parameters.Add("tip", "is_listesi");
                                     ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
                                     ayarlar.cmd.Parameters.Add("user_id", gorevliID);
@@ -2691,7 +2699,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                     ayarlar.cmd.Parameters.Add("ekleyen_id", SessionManager.CurrentUser.ekleyen_id);
                                     ayarlar.cmd.Parameters.Add("ekleyen_ip", HttpContext.Current.Request.ServerVariables["Remote_Addr"]);
                                     ayarlar.cmd.ExecuteNonQuery();
-                                }
+                                //}
 
                                 if (Personel["personel_telefon"].ToString().Length > 5)
                                 {
@@ -3557,7 +3565,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select id,proje_adi, proje_kodu, firma_id from ucgem_proje_listesi where cop = 'false' order by id desc";
+        ayarlar.cmd.CommandText = "select id, proje_adi, proje_kodu, firma_id from ucgem_proje_listesi where cop = 'false' order by id desc";
         ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(ayarlar.cmd);
         DataSet dataSet = new DataSet();
@@ -3918,7 +3926,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select * from tanimlama_santiye_durum_listesi where firma_id = @firma_id and cop = 'false' order by sirano asc";
+        ayarlar.cmd.CommandText = "select * from (select ROW_NUMBER() OVER(ORDER BY id DESC) AS sira, * from tanimlama_santiye_durum_listesi where firma_id = @firma_id and cop = 'false') as t";
         ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
         DataSet ds = new DataSet();
@@ -4086,7 +4094,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy,getdate())),3, 3) + '' + CONVERT(varchar(50), DATEPART(MM, GETDATE())) + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), proje.id + 1),1,4), 4) from ucgem_proje_listesi proje where proje.durum = 'true' and proje.cop = 'false' order by id desc";
+            ayarlar.cmd.CommandText = "select CASE WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy,getdate())),3, 3) + '' + CONVERT(varchar(50), DATEPART(MM, GETDATE())) + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), proje.id + 1),1,4), 4) from ucgem_proje_listesi proje where proje.durum = 'true' and proje.cop = 'false' order by id desc), 0) = 0 THEN (select SUBSTRING(CONVERT(varchar(50), datepart(yy,getdate())),3, 3) + '' + CONVERT(varchar(50), DATEPART(MM, GETDATE())) + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1),1,4), 4)) ELSE (select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy,getdate())),3, 3) + '' + CONVERT(varchar(50), DATEPART(MM, GETDATE())) + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1),1,4), 4) from ucgem_proje_listesi proje where proje.durum = 'true' and proje.cop = 'false' order by id desc) END";
             int proje_Id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
 
             ayarlar.cmd.Parameters.Clear();
@@ -4537,22 +4545,29 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                     {
                         result.Parca = parca;
                         result.Sayi = Convert.ToString((agacParcaAdet + minimummiktar) - miktar);
-                        result.Durum = 2;
+                        result.Durum = 1;
                     }
                     else
                     {
                         result.Parca += "," + parca;
                         result.Sayi += "," + Convert.ToString((agacParcaAdet + minimummiktar) - miktar);
-                        result.Durum = 2;
+                        result.Durum = 1;
                     }
-                    //return JsonConvert.SerializeObject(result);
                 }
                 else
                 {
-                    if (result.Durum != 2)
-                        result.Durum = 1;
+                    if (result.Parca == null && result.Sayi == null)
+                    {
+                        result.Parca = parca;
+                        result.Sayi = Convert.ToString(agacParcaAdet);
+                        result.Durum = 0;
+                    }
                     else
-                        result.Durum = 2;
+                    {
+                        result.Parca += "," + parca;
+                        result.Sayi += "," + Convert.ToString(agacParcaAdet);
+                        result.Durum = 0;
+                    }
                 }
             }
             return JsonConvert.SerializeObject(result);
@@ -4577,19 +4592,17 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             {
                 result.Parca = parca;
                 result.Sayi = Convert.ToString((GirilenMiktar + minimummiktar) - miktar);
-                result.Durum = 2;
+                result.Durum = 1;
             }
             else
             {
                 result.Parca = parca;
                 result.Sayi = Convert.ToString(GirilenMiktar);
-                result.Durum = 1;
+                result.Durum = 0;
             }
             return JsonConvert.SerializeObject(result);
         }
     }
-
-
 
     public string LNG(string kelime)
     {

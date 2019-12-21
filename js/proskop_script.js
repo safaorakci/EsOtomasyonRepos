@@ -166,9 +166,8 @@ function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum, parcaBilgisi) {
                     //<span class="label label-warning" style="font-size: 100%; padding: 5px; display: inline;">Islem Bekliyor</span>
 
                 }
-                else if (durum === 1)
-                { is_detay_parca_agaci_sectim(IsID, ParcaId); }
-                else { is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet); }
+                if (durum == 2) { is_detay_parca_agaci_sectim(IsID, ParcaId); }
+                if (durum == 0) { is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet); }
                 //var data = "islem=is_detay_parca_sectim&islem2=ekle";
                 //data += "&IsID=" + IsID;
                 //data += "&ParcaId=" + ParcaId;
@@ -2480,12 +2479,11 @@ function personel_izin_kayit(nesne, personel_id) {
             personel_yillik_takvimi_getir(personel_id, n);
         });
     }
-
 }
 
 function personel_giris_cikis_kayit(nesne, personel_id) {
 
-    if ($("#yeni_personel_giris_form input[type=text],textarea").valid("valid")) {
+    if ($("#yeni_personel_giris_form input[type=text]").valid("valid")) {
 
         var saat_tipi = $("#saat_tipi").val();
         var giris_cikis_saati = $("#giris_cikis_saati").val();
@@ -2504,7 +2502,9 @@ function personel_giris_cikis_kayit(nesne, personel_id) {
             personel_yillik_takvimi_getir(personel_id, n);
             $(".close").click();
         });
-
+    }
+    else {
+        mesaj_ver("Personel Yönetimi", "Saat Alanını Boş Geçmeyiniz !", "danger");
     }
 }
 
@@ -3546,7 +3546,7 @@ function personel_izin_talep_onayla(personel_id, kayit_id, durum) {
     data += "&durum=" + durum;
     data = encodeURI(data);
     $("#koftiden").loadHTML({ url: "/ajax_request6/", data: data, status }, function () {
-        if (status == "success")
+        if (status == "")
             mesaj_ver("İzin Talepleri", "Kayıt Başarıyla Güncellendi", "success");
         if (status == "error")
             mesaj_ver("İzin Talepleri", "Kendi İzin Talebinizi Onaylayamazsınız. !", "danger");
@@ -4611,6 +4611,7 @@ function is_listesi_etiket(etiket_tip, etiket, stok, yer) {
     data += "&yer=" + yer;
     data += "&parcaId=" + etiket;
     data += "&projeId=" + etiket;
+    data += "&personelId=" + etiket;
     data += "&durum=";
     data += "&tip=";
     data += "&adi=" + adi;
@@ -4901,7 +4902,7 @@ function kendi_personel_bilgilerini_guncelle() {
 
 
 
-    if ($("#personel_guncelleme_form input[type=text],textarea").valid("valid")) {
+    if ($("#personel_guncelleme_form input[type=text]").valid("valid")) {
 
         var personel_resim = $("#personel_resim").attr("filePath");
         var personel_ad = $("#personel_ad").val();
@@ -4926,17 +4927,14 @@ function kendi_personel_bilgilerini_guncelle() {
         data = encodeURI(data);
         $("#koftiden").loadHTML({ url: "/ajax_request/", data: data }, function () {
             mesaj_ver("Personel Detayları", "Kayıt Başarıyla Güncellendi", "success");
-        })
+        });
     }
-
-
-
 }
 
 
 function personel_bilgilerini_guncelle(personel_id) {
 
-    if ($("#personel_guncelleme_form input[type=text],textarea").valid("valid")) {
+    if ($("#personel_guncelleme_form input[type=text]").valid("valid")) {
 
         var personel_resim = $("#personel_resim").attr("filePath");
         var personel_ad = $("#personel_ad").val();
@@ -6220,6 +6218,9 @@ function rapor_pdf_indir(deger, personel_id, izin_id) {
         data += "&bitis=" + bitis;
 
     }
+    else if (deger == "proje_maliyet_formu") {
+        data += "&proje_id=" + personel_id;
+    }
     else if (deger == "teknik_servis_formu") {
 
         data += "&personel_id=" + personel_id;
@@ -6418,6 +6419,8 @@ function rapor_pdf_gonder(deger, personel_id, izin_id, dosya_yolu) {
 
             data += "&satinalma_id=" + personel_id;
 
+        } else if (deger == "proje_maliyet_formu") {
+            data += "&proje_id=" + personel_id;
         }
         else if (deger == "izin_talep_formu") {
 
@@ -6554,7 +6557,10 @@ function rapor_pdf_yazdir(deger, personel_id, izin_id) {
             data += "&baslangic=" + baslangic;
             data += "&bitis=" + bitis;
 
-        } else if (deger == "izin_talep_formu") {
+        } else if (deger == "proje_maliyet_formu") {
+            data += "&proje_id=" + personel_id;
+        }
+        else if (deger == "izin_talep_formu") {
 
             data += "&personel_id=" + personel_id;
             data += "&izin_id=" + izin_id;
@@ -9058,11 +9064,10 @@ function parcaDuzenle(id) {
         $("#parcalarId").attr("stokadet", stokadet);
 
         if ($("#parcalarId").attr("delparcaid") != "") {
-            $("#parcalarId").attr("delParcaId", $("#parcalarId").attr("delParcaId") + "," + silinenParca).attr("delAdet", $("#parcalarId").attr("delAdet") + "," + silinenAdet).attr("depstokadet", $("#parcalarId").attr("delstokadet") + "," + silinenstokadet).attr("sayi", "birdenfazla").attr("index2", "silme");
+            $("#parcalarId").attr("delParcaId", $("#parcalarId").attr("delParcaId") + "," + silinenParca).attr("delAdet", $("#parcalarId").attr("delAdet") + "," + silinenAdet).attr("delstokadet", $("#parcalarId").attr("delstokadet") + "," + silinenstokadet).attr("sayi", "birdenfazla").attr("index2", "silme");
         }
         else { $("#parcalarId").attr("delParcaId", silinenParca).attr("delAdet", silinenAdet).attr("delstokadet", silinenstokadet).attr("sayi", "tek").attr("index2", "silme"); }
     }
-
     //var parcaId = $("#siparisformu").attr("siparisparcaid").split(",");
     //var parcaAdet = $("#siparisformu").attr("siparisadet").split(",");
     //var index2 = parcaId.indexOf(id);
@@ -9082,7 +9087,21 @@ function parcaDuzenle(id) {
     //    $("#siparisformu").attr("stokparcaid", stokparcaId);
     //    $("#siparisformu").attr("stokadet", stokparcaAdet);
     //}
-    
+    sumPrice();
+}
+
+function sumPrice() {
+    var sum = 0;
+    // iterate through each td based on class and add the values
+    $(".price").each(function () {
+
+        var value = $(this).text().replace('TL', '').replace(' ', '');
+        // add only if the value is number
+        if (!isNaN(value) && value.length != 0) {
+            sum += parseFloat(value);
+        }
+    });
+    $("#totalPrice").text(sum + " TL");
 }
 
 function ServisBakimKaydiDuzenlemeYap(kayitId) {

@@ -1140,6 +1140,33 @@
                 ParcaParcaDosyaIndir sName, "Rapor.pdf"
             end if
 
+             elseif trn(request("islem2"))="proje_maliyet_formu" then
+
+                proje_id = trn(request("proje_id"))
+
+                Doc.ImportFromUrl site_url & "/proje_maliyet_formu/?jsid=4559&proje_id=" & proje_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
+                
+                dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
+                Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
+
+                sName = server.MapPath(dosya_yolu)
+
+             if trn(request("islem3"))="yazdir" then
+%>
+<script>
+        $(function (){
+            $(".btnPrint").printPage();
+        });
+</script>
+<center>
+<img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
+    <h4><%=LNG("Belgeniz Hazır.")%></h4><br /><br /><a class="btn btn-success btn-rnd btnPrint" href="<%=dosya_yolu %>"><i class="fa fa-print"></i> <%=LNG("Yazdır")%></a><br /><br />
+    </center>
+<%
+            else
+                ParcaParcaDosyaIndir sName, "Rapor.pdf"
+            end if
+
 
             elseif trn(request("islem2"))="teknik_servis_formu" then
                 personel_Id = trn(request("personel_id"))
@@ -1702,6 +1729,16 @@
             satinalma_id = trn(request("satinalma_id"))
 
             Doc.ImportFromUrl site_url & "/satinalma_formu/?jsid=4559&satinalma_id=" & satinalma_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
+            dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
+            Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
+
+            sName = server.MapPath(dosya_yolu)
+
+        elseif trn(request("islem2"))="proje_maliyet_formu" then
+
+            proje_id = trn(request("proje_id"))
+
+            Doc.ImportFromUrl site_url & "/proje_maliyet_formu/?jsid=4559&proje_id=" & proje_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
             dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
             Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
 

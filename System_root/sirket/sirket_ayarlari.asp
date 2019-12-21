@@ -10,15 +10,19 @@
 
 %>
 
-<div class="page-body breadcrumb-page">
+<div class="page-body breadcrumb-page" style="margin-top: 15px; margin-bottom: 45px;">
     <div class="card page-header p-0">
         <div class="card-block front-icon-breadcrumb row align-items-end">
             <div class="breadcrumb-header col">
                 <div class="big-icon">
-                    <div class="card-block user-info" style=" bottom: -73px;">
+                    <div class="card-block user-info" style=" bottom: -85px;">
                         <div class="media-left">
                             <a href="#" class="profile-image">
-                                <img class="user-img img-radius" src="/img/taseron_logo.jpg" style="width: 140px!important; height:149px!important;">
+                                <% if firma("firma_logo") = "undefined" or firma("firma_logo") = null or IsNull(firma("firma_logo")) then %>
+                                    <img class="user-img img-radius" src="/img/taseron_logo.jpg" style="width: 140px!important; height:149px!important;">
+                                <%else %>
+                                    <img class="user-img img-radius" src="<%=firma("firma_logo") %>"" style="width: 140px!important; height:149px!important;">
+                                <%end if %>
                             </a>
                         </div>
                     </div>
@@ -47,7 +51,7 @@
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Firma Logo")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
-                                <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" yol="firma_logo/" class="form-control" />
+                                <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" filepath="<%=firma("firma_logo") %>" folder="FirmaLogo" yol="firma_logo/" class="form-control" />
                             </div>
                         </div>
                          <div class="row">

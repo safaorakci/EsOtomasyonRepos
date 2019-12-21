@@ -188,21 +188,21 @@
                                         <!--<td style="text-align:center"><%=k %></td>-->
                                         <td style="text-align:center">
                                             <%if parcadetay("marka") = "" then %>
-                                                Marka Girilmedi
+                                                -
                                             <%else %>
                                                 <%=parcadetay("marka") %>
                                             <%end if %>
                                         </td>
                                         <td style="text-align:center">
                                             <%if parcadetay("parca_kodu") = "" then %>
-                                                Parça Kodu Girilmedi
+                                                -
                                             <%else %>
                                                 <%=parcadetay("parca_kodu") %>
                                             <%end if %>
                                         </td>
                                         <td style="text-align:center">
                                             <%if parcadetay("aciklama") = "" then %>
-                                                Açıklama Girilmedi
+                                                -
                                             <%else %>
                                                 <%=parcadetay("aciklama") %>
                                             <%end if %>
@@ -210,7 +210,7 @@
                                         <td style="text-align:center"><%=Adet %></td>
                                         <td style="text-align:center">
                                             <%if IsNull(parcadetay("birim")) then %>
-                                                Birim Girilmedi
+                                                -
                                             <%else %>
                                                 <%=parcadetay("birim") %>
                                             <%end if %>

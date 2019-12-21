@@ -127,7 +127,7 @@
         $(function () {
             var d = new Date();
             var strDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
-            $("#sp").html("bİLAL");
+            //$("#sp").html("bİLAL");
         });
       </script>
 </html>

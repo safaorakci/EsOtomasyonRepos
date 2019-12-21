@@ -7,7 +7,7 @@ using System.Web.Configuration;
 using System.Xml;
 using System.Net;
 using System.Text;
-
+using System.Data;
 
 namespace Ahtapot.App_Code.ayarlar
 {
@@ -90,29 +90,37 @@ namespace Ahtapot.App_Code.ayarlar
 
         public static void NetGSM_SMS(string numara, string mesaj)
         {
-            string ss = "";
-            ss += "<?xml version='1.0' encoding='UTF-8'?>";
-            ss += "<mainbody>";
-            ss += "<header>";
-            ss += "<company>NETGSM</company>";
-            ss += "<usercode>8508406149</usercode>";
-            ss += "<password>W3KF5XRT</password>";
-            ss += "<startdate></startdate>";
-            ss += "<stopdate></stopdate>";
-            ss += "<type>1:n</type>";
-            ss += "<msgheader>ESOTOMASYON</msgheader>";
-            ss += "</header>";
-            ss += "<body>";
-            ss += "<msg><![CDATA["+ mesaj+"]]></msg>";
-            ss += "<no>"+ numara +"</no>";
-            ss += "</body>";
-            ss += "</mainbody>";
+            baglan();
+            cmd.Parameters.Clear();
+            cmd.CommandText = "select ISNULL(sms_entegrasyon, 0) as sms_entegrasyon from ucgem_firma_listesi where yetki_kodu = 'BOSS'";
+            SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
+            DataTable dtSmsKontrol = new DataTable();
+            sqlData.Fill(dtSmsKontrol);
 
-            string donus = XMLPOST("http://api.netgsm.com.tr/xmlbulkhttppost.asp", ss);
+            if (Convert.ToBoolean(dtSmsKontrol.Rows[0]["sms_entegrasyon"]))
+            {
+                string ss = "";
+                ss += "<?xml version='1.0' encoding='UTF-8'?>";
+                ss += "<mainbody>";
+                ss += "<header>";
+                ss += "<company>NETGSM</company>";
+                ss += "<usercode>8508406149</usercode>";
+                ss += "<password>W3KF5XRT</password>";
+                ss += "<startdate></startdate>";
+                ss += "<stopdate></stopdate>";
+                ss += "<type>1:n</type>";
+                ss += "<msgheader>ESOTOMASYON</msgheader>";
+                ss += "</header>";
+                ss += "<body>";
+                ss += "<msg><![CDATA[" + mesaj + "]]></msg>";
+                ss += "<no>" + numara + "</no>";
+                ss += "</body>";
+                ss += "</mainbody>";
 
-             //HttpContext.Current.Response.Write(donus);
+                string donus = XMLPOST("http://api.netgsm.com.tr/xmlbulkhttppost.asp", ss);
+            }
 
-
+            //HttpContext.Current.Response.Write(donus);
         }
 
 

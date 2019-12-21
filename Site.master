@@ -125,6 +125,11 @@
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!">
+                                    <% 
+                                        string resim = SessionManager.CurrentUser.resim.ToString();
+                                        string resimUrl = "img/user.png";
+                                        if (resim == "undefined") { resimUrl.ToString(); } else { SessionManager.CurrentUser.resim.ToString(); }
+                                    %>
                                     <img src="<%: SessionManager.CurrentUser.resim %>" class="img-radius" alt="User-Profile-Image">
                                     <span><%: SessionManager.CurrentUser.kullanici_adsoyad %></span>
                                     <i class="ti-angle-down"></i>

@@ -906,11 +906,9 @@ function satinalmayenisatirsil(i) {
     $("#satinalmasatir" + i).remove();
 }
 
-var j = 0;
-function satinalmayenisatirekle(i) {
+function satinalmayenisatirekle() {
 
-    i++;
-    j += i;
+    var j = parseInt($("#satinalma_parcalistesi tr .parcalar").last().attr("i")) + 1;
 
     $("#parcasayisi").val(j);
 
@@ -1004,10 +1002,10 @@ function parcalar_autocomplete_calistir2() {
                         },
                         success: function (data) {
                             var result = jQuery.parseJSON(data.d);
-                            if (result.Durum == 0) {
-                                SiparisPopup(IsId, ui.item.id, parseInt(result.Sayi), adet, durum, result.Parca);
-                            }
                             if (result.Durum == 1) {
+                                SiparisPopup(IsId, ui.item.id, result.Sayi, adet, durum, result.Parca);
+                            }
+                            if (result.Durum == 0) {
                                 is_detay_parca_sectim(IsId, ui.item.id, adet, 0);
                             }
                         }
@@ -1073,10 +1071,10 @@ function parcalar_autocomplete_calistir2() {
                         },
                         success: function (data) {
                             var result = jQuery.parseJSON(data.d);
-                            if (result.Durum == 2) {
-                                SiparisPopup(IsId, ui.item.id, result.Sayi, adet, durum, result.Parca);
-                            }
                             if (result.Durum == 1) {
+                                SiparisPopup(IsId, ui.item.id, result.Sayi, adet, result.Durum, result.Parca);
+                            }
+                            if (result.Durum == 0) {
                                 is_detay_parca_agaci_sectim(IsId, ui.item.id);
                             }
                         }
@@ -1148,9 +1146,14 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
                     }
                     else { $("#servisparca").attr("parcaId", SPparcaListesi); $("#servisparca").attr("adet", SPadet); $("#servisparca").attr("sayi", "tek"); }
 
-                    //+ "<td  style='width:170px'>" + "<span class='label label-success' style='font-size: 100%; padding: 5px; display: inline;'> Stoktan Kullanıldı </span>" + "</td>" 
+                    //+ "<td  style='width:170px'>" + "<span class='label label-success' style='font-size: 100%; padding: 5px; display: inline;'> Stoktan Kullanıldı </span>" + "</td>"
 
-                    $("#stoklist").append("<tr id='" + ui.item.id + "'> <td>" + ui.item.marka + " - " + ui.item.kodu + "</td>" + "<td>" + $("#musteriparcaadeti").val() + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
+                    var price = parseInt(ui.item.maliyet) * parseInt($("#musteriparcaadeti").val());
+
+                    $("#stoklist").prepend("<tr id='" + ui.item.id + "'> <td>" + ui.item.marka + " - " + ui.item.kodu + "</td>" + "<td>" + $("#musteriparcaadeti").val() + "</td>" + "<td class='price'>" + price + " TL" + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
+
+                    $("#SumPriceRow").show();
+                    sumPrice();
 
                     //$.ajax({
                     //    type: 'POST',
@@ -1313,6 +1316,7 @@ function ParcaSil(id, durum) {
     //    STadet.splice(index3, 1);
     //    $("#siparisformu").attr("stokparcaid", STparcaListesi).attr("stokadet", STadet);
     //}
+    sumPrice();
 }
 
 function is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet) {
@@ -1623,10 +1627,7 @@ function satinalma_kayitduzenle(kayit_id, is_id, parca_id) {
     $("#modal_div3").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         sayfa_yuklenince();
         datatableyap();
-        $(".close").click();
     });
-
-
 }
 
 

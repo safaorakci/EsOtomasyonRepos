@@ -428,6 +428,7 @@
                 </style>
                 <div class="col-lg-8 col-xl-9" style="padding-top: 15px;">
                     <h5 class="card-header-text"><%=LNG("Giriş Çıkış Bilgilerim")%></h5>
+                    <input type="button" style="float: right; margin-top: 10px; display:none" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" />
                     <br />
                     <br />
                     <div id="giris_cikis_kayitlari">
@@ -441,10 +442,7 @@
 
                 </div>
             </div>
-
             <hr />
-
-
         </div>
     </div>
 </div>
@@ -817,11 +815,12 @@
                 <th><%=LNG("Saat")%></th>
                 <th><%=LNG("Tip")%></th>
                 <th><%=LNG("Durum")%></th>
+                <th><%=LNG("İşlem")%></th>
             </tr>
         </thead>
         <tbody>
             <%
-                SQL="SELECT mesai.id as idd, CASE WHEN mesai.giris_tipi = 1 THEN DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai.tarih) = 1 THEN kullanici.gun1_saat1 WHEN DATEPART(dw, mesai.tarih) = 2 THEN kullanici.gun2_saat1 WHEN DATEPART(dw, mesai.tarih) = 3 THEN kullanici.gun3_saat1 WHEN DATEPART(dw, mesai.tarih) = 4 THEN kullanici.gun4_saat1 WHEN DATEPART(dw, mesai.tarih) = 5 THEN kullanici.gun5_saat1 WHEN DATEPART(dw, mesai.tarih) = 6 THEN kullanici.gun6_saat1 WHEN DATEPART(dw, mesai.tarih) = 7 THEN kullanici.gun7_saat1 END, '00:00' ) ) ), CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, mesai.saat) ) ELSE DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai.tarih) = 1 THEN kullanici.gun1_saat2 WHEN DATEPART(dw, mesai.tarih) = 2 THEN kullanici.gun2_saat2 WHEN DATEPART(dw, mesai.tarih) = 3 THEN kullanici.gun3_saat2 WHEN DATEPART(dw, mesai.tarih) = 4 THEN kullanici.gun4_saat2 WHEN DATEPART(dw, mesai.tarih) = 5 THEN kullanici.gun5_saat2 WHEN DATEPART(dw, mesai.tarih) = 6 THEN kullanici.gun6_saat2 WHEN DATEPART(dw, mesai.tarih) = 7 THEN kullanici.gun7_saat2 END, '00:00' ) ) ), CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, mesai.saat) ) END AS fark, * FROM ucgem_personel_mesai_girisleri mesai JOIN ucgem_firma_kullanici_listesi kullanici ON kullanici.id = mesai.personel_id WHERE mesai.personel_id = '"& personel_id &"' AND mesai.cop = 'false' and mesai.giris_tipi != 2 ORDER BY mesai.id DESC;"
+                SQL="set datefirst 1;SELECT mesai.id as form_id, CASE WHEN mesai.giris_tipi = 1 THEN DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai.tarih) = 1 THEN kullanici.gun1_saat1 WHEN DATEPART(dw, mesai.tarih) = 2 THEN kullanici.gun2_saat1 WHEN DATEPART(dw, mesai.tarih) = 3 THEN kullanici.gun3_saat1 WHEN DATEPART(dw, mesai.tarih) = 4 THEN kullanici.gun4_saat1 WHEN DATEPART(dw, mesai.tarih) = 5 THEN kullanici.gun5_saat1 WHEN DATEPART(dw, mesai.tarih) = 6 THEN kullanici.gun6_saat1 WHEN DATEPART(dw, mesai.tarih) = 7 THEN kullanici.gun7_saat1 END, '00:00' ) ) ), CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, mesai.saat) ) ELSE DATEDIFF( MINUTE, (CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, ISNULL( CASE WHEN DATEPART(dw, mesai.tarih) = 1 THEN kullanici.gun1_saat2 WHEN DATEPART(dw, mesai.tarih) = 2 THEN kullanici.gun2_saat2 WHEN DATEPART(dw, mesai.tarih) = 3 THEN kullanici.gun3_saat2 WHEN DATEPART(dw, mesai.tarih) = 4 THEN kullanici.gun4_saat2 WHEN DATEPART(dw, mesai.tarih) = 5 THEN kullanici.gun5_saat2 WHEN DATEPART(dw, mesai.tarih) = 6 THEN kullanici.gun6_saat2 WHEN DATEPART(dw, mesai.tarih) = 7 THEN kullanici.gun7_saat2 END, '00:00' ) ) ), CONVERT(DATETIME, mesai.tarih) + CONVERT(DATETIME, mesai.saat) ) END AS fark, * FROM ucgem_personel_mesai_girisleri mesai JOIN ucgem_firma_kullanici_listesi kullanici ON kullanici.id = mesai.personel_id WHERE mesai.personel_id = '"& personel_id &"' AND mesai.cop = 'false' ORDER BY mesai.tarih DESC;"
                 set giris = baglanti.execute(SQL)
                 if giris.eof then
             %>
@@ -831,9 +830,10 @@
             <%
                 end if
                 do while not giris.eof
+                k = k + 1 
             %>
             <tr>
-                <td><%=giris("idd") %></td>
+                <td><%=k %></td>
                 <td><%=day(cdate(giris("tarih"))) %>&nbsp;<%=monthname(month(cdate(giris("tarih")))) %>&nbsp;<%=year(cdate(giris("tarih"))) %>&nbsp;<%=weekdayname(weekday(cdate(giris("tarih")))) %></td>
                 <td><%=left(giris("saat"),5) %></td>
                 <td><% if trim(giris("giris_tipi"))="2" then %><%=LNG("İzin")%><% elseif trim(giris("giris_tipi"))="1" then %><%=LNG("Giriş")%><% else %><%=LNG("Çıkış")%><% end if %></td>
@@ -846,6 +846,20 @@
                 <td><span class="label label-<% if cdbl(giris("fark"))>=0 then %>success<% elseif cdbl(giris("fark"))>30 then %>warning<% else %>danger<% end if %>">
                     <% if cdbl(giris("fark"))<0 then %><%=cdbl(giris("fark"))*-1 %>&nbsp;<%=LNG("Dakika Erken")%><% elseif cdbl(giris("fark"))=0 then %><%=LNG("Zamanında")%><% else %><%=cdbl(giris("fark")) %>&nbsp;<%=LNG("Dakika Geç")%><% end if %></span></td>
                 <% end if %>
+                <td>
+                    <div style="width: 120px;">
+                        <div class="btn-group dropdown-split-primary">
+                            <button type="button" class="btn btn-mini btn-primary"><i class="icofont icofont-exchange"></i><%=LNG("İşlemler")%></button>
+                            <button type="button" class="btn btn-primary btn-mini dropdown-toggle dropdown-toggle-split waves-effect waves-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only"><%=LNG("İşlemler")%></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <!--<a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_duzenle('<%=personel_id %>', '<%=giris("form_id") %>');"><%=LNG("Kaydı Düzenle")%></a>-->
+                                <a class="dropdown-item waves-effect waves-light" href="javascript:void(0);" onclick="personel_giris_cikis_kaydi_sil('<%=personel_id %>', '<%=giris("form_id") %>');"><%=LNG("Kaydı Sil")%></a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
             </tr>
             <%
                 giris.movenext
@@ -1949,7 +1963,7 @@
             <div class="row">
                 <div class="col-lg-12 col-xl-12">
                     <h5 class="card-header-text"><%=LNG("Personel Mesai Bilgileri")%> </h5>
-                    <span style="float: right;">
+                    <span style="float: right; margin-bottom:15px">
                         <button onclick="modal_mesai_bildirimi_yap('<%=personel_id %>', 'Onaylandı');" class="btn btn-primary">Mesai Bilgisi Ekle</button>
                     </span>
                     <br />
@@ -1974,7 +1988,7 @@
                 if mesai.eof then
                                 %>
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">Kayıt Bulunamadı</td>
+                                    <td colspan="7" style="text-align: center;">Kayıt Bulunamadı</td>
                                 </tr>
                                 <%
                 end if
@@ -2504,9 +2518,7 @@
 
 
             SQL="insert into parca_listesi(parca_kodu, parca_resmi, marka, parca_adi, kategori, aciklama, birim_maliyet, birim_pb, birim, miktar, minumum_miktar, barcode, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& kodu &"', '"& parca_resmi &"', '"& marka &"', '"& parca_adi &"', '"& kategori &"', '"& aciklama &"', '"& birim_maliyet &"', '"& birim_pb &"', '"& birim &"', '"& miktar &"', '"& minumum_miktar &"', '"& barcode &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
-            set ekle = baglanti.execute(SQL)
-
-        
+            set ekle = baglanti.execute(SQL)        
 
 
         elseif trn(request("islem2"))="guncelle" then
@@ -2924,7 +2936,6 @@
                     
                     function formatRepo(repo) {
                         console.log(repo);
-                   
                         if (repo.loading) return repo.text;
                         var markup = '<div class="select2-result-repository clearfix" style="padding:0;">' +
                             '<div class="select2-result-repository__meta">' +
@@ -3000,7 +3011,7 @@
 
     %>
     <span style="float: right;">
-        <input type="button" class="btn btn-danger btn-mini" onclick="grubu_sil('<%=grup("id") %>');" value="Grubu Sil" />&nbsp;<input type="button" class="btn btn-success btn-mini" onclick="gruba_parca_ekle('<%=grup("id") %>');" value="Gruba Parça Ekle" /><br />
+        <input type="button" class="btn btn-danger btn-mini" onclick="grubu_sil('<%=grup("id") %>');" value="Grubu Sil" />&nbsp;<input type="button" class="btn btn-success btn-mini" onclick="gruba_parca_ekle('<%=grup("id") %>');" value="Grubu Düzenle" /><br />
         <br />
     </span>
     <div id="grup_listesi<%=grup_id %>">
@@ -3022,7 +3033,7 @@
                 if grup_parca.eof then
                     
                 end if
-                Dim parcaAdet(15)
+                Dim parcaAdet(1500)
                 do while not grup_parca.eof
                     count = count + 1
                     parcaAdet(count) = grup_parca(0)
@@ -3046,9 +3057,9 @@
             %>
             <tr>
                 <td style="width: 30px;"><%=p %></td>
-                <td><%=parca("parca_adi") %></td>
-                <td><%=parca("marka") %></td>
-                <td><%=parca("aciklama") %></td>
+                <td><% if parca("parca_adi") = "" then %> - <%else %> <%=parca("parca_adi") %> <%end if %></td>
+                <td><% if parca("marka") = "" then %> - <%else %> <%=parca("marka") %> <%end if %></td>
+                <td><% if parca("aciklama") = "" then %> - <%else %> <%=parca("aciklama") %> <%end if %></td>
                 <td><input type="number" min="1" style="width:50px" value="<%=parcaAdet(p) %>" id="count<%=grup("id") %><%=p %>" parca_id="<%=parca("id") %>""/></td>
             </tr>
             <% 
@@ -3070,7 +3081,7 @@
 
         Response.AddHeader "Content-Type", "application/json"
 
-        SQL="SELECT top 20 parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet ORDER BY parca.parca_adi asc;"
+        SQL="SELECT top 20 parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca.cop = 'false' and parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet ORDER BY parca.parca_adi asc;"
         set parca = baglanti.execute(SQL)
 
         Response.Write "["
@@ -3412,6 +3423,13 @@
             ekleme_tarihi = date
             ekleme_saati = time
 
+            if tedarikci_id = "null" then
+                tedarikci_id = 0
+            end if
+            if proje_id = "null" then
+                proje_id = 0
+            end if
+
 
             SQL="SET NOCOUNT ON; insert into satinalma_listesi(baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, aciklama, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, toplamtl, toplamusd, toplameur) values('"& baslik &"', CONVERT(date, '"& siparis_tarihi &"', 103), '"& oncelik &"', '"& tedarikci_id &"', '"& proje_id &"', '"& aciklama &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& toplamtl &"', '"& toplamusd &"', '"& toplameur &"'); SELECT SCOPE_IDENTITY() id;"
             set ekle = baglanti.execute(SQL)
@@ -3420,7 +3438,7 @@
 
             for x = 0 to ubound(split(parcalar, "|"))
 
-                if len(split(parcalar, "|")(x))>5 then
+                if len(split(parcalar, "|")(x)) > 5 then
 
                     maliyet = split(split(parcalar, "|")(x), "~")(0)
                     pb = split(split(parcalar, "|")(x), "~")(1)
@@ -3447,7 +3465,7 @@
 
             kayit_id = trn(request("kayit_id"))
             is_id = trn(request("is_id"))
-        Response.Write("iş Id : " & is_id)
+            'Response.Write("iş Id : " & is_id)
 
             baslik = trn(request("baslik"))
             siparis_tarihi = trn(request("siparis_tarihi"))
@@ -3474,7 +3492,7 @@
 
             SatinalmaId = kayit_id
 
-            SQL="delete from satinalma_siparis_listesi where IsId = '"& is_id &"'"
+            SQL="delete from satinalma_siparis_listesi where SatinalmaId = '"& kayit_id &"'"
             set sil = baglanti.execute(SQL)
 
             for x = 0 to ubound(split(parcalar, "|"))
@@ -4859,11 +4877,17 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                                     <th>Parça</th>
                                     <th>Adet</th>
                                     <!--<th>Sipariş Durumu</th>-->
+                                    <th>Maliyet</th>
                                     <th>Açıklama</th>
                                     <th>Işlem</th>
                                 </tr>
                             </thead>
                             <tbody id="stoklist">
+                                <tr id="SumPriceRow" style="display:none">
+                                    <td colspan="2" style="text-align: right; font-weight: 700;"><span>Tolam Malitet</span></td>
+                                    <td colspan="1" id="totalPrice"></td>
+                                    <td colspan="2"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -5518,6 +5542,7 @@ works properly when clicked or hovered */
                                     <!--<th>Id</th>-->
                                     <th>Parça</th>
                                     <th>Adet</th>
+                                    <th>Maliyet</th>
                                     <th>Açıklama</th>
                                     <th>Işlem</th>
                                 </tr>
@@ -5540,8 +5565,10 @@ works properly when clicked or hovered */
                                         SQL = "select * from parca_listesi where durum = 'true' and cop = 'false' and id = '"& id &"'"
                                         set parcadetay = baglanti.execute(SQL)
 
-                                        parca_kodu = ""
-                                        marka = ""
+                                        parca_kodu = "-"
+                                        marka = "-"
+                                        toplamMaliyet = CDbl(CDbl(parcadetay("birim_maliyet")) * Adet)
+                                        birimPB = parcadetay("birim_pb")
                                         if parcadetay("marka") = "" then
                                         else
                                             marka = parcadetay("marka")
@@ -5559,15 +5586,20 @@ works properly when clicked or hovered */
                                     <!--<td style="text-align:center"><%=k %></td>-->
                                     <td><%=parca_kodu %> - <%=marka %></td>
                                     <td><%=Adet %></td>
+                                    <td class="price"><%=toplamMaliyet %>&nbsp<%=parcadetay("birim_pb") %></td>
                                     <td><%=parcadetay("aciklama") %></td>
-                                    <td>
-                                        <button type="button" onclick="parcaDuzenle('<%=parcadetay("id")%>');" class="btn btn-danger btn-mini">Sil</button></td>
+                                    <td><button type="button" onclick="parcaDuzenle('<%=parcadetay("id")%>');" class="btn btn-danger btn-mini">Sil</button></td>
                                 </tr>
                                 <% 
                                         parcadetay.movenext 
                                         loop
                                 %>
                                 <% next %>
+                                <tr>
+                                    <td colspan="2" style="text-align: right; font-weight: 700;"><span>Tolam Malitet</span></td>
+                                    <td colspan="1" id="totalPrice"></td>
+                                    <td colspan="2"></td>
+                                </tr>
                             </tbody>
                         </table>
                         <input type="hidden" id="parcalarId" adet="<%=formduzenle("Adet") %>" parcaid="<%=formduzenle("ParcaId") %>" stokadet="<%=formduzenle("StoktanKullanilanAdet") %>" delstokadet="" delparcaid="" deladet="" sonradaneklenenparca="" sonradaneklenenadet="" />
@@ -5578,6 +5610,21 @@ works properly when clicked or hovered */
         <div class="modal-footer">
             <button class="btn btn-primary" onclick="ServisBakimKaydiDuzenlemeYap(<%=kayitId%>);">Servis / Bakım Planı Düzenle</button>
         </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var sum = 0;
+                // iterate through each td based on class and add the values
+                $(".price").each(function () {
+
+                    var value = $(this).text().replace('TL', '').replace(' ', '');
+                    // add only if the value is number
+                    if (!isNaN(value) && value.length != 0) {
+                        sum += parseFloat(value);
+                    }
+                });
+                $("#totalPrice").text(sum + " TL");
+            });
+        </script>
         <style>
             .ui-helper-hidden {
                 display: none;
