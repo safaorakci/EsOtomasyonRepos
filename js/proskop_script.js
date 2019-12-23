@@ -9091,17 +9091,43 @@ function parcaDuzenle(id) {
 }
 
 function sumPrice() {
-    var sum = 0;
-    // iterate through each td based on class and add the values
+    var sumTL = 0;
+    var sumUSD = 0;
+    var sumEUR = 0;
+    var valueTL = 0;
+    var valueUSD = 0;
+    var valueEUR = 0;
+
     $(".price").each(function () {
 
-        var value = $(this).text().replace('TL', '').replace(' ', '');
-        // add only if the value is number
-        if (!isNaN(value) && value.length != 0) {
-            sum += parseFloat(value);
+        var sonucTL = $(this).text().indexOf("TL");
+        var sonucUSD = $(this).text().indexOf("USD");
+        var sonucEUR = $(this).text().indexOf("EUR");
+
+        if (sonucTL != -1) {
+            valueTL = $(this).text().replace('TL', '').replace(' ', '');
+            if (!isNaN(valueTL) && valueTL.length != 0 && valueTL > 0) {
+                sumTL += parseFloat(valueTL);
+                $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+            }    
+        }
+
+        if (sonucUSD != -1) {
+            valueUSD = $(this).text().replace('USD', '').replace(' ', '');
+            if (!isNaN(valueUSD) && valueUSD.length != 0 && valueUSD > 0) {
+                sumUSD += parseFloat(valueUSD);
+                $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+            }
+        }
+
+        if (sonucEUR != -1) {
+            valueEUR = $(this).text().replace('EUR', '').replace(' ', '');
+            if (!isNaN(valueEUR) && valueEUR.length != 0 && valueEUR > 0) {
+                sumEUR += parseFloat(valueEUR);
+                $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+            }
         }
     });
-    $("#totalPrice").text(sum + " TL");
 }
 
 function ServisBakimKaydiDuzenlemeYap(kayitId) {

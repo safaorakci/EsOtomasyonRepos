@@ -3081,12 +3081,12 @@
 
         Response.AddHeader "Content-Type", "application/json"
 
-        SQL="SELECT top 20 parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca.cop = 'false' and parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet ORDER BY parca.parca_adi asc;"
+        SQL="SELECT top 20 parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet, parca.birim_pb FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca.cop = 'false' and parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet, parca.birim_pb ORDER BY parca.parca_adi asc;"
         set parca = baglanti.execute(SQL)
 
         Response.Write "["
         do while not parca.eof
-    %>{"id":<%=parca("id") %>,"parcaadi":"<%=parca("parca_adi") %>","kodu":"<%=parca("parca_kodu") %>","kod_marka":"<%=parca("parca_kodu") %>-<%=parca("marka") %>","marka":"<%=parca("marka") %>","aciklama":"<%=parca("aciklama") %>","kategori":"<%=parca("kategori_adi") %>","maliyet":"<%=parca("birim_maliyet") %>"},<%
+    %>{"id":<%=parca("id") %>,"parcaadi":"<%=parca("parca_adi") %>","kodu":"<%=parca("parca_kodu") %>","kod_marka":"<%=parca("parca_kodu") %>-<%=parca("marka") %>","marka":"<%=parca("marka") %>","aciklama":"<%=parca("aciklama") %>","kategori":"<%=parca("kategori_adi") %>","maliyet":"<%=parca("birim_maliyet") %>","birim_pb":"<%=parca("birim_pb") %>"},<%
         parca.movenext
         loop
 
@@ -4884,7 +4884,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                             </thead>
                             <tbody id="stoklist">
                                 <tr id="SumPriceRow" style="display:none">
-                                    <td colspan="2" style="text-align: right; font-weight: 700;"><span>Tolam Malitet</span></td>
+                                    <td colspan="2" style="text-align: right; font-weight: 700;"><span>Tolam Maliyet</span></td>
                                     <td colspan="1" id="totalPrice"></td>
                                     <td colspan="2"></td>
                                 </tr>
@@ -5596,7 +5596,7 @@ works properly when clicked or hovered */
                                 %>
                                 <% next %>
                                 <tr>
-                                    <td colspan="2" style="text-align: right; font-weight: 700;"><span>Tolam Malitet</span></td>
+                                    <td colspan="2" style="text-align: right; font-weight: 700;"><span>Tolam Maliyet</span></td>
                                     <td colspan="1" id="totalPrice"></td>
                                     <td colspan="2"></td>
                                 </tr>
@@ -5612,17 +5612,43 @@ works properly when clicked or hovered */
         </div>
         <script type="text/javascript">
             $(document).ready(function () {
-                var sum = 0;
-                // iterate through each td based on class and add the values
+                var sumTL = 0;
+                var sumUSD = 0;
+                var sumEUR = 0;
+                var valueTL = 0;
+                var valueUSD = 0;
+                var valueEUR = 0;
+
                 $(".price").each(function () {
 
-                    var value = $(this).text().replace('TL', '').replace(' ', '');
-                    // add only if the value is number
-                    if (!isNaN(value) && value.length != 0) {
-                        sum += parseFloat(value);
+                    var sonucTL = $(this).text().indexOf("TL");
+                    var sonucUSD = $(this).text().indexOf("USD");
+                    var sonucEUR = $(this).text().indexOf("EUR");
+
+                    if (sonucTL != -1) {
+                        valueTL = $(this).text().replace('TL', '').replace(' ', '');
+                        if (!isNaN(valueTL) && valueTL.length != 0 && valueTL > 0) {
+                            sumTL += parseFloat(valueTL);
+                            $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+                        }
+                    }
+
+                    if (sonucUSD != -1) {
+                        valueUSD = $(this).text().replace('USD', '').replace(' ', '');
+                        if (!isNaN(valueUSD) && valueUSD.length != 0 && valueUSD > 0) {
+                            sumUSD += parseFloat(valueUSD);
+                            $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+                        }
+                    }
+
+                    if (sonucEUR != -1) {
+                        valueEUR = $(this).text().replace('EUR', '').replace(' ', '');
+                        if (!isNaN(valueEUR) && valueEUR.length != 0 && valueEUR > 0) {
+                            sumEUR += parseFloat(valueEUR);
+                            $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+                        }
                     }
                 });
-                $("#totalPrice").text(sum + " TL");
             });
         </script>
         <style>

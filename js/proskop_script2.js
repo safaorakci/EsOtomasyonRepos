@@ -1150,7 +1150,7 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
 
                     var price = parseInt(ui.item.maliyet) * parseInt($("#musteriparcaadeti").val());
 
-                    $("#stoklist").prepend("<tr id='" + ui.item.id + "'> <td>" + ui.item.marka + " - " + ui.item.kodu + "</td>" + "<td>" + $("#musteriparcaadeti").val() + "</td>" + "<td class='price'>" + price + " TL" + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
+                    $("#stoklist").prepend("<tr id='" + ui.item.id + "'> <td>" + ui.item.marka + " - " + ui.item.kodu + "</td>" + "<td>" + $("#musteriparcaadeti").val() + "</td>" + "<td class='price'>" + price + " " + ui.item.birim_pb + "</td>" + "<td>" + ui.item.aciklama + "<td>" + "<button class='btn btn-danger btn-mini' onclick='ParcaSil(" + ui.item.id + ");'>Sil</button>" + "</td> </tr>");
 
                     $("#SumPriceRow").show();
                     sumPrice();
