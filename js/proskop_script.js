@@ -927,6 +927,7 @@ function personel_ekle() {
     data += "&gorevler=" + encodeURIComponent(gorevler);
     data += "&personel_parola=" + encodeURIComponent(personel_parola);
     data += "&personel_tcno=" + encodeURIComponent(personel_tcno);
+    data += "&today=" +  new Date().toLocaleDateString();
     data = encodeURI(data);
 
     if ($("#personel_ekle_form  input:not(input[type=button])").valid("valid")) {

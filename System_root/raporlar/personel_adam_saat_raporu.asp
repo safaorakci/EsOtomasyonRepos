@@ -156,11 +156,11 @@
                         <select name="yeni_is_yuku_proje_id" class="select2" id="yeni_is_yuku_proje_id">
                                         <option value="0"><%=LNG("Tüm Projeler")%></option>
                                         <%
-                        SQL="select id, proje_adi from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' order by proje_adi asc"
+                        SQL="select id, proje_adi,proje_kodu from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' order by proje_adi asc"
                         set proje = baglanti.execute(SQL)
                         do while not proje.eof
                                         %>
-                                        <option value="<%=proje("id") %>"><%=proje("proje_adi") %></option>
+                                        <option value="<%=proje("id") %>"><%=proje("proje_adi") %>-<%=proje("proje_kodu") %></option>
                                         <%
                         proje.movenext
                         loop

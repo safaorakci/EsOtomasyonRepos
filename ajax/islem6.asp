@@ -3588,7 +3588,7 @@
 
                         SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id  where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' "& sorgu_str &" order by satinalma.id desc"
                     else
-                        SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id left join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
+                        SQL="select satinalma.*, isnull(firma.firma_adi, '') as tedarikci, proje.proje_adi as proje, proje.proje_kodu as proje_kodu, kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen from satinalma_listesi satinalma left join ucgem_firma_listesi firma on firma.id = satinalma.tedarikci_id left join ucgem_proje_listesi proje on proje.id = satinalma.proje_id join ucgem_firma_kullanici_listesi kullanici on kullanici.id = satinalma.ekleyen_id where satinalma.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and satinalma.cop = 'false' order by satinalma.id desc"
                     
                     end if
                     set satinalma = baglanti.execute(SQL)
@@ -3631,7 +3631,7 @@
                     <%if trim(satinalma("proje_id")) = "0" then%>
                     <td><span style="font-size: 12px; font-weight: bold">Belirtilmedi</span></td>
                     <%else%>
-                    <td><%=satinalma("proje")%></td>
+                    <td><%=satinalma("proje")%>-<%=satinalma("proje_kodu")%></td>
                     <%end if %>
                     <td>
                         <% if not formatnumber(satinalma("toplamtl"),2) = "00" then %>
@@ -3752,7 +3752,7 @@
                     set proje = baglanti.execute(SQL)
                     do while not proje.eof
                     %>
-                    <option <% if trim(proje("id"))=trim(kayit("proje_id")) then %> selected="selected" <% end if %> value="<%=proje("id") %>"><%=proje("proje_adi") %> </option>
+                    <option <% if trim(proje("id"))=trim(kayit("proje_id")) then %> selected="selected" <% end if %> value="<%=proje("id") %>"><%=proje("proje_adi") %>-<%=proje("proje_kodu") %> </option>
                     <%
                     proje.movenext
                     loop

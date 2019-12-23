@@ -3982,12 +3982,11 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string gorevler = UIHelper.trn(Request.Form["gorevler"].ToString());
             string personel_parola = UIHelper.trn(Request.Form["personel_parola"].ToString());
             string personel_tcno = UIHelper.trn(Request.Form["personel_tcno"].ToString());
-
             try
             {
                 ayarlar.baglan();
                 ayarlar.cmd.Parameters.Clear();
-                ayarlar.cmd.CommandText = "SET NOCOUNT ON;  insert into ucgem_firma_kullanici_listesi(yetki_kodu, firma_kodu, firma_id, firma_hid, personel_eposta, personel_parola, maili_varmi, personel_cinsiyet, personel_ad, personel_soyad, personel_telefon, personel_dtarih, personel_resim, ekleyen_yetki_kodu, ekleyen_firma_kodu, ekleyen_firma_id, departmanlar, gorevler, durum, cop, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, tcno) values(@yetki_kodu, @firma_kodu, @firma_id, @firma_hid, @personel_eposta, @personel_parola, @maili_varmi, @personel_cinsiyet, @personel_ad, @personel_soyad, @personel_telefon, CONVERT(date, '" + personel_dtarih + "', 103), @personel_resim, @ekleyen_yetki_kodu, @ekleyen_firma_kodu, @ekleyen_firma_id, @departmanlar, @gorevler, @durum, @cop, @ekleyen_id, @ekleyen_ip, CONVERT(date, '" + DateTime.Now + "', 103), CONVERT(time, '" + DateTime.Now.TimeOfDay + "', 103), @tcno); SELECT SCOPE_IDENTITY() id; ";
+                ayarlar.cmd.CommandText = "SET NOCOUNT ON;  insert into ucgem_firma_kullanici_listesi(yetki_kodu, firma_kodu, firma_id, firma_hid, personel_eposta, personel_parola, maili_varmi, personel_cinsiyet, personel_ad, personel_soyad, personel_telefon, personel_dtarih, personel_resim, ekleyen_yetki_kodu, ekleyen_firma_kodu, ekleyen_firma_id, departmanlar, gorevler, durum, cop, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, tcno, personel_yillik_izin_hakedis, personel_yillik_izin) values(@yetki_kodu, @firma_kodu, @firma_id, @firma_hid, @personel_eposta, @personel_parola, @maili_varmi, @personel_cinsiyet, @personel_ad, @personel_soyad, @personel_telefon, CONVERT(date, '" + personel_dtarih + "', 103), @personel_resim, @ekleyen_yetki_kodu, @ekleyen_firma_kodu, @ekleyen_firma_id, @departmanlar, @gorevler, @durum, @cop, @ekleyen_id, @ekleyen_ip, CONVERT(date, '" + DateTime.Now + "', 103), CONVERT(time, '" + DateTime.Now.TimeOfDay + "', 103), @tcno, CONVERT(date, '" + DateTime.Now + "', 103),0); SELECT SCOPE_IDENTITY() id; ";
                 ayarlar.cmd.Parameters.Add("tcno", personel_tcno);
                 ayarlar.cmd.Parameters.Add("yetki_kodu", "ALL");
                 ayarlar.cmd.Parameters.Add("firma_hid", SessionManager.CurrentUser.firma_hid);
