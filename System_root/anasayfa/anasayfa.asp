@@ -262,11 +262,11 @@
                                 <select name="yeni_is_yuku_proje_id" id="yeni_is_yuku_proje_id" onchange="is_yuku_gosterim_proje_sectim('<%=cdate(dongu_baslangic) %>', '<%=cdate(dongu_bitis) %>');" class="select2">
                                     <option selected value="0"><%=LNG("Tüm Projeler")%></option>
                                     <%
-                                                SQL="select id, proje_adi from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' order by proje_adi asc"
+                                                SQL="select id, proje_adi,proje_kodu from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' order by proje_adi asc"
                                                 set proje = baglanti.execute(SQL)
                                                 do while not proje.eof
                                     %>
-                                    <option value="<%=proje("id") %>"><%=proje("proje_adi") %></option>
+                                    <option value="<%=proje("id") %>"><%=proje("proje_adi") %>-<%=proje("proje_kodu") %></option>
                                     <%
                                                 proje.movenext
                                                 loop
@@ -389,7 +389,7 @@
                                 <div class="col-md-9">
                                     <select name="rapor_proje_ilerleme_proje_id" onchange="anasayfa_proje_durum_bilgisi_getir(this.value);" id="rapor_proje_ilerleme_proje_id" class="select2">
                                         <%
-                                            SQL="select id, proje_adi from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' and proje_firma_id != 0"
+                                            SQL="select id, proje_adi,proje_kodu from ucgem_proje_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' and proje_firma_id != 0"
                                             set projeler = baglanti.execute(SQL)
                                             'response.Write(SQL)
 
@@ -399,7 +399,7 @@
                                                     ilk_proje_id = projeler("id")
                                                 end if
                                         %>
-                                        <option <% if trim(ilk_proje_id)=trim(projeler("id")) then %> selected="selected" <% end if %> value="<%=projeler("id") %>"><%=projeler("proje_adi") %></option>
+                                        <option <% if trim(ilk_proje_id)=trim(projeler("id")) then %> selected="selected" <% end if %> value="<%=projeler("id") %>"><%=projeler("proje_adi") %>-<%=projeler("proje_kodu") %></option>
                                         <%
                                             projeler.movenext
                                             loop

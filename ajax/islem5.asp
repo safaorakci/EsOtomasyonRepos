@@ -418,7 +418,7 @@
 <form id="koftiform"></form>
 <form autocomplete="off" id="yeni_parca_giris_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
 
-    <div class="row">
+    <div class="row" style="display:none;">
         <label class="col-sm-12 col-form-label">Parça Resmi :</label>
         <div class="col-sm-12">
             <input type="file" id="parca_resmi" yol="/Parcalar" tip="buyuk" class="form-control" />
@@ -534,7 +534,7 @@
 <form id="koftiform"></form>
 <form autocomplete="off" id="yeni_parca_giris_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
 
-    <div class="row">
+    <div class="row" style="display:none;">
         <label class="col-sm-12 col-form-label">Parça Resmi :</label>
         <div class="col-sm-12">
             <input type="file" id="parca_resmi" yol="/Parcalar" tip="buyuk" value="<%=parca("parca_resmi") %>" class="form-control" />
@@ -690,7 +690,7 @@
                     set proje = baglanti.execute(SQL)
                     do while not proje.eof
                 %>
-                <option value="<%=proje("id") %>"><%=proje("proje_adi") %></option>
+                <option value="<%=proje("id") %>"><%=proje("proje_adi") %>-<%=proje("proje_kodu") %></option>
                 <%
                     proje.movenext
                     loop
@@ -1286,7 +1286,7 @@ works properly when clicked or hovered */
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="display:none;">
         <label class="col-sm-12 col-form-label">Dosya :</label>
         <div class="col-sm-12">
             <input type="file" id="talep_dosya" yol="/Parcalar" tip="kucuk" class="form-control" folder="TalepFisDosyalari" />
@@ -1342,7 +1342,7 @@ works properly when clicked or hovered */
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="display:none;">
         <label class="col-sm-12 col-form-label">Dosya :</label>
         <div class="col-sm-12">
             <input type="file" id="talep_dosya" yol="/Parcalar" tip="kucuk" value="<%=talepcek("dosya") %>" folder="TalepFisDosyalari" class="form-control" />

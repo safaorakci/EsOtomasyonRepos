@@ -207,7 +207,7 @@
                                 </script>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="display:none;">
                             <div class="col-sm-12">
                                 <label class="col-form-label"><% Response.Write(LNG("İş Tipi")); %></label>
                                 <div class="">
