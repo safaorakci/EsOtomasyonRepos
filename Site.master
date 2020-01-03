@@ -1,10 +1,11 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" EnableViewState="false" Inherits="SiteMaster" %>
 
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <%--bismillahirrahmanirrahim--%>
-    <title><% Response.Write(LNG("Proskop | Süreç Yönetimi")); %></title>
+    <%FirmaBilgileri firma = firmaBilgileri();%>
+    <title><% Response.Write(firma.Title.ToString()); %> | Süreç Yönetimi</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="cache-control" content="max-age=0" />
@@ -69,7 +70,14 @@
                             </div>
                         </div>
                         <a href="/default.aspx">
-                            <img class="img-fluid" style="max-height: 50px;" src="/images/ahtapot_buyuk2.png" />
+                            <%if (firma.Title == "ESFLW")
+                                { %>
+                                <img class="img-fluid" style="max-height: 50px;" src="images/proyeni_logo.png" />
+                            <%} %>
+                            <%else
+                            { %>
+                                <img class="img-fluid" style="max-height: 50px;" src="images/ahtapot_buyuk2.png"/>
+                            <%} %>
                         </a>
                         <a class="mobile-options">
                             <i class="ti-more"></i>
@@ -97,6 +105,7 @@
                             </li>
                             <li></li>
                         </ul>
+
                         <ul class="nav-right">
                             <li class="header-notification header-notification2">
                                 <a href="#!">
@@ -106,7 +115,6 @@
                                 <div id="bildirim_listesi">
                                 </div>
                             </li>
-
                             <li style="display: none;">
                                 <div id="toolbar-options" class="hidden">
                                     <a href="javascript:void(0);" onclick="ajax_dil('turkce');">
@@ -260,12 +268,12 @@
                 </div>
             </div>
             Sistemden Çıkmak İstediğinize Emin misiniz
-            <div class="container-fuild" id="firstDiv" style="margin-top:42px; min-height: calc(100vh - 56px);">
+            <div class="container-fuild" id="firstDiv" style="margin-top: 42px; min-height: calc(100vh - 56px);">
                 <div class="pcoded-wrapper">
                     <nav class="pcoded-navbar">
                         <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
                         <div class="pcoded-inner-navbar main-menu">
-
+                            <%ModulYetkiler yetkiler = modulYetkiler(); %>
                             <ul class="pcoded-item pcoded-left-item" style="margin-top: 20px;">
 
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",60,") > 0)
@@ -287,8 +295,6 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-
-
 
                                 <li class="" style="display: none;">
                                     <a href="javascript:void(0);" onclick="sayfagetir('/is_listesi_yeni/','jsid=4559');">
@@ -332,8 +338,9 @@
                                     </a>
                                 </li>
                                 <% } %>
+
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",65,") > 0)
-                                    {%>
+                                    { %>
                                 <li class="">
                                     <a href="javascript:void(0);" onclick="sayfagetir('/parcalar/','jsid=4559');">
                                         <span class="pcoded-micon"><i class="ti-pencil-alt"></i><b>N</b></span>
@@ -342,6 +349,8 @@
                                     </a>
                                 </li>
                                 <% } %>
+                                <%if (yetkiler.satinalma == true)
+                                    { %>
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",66,") > 0)
                                     {%>
                                 <li class="">
@@ -352,8 +361,12 @@
                                     </a>
                                 </li>
                                 <% } %>
-                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",67,") > 0)
+                                <% } %>
+
+                                <%if (yetkiler.teknikServis == true)
                                     {%>
+                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",67,") > 0)
+                                    { %>
                                 <li class="">
                                     <a href="javascript:void(0);" onclick="sayfagetir('/bakim_yonetimi/','jsid=4559');">
                                         <span class="pcoded-micon"><i class="ti-pencil-alt"></i><b>N</b></span>
@@ -362,6 +375,8 @@
                                     </a>
                                 </li>
                                 <% } %>
+                                <% } %>
+
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",68,") > 0)
                                     {%>
                                 <li class="">
@@ -383,7 +398,37 @@
                                     </a>
                                 </li>
                                 <% } %>
+                                <%if (yetkiler.toplanti == true)
+                                    { %>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/toplanti_yonetimi/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="fa fa-comments-o"></i><b>N</b></span>
+                                        <span class="pcoded-mtext">Toplantılar</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <%} %>
+                                <%if (yetkiler.cariFinansman == true)
+                                    { %>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/finansman_yonetimi/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="fa fa-line-chart"></i><b>N</b></span>
+                                        <span class="pcoded-mtext">Finansman</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <%} %>
 
+                                <%if (yetkiler.hatirlatici == true)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/hatirlatici/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="fa fa-clock-o"></i><b>N</b></span>
+                                        <span class="pcoded-mtext">Hatırlatıcı</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <%} %>
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",70,") > 0)
                                     {%>
                                 <li class="">
@@ -394,8 +439,6 @@
                                     </a>
                                 </li>
                                 <% } %>
-
-
 
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",71,") > 0)
                                     {%>
@@ -458,7 +501,7 @@
                                         <% } %>
                                         <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",87,") > 0)
                                             {%>
-                                        <li style="display:none" class=" ">
+                                        <li style="display: none" class=" ">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/departman_adam_saat_raporu/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext"><% Response.Write(LNG("Departman Adam-Saat Raporu")); %></span>
@@ -482,8 +525,6 @@
                                 </li>
                                 <% } %>
 
-
-
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",72,") > 0)
                                     {%>
                                 <li class="pcoded-hasmenu">
@@ -493,6 +534,8 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                     <ul class="pcoded-submenu">
+                                        <%if (yetkiler.uretimSablonu == true)
+                                            { %>
                                         <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",76,") > 0)
                                             {%>
                                         <li class="">
@@ -503,6 +546,30 @@
                                             </a>
                                         </li>
                                         <% } %>
+                                        <% } %>
+
+                                        <%if (yetkiler.urunAgaci == true)
+                                            { %>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/ucun_agaci/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Ürün Ağacı")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <%} %>
+
+                                        <%if (yetkiler.yillikIzinMezvuat == true)
+                                            { %>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/yillik_izin_mevzuat/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Yıllık İzin Mevzuat")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <%} %>
+
                                         <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",77,") > 0)
                                             {%>
                                         <li class="">
@@ -612,10 +679,7 @@
                                     </a>
                                 </li>
 
-
-
                             </ul>
-
                         </div>
                     </nav>
                     <div class="pcoded-content">
@@ -761,11 +825,11 @@
         });
     </script>
     <script type="text/javascript">
-            $(document).ready(function () {
-                if ($(window).width() < 500) {
-                    $("#mobile-collapse").trigger("click");
-                }
-            });
+        $(document).ready(function () {
+            if ($(window).width() < 500) {
+                $("#mobile-collapse").trigger("click");
+            }
+        });
     </script>
 
     <button id="modal_butonum" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow"></button>

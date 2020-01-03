@@ -314,7 +314,7 @@
         SQL = "select ISNULL(sms_entegrasyon, 0) as sms_entegrasyon from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
         set sms_control = baglanti.execute(SQL)
 
-        if sms_control("sms_entegrasyon") = "Doğru" or sms_control("sms_entegrasyon") = "True" then
+        if sms_control("sms_entegrasyon") = True then
             xml ="<?xml version='1.0' encoding='UTF-8'?>" & _
             "<mainbody>" & _
             "<header>" & _
@@ -331,8 +331,9 @@
             "<no>"& numara &"</no>" & _
             "</body>" & _
             "</mainbody>"
+
+            cevap = GETHTTPXML("http://api.netgsm.com.tr/xmlbulkhttppost.asp",xml)
         end if
-        cevap = GETHTTPXML("http://api.netgsm.com.tr/xmlbulkhttppost.asp",xml)
         'Response.Write cevap
 
     End Function
@@ -390,4 +391,21 @@ Function RelativeTime(dt)
 
     End Function
 
+
+    Function FormatDate(SourceDate, DateFormat)
+	If IsDate(SourceDate) = False Then 'This is not a date value - return an error.
+		FormatDate = "[##ERROR! - Invalid Date: " & SourceDate & "]"
+	Else
+		
+		If DateFormat <> "00" Then 'Either no format specified or it wasn't leading zeros.
+			FormatDate = Trim(CStr(Day(SourceDate))) & "."&Trim(Cstr(Month(SourceDate)))  &FormatDate
+		Else	'Format requested includes leading zeros
+			If Day(SourceDate) < 10 Then FormatDate = FormatDate & "0" & Trim(CStr(Day(SourceDate))) Else  FormatDate=   Trim(CStr(Day(SourceDate))) & "." & FormatDate
+            If Month(SourceDate) < 10 Then FormatDate = FormatDate & ".0" & Trim(CStr(Month(SourceDate))) Else FormatDate = FormatDate & "."&Trim(CStr(Month(SourceDate)))  
+		End If
+    FormatDate = FormatDate &"." &CStr(Year(SourceDate))
+	End If
+End Function
+
+   
 %>

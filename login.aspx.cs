@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -110,5 +111,33 @@ public partial class login : System.Web.UI.Page
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
         ayarlar.cmd.CommandText = "select * from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'";
+    }
+
+    public class FirmaBilgileri
+    {
+        public string Title { get; set; }
+        public string Logo { get; set; }
+    }
+
+    public FirmaBilgileri firmaBilgileri()
+    {
+        ayarlar.baglan();
+        ayarlar.cmd.Parameters.Clear();
+        ayarlar.cmd.CommandText = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'";
+        ayarlar.cmd.ExecuteNonQuery();
+
+        FirmaBilgileri firma = new FirmaBilgileri();
+        SqlDataReader dataReader = ayarlar.cmd.ExecuteReader();
+        while (dataReader.Read())
+        {
+            if (dataReader["firma_kodu"].ToString() == "ESOTOMASYON")
+                firma.Title = "ESFLW";
+            else
+                firma.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader["firma_kodu"].ToString());
+
+            firma.Logo = dataReader["firma_logo"].ToString();
+        }
+        ayarlar.cnn.Close();
+        return firma;
     }
 }

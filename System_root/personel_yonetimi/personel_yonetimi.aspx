@@ -147,7 +147,7 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" class="takvimyap form-control" id="personel_dtarih" required />
+                                    <input type="text" class="takvimyap form-control" id="personel_dtarih" value="<% Response.Write(DateTime.Now.ToString("dd.MM.yyyy")); %>"" required />
                                 </div>
                             </div>
                         </div>

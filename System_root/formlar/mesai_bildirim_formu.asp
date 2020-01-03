@@ -8,13 +8,21 @@
 
     SQL="SELECT bildirim.baslangic_tarihi, kullanici.personel_ad, kullanici.personel_soyad, bildirim.aciklama, LEFT(bildirim.baslangic_saati,5) as baslangic_saati , LEFT(bildirim.bitis_saati,5) as bitis_saati, DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati) - ((DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati) / 60 ) *60) as dakika, DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati)/60 as saat FROM ucgem_personel_mesai_bildirimleri bildirim INNER JOIN ucgem_firma_kullanici_listesi kullanici on kullanici.id = bildirim.personel_id WHERE bildirim.id =  '"& izin_id &"'"
     set mesai = baglanti.execute(SQL)
+
+    SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+    set firmaBilgileri = baglanti.execute(SQL)
+
+    firmaLogo = firmaBilgileri("firma_logo")
+    if firmaBilgileri("firma_logo") = "undefined" then
+        firmaLogo = ""    
+    end if
 %>
 <html lang="tr">
 <head>
     <title><%=LNG("Fazla Mesai Formu")%></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    
+
 </head>
 <body>
 
@@ -23,7 +31,9 @@
             <tr>
                 <td colspan="7" style="vertical-align: middle;">
                     <span style="float: left;">
-                        <img src="../../images/esotomasyon_logo.png" style="width: 150px;" />
+                        <%if firmaBilgileri("firma_kodu") = "ESOTOMASYON" then %>
+                            <img src="<%=firmaLogo %>" style="width: 150px;" />
+                        <%end if %>
                     </span>
                     <br />
                     <center>
@@ -123,11 +133,11 @@
     </table>
 
 </body>
-    <script type="text/javascript">
-        $(function () {
-            var d = new Date();
-            var strDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
-            //$("#sp").html("bİLAL");
-        });
-      </script>
+<script type="text/javascript">
+    $(function () {
+        var d = new Date();
+        var strDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+        //$("#sp").html("bİLAL");
+    });
+</script>
 </html>

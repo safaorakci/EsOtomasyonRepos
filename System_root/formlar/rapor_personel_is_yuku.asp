@@ -12,13 +12,16 @@
     firma_id = trn(request("fid"))
     kullanici_id = trn(request("kid"))
 
+    SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+    set firmaBilgileri = baglanti.execute(SQL)
+
 %>
 <html lang="tr">
     <head>
         <title><%=LNG("Personel İş Yükü Raporu")%></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <style>
-
+            
             body {
                 font-family:Arial;
             }
@@ -145,7 +148,14 @@
         <table style="width:100%;">
             <tr>
                 <td style="vertical-align:top; text-align:left;"><h2><%=LNG("PERSONEL İŞ YÜKÜ RAPORU")%></h2><span><%=LNG("Oluşturma Tarihi")%>&nbsp;:&nbsp;<%=now %></span></td>
-                <td style="vertical-align:top; text-align:right;"><img src="/images/proskop_buyuk2_form.png" /></td>            </tr>
+                <td style="vertical-align:top; text-align:right;">
+                     <%if firmaBilgileri("firma_kodu") = "ESOTOMASYON" then%>
+                         <img src="/images/esotomasyon_logo.png" style="width: 150px;" />
+                     <%else %>
+                         <img src="/images/proskop_buyuk2_form.png" style="width: 150px;" />
+                     <%end if %>
+                </td>
+            </tr>
         </table>
     <div>
     <div id="tablediv">

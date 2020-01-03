@@ -82,13 +82,13 @@
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Başlangıç Tarihi")) %></label>
                             <div class="col-sm-12 col-lg-12">
-                                <input type="text" class="takvimyap form-control" name="baslangic_tarihi" id="baslangic_tarihi" />
+                                <input type="text" class="takvimyap form-control" name="baslangic_tarihi" id="baslangic_tarihi" value="<%=FormatDate(date, "00") %>"/>
                             </div>
                         </div>
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Başlangıç Tarihi")) %></label>
                             <div class="col-sm-12 col-lg-12">
-                                <input type="text" class="takvimyap form-control" name="bitis_tarihi" id="bitis_tarihi" />
+                                <input type="text" class="takvimyap form-control" name="bitis_tarihi" id="bitis_tarihi" value="<%=FormatDate(date, "00") %>"/>
                             </div>
                         </div>
                     </form>

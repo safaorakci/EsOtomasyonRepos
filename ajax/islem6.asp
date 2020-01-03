@@ -1665,7 +1665,7 @@
                 <span class="input-group-addon">
                     <i class="icon-prepend fa fa-cubes"></i>
                 </span>
-                <input type="text" class="required form-control takvimyap" name="izin_baslangic_tarihi" id="izin_baslangic_tarihi" placeholder="__.__.____" />
+                <input type="text" class="required form-control takvimyap" name="izin_baslangic_tarihi" id="izin_baslangic_tarihi" value="<%=FormatDate(date, "00") %>" placeholder="__.__.____" />
                 <script type="text/javascript">
                     var date = new Date();
                     date.setDate(date.getDate() - 1);
@@ -1692,7 +1692,7 @@
                 <span class="input-group-addon">
                     <i class="icon-prepend fa fa-cubes"></i>
                 </span>
-                <input type="text" class="required form-control takvimyap" name="izin_bitis_tarihi" id="izin_bitis_tarihi" placeholder="__.__.____" />
+                <input type="text" class="required form-control takvimyap" name="izin_bitis_tarihi" id="izin_bitis_tarihi" value="<%=FormatDate(date, "00") %>" placeholder="__.__.____" />
                 <script type="text/javascript">
                     $(".takvimyap").datepicker({
                         minDate: new Date()
@@ -3100,19 +3100,15 @@
 
         Response.AddHeader "Content-Type", "application/json"
 
-        strsonuc = ""
-
         SQL="select top 20 id, grup_adi from parca_grup_listesi where grup_adi collate French_CI_AI like '%"& q &"%' and firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and cop = 'false' order by grup_adi asc"
         set parca = baglanti.execute(SQL)
         Response.Write "["
         do while not parca.eof
-            strsonuc = "{""id"":"& parca("id") &",""agacadi"":"""& parca("grup_adi") &"""},"
+            %>{"id":<%=parca("id") %>, "agacadi":"<%=parca("grup_adi") %>"},<%
         parca.movenext
         loop
-        if len(strsonuc)>3 then
-            strsonuc = left(strsonuc, len(strsonuc)-1)
-        end if
-        Response.Write strsonuc & "]"
+
+        Response.Write "{}]"
 
     elseif trn(request("islem"))="talep_fisleri" then
 
@@ -3623,13 +3619,13 @@
                     <td><%=cdate(satinalma("siparis_tarihi"))%></td>
 
                     <%if trim(satinalma("tedarikci_id")) = "0" then%>
-                    <td><span style="font-size: 12px; font-weight: bold">Belirtilmedi</span></td>
+                    <td><span style="font-size: 12px; font-weight: bold">-</span></td>
                     <%else%>
                     <td><%=satinalma("tedarikci")%></td>
                     <%end if %>
 
                     <%if trim(satinalma("proje_id")) = "0" then%>
-                    <td><span style="font-size: 12px; font-weight: bold">Belirtilmedi</span></td>
+                    <td><span style="font-size: 12px; font-weight: bold">-</span></td>
                     <%else%>
                     <td><%=satinalma("proje")%>-<%=satinalma("proje_kodu")%></td>
                     <%end if %>
@@ -3637,12 +3633,16 @@
                         <% if not formatnumber(satinalma("toplamtl"),2) = "00" then %>
                             <%=formatnumber(satinalma("toplamtl"),2) %> TL
                         <% end if  %>
+                        <% if Cdbl(satinalma("toplamtl")) > 0 and Cdbl(satinalma("toplamusd")) > 0 or Cdbl(satinalma("toplamtl")) > 0 and Cdbl(satinalma("toplameur")) > 0 then %>
+                            -
+                        <%end if %>
                         <% if not formatnumber(satinalma("toplamusd"),2) = "00" then %>
-                        -
                             <%=formatnumber(satinalma("toplamusd"),2) %> USD
                         <% end if  %>
-                        <% if not formatnumber(satinalma("toplameur"),2) = "00" then %>
+                        <% if Cdbl(satinalma("toplamusd")) > 0 and Cdbl(satinalma("toplameur")) > 0 then %>
                             -
+                        <%end if %>
+                        <% if not formatnumber(satinalma("toplameur"),2) = "00" then %>
                             <%=formatnumber(satinalma("toplameur"),2) %> EUR
                         <% end if  %></td>
                     <td><%=satinalma("ekleyen") %><br />
@@ -3716,7 +3716,7 @@
             <label class="col-sm-6 col-form-label">Sipariş Tarihi :</label>
             <label class="col-sm-6 col-form-label">Öncelik :</label>
             <div class="col-sm-6">
-                <input type="text" name="siparis_tarihi" id="siparis_tarihi" class="form-control required takvimyap" value="<%=cdate(kayit("siparis_tarihi")) %>" required />
+                <input type="text" name="siparis_tarihi" id="siparis_tarihi" class="form-control required takvimyap" value="<%=FormatDate(kayit("siparis_tarihi"), "00") %>" required />
             </div>
             <div class="col-sm-6">
                 <select name="satinalma_oncelik" id="satinalma_oncelik" class="select2">
@@ -4780,7 +4780,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                                 <span class="input-group-addon">
                                     <i class="icon-prepend fa fa-calendar"></i>
                                 </span>
-                                <input type="text" id="baslangic_tarihi" required class="takvimyap form-control" style="padding-left: 10px" value="<%Response.Write Date()%>" />
+                                <input type="text" id="baslangic_tarihi" required class="takvimyap form-control" style="padding-left: 10px" value="<%=FormatDate(date, "00")%>" />
                             </div>
                         </div>
                     </div>
@@ -4791,7 +4791,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                                 <span class="input-group-addon">
                                     <i class="icon-prepend fa fa-calendar"></i>
                                 </span>
-                                <input type="text" id="bitis_tarihi" required class="takvimyap form-control" style="padding-left: 10px" value="<%Response.Write Date()%>" />
+                                <input type="text" id="bitis_tarihi" required class="takvimyap form-control" style="padding-left: 10px" value="<%=FormatDate(date, "00")%>" />
                             </div>
                         </div>
                     </div>
@@ -4883,9 +4883,9 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                                 </tr>
                             </thead>
                             <tbody id="stoklist">
-                                <tr id="SumPriceRow" style="display:none">
+                                <tr id="SumPriceRow">
                                     <td colspan="2" style="text-align: right; font-weight: 700;"><span>Tolam Maliyet</span></td>
-                                    <td colspan="1" id="totalPrice"></td>
+                                    <td colspan="1" id="totalPrice">0 TL - 0 USD - 0 EUR</td>
                                     <td colspan="2"></td>
                                 </tr>
                             </tbody>
@@ -5577,16 +5577,24 @@ works properly when clicked or hovered */
                                         else
                                             parca_kodu = parcadetay("parca_kodu")
                                         end if
+                                        birim = "TL"
+                                        if parcadetay("birim_pb") = "" then
+                                        else
+                                            birim = parcadetay("birim_pb")
+                                            if birim = "EURO" then
+                                                birim = "EUR"
+                                            end if
+                                        end if
 
                                         k = 0
                                         do while not parcadetay.eof
                                             k = k + 1
                                 %>
-                                <tr id="<%=parcadetay("id") %>">
+                                <tr id="parca<%=parcadetay("id") %>">
                                     <!--<td style="text-align:center"><%=k %></td>-->
                                     <td><%=parca_kodu %> - <%=marka %></td>
                                     <td><%=Adet %></td>
-                                    <td class="price"><%=toplamMaliyet %>&nbsp<%=parcadetay("birim_pb") %></td>
+                                    <td class="price"><%=toplamMaliyet %>&nbsp<%=birim %></td>
                                     <td><%=parcadetay("aciklama") %></td>
                                     <td><button type="button" onclick="parcaDuzenle('<%=parcadetay("id")%>');" class="btn btn-danger btn-mini">Sil</button></td>
                                 </tr>
@@ -5595,7 +5603,7 @@ works properly when clicked or hovered */
                                         loop
                                 %>
                                 <% next %>
-                                <tr>
+                                <tr id="toplamtutar">
                                     <td colspan="2" style="text-align: right; font-weight: 700;"><span>Tolam Maliyet</span></td>
                                     <td colspan="1" id="totalPrice"></td>
                                     <td colspan="2"></td>
@@ -5619,6 +5627,10 @@ works properly when clicked or hovered */
                 var valueUSD = 0;
                 var valueEUR = 0;
 
+                if ($("#stoklist").children('tr').length == 1) {
+                    $("#totalPrice").text(0 + " TL" + " - " + 0 + " USD" + " - " + 0 + " EUR");
+                }
+
                 $(".price").each(function () {
 
                     var sonucTL = $(this).text().indexOf("TL");
@@ -5626,26 +5638,26 @@ works properly when clicked or hovered */
                     var sonucEUR = $(this).text().indexOf("EUR");
 
                     if (sonucTL != -1) {
-                        valueTL = $(this).text().replace('TL', '').replace(' ', '');
+                        valueTL = $(this).text().replace('TL', '').replace(' ', '').replace(',','.');
                         if (!isNaN(valueTL) && valueTL.length != 0 && valueTL > 0) {
                             sumTL += parseFloat(valueTL);
-                            $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+                            $("#totalPrice").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
                         }
                     }
 
                     if (sonucUSD != -1) {
-                        valueUSD = $(this).text().replace('USD', '').replace(' ', '');
+                        valueUSD = $(this).text().replace('USD', '').replace(' ', '').replace(',', '.');
                         if (!isNaN(valueUSD) && valueUSD.length != 0 && valueUSD > 0) {
                             sumUSD += parseFloat(valueUSD);
-                            $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+                            $("#totalPrice").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
                         }
                     }
 
                     if (sonucEUR != -1) {
-                        valueEUR = $(this).text().replace('EUR', '').replace(' ', '');
+                        valueEUR = $(this).text().replace('EUR', '').replace(' ', '').replace(',', '.');
                         if (!isNaN(valueEUR) && valueEUR.length != 0 && valueEUR > 0) {
                             sumEUR += parseFloat(valueEUR);
-                            $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+                            $("#totalPrice").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
                         }
                     }
                 });

@@ -218,7 +218,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
 
         ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select id, UPPER(left(firma_adi, 1)) + LOWER(right(firma_adi, len(firma_adi) -1)) as firma_adi from ucgem_firma_listesi where ekleyen_firma_id = @firma_id and durum = 'true' and cop = 'false' order by firma_adi asc;";
+        ayarlar.cmd.CommandText = "SELECT id, dbo.IlkHarfBuyutme(firma.firma_adi) as firma_adi from ucgem_firma_listesi firma where firma.ekleyen_firma_id = @firma_id and firma.durum = 'true' and firma.cop = 'false' order by firma.firma_adi asc";
         ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda2 = new SqlDataAdapter(ayarlar.cmd);
         DataSet ds2 = new DataSet();
@@ -538,7 +538,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
 
         ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select case when  (SELECT COUNT(value) FROM STRING_SPLIT(@etiketler, ',') WHERE value =  etiket.sorgu ) > 0 then 'true' else 'false' end as varmi, * from etiketler etiket with(nolock) where etiket.firma_id = @firma_id";
+        ayarlar.cmd.CommandText = "select case when (SELECT COUNT(value) FROM STRING_SPLIT(@etiketler, ',') WHERE value = etiket.sorgu ) > 0 then 'true' else 'false' end as varmi, (select proje_kodu from ucgem_proje_listesi where id = SUBSTRING(etiket.sorgu, CHARINDEX('-', etiket.sorgu) + 1, 10)) as proje_kodu, * from etiketler etiket where etiket.firma_id = @firma_id";
 
 
         ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
@@ -581,7 +581,10 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         foreach (DataRow item in ds2.Tables[0].Rows)
         {
             ListItem litem = new ListItem();
-            litem.Text = item["adi"].ToString();
+            if (item["tip"].ToString() == "proje")
+                litem.Text = item["adi"].ToString() + " - " + item["proje_kodu"].ToString();
+            else
+                litem.Text = item["adi"].ToString();
             litem.Value = item["tip"].ToString() + "-" + item["id"].ToString();
             litem.Attributes.Add("tip", item["tip"].ToString());
             litem.Attributes.Add("optiongroup", item["grup"].ToString());
@@ -1488,7 +1491,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 }
                 else if (tip == "arama")
                 {
-
                     string adi = UIHelper.trn(Request.Form["adi"].ToString());
                     string is_durum = UIHelper.trn(Request.Form["is_durum"].ToString());
                     string gorevliler = UIHelper.trn(Request.Form["gorevliler"].ToString());
@@ -1517,7 +1519,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                     }
                     catch (Exception)
                     {
-
 
                     }
 
@@ -2703,11 +2704,11 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                                 if (Personel["personel_telefon"].ToString().Length > 5)
                                 {
-                                    ayarlar.NetGSM_SMS(Personel["personel_telefon"].ToString(), SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.");
+                                    ayarlar.NetGSM_SMS(Personel["personel_telefon"].ToString(), SessionManager.CurrentUser.kullanici_adsoyad + " " + yeni_adi + "' adlı işte düzenleme yaptı.");
                                 }
 
                                 Exception except;
-                                bool result = Pushover.SendNotification(ayarlar.PushOverAppKey, Personel["PushUserKey"].ToString(), "ÜÇGEM MEKANİK A.Ş ERP SYTEM", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.", Priority.Normal, PushoverSound.DeviceDefault, String.Empty, "http://erp.ucgem.com", "http://erp.ucgem.com", 60, 3600, out except);
+                                bool result = Pushover.SendNotification(ayarlar.PushOverAppKey, Personel["PushUserKey"].ToString(), "ÜÇGEM MEKANİK A.Ş ERP SYSTEM", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.", Priority.Normal, PushoverSound.DeviceDefault, String.Empty, "http://erp.ucgem.com", "http://erp.ucgem.com", 60, 3600, out except);
                             }
 
                         }
@@ -2925,13 +2926,8 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                     ayarlar.NetGSM_SMS(Personel["personel_telefon"].ToString(), SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.");
                                 }
 
-
-
                                 bool result = Pushover.SendNotification(ayarlar.PushOverAppKey, Personel["PushUserKey"].ToString(), "ÜÇGEM MEKANİK A.Ş ERP SYTEM", SessionManager.CurrentUser.kullanici_adsoyad + " sizi '" + yeni_adi + "' adlı işte görevlendirdi.", Priority.Normal, PushoverSound.DeviceDefault, String.Empty, "http://erp.ucgem.com", "http://erp.ucgem.com", 60, 3600, out except);
                             }
-
-
-
                         }
                     }
                 }
@@ -4093,7 +4089,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "select CASE WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy,getdate())),3, 3) + '' + CONVERT(varchar(50), DATEPART(MM, GETDATE())) + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), proje.id + 1),1,4), 4) from ucgem_proje_listesi proje where proje.durum = 'true' and proje.cop = 'false' order by id desc), 0) = 0 THEN (select SUBSTRING(CONVERT(varchar(50), datepart(yy,getdate())),3, 3) + '' + CONVERT(varchar(50), DATEPART(MM, GETDATE())) + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1),1,4), 4)) ELSE (select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy,getdate())),3, 3) + '' + CONVERT(varchar(50), DATEPART(MM, GETDATE())) + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1),1,4), 4) from ucgem_proje_listesi proje where proje.durum = 'true' and proje.cop = 'false' order by id desc) END";
+            ayarlar.cmd.CommandText = "SELECT CASE WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' order by id desc), 0) = 0 THEN(select SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4)) WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' order by id desc), 0) != 0 THEN(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' order by id desc) ELSE(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' order by id desc) END";
             int proje_Id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
 
             ayarlar.cmd.Parameters.Clear();

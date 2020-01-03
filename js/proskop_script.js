@@ -166,7 +166,7 @@ function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum, parcaBilgisi) {
                     //<span class="label label-warning" style="font-size: 100%; padding: 5px; display: inline;">Islem Bekliyor</span>
 
                 }
-                if (durum == 2) { is_detay_parca_agaci_sectim(IsID, ParcaId); }
+                if (durum == 1) { is_detay_parca_agaci_sectim(IsID, ParcaId); }
                 if (durum == 0) { is_detay_parca_sectim(IsID, ParcaId, adet, toplamAdet); }
                 //var data = "islem=is_detay_parca_sectim&islem2=ekle";
                 //data += "&IsID=" + IsID;
@@ -927,7 +927,7 @@ function personel_ekle() {
     data += "&gorevler=" + encodeURIComponent(gorevler);
     data += "&personel_parola=" + encodeURIComponent(personel_parola);
     data += "&personel_tcno=" + encodeURIComponent(personel_tcno);
-    data += "&today=" +  new Date().toLocaleDateString();
+    data += "&today=" + new Date().toLocaleDateString();
     data = encodeURI(data);
 
     if ($("#personel_ekle_form  input:not(input[type=button])").valid("valid")) {
@@ -9050,7 +9050,7 @@ function ServisBakimKaydiDuzenle(kayitId, firmaId) {
 }
 
 function parcaDuzenle(id) {
-    $("#" + id).remove();
+    $("#parca" + id).remove();
     var parcalarId = $("#parcalarId").attr("parcaid").split(",");
     var adet = $("#parcalarId").attr("adet").split(",");
     var stokadet = $("#parcalarId").attr("stokadet").split(",");
@@ -9099,6 +9099,10 @@ function sumPrice() {
     var valueUSD = 0;
     var valueEUR = 0;
 
+    if ($("#stoklist").children('tr').length == 1) {
+        $("#totalPrice").text(0 + " TL" + " - " + 0 + " USD" + " - " + 0 + " EUR");
+    }
+
     $(".price").each(function () {
 
         var sonucTL = $(this).text().indexOf("TL");
@@ -9106,26 +9110,26 @@ function sumPrice() {
         var sonucEUR = $(this).text().indexOf("EUR");
 
         if (sonucTL != -1) {
-            valueTL = $(this).text().replace('TL', '').replace(' ', '');
+            valueTL = $(this).text().replace('TL', '').replace(' ', '').replace(',', '.');
             if (!isNaN(valueTL) && valueTL.length != 0 && valueTL > 0) {
                 sumTL += parseFloat(valueTL);
-                $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
-            }    
+                $("#totalPrice").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
+            }
         }
 
         if (sonucUSD != -1) {
-            valueUSD = $(this).text().replace('USD', '').replace(' ', '');
+            valueUSD = $(this).text().replace('USD', '').replace(' ', '').replace(',', '.');
             if (!isNaN(valueUSD) && valueUSD.length != 0 && valueUSD > 0) {
                 sumUSD += parseFloat(valueUSD);
-                $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+                $("#totalPrice").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
             }
         }
 
         if (sonucEUR != -1) {
-            valueEUR = $(this).text().replace('EUR', '').replace(' ', '');
+            valueEUR = $(this).text().replace('EUR', '').replace(' ', '').replace(',', '.');
             if (!isNaN(valueEUR) && valueEUR.length != 0 && valueEUR > 0) {
                 sumEUR += parseFloat(valueEUR);
-                $("#totalPrice").text(sumTL + " TL" + " - " + sumUSD + " USD" + " - " + sumEUR + " EUR");
+                $("#totalPrice").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
             }
         }
     });
@@ -9173,7 +9177,7 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
     data += "&firmanot=" + $("#firmanot").val();
     data += "&listeyeekle=" + $("#listeyeekle").is(":checked");
     data = encodeURI(data);
-    
+
     if ($("#servisbakimduzenle input:not(input[type=button])").valid("valid")) {
         if ($("#firmagorevli").val().length > 0) {
             $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
@@ -9183,7 +9187,7 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
         }
         else { mesaj_ver("Servis Bakım Formu", "Görevli alanı zorunludur.", "danger"); }
     }
-    else { mesaj_ver("Servis Bakım Formu", "Lütfen tüm zorunlu alanları doldurunuz .", "danger"); }   
+    else { mesaj_ver("Servis Bakım Formu", "Lütfen tüm zorunlu alanları doldurunuz .", "danger"); }
 }
 
 function YeniMusteriOlustur() {

@@ -18,6 +18,14 @@
 
     SQL = "SELECT ROW_NUMBER() OVER(ORDER BY kullanici.id) AS Id, kullanici.personel_ad + ' ' + personel_soyad as ad_soyad, proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM ((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) AS calismaSuresi, CONVERT(decimal(18,2), ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))) * 0.016667, 0) * kullanici.personel_saatlik_maliyet FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id))) AS toplamMaliyet FROM dbo.ucgem_proje_listesi proje, ucgem_firma_kullanici_listesi kullanici where proje.firma_id = '1' AND proje.id = '"& proje_id &"' AND proje.cop = 'false' AND proje.durum = 'true' AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) > 0 " 
     set personelAdamSaat = baglanti.execute(SQL)
+
+    SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+    set firmaBilgileri = baglanti.execute(SQL)
+
+    firmaLogo = firmaBilgileri("firma_logo")
+    if firmaBilgileri("firma_logo") = "undefined" then
+        firmaLogo = ""    
+    end if
 %>
 <html lang="tr">
 <head>
@@ -32,7 +40,9 @@
             <tr>
                 <td colspan="2" style="vertical-align: middle; padding-bottom: 50px;">
                     <span style="float: left;">
-                        <img src="/images/esotomasyon_logo.png" style="width: 150px;" />
+                        <%if firmaBilgileri("firma_kodu") = "ESOTOMASYON" then %>
+                            <img src="<%=firmaLogo %>" style="width: 150px;" />
+                        <%end if %>
                     </span>
                     <br />
                     <center>
@@ -72,24 +82,24 @@
     <table border="1" cellpadding="0" cellspacing="0" style="width: 100%; border: solid 1px black; font-family: Arial; font-size: 12px;">
         <thead>
             <tr>
-                <th colspan="6" style="text-align: center; padding:5px">Sipariş Verilen Parçalar</th>
+                <th colspan="6" style="text-align: center; padding: 5px">Sipariş Verilen Parçalar</th>
             </tr>
             <tr>
-                <th style="padding:5px; text-align:left">Parça</th>
-                <th style="padding:5px; text-align:left">Marka</th>
-                <th style="padding:5px; text-align:left">Açıklama</th>
-                <th style="padding:5px; text-align:left">Adet</th>
-                <th style="padding:5px; text-align:left">Maliyet</th>
-                <th style="padding:5px; text-align:left">Toplam Maliyet</th>
+                <th style="padding: 5px; text-align: left">Parça</th>
+                <th style="padding: 5px; text-align: left">Marka</th>
+                <th style="padding: 5px; text-align: left">Açıklama</th>
+                <th style="padding: 5px; text-align: left">Adet</th>
+                <th style="padding: 5px; text-align: left">Maliyet</th>
+                <th style="padding: 5px; text-align: left">Toplam Maliyet</th>
             </tr>
         </thead>
         <tbody>
             <% 
                  if satinalma.eof then 
             %>
-                <tr>
-                    <td colspan="6" style="text-align: center; padding:5px">Kayıt Bulunamadı</td>
-                </tr>
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 5px">Kayıt Bulunamadı</td>
+            </tr>
             <%
                  end if
                  do while not satinalma.eof
@@ -120,16 +130,24 @@
                  else
                      adet = CInt(sondurum("adet"))
                  end if
+                 birimPB = "TL"
+                 if parcaBilgi("birim_pb") = "" then
+                 else
+                    birimPB = parcaBilgi("birim_pb")
+                    if birimPB = "EURO" then
+                        birimPB = "EUR"
+                    end if
+                 end if
 
                  SatinalmaToplamMaliyet = Cdbl(parcaBilgi("birim_maliyet")) * adet
             %>
             <tr>
-                <td style="padding:5px; text-align:left"><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
-                <td style="padding:5px; text-align:left"><%=parcaBilgi("marka") %></td>
-                <td style="padding:5px; text-align:left"><%=parcaBilgi("aciklama") %></td>
-                <td style="padding:5px; text-align:left"><% if durum = 1 then %> <%=CInt(sondurum("SiparisVerilenAdet") - parcaBilgi("minumum_miktar")) %> <%else %> <%=CInt(sondurum("adet")) %> <%end if %></td>
-                <td style="padding:5px; text-align:left"><%=parcaBilgi("birim_maliyet") %> TL</td>
-                <td style="padding:5px; text-align:left" class="toplamMaliyet"><%=SatinalmaToplamMaliyet %> TL</td>
+                <td style="padding: 5px; text-align: left"><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
+                <td style="padding: 5px; text-align: left"><%=parcaBilgi("marka") %></td>
+                <td style="padding: 5px; text-align: left"><%=parcaBilgi("aciklama") %></td>
+                <td style="padding: 5px; text-align: left"><% if durum = 1 then %> <%=CInt(sondurum("SiparisVerilenAdet") - parcaBilgi("minumum_miktar")) %> <%else %><%=CInt(sondurum("adet")) %> <%end if %></td>
+                <td style="padding: 5px; text-align: left"><%=parcaBilgi("birim_maliyet") %>&nbsp;<%=birimPB %></td>
+                <td style="padding: 5px; text-align: left" class="toplamMaliyet"><%=SatinalmaToplamMaliyet %>&nbsp;<%=birimPB %></td>
             </tr>
             <%
                  siparisparca.movenext
@@ -144,24 +162,24 @@
     <table border="1" cellpadding="0" cellspacing="0" style="width: 100%; border: solid 1px black; font-family: Arial; font-size: 12px;">
         <thead>
             <tr>
-                <th colspan="6" style="text-align: center; padding:5px">Stoktan Kullanılan Parçalar</th>
+                <th colspan="6" style="text-align: center; padding: 5px">Stoktan Kullanılan Parçalar</th>
             </tr>
             <tr>
-                <th style="padding:5px; text-align:left">Parça</th>
-                <th style="padding:5px; text-align:left">Marka</th>
-                <th style="padding:5px; text-align:left">Açıklama</th>
-                <th style="padding:5px; text-align:left">Adet</th>
-                <th style="padding:5px; text-align:left">Maliyet</th>
-                <th style="padding:5px; text-align:left">Toplam Maliyet</th>
+                <th style="padding: 5px; text-align: left">Parça</th>
+                <th style="padding: 5px; text-align: left">Marka</th>
+                <th style="padding: 5px; text-align: left">Açıklama</th>
+                <th style="padding: 5px; text-align: left">Adet</th>
+                <th style="padding: 5px; text-align: left">Maliyet</th>
+                <th style="padding: 5px; text-align: left">Toplam Maliyet</th>
             </tr>
         </thead>
         <tbody>
             <% 
                 if satinalma2.eof then
             %>
-                <tr>
-                    <td colspan="6" style="text-align: center; padding:5px">Kayıt Bulunamadı</td>
-                </tr>
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 5px">Kayıt Bulunamadı</td>
+            </tr>
             <%
                 end if
                 do while not satinalma2.eof
@@ -178,15 +196,24 @@
                 SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"'"
                 set parcaBilgi = baglanti.execute(SQL)
 
+                birimPB = "TL"
+                if parcaBilgi("birim_pb") = "" then
+                else
+                   birimPB = parcaBilgi("birim_pb")
+                   if birimPB = "EURO" then
+                       birimPB = "EUR"
+                   end if
+                end if
+
                 KullanilanToplamMaliyet = Cdbl(parcaBilgi("birim_maliyet")) * sondurum("StoktanKullanilanAdet")
             %>
             <tr>
-                <td style="padding:5px; text-align:left"><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
-                <td style="padding:5px; text-align:left"><%=parcaBilgi("marka") %></td>
-                <td style="padding:5px; text-align:left"><%=parcaBilgi("aciklama") %></td>
-                <td style="padding:5px; text-align:left"><%=sondurum("StoktanKullanilanAdet") %></td>
-                <td style="padding:5px; text-align:left"><%=parcaBilgi("birim_maliyet") %> TL</td>
-                <td style="padding:5px; text-align:left" class="toplamMaliyet"><%=KullanilanToplamMaliyet %> TL</td>
+                <td style="padding: 5px; text-align: left"><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
+                <td style="padding: 5px; text-align: left"><%=parcaBilgi("marka") %></td>
+                <td style="padding: 5px; text-align: left"><%=parcaBilgi("aciklama") %></td>
+                <td style="padding: 5px; text-align: left"><%=sondurum("StoktanKullanilanAdet") %></td>
+                <td style="padding: 5px; text-align: left"><%=parcaBilgi("birim_maliyet") %>&nbsp;<%=birimPB %></td>
+                <td style="padding: 5px; text-align: left" class="toplamMaliyet"><%=KullanilanToplamMaliyet %>&nbsp;<%=birimPB %></td>
             </tr>
             <%
                 eksikparca.movenext
@@ -202,29 +229,29 @@
     <table border="1" cellpadding="0" cellspacing="0" style="width: 100%; border: solid 1px black; font-family: Arial; font-size: 12px;">
         <thead>
             <tr>
-                <th colspan="3" style="text-align: center; padding:5px">Personel Adam Saat</th>
+                <th colspan="3" style="text-align: center; padding: 5px">Personel Adam Saat</th>
             </tr>
             <tr>
-                <th style="padding:5px; text-align:left">Personel</th>
-                <th style="padding:5px; text-align:left">Çalışma Süresi</th>
-                <th style="padding:5px; text-align:left">Toplam Maliyeti</th>
-            </tr>   
-        </thead>    
-        <tbody>     
+                <th style="padding: 5px; text-align: left">Personel</th>
+                <th style="padding: 5px; text-align: left">Çalışma Süresi</th>
+                <th style="padding: 5px; text-align: left">Toplam Maliyeti</th>
+            </tr>
+        </thead>
+        <tbody>
             <%
                  if personelAdamSaat.eof then
             %>
             <tr>
-                <td colspan="3" style="text-align: center; padding:5px">Kayıt Bulunamadı</td>
+                <td colspan="3" style="text-align: center; padding: 5px">Kayıt Bulunamadı</td>
             </tr>
             <%
                  end if
                  do while not personelAdamSaat.eof
             %>
             <tr>
-                <td style="padding:5px; text-align:left"><%=personelAdamSaat("ad_soyad") %></td>
-                <td style="padding:5px; text-align:left"><%=personelAdamSaat("calismaSuresi") %></td>
-                <td style="padding:5px; text-align:left" class="toplamMaliyet"><%=Replace(personelAdamSaat("toplamMaliyet"),",",".") %> TL</td>
+                <td style="padding: 5px; text-align: left"><%=personelAdamSaat("ad_soyad") %></td>
+                <td style="padding: 5px; text-align: left"><%=personelAdamSaat("calismaSuresi") %></td>
+                <td style="padding: 5px; text-align: left" class="toplamMaliyet"><%=Replace(personelAdamSaat("toplamMaliyet"),",",".") %> TL</td>
             </tr>
             <%
                  personelAdamSaat.movenext

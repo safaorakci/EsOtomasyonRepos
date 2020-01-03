@@ -2643,7 +2643,7 @@
                 <td><% if trim(liste("akis_tipi"))="Çek" then %><%=cdate(liste("vade_tarihi")) %><% end if %></td>
                 <td style="text-align: center;"><% if trim(liste("islem_tipi"))="Ödeme" then %><%=formatnumber(liste("meblag"),2) %><% if trim(liste("parabirimi"))="TL" then %>&nbsp;TL<% elseif trim(liste("parabirimi"))="USD" then %>&nbsp;$<% elseif trim(liste("parabirimi"))="EUR" then %>&nbsp;€<% end if %><% end if %></td>
                 <td style="text-align: center; border-right: 2px solid #ddd;"><% if trim(liste("islem_tipi"))="Tahsilat" then %><%=formatnumber(liste("meblag"),2) %><% if trim(liste("parabirimi"))="TL" then %>&nbsp;TL<% elseif trim(liste("parabirimi"))="USD" then %>&nbsp;$<% elseif trim(liste("parabirimi"))="EUR" then %>&nbsp;€<% end if %><% end if %></td>
-                <td style="text-align: center;"><%=formatnumber(tl_bakiye,2) %> TL</td>
+                <td style="text-align: center;"><%=formatnumber(tl_bakiye,2) %> ₺</td>
                 <td style="text-align: center;"><%=formatnumber(usd_bakiye,2) %> $</td>
                 <td style="text-align: center; border-right: 2px solid #ddd;"><%=formatnumber(eur_bakiye,2) %> €</td>
                 <td style="text-align: center;">
@@ -2670,7 +2670,7 @@
             <tr>
                 <td colspan="4" style="border: none;"></td>
                 <td style="border-top: 2px solid #ddd; text-align: right; padding-right: 10px;" colspan="2"><%=LNG("TOPLAM ALACAK")%></td>
-                <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(alacak_tl_bakiye,2) %> TL</td>
+                <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(alacak_tl_bakiye,2) %> ₺</td>
                 <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(alacak_usd_bakiye,2) %> $</td>
                 <td style="text-align: center; border-top: 2px solid #ddd;"><%=formatnumber(alacak_eur_bakiye,2) %> €</td>
                 <td style="border-top: 2px solid #ddd;"></td>
@@ -2678,7 +2678,7 @@
             <tr>
                 <td colspan="4" style="border: none;"></td>
                 <td style="border-top: 2px solid #ddd; text-align: right; padding-right: 10px;" colspan="2"><%=LNG("TOPLAM BORÇ")%></td>
-                <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(borc_tl_bakiye,2) %> TL</td>
+                <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(borc_tl_bakiye,2) %> ₺</td>
                 <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(borc_usd_bakiye,2) %> $</td>
                 <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(borc_eur_bakiye,2) %> €</td>
                 <td style="border-top: 2px solid #ddd;"></td>
@@ -2687,7 +2687,7 @@
             <tr>
                 <td colspan="4" style="border: none;"></td>
                 <td style="border-top: 2px solid #ddd; text-align: right; padding-right: 10px;" colspan="2"><%=LNG("BAKİYE")%></td>
-                <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(tl_bakiye,2) %> TL</td>
+                <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(tl_bakiye,2) %> ₺</td>
                 <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(usd_bakiye,2) %> $</td>
                 <td style="border-top: 2px solid #ddd; text-align: center;"><%=formatnumber(eur_bakiye,2) %> €</td>
                 <td style="border-top: 2px solid #ddd;"></td>
@@ -2703,7 +2703,7 @@
         <thead>
             <tr>
                 <th data-class="expand"><%=LNG("Cari Hesap Adı")%></th>
-                <th data-hide="phone" style="text-align: center; background: linear-gradient(45deg, #4099ff, #73b4ff); width: 150px;"><span class="label label-primary arkaplansiz badge-lg">TL <%=LNG("BAKİYE")%></span></th>
+                <th data-hide="phone" style="text-align: center; background: linear-gradient(45deg, #4099ff, #73b4ff); width: 150px;"><span class="label label-primary arkaplansiz badge-lg">₺ <%=LNG("BAKİYE")%></span></th>
                 <th data-hide="phone" style="text-align: center; background: linear-gradient(45deg, #FF5370, #ff869a); width: 150px;"><span class="label label-danger arkaplansiz badge-lg ">$ <%=LNG("BAKİYE")%></span></th>
                 <th data-hide="phone" style="text-align: center; background: linear-gradient(45deg, #FFB64D, #ffcb80); width: 150px;"><span class="label label-warning arkaplansiz badge-lg">€ <%=LNG("BAKİYE")%></span></th>
                 <th data-hide="phone" style="text-align: center; width: 150px;"><%=LNG("İşlemler")%></th>
@@ -2713,13 +2713,24 @@
             <%      
                 SQL="Declare @cari_tip nvarchar(50) = 'firma'; select firma.id, firma.firma_adi, ((select isnull(sum(meblag),0) from cari_hareketler where borclu_tipi = @cari_tip and borclu_id = firma.id and parabirimi = 'TL' and cop = 'false')- (select isnull(sum(meblag),0) from cari_hareketler where alacakli_tipi = @cari_tip and alacakli_id = firma.id and parabirimi = 'TL' and cop = 'false')) as bakiye_tl, ((select isnull(sum(meblag),0) from cari_hareketler where borclu_tipi = @cari_tip and borclu_id = firma.id and parabirimi = 'USD' and cop = 'false')- (select isnull(sum(meblag),0) from cari_hareketler where alacakli_tipi = @cari_tip and alacakli_id = firma.id and parabirimi = 'USD' and cop = 'false')) as bakiye_usd, ((select isnull(sum(meblag),0) from cari_hareketler where borclu_tipi = @cari_tip and borclu_id = firma.id and parabirimi = 'EUR' and cop = 'false')- (select isnull(sum(meblag),0) from cari_hareketler where alacakli_tipi = @cari_tip and alacakli_id = firma.id and parabirimi = 'EUR' and cop = 'false')) as bakiye_eur from ucgem_firma_listesi firma where firma.ekleyen_firma_id = '"& Request.cookies("kullanici")("firma_id") &"' and firma.cop = 'false' order by firma.firma_adi asc"
                 set firma = baglanti.execute(SQL)
+                'response.Write(SQL)
+                if firma.eof then
+            %>
+                <tr>
+                    <td colspan="5">Kayıt Bulunamadı</td>
+                </tr>
+            <%
+                end if
+            %>
+
+            <% 
                 do while not firma.eof
             %>
             <tr>
                 <td><%=firma("firma_adi") %></td>
-                <td style="text-align: center;"><%=formatnumber(firma("bakiye_tl")) %> TL</td>
-                <td style="text-align: center;"><%=formatnumber(firma("bakiye_usd")) %> $</td>
-                <td style="text-align: center;"><%=formatnumber(firma("bakiye_eur")) %> €</td>
+                <td style="text-align: center;"><%if firma("bakiye_tl") = "0" then %> <%=firma("bakiye_tl") %> ₺ <%else %> <%=formatnumber(firma("bakiye_tl")) %> ₺ <%end if %></td>
+                <td style="text-align: center;"><%if firma("bakiye_usd") = "0" then %> <%=firma("bakiye_usd") %> $ <%else %> <%=formatnumber(firma("bakiye_usd")) %> $ <%end if %></td>
+                <td style="text-align: center;"><%if firma("bakiye_eur") = "0" then %> <%=firma("bakiye_eur") %> € <%else %> <%=formatnumber(firma("bakiye_eur")) %> € <%end if %></td>
                 <td style="text-align: center;">
                     <div class="btn-group dropdown-split-primary">
                         <button type="button" class="btn btn-mini btn-primary" onclick="sayfagetir('/finansman_detay/','jsid=4559&cari_id=<%=firma("id") %>&tip=firma');"><i class="icofont icofont-exchange"></i><%=LNG("İşlemler")%></button>
@@ -2769,10 +2780,10 @@
         <h5 class="card-header-text"><% if trim(firma("yetki_kodu"))="MUSTERI" then %><%=LNG("Müşteri ")%><% else %><%=LNG("Taşeron ")%><% end if %> <%=LNG("Bilgileri")%></h5>
         <% if trim(firma("yetki_kodu"))="MUSTERI" then %>
         <a href="javascript:void(0);" onclick="sayfagetir('/firma_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i></span>&nbsp;Geri Dön</a>
+            <i class="fa fa-history"></i> Geri Dön</span></a>
         <% else %>
         <a href="javascript:void(0);" onclick="sayfagetir('/taseron_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i></span>&nbsp;Geri Dön</a>
+            <i class="fa fa-history"></i> Geri Dön</span></a>
         <% end if %>
     </div>
     <div class="card-block">
@@ -3537,7 +3548,7 @@
     <div class="card-header">
         <h5 class="card-header-text"><%=LNG("Personel Bilgileri")%></h5>
         <a href="javascript:void(0);" onclick="sayfagetir('/personel_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i></span>&nbsp;Geri Dön</a>
+            <i class="fa fa-history"></i> Geri Dön</span></a>
     </div>
     <div class="card-block">
         <div class="view-info">
@@ -3956,7 +3967,6 @@
 
                     .table.dataTable {
                         margin-bottom: 15px !important;
-                        border-top: none;
                     }
 
                     table.table-bordered.dataTable {
@@ -4526,6 +4536,7 @@
                                     <%
                                         SQL="EXEC dbo.PersonelAdamSaatCetveli @personel_id = '"& personel_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @proje_id = '"& proje_id &"';"
                                         set cetvel = baglanti.execute(sql)
+                                        'response.Write(SQL)
 
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
@@ -4552,11 +4563,13 @@
                                         <% end if %>
                                     <tr class=" ustunegelince <%=klas %>">
                                         <%
+                                                'toplam_saat = cetvel("toplam_calisma_saati")
+                                                'toplam_saat = DakikadanSaatYap(cdbl(cetvel("kaynak_toplam_saat"))*60)
                                                 toplam_saat = cdbl(toplam_saat) + cdbl(cetvel("kaynak_toplam_saat"))
                                                 toplam_tutar = cdbl(toplam_tutar) + cdbl(cetvel("kaynak_toplam_maliyet"))
                                         %>
                                         <td style="width: 150px;" class="ust_td2 headcol"><%=cetvel("kaynak") %></td>
-                                        <td class="gosterge_td alt_td "><%= DakikadanSaatYap(cdbl(cetvel("kaynak_toplam_saat"))*60) %></td>
+                                        <td class="gosterge_td alt_td "><%=DakikadanSaatYap(cdbl(cetvel("kaynak_toplam_saat"))*60) %></td>
                                         <td class=" gosterge_td alt_td sagcizgi">
                                             <%=cetvel("kaynak_toplam_maliyet") %> TL
                                                 
@@ -4585,14 +4598,14 @@
                                     </tr>
                                     <tr>
                                         <td class="ust_td2 headcol" style="width: 150px; background-color: #4d7193; color: white!important;"><%=LNG("TOPLAM")%></td>
-                                        <td class="gosterge_td alt_td "><%=toplam_saat %></td>
+                                        <td class="gosterge_td alt_td "><%=DakikadanSaatYap(toplam_saat * 60) %></td>
                                         <td class=" gosterge_td alt_td sagcizgi"><%=toplam_tutar %> TL</td>
                                         <% for x = 0 to ubound(gun_toplam)-2 %>
                                         <td class="alt_td" style="background-color: #4d7193; color: white;">
                                             <% if trim(gosterim_tipi)="0" then %>
-                                            <%=gun_toplam(x) %> TL
+                                                <%=gun_toplam(x) %> TL
                                             <% else %>
-                                            <%=DakikadanSaatYap(gun_toplam(x)) %>
+                                                <%=DakikadanSaatYap(gun_toplam(x)) %>
                                             <% end if %>
                                         </td>
                                         <% next %>
@@ -5745,7 +5758,7 @@
                     <span class="input-group-addon">
                         <i class="icon-prepend fa fa-calendar"></i>
                     </span>
-                    <input type="text" <% if acikmi = false then %> disabled="disabled" <% end if %> required class="required form-control takvimyap" value="<%=cdate(olay("baslangic")) %>" name="baslangic_tarihi" id="baslangic_tarihi" />
+                    <input type="text" <% if acikmi = false then %> disabled="disabled" <% end if %> required class="required form-control takvimyap" value="<%=FormatDate(olay("baslangic"), "00") %>" name="baslangic_tarihi" id="baslangic_tarihi" />
                 </div>
             </div>
         </div>
@@ -5770,7 +5783,7 @@
                     <span class="input-group-addon">
                         <i class="icon-prepend fa fa-calendar"></i>
                     </span>
-                    <input type="text" required <% if acikmi = false then %> disabled="disabled" <% end if %> class="required form-control takvimyap" value="<%=cdate(olay("bitis")) %>" name="bitis_tarihi" id="bitis_tarihi" />
+                    <input type="text" required <% if acikmi = false then %> disabled="disabled" <% end if %> class="required form-control takvimyap" value="<%=FormatDate(olay("bitis"), "00") %>" name="bitis_tarihi" id="bitis_tarihi" />
                 </div>
             </div>
         </div>

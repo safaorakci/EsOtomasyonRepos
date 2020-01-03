@@ -101,53 +101,6 @@
         </article>
     </div>
 </section>
-
-<section id="widget-grid" class="">
-    <div class="row">
-        <article class="col-xs-12 ">
-            <div class="card">
-               
-                <div class="card-block">
-                    <div class="row">
-
-                        <div class="col-md-3">
-                            <h5>Ürün Grubu Ekle</h5><br />
-                            <div class="row">
-                                <label class="col-sm-12  col-lg-12 col-form-label">Grup Adı :</label>
-                                <div class="col-sm-12 col-lg-12">
-                                    <div class="input-group input-group-primary">
-                                        <span class="input-group-addon">
-                                            <i class="icon-prepend fa fa-user"></i>
-                                        </span>
-                                        <input type="text" id="grup_adi" class="form-control" required data-msg="<% Response.Write(LNG("Grup Adı Giriniz")) %>" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <input type="button" value="Ürün Grubu Ekle" onclick="urun_grubu_ekle();" class="btn btn-primary" />
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-md-9">
-                            <h5>Ürün Ağaçları</h5><br />
-                            <div id="urun_agac_listesi">
-                                <script>
-                                    $(function (){
-                                        urun_gruplarini_getir();
-                                    });
-                                </script>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </article>
-    </div>
-</section>
 <link rel="stylesheet" type="text/css" href="/files/assets/pages/data-table/extensions/responsive/css/responsive.dataTables.css">
 <script src="/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>

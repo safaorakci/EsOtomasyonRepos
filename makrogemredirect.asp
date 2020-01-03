@@ -142,6 +142,12 @@
         Server.Execute("/ajax/dil.asp")
     elseif gp(3) = "parcalar" then
         Server.Execute("/System_root/parcalar/parcalar.asp")
+    elseif gp(3) = "ucun_agaci" then
+        Server.Execute("/System_root/parcalar/ucunagaci.asp")
+    elseif gp(3) = "hatirlatici" then
+        Server.Execute("/System_root/hatirlatici/hatirlatici.asp")
+    elseif gp(3) = "yillik_izin_mevzuat" then
+        Server.Execute("/System_root/yillik_izin_mevzuat/yillik_izin_mevzuat.asp")
     elseif gp(3) = "satinalma-siparisleri" then
         Server.Execute("/System_root/satinalma/satinalma-siparisleri.asp")
     elseif gp(3) = "talepler" then
@@ -157,5 +163,4 @@
     elseif gp(3) = "bakim_yonetimi" then
         Server.Execute("/System_root/bakim/bakim_yonetimi.asp")
     end if
-
 %>

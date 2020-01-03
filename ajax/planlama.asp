@@ -361,11 +361,10 @@
                     if len(gorevliler)>0 then
                         
                         SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 2 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 3 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 4 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 5 THEN (SELECT LEFT(haftaici_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 7 THEN (SELECT LEFT(pazar_baslangic_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) END as baslangic"
-                        start= baglanti.execute(SQL) 
-                            
+                        set start = baglanti.execute(SQL)                             
     
                         SQL="SELECT CASE (DATEPART(WEEKDAY,GETDATE())-1) WHEN 1 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' )WHEN 2 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 3 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 4 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 5 THEN (SELECT LEFT(haftaici_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 6 THEN (SELECT LEFT(cumartesi_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' ) WHEN 7 THEN (SELECT LEFT(pazar_bitis_saati,5) FROM ucgem_firma_listesi WHERE yetki_kodu='BOSS' )END as bitis"
-                        enddate = baglanti.execute(SQL) 
+                        set enddate = baglanti.execute(SQL) 
                         
 
                         renk = "rgb(52, 152, 219)"

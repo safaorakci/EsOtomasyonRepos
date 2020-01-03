@@ -5,7 +5,8 @@
 <html lang="tr-TR">
 
 <head>
-    <title>Proskop | Süreç Yönetimi </title>
+    <%FirmaBilgileri firma = firmaBilgileri();%>
+    <title><% Response.Write(firma.Title.ToString()); %> | Süreç Yönetimi</title>
     <!--[if lt IE 10]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -53,7 +54,14 @@
                             <div class="text-center">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <img src="/images/ahtapot_buyuk2.png" style="height: 60px; margin-top: 15px;" />
+                                        <%if (firma.Title == "ESFLW")
+                                            { %>
+                                            <img class="img-fluid" style="max-height: 50px;" src="images/esotomasyon_logo.png" />
+                                        <%} %>
+                                        <%else
+                                            { %>
+                                            <img class="img-fluid" style="max-height: 50px;" src="images/ahtapot_buyuk2.png" />
+                                        <%} %>
                                     </div>
                                 </div>
 

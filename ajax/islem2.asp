@@ -181,7 +181,7 @@
                 <span class="input-group-addon">
                     <i class="icon-prepend fa fa-cubes"></i>
                 </span>
-                <input type="text" class="takvimyap form-control required" value="<%=cdate(tarih) %>" required name="giris_cikis_tarihi" id="giris_cikis_tarihi" />
+                <input type="text" class="takvimyap form-control required" value="<%=FormatDate(tarih, "00") %>" required name="giris_cikis_tarihi" id="giris_cikis_tarihi" />
             </div>
         </div>
     </div>
@@ -2593,27 +2593,17 @@
             <button id="edit-btn" style="margin-top: -5px; display:none" type="button" onclick="yeni_satinalma_kaydi_ekle('<%=proje_id %>');" class="btn btn-mini btn-success waves-effect waves-light f-right btn-round"><i class="icofont icofont-edit"></i><%=LNG("Yeni Satın Alma Ekle")%></button></h5>
         <div>
             <%
-                SQL="select id, IsId, sum(toplamtl) as toplamTL from satinalma_listesi where proje_id = '"& proje_id &"' and durum != 'Iptal Edildi' and cop = 'false' group by id, IsId"
+                SQL="select id, IsId, sum(toplamtl) as toplamTL, sum(toplamusd) as toplamUSD, sum(toplameur) as toplamEUR from satinalma_listesi where proje_id = '"& proje_id &"' and durum != 'Iptal Edildi' and cop = 'false' group by id, IsId"
                 'response.Write(SQL & "- ")
                 set satinalmaformu = baglanti.execute(SQL)
+
+                SQL="select id, IsId, sum(toplamtl) as toplamTL, sum(toplamusd) as toplamUSD, sum(toplameur) as toplamEUR from satinalma_listesi where proje_id = '"& proje_id &"' and durum != 'Iptal Edildi' and cop = 'false' group by id, IsId"
+                'response.Write(SQL & "- ")
+                set satinalmaformu2 = baglanti.execute(SQL)
 
                 SQL = "DECLARE @id int; set @id='"& proje_id &"'; IF EXISTS(select id from satinalma_listesi where proje_id = @id) begin select id from satinalma_listesi where proje_id = @id and durum != 'Iptal Edildi' and cop = 'false' END else begin select 0 as id end"
                 'response.Write(SQL & "- ")
                 set sapariskontrol = baglanti.execute(SQL)
-
-                if sapariskontrol.eof then
-                    SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '0' and cop = 'false'"
-                    set siparisparca = baglanti.execute(SQL)
-
-                    SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '0' and cop = 'false'"
-                    set eksikparca = baglanti.execute(SQL)
-                else
-                    SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& sapariskontrol("id") &"' and cop = 'false'"
-                    set siparisparca = baglanti.execute(SQL)
-
-                    SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& sapariskontrol("id") &"' and cop = 'false'"
-                    set eksikparca = baglanti.execute(SQL)
-                end if
 
                 SQL = "SELECT ROW_NUMBER() OVER(ORDER BY kullanici.id) AS Id, kullanici.personel_ad + ' ' + personel_soyad as ad_soyad, proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM ((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) AS calismaSuresi, CONVERT(decimal(18,2), ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))) * 0.016667, 0) * kullanici.personel_saatlik_maliyet FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id))) AS toplamMaliyet FROM dbo.ucgem_proje_listesi proje, ucgem_firma_kullanici_listesi kullanici where proje.firma_id = '1' AND proje.id = '"& proje_id &"' AND proje.cop = 'false' AND proje.durum = 'true' AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) > 0 " 
                 set personelAdamSaat = baglanti.execute(SQL)
@@ -2625,7 +2615,7 @@
                     <thead>
                         <tr>
                             <th colspan="1">Maliyet Formu</th>
-                            <th style="width: 115px;"><%=LNG("Toplam Maliyet")%></th>
+                            <th style="width: 300px;"><%=LNG("Toplam Maliyet")%></th>
                             <th>Dosya</th>
                         </tr>
                     </thead>
@@ -2647,20 +2637,6 @@
                                    <span id="subTotal" class="label-warning text-dark" style="padding:4px 10px; margin-right:0px; font-weight:bold; border-radius:5px">
 
                                    </span>
-
-                                <script type="text/javascript">
-                                    var sum = 0;
-                                    // iterate through each td based on class and add the values
-                                    $(".toplamMaliyet").each(function () {
-
-                                        var value = $(this).text().replace('TL', '').replace(' ', '');
-                                        // add only if the value is number
-                                        if (!isNaN(value) && value.length != 0) {
-                                            sum += parseFloat(value);
-                                        }
-                                    });
-                                    $("#subTotal").text(sum + " TL");
-                                </script>
                             </td>
                             <td class="dropdown" style="width: 10px;">
                                 <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
@@ -2673,23 +2649,32 @@
                             </tr>
                             <tr>
                                 <td colspan="3" id="detayTD" style="display:none">
-                                    <div class="col-md-6" id="maliyetDetay" style="display: none">
-                                        <table id="dt_basic" class="table table-bordered datatableyap ml-4 mt-3 mb-3">
+                                    <div class="col-md-7" id="maliyetDetay" style="display: none">
+                                        <table id="dt_basic" class="table table-bordered datatableyap ml-2 mt-3 mb-3">
                                             <thead>
                                                 <tr>
-                                                    <th colspan="6" style="text-align:center">Sipariş Verilen Parçalar</th>
+                                                    <th colspan="6" style="text-align:center; background-color: lightskyblue !important">Sipariş Verilen Parçalar</th>
                                                 </tr>
                                                 <tr>
                                                     <th>Parça</th>
                                                     <th>Marka</th>
                                                     <th>Açıklama</th>
                                                     <th>Adet</th>
-                                                    <th>Maliyet</th>
-                                                    <th>Toplam Maliyet</th>
+                                                    <th style="width: 100px;">Maliyet</th>
+                                                    <th style="width: 100px;">Toplam Maliyet</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <% 
+                                            <%  
+                                                do while not satinalmaformu.eof
+                                                if satinalmaformu.eof then
+                                                    SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '0' and cop = 'false'"
+                                                    set siparisparca = baglanti.execute(SQL)
+                                                else
+                                                    SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& satinalmaformu("id") &"' and cop = 'false'"
+                                                    set siparisparca = baglanti.execute(SQL)
+                                                end if
+
                                                 if siparisparca.eof then 
                                             %>
                                                  <tr>
@@ -2709,9 +2694,9 @@
                                                 end if
                                                 set sondurum = baglanti.execute(SQL)
                                                 if durum = 1 then
-                                                    SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"'"
+                                                    SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"' and cop = 'false'"
                                                 elseif durum = 2 then
-                                                    SQL = "select * from parca_listesi where id = '"& sondurum("parcaId") &"'"
+                                                    SQL = "select * from parca_listesi where id = '"& sondurum("parcaId") &"' and cop = 'false'"
                                                 end if
                                                 set parcaBilgi = baglanti.execute(SQL)
 
@@ -2720,6 +2705,15 @@
                                                 elseif durum = 2 then
                                                     adet = sondurum("adet")
                                                 end if
+
+                                                birimPB = "TL"
+                                                if parcaBilgi("birim_pb") = "" then
+                                                else
+                                                   birimPB = parcaBilgi("birim_pb")
+                                                   if birimPB = "EURO" then
+                                                       birimPB = "EUR"
+                                                   end if
+                                                end if
                                                 SatinalmaToplamMaliyet = Cdbl(parcaBilgi("birim_maliyet")) * adet
                                             %>
                                                 <tr>
@@ -2727,31 +2721,43 @@
                                                     <td><%=parcaBilgi("marka") %></td>
                                                     <td><%=parcaBilgi("aciklama") %></td>
                                                     <td><% if durum = 1 then %> <%=CInt(sondurum("SiparisVerilenAdet") - parcaBilgi("minumum_miktar")) %> <%elseif durum = 2 then%> <%=sondurum("adet") %> <%end if %></td>
-                                                    <td><%=parcaBilgi("birim_maliyet") %> TL</td>
-                                                    <td class="toplamMaliyet"><%=SatinalmaToplamMaliyet %> TL</td>
+                                                    <td><%=parcaBilgi("birim_maliyet") %>&nbsp;<%=birimPB %></td>
+                                                    <td class="toplamMaliyet"><%=SatinalmaToplamMaliyet %> &nbsp;<%=birimPB %></td>
                                                 </tr>
                                             <%
                                                  siparisparca.movenext
                                                  loop
                                             %>
+                                            <%
+                                                satinalmaformu.movenext
+                                                loop
+                                            %>
                                             </tbody>
                                            </table>
-                                        <table id="dt_basic" class="table table-bordered datatableyap ml-4 mt-3 mb-3">
+                                        <table id="dt_basic" class="table table-bordered datatableyap ml-2 mt-3 mb-3">
                                             <thead>
                                                 <tr>
-                                                    <th colspan="6" style="text-align:center">Stoktan Kullanılan Parçalar</th>
+                                                    <th colspan="6" style="text-align:center; background-color: lightskyblue !important">Stoktan Kullanılan Parçalar</th>
                                                 </tr>
                                                 <tr>
                                                     <th>Parça</th>
                                                     <th>Marka</th>
                                                     <th>Açıklama</th>
                                                     <th>Adet</th>
-                                                    <th>Maliyet</th>
-                                                    <th>Toplam Maliyet</th>
+                                                    <th style="width: 100px;">Maliyet</th>
+                                                    <th style="width: 100px;">Toplam Maliyet</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <% 
+                                                <%  
+                                                    do while not satinalmaformu2.eof
+                                                        if satinalmaformu2.eof then
+                                                            SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '0' and cop = 'false'"
+                                                            set eksikparca = baglanti.execute(SQL)
+                                                        else
+                                                            SQL = "select id, Adet, IsID, ParcaId, StoktanKullanilanAdet, SiparisVerilenAdet from is_parca_listesi where IsID = '"& satinalmaformu2("IsId") &"'"
+                                                            set eksikparca = baglanti.execute(SQL)
+                                                        end if
                                                     if eksikparca.eof then
                                                 %>
                                                     <tr>
@@ -2761,36 +2767,42 @@
                                                     end if
                                                     do while not eksikparca.eof
 
-                                                    if Not IsNull(eksikparca("IsId")) then
-                                                    SQL = "select id, Adet, IsID, ParcaId, StoktanKullanilanAdet, SiparisVerilenAdet from is_parca_listesi where ParcaId = '"& eksikparca("parcaId") &"' and IsID = '"& eksikparca("IsId") &"'"
-                                                    'response.Write(SQL)
-                                                    set sondurum = baglanti.execute(SQL)
-
-                                                    SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"' and cop = 'false'"
+                                                    SQL = "select * from parca_listesi where id = '"& eksikparca("ParcaId") &"' and cop = 'false'"
                                                     set parcaBilgi = baglanti.execute(SQL)
 
-                                                    KullanilanToplamMaliyet = Cdbl(parcaBilgi("birim_maliyet")) * sondurum("StoktanKullanilanAdet")
-                                                    'if sondurum("StoktanKullanilanAdet") > 0 then
+                                                    birimPB = "TL"
+                                                    if parcaBilgi("birim_pb") = "" then
+                                                    else
+                                                       birimPB = parcaBilgi("birim_pb")
+                                                       if birimPB = "EURO" then
+                                                           birimPB = "EUR"
+                                                       end if
+                                                    end if
+
+                                                    KullanilanToplamMaliyet = Cdbl(parcaBilgi("birim_maliyet")) * eksikparca("StoktanKullanilanAdet")
                                                 %>
                                                     <tr>
                                                         <td><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
                                                         <td><%=parcaBilgi("marka") %></td>
                                                         <td><%=parcaBilgi("aciklama") %></td>
-                                                        <td><%=sondurum("StoktanKullanilanAdet") %></td>
-                                                        <td><%=parcaBilgi("birim_maliyet") %> TL</td>
-                                                        <td class="toplamMaliyet"><%=KullanilanToplamMaliyet %> TL</td>
+                                                        <td><%=eksikparca("StoktanKullanilanAdet") %></td>
+                                                        <td><%=parcaBilgi("birim_maliyet") %>&nbsp;<%=birimPB %></td>
+                                                        <td class="toplamMaliyet"><%=KullanilanToplamMaliyet %>&nbsp;<%=birimPB %></td>
                                                     </tr>
                                                 <%
-                                                    end if
                                                     eksikparca.movenext
+                                                    loop
+                                                %>
+                                                <%
+                                                    satinalmaformu2.movenext
                                                     loop
                                                 %>
                                             </tbody>
                                         </table>
-                                        <table class="table table-bordered ml-4 mt-3 mb-3">
+                                        <table class="table table-bordered ml-2 mt-3 mb-3">
                                             <thead>
                                                 <tr>
-                                                    <th colspan="3" style="text-align:center">Personel Adam Saat</th>
+                                                    <th colspan="3" style="text-align:center; background-color: lightskyblue !important">Personel Adam Saat</th>
                                                 </tr>
                                                 <tr>
                                                     <th>Personel</th>
@@ -2828,6 +2840,45 @@
                         %>
                     </tbody>
                 </table>
+                <script type="text/javascript">
+                    var sumTL = 0;
+                    var sumUSD = 0;
+                    var sumEUR = 0;
+                    var valueTL = 0;
+                    var valueUSD = 0;
+                    var valueEUR = 0;
+
+                    $(".toplamMaliyet").each(function () {
+
+                        var sonucTL = $(this).text().indexOf("TL");
+                        var sonucUSD = $(this).text().indexOf("USD");
+                        var sonucEUR = $(this).text().indexOf("EUR");
+
+                        if (sonucTL != -1) {
+                            valueTL = $(this).text().replace('TL', '').replace(' ', '');
+                            if (!isNaN(valueTL) && valueTL.length != 0 && valueTL > 0) {
+                                sumTL += parseFloat(valueTL);
+                                $("#subTotal").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
+                            }
+                        }
+
+                        if (sonucUSD != -1) {
+                            valueUSD = $(this).text().replace('USD', '').replace(' ', '');
+                            if (!isNaN(valueUSD) && valueUSD.length != 0 && valueUSD > 0) {
+                                sumUSD += parseFloat(valueUSD);
+                                $("#subTotal").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
+                            }
+                        }
+
+                        if (sonucEUR != -1) {
+                            valueEUR = $(this).text().replace('EUR', '').replace(' ', '');
+                            if (!isNaN(valueEUR) && valueEUR.length != 0 && valueEUR > 0) {
+                                sumEUR += parseFloat(valueEUR);
+                                $("#subTotal").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
+                            }
+                        }
+                    });
+                </script>
             </div>
         </div>
     </div>

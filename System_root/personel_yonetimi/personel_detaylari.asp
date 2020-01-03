@@ -10,6 +10,8 @@
     SQL="select kullanici.personel_resim, gorev.gorev_adi, kullanici.personel_ad, kullanici.personel_soyad from ucgem_firma_kullanici_listesi kullanici join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.id = '"& personel_id &"' and kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
     set personel = baglanti.execute(SQL)
 
+    SQL = "select * from tbl_ModulYetkileri where FirmaId = '"& Request.Cookies("kullanici")("firma_id") &"'"
+    set tblModulYetkiler = baglanti.execute(SQL)
 
     personel_resim = personel("personel_resim")
     if len(trim(personel_resim))<15 then
@@ -76,16 +78,37 @@
         <div class="tabs tabs-style-bar">
             <nav>
                 <ul>
+                    <%
+                        Bordro = False
+                        Dosyalar = False
+                        if not tblModulYetkiler.eof then
+                            do while not tblModulYetkiler.eof
+                                if tblModulYetkiler("ModulId") = 2 and tblModulYetkiler("Status") = True then
+                                    Bordro = True
+                                end if
+                                if tblModulYetkiler("ModulId") = 3 and tblModulYetkiler("Status") = True then
+                                    Dosyalar = True
+                                end if
+                            tblModulYetkiler.movenext
+                            loop
+                        end if
+                    %>
+
                     <li class="nav-link_yeni"><a href="#personel_bilgileri" onclick="personel_bilgileri_getir('<%=personel_id %>', this);" class="icon icon-home"><span><%=LNG("Personel")%></span></a></li>
+                    
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",103,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#giris_cikis" id="giris_cikis_buton" onclick="personel_giris_cikis_getir('<%=personel_id %>', this);" class="icon icon-box"><span><%=LNG("Giriş-İzin")%></span></a></li>
+                        <li class="nav-link_yeni"><a href="#giris_cikis" id="giris_cikis_buton" onclick="personel_giris_cikis_getir('<%=personel_id %>', this);" class="icon icon-box"><span><%=LNG("Giriş-İzin")%></span></a></li>
                     <% end if %>
+
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",104,")>0 then %>
                       <li class="nav-link_yeni"><a href="#mesai_section" id="mesai_buton" onclick="personel_mesai_getir('<%=personel_id %>', this);" class="icon icon-home"><span><%=LNG("Mesai")%></span></a></li>
                     <% end if %>
-                    <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",105,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#bordro_section" id="bordro_buton" onclick="personel_bordro_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Bordro")%></span></a></li>
-                    <% end if %>
+
+                    <%if Bordro = True then %>
+                        <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",105,")>0 then %>
+                            <li class="nav-link_yeni"><a href="#bordro_section" id="bordro_buton" onclick="personel_bordro_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Bordro")%></span></a></li>
+                        <% end if %>
+                    <%end if %>
 
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",106,")>0 then %>
                     <li class="nav-link_yeni"><a href="#zimmet" onclick="zimmet_getir('personel', '<%=personel_id %>', this);" class="icon icon-display"><span><%=LNG("Zimmet")%></span></a></li>
@@ -93,9 +116,13 @@
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",107,")>0 and 1 = 2 then %>
                     <li class="nav-link_yeni"><a href="#cari_hareketler" onclick="personel_cari_getir('<%=personel_id %>', this);" class="icon icon-upload"><span><%=LNG("Cari Hareketler")%></span></a></li>
                     <% end if %>
-                    <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",108,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#dosyalar" onclick="personel_dosyalari_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Dosyalar")%></span></a></li>
-                    <% end if %>
+
+                    <%if Dosyalar = True then %>
+                        <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",108,")>0 then %>
+                            <li class="nav-link_yeni"><a href="#dosyalar" onclick="personel_dosyalari_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Dosyalar")%></span></a></li>
+                        <% end if %>
+                    <%end if %>
+
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",109,")>0 then %>
                     <li class="nav-link_yeni"><a href="#personel_ajanda" onclick="personel_ajandasi_getir('<%=personel_id %>', this);" class="icon icon-home"><span><%=LNG("Ajanda")%></span></a></li>
                     <% end if %>
@@ -105,6 +132,7 @@
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",111,")>0 then %>
                     <li class="nav-link_yeni"><a href="#adam_saat_cetveli" onclick="personel_adamsaat_getir('<%=personel_id %>', this, '<%=month(date) %>', '<%=year(date) %>');" class="icon icon-upload"><span><%=LNG("Adam-Saat")%></span></a></li>
                     <% end if %>
+
             <!--        <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",112,")>0 then %>
                     <li style="display:none;" class="nav-link_yeni"><a onclick="personel_raporlarini_getir('<%=personel_id %>', this);" style="-webkit-border-top-right-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-bottomright: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" href="#raporlar" class="icon icon-tools"><span><%=LNG("Raporlar")%></span></a></li>
                     <% end if %>-->

@@ -9,6 +9,9 @@
     set sayilar = baglanti.execute(SQL)
     'response.Write(SQL)
 
+    SQL = "select * from tbl_ModulYetkileri where FirmaId = '"& Request.Cookies("kullanici")("firma_id") &"'"
+    set tblModulYetkiler = baglanti.execute(SQL)
+
         ay = trn(request("ay"))
         yil = trn(request("yil"))
 
@@ -376,6 +379,18 @@
                 sayi = 0
             end if
         %>
+        <%
+            Projeilerleme = False
+            if not tblModulYetkiler.eof then
+                do while not tblModulYetkiler.eof
+                    if tblModulYetkiler("ModulId") = 5 and tblModulYetkiler("Status") = True then
+                        Projeilerleme = True
+                    end if
+                tblModulYetkiler.movenext
+                loop
+            end if
+        %>
+        <%if Projeilerleme = True then %>
         <div class="col-md-12 col-lg-7">
             <div class="card">
                 <div class="card-header">
@@ -385,7 +400,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="row">
-                                <div class="col-md-3" style="display:flex"><span style="align-self: center;">Proje</span></div>
+                                <div class="col-md-3" style="display: flex"><span style="align-self: center;">Proje</span></div>
                                 <div class="col-md-9">
                                     <select name="rapor_proje_ilerleme_proje_id" onchange="anasayfa_proje_durum_bilgisi_getir(this.value);" id="rapor_proje_ilerleme_proje_id" class="select2">
                                         <%
@@ -430,8 +445,7 @@
                 </div>
             </div>
         </div>
-
-
+        <%end if %>
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12">

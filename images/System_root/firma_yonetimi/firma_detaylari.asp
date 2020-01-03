@@ -148,7 +148,7 @@
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",37,")>0 then %>
                     <li class="nav-link_yeni"><a onclick="musteri_raporlarini_getir('<%=firma_id %>', this, this);" style="-webkit-border-top-right-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-bottomright: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" href="#raporlar" class="icon icon-tools"><span><%=LNG("Raporlar")%></span></a></li>
                     <% end if %>
-        <% else %>
+                    <% else %>
                     <li class="nav-link_yeni"><a style="-webkit-border-top-left-radius: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-topleft: 10px; -moz-border-radius-bottomleft: 10px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;" href="#musteri_bilgileri" onclick="musteri_bilgilerini_getir('<%=firma_id %>', this);" class="icon icon-home"><span><%=LNG("Müşteri")%></span></a></li>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",48,")>0 then %>
                     <li class="nav-link_yeni"><a href="#cari_hareketler" onclick="musteri_cari_hareketleri_getir('<%=firma_id %>', this);" class="icon icon-box"><span><%=LNG("Cari Hareketler")%></span></a></li>

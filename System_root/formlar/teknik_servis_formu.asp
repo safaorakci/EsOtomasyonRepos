@@ -20,6 +20,11 @@
 
     SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
     set firmaBilgileri = baglanti.execute(SQL)
+
+    firmaLogo = firmaBilgileri("firma_logo")
+    if firmaBilgileri("firma_logo") = "undefined" then
+        firmaLogo = ""    
+    end if
     
 %>
 <html lang="tr">
@@ -42,24 +47,26 @@
                             <tbody>
                                 <tr>
                                     <td rowspan="4" style="width: 15%; text-align: center; vertical-align: middle;">
-                                        <img src="/images/esotomasyon_logo.png" style="width: 150px;" />
+                                        <%if firmaBilgileri("firma_kodu") = "ESOTOMASYON" then %>
+                                            <img src="<%=firmaLogo %>" style="width: 150px;" />
+                                        <%end if %>
                                     </td>
                                     <td rowspan="2" colspan="1" style="vertical-align: middle;">
                                         <center>
                                             <span style="font-weight:bold; font-size:30px;">TEKNİK SERVİS FORMU</span>
                                         </center>
                                     </td>
-                                    <td> Seri No : </td>
-                                    <td> 
+                                    <td>Seri No : </td>
+                                    <td>
                                         <%=seriNo("seri_no") %>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Tarih</td>
-                                    <td> <%Response.Write Date()%> </td>
+                                    <td><%Response.Write Date()%> </td>
                                 </tr>
                                 <tr>
-                                    <td rowspan="1" colspan="3" style="height: 50px;"> 
+                                    <td rowspan="1" colspan="3" style="height: 50px;">
                                         <center>
                                             <%=firmaBilgileri("firma_adres") %> <br /> <%=firmaBilgileri("firma_telefon") %> &nbsp; <%=firmaBilgileri("firma_mail") %>
                                         </center>
@@ -74,10 +81,10 @@
                             <tbody>
                                 <tr>
                                     <td rowspan="5" style="text-align: center; vertical-align: middle;">SERVIS TALEP</td>
-                                    <td style="width:150px">Firma Ünvanı</td>
-                                    <td> <%=servisformu("FirmaUnvani") %> </td>
-                                    <td style="width:150px">Yetkili</td>
-                                    <td> <%=servisformu("Yetkili") %> </td>
+                                    <td style="width: 150px">Firma Ünvanı</td>
+                                    <td><%=servisformu("FirmaUnvani") %> </td>
+                                    <td style="width: 150px">Yetkili</td>
+                                    <td><%=servisformu("Yetkili") %> </td>
                                 </tr>
                                 <tr>
                                     <td rowspan="2">Adres</td>
@@ -105,30 +112,30 @@
                         <br />
                         <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border: solid 1px black;">
                             <tbody>
-                                    <tr>
-                                        <td rowspan="7" style="text-align: center; vertical-align: middle;">SERVIS DETAY</td>
-                                        <td style="width: 70px;">Servis Personeli</td>
-                                        <td colspan="2"> <%=kullanici("adsoyad") %> </td>
-                                        <td>Başlangıç Tarihi</td>
-                                        <td> <%=servisformu("BaslangicTarihi") %> </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 70px;">Makine Bilgileri</td>
-                                        <td colspan="2"> <%=servisformu("MakinaBilgileri") %> </td>
-                                        <td>Başlangıç Saati</td>
-                                        <td> <%=servisformu("Baslangic") %> </td>
-                                    </tr>
-                                    <tr>
-                                        <td rowspan="2">Bildirilen Arıza</td>
-                                        <td rowspan="2" colspan="2"><%=servisformu("BildirilenAriza") %></td>
-                                        <td>Bitiş Tarihi</td>
-                                        <td> <%=servisformu("BitisTarihi") %> </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Bitiş Saati</td>
-                                        <td> <%=servisformu("Bitis") %> </td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <td rowspan="7" style="text-align: center; vertical-align: middle;">SERVIS DETAY</td>
+                                    <td style="width: 70px;">Servis Personeli</td>
+                                    <td colspan="2"><%=kullanici("adsoyad") %> </td>
+                                    <td>Başlangıç Tarihi</td>
+                                    <td><%=servisformu("BaslangicTarihi") %> </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 70px;">Makine Bilgileri</td>
+                                    <td colspan="2"><%=servisformu("MakinaBilgileri") %> </td>
+                                    <td>Başlangıç Saati</td>
+                                    <td><%=servisformu("Baslangic") %> </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">Bildirilen Arıza</td>
+                                    <td rowspan="2" colspan="2"><%=servisformu("BildirilenAriza") %></td>
+                                    <td>Bitiş Tarihi</td>
+                                    <td><%=servisformu("BitisTarihi") %> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bitiş Saati</td>
+                                    <td><%=servisformu("Bitis") %> </td>
+                                </tr>
+                            </tbody>
                         </table>
                         <br />
                         <br />
@@ -151,21 +158,23 @@
                         <br />
                         <br />
                         <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border: solid 1px black; border-bottom: 0px;">
-                            <tbody><td colspan="7" style="text-align: center;">Kullanılan Malzemeler</td></tbody>
+                            <tbody>
+                                <td colspan="7" style="text-align: center;">Kullanılan Malzemeler</td>
+                            </tbody>
                         </table>
                         <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border: solid 1px black;">
-                                <thead>
-                                    <tr>
-                                        <!--<th style="text-align: center; width: 10%;">Sıra No</th>-->
-                                        <th style="text-align: center; width: 10%;">Marka</th>
-                                        <th style="text-align: center; width: 10%;">Kod</th>
-                                        <th style="text-align: center;">Açıklama</th>
-                                        <th style="text-align: center; width: 10%;">Miktar</th>
-                                        <th style="text-align: center; width: 10%;">Birim</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <%
+                            <thead>
+                                <tr>
+                                    <!--<th style="text-align: center; width: 10%;">Sıra No</th>-->
+                                    <th style="text-align: center; width: 10%;">Marka</th>
+                                    <th style="text-align: center; width: 10%;">Kod</th>
+                                    <th style="text-align: center;">Açıklama</th>
+                                    <th style="text-align: center; width: 10%;">Miktar</th>
+                                    <th style="text-align: center; width: 10%;">Birim</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%
                                         for x = 0 to ubound(split(servisformu("ParcaId"), ","))
                                             id = split(servisformu("ParcaId"), ",")(x)
                                             Adet = split(servisformu("Adet"), ",")(x)
@@ -174,54 +183,54 @@
                                         set parcadetay = baglanti.execute(SQL)
 
                                         if parcadetay.eof then
-                                    %>
-                                        <tr>
-                                            <td colspan="6" style="text-align:center">Kayıt Bulunamadı !</td>
-                                        </tr>
-                                    <%
+                                %>
+                                <tr>
+                                    <td colspan="6" style="text-align: center">Kayıt Bulunamadı !</td>
+                                </tr>
+                                <%
                                         end if
                                         k = 0
                                         do while not parcadetay.eof
                                             k = k + 1
-                                    %>   
-                                    <tr>
-                                        <!--<td style="text-align:center"><%=k %></td>-->
-                                        <td style="text-align:center">
-                                            <%if parcadetay("marka") = "" then %>
+                                    %>
+                                <tr>
+                                    <!--<td style="text-align:center"><%=k %></td>-->
+                                    <td style="text-align: center">
+                                        <%if parcadetay("marka") = "" then %>
                                                 -
                                             <%else %>
-                                                <%=parcadetay("marka") %>
-                                            <%end if %>
-                                        </td>
-                                        <td style="text-align:center">
-                                            <%if parcadetay("parca_kodu") = "" then %>
+                                        <%=parcadetay("marka") %>
+                                        <%end if %>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <%if parcadetay("parca_kodu") = "" then %>
                                                 -
                                             <%else %>
-                                                <%=parcadetay("parca_kodu") %>
-                                            <%end if %>
-                                        </td>
-                                        <td style="text-align:center">
-                                            <%if parcadetay("aciklama") = "" then %>
+                                        <%=parcadetay("parca_kodu") %>
+                                        <%end if %>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <%if parcadetay("aciklama") = "" then %>
                                                 -
                                             <%else %>
-                                                <%=parcadetay("aciklama") %>
-                                            <%end if %>
-                                        </td>
-                                        <td style="text-align:center"><%=Adet %></td>
-                                        <td style="text-align:center">
-                                            <%if IsNull(parcadetay("birim")) then %>
+                                        <%=parcadetay("aciklama") %>
+                                        <%end if %>
+                                    </td>
+                                    <td style="text-align: center"><%=Adet %></td>
+                                    <td style="text-align: center">
+                                        <%if IsNull(parcadetay("birim")) then %>
                                                 -
                                             <%else %>
-                                                <%=parcadetay("birim") %>
-                                            <%end if %>
-                                        </td>
-                                    </tr>
-                                    <% 
+                                        <%=parcadetay("birim") %>
+                                        <%end if %>
+                                    </td>
+                                </tr>
+                                <% 
                                         parcadetay.movenext 
                                         loop
-                                    %>
-                                    <% next %>
-                                </tbody>
+                                %>
+                                <% next %>
+                            </tbody>
                         </table>
                     </div>
                 </div>

@@ -18,6 +18,14 @@
     SQL="select STUFF((select departman_adi + ', ' from dbo.tanimlama_departman_listesi departman join ucgem_firma_kullanici_listesi personel on dbo.iceriyormu(personel.departmanlar, departman.id)=1 where personel.id = '1' FOR XML PATH('')), 1, 0, '') as departmanlar"
     set departmancek = baglanti.execute(SQL)
 
+    SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+    set firmaBilgileri = baglanti.execute(SQL)
+
+    firmaLogo = firmaBilgileri("firma_logo")
+    if firmaBilgileri("firma_logo") = "undefined" then
+        firmaLogo = ""    
+    end if
+
     departmanlar = ""
     if not departmancek.eof then
         departmanlar = departmancek(0)
@@ -42,7 +50,9 @@
             <tr>
                 <td colspan="2" style="vertical-align: middle;">
                     <span style="float: left;">
-                        <img src="/images/esotomasyon_logo.png" style="width: 150px;" />
+                        <%if firmaBilgileri("firma_kodu") = "ESOTOMASYON" then %>
+                            <img src="<%=firmaLogo %>" style="width: 150px;" />
+                        <%end if %>
                     </span>
                     <br />
                     <center>

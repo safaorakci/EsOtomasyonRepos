@@ -1116,9 +1116,7 @@
 
                 satinalma_id = trn(request("satinalma_id"))
 
-
                 Doc.ImportFromUrl site_url & "/teklif_formu/?jsid=4559&satinalma_id=" & satinalma_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
-                
                 dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
                 Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
 
@@ -1169,18 +1167,19 @@
 
 
             elseif trn(request("islem2"))="teknik_servis_formu" then
-                personel_Id = trn(request("personel_id"))
-                izin_id = trn(request("izin_id"))
 
-                firma_id = Request.Cookies("kullanici")("firma_id")
-                kullanici_id = Request.Cookies("kullanici")("kullanici_id")
+                    personel_Id = trn(request("personel_id"))
+                    izin_id = trn(request("izin_id"))
 
-                Doc.ImportFromUrl site_url & "/teknik_servis_formu/?jsid=4559&personel_id=" & personel_id & "&izin_id=" & izin_id & "&firma_id=" & firma_id & "&kullanici_id=" & kullanici_id , "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
+                    firma_id = Request.Cookies("kullanici")("firma_id")
+                    kullanici_id = Request.Cookies("kullanici")("kullanici_id")
+
+                    Doc.ImportFromUrl site_url & "/teknik_servis_formu/?jsid=4559&personel_id=" & personel_id & "&izin_id=" & izin_id & "&firma_id=" & firma_id & "&kullanici_id=" & kullanici_id , "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
                 
-                dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
-                Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
+                    dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
+                    Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
 
-                sName = server.MapPath(dosya_yolu)
+                    sName = server.MapPath(dosya_yolu)
 
              if trn(request("islem3"))="yazdir" then
 %>
@@ -2033,6 +2032,10 @@
         
     elseif trn(request("islem"))="mail_gonderim_baslat" then
 
+        SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+        set firmaBilgileri = baglanti.execute(SQL)
+
+        if firmaBilgileri("mail_entegrasyon") = True then
 
         ' on error resume next
 
@@ -2043,38 +2046,39 @@
         maill = trn(request("mesaj"))
         mail_antet = ""
         'gonderici = "uygulama@proskop.com"
-        gonderici = "esflw@esotomasyon.com.tr"
+        'gonderici = "esflw@esotomasyon.com.tr"
+
+        mailTLS = false
+        if firmaBilgileri("firma_mail_tls") = True then
+            mailTLS = true
+        end if
 
         dosya_ismi = "belge.pdf"
 
         antet_ust = "<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd""> <html lang=""en""> <head> <meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8""> <meta name=""viewport"" content=""width=device-width, initial-scale=1""> <meta http-equiv=""X-UA-Compatible"" content=""IE=edge""> <title>Es Otomasyon</title> <style type=""text/css""> </style> </head> <body style=""margin:0; padding:0; background-color:#F2F2F2;""> <center> <img src=""http://otomasyon.esflw.com/images/esotomasyon_logo.png"" width=""150"" style=""width:150px;"" /><br /><br /> <table width=""640"" cellpadding=""0"" cellspacing=""0"" border=""0"" class=""wrapper"" bgcolor=""#FFFFFF""> <tr> <td height=""10"" style=""font-size:10px; line-height:10px;"">&nbsp;</td> </tr> <tr> <td align=""center"" valign=""top""> <table width=""600"" cellpadding=""0"" cellspacing=""0"" border=""0"" class=""container""> <tr> <td align=""left"" valign=""top""> <p style=""font-family:Tahoma; font-size:12px;""> "
-        antet_alt = "</p> <p style=""font-family:Tahoma; font-size:12px;""> Sevgiler,<br /><strong>Es Otomasyon Ekibi</strong> </p> </td> </tr> </table> </td> </tr> <tr> <td height=""10"" style=""font-size:10px; line-height:10px;"">&nbsp;</td></tr></table><p style=""font-family:Tahoma; font-size:12px; color:#808080;""> <br /> <strong>PROSKOP</strong><br /><br /><br /></p></center></body></html>"
+        antet_alt = "</p> <p style=""font-family:Tahoma; font-size:12px;""> Sevgiler,<br /><strong>"& firmaBilgileri("firma_adi") &" Ekibi</strong> </p> </td> </tr> </table> </td> </tr> <tr> <td height=""10"" style=""font-size:10px; line-height:10px;"">&nbsp;</td></tr></table><p style=""font-family:Tahoma; font-size:12px; color:#808080;""> <br /> <strong>PROSKOP</strong><br /><br /><br /></p></center></body></html>"
         
-
 		Set Mail = Server.CreateObject("Persits.MailSender")
-		'Mail.Host = "mail.makrogem.com.tr"                                     ' Es-Posta sunucu adresi
-		Mail.Host = "mail.esotomasyon.com.tr"                                   ' E-Posta sunucu adresi
-        Mail.Port = 587
-        Mail.TLS = false
-		Mail.Username = gonderici                                               ' Gönderim adresi
-		Mail.Password = "Es22995566"                                                ' Gönderen hesabın şifresi
-		Mail.From = gonderici                                                   ' E-Postayı gönderen adres
-		Mail.FromName = Mail.EncodeHeader("Es Otomasyon", "UTF-8")              ' E-Posta gönderen isim
-		Mail.AddAddress e_posta                                                 ' Alıcı e-posta adresi
-		Mail.AddReplyTo gonderici                                               ' Alıcı yanıtladığında gidecek adres
-		Mail.Subject = Mail.EncodeHeader("Es Otomasyon - " & konu, "UTF-8")     ' Mail konusu
-		Mail.Body = antet_ust & maill & antet_alt                               ' Mail içeriği
+		'Mail.Host = "mail.makrogem.com.tr"                                                     ' Es-Posta sunucu adresi
+		Mail.Host = firmaBilgileri("firma_mail_host")                                           ' E-Posta sunucu adresi
+        Mail.Port = CInt(firmaBilgileri("firma_mail_port"))
+        Mail.TLS = mailTLS
+		Mail.Username = firmaBilgileri("firma_mail")                                            ' Gönderim adresi
+		Mail.Password = firmaBilgileri("firma_mail_sifre")                                      ' Gönderen hesabın şifresi
+		Mail.From = firmaBilgileri("firma_mail")                                                ' E-Postayı gönderen adres
+		Mail.FromName = Mail.EncodeHeader(firmaBilgileri("firma_adi"), "UTF-8")                 ' E-Posta gönderen isim
+		Mail.AddAddress e_posta                                                                 ' Alıcı e-posta adresi
+		Mail.AddReplyTo firmaBilgileri("firma_mail")                                            ' Alıcı yanıtladığında gidecek adres
+		Mail.Subject = Mail.EncodeHeader(firmaBilgileri("firma_adi") & " - " & konu, "UTF-8")   ' Mail konusu
+		Mail.Body = antet_ust & maill & antet_alt                                               ' Mail içeriği
 		Mail.IsHTML = True
         Mail.CharSet = "UTF-8"
-        if ek_dosya = "undefined" then
-            
+
+        if ek_dosya = "undefined" then            
         else
             sName = server.MapPath(ek_dosya)
             Mail.AddAttachment sName
         End If
-
-       
-
 
 		Mail.Send
 
@@ -2086,6 +2090,9 @@
         End If
 
         Response.End
+        else
+            Response.Write "<center><img src='/img/uyari.png' /><br><br><strong>" & LNG("Mail Entegrasyonunuz Yapılmamıştır...") & "</strong></center>"
+        end if
 
     end if 
 

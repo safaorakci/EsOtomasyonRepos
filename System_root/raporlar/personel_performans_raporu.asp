@@ -93,11 +93,11 @@
                         </div>
                         <div class="col-sm-12 col-md-2">
                             <%=LNG("Başlangıç")%><br />
-                            <input type="text" id="baslangic_tarihi" value="<%=cdate(date) %>" class="takvimyap_yeni form-control" />
+                            <input type="text" id="baslangic_tarihi" value="<%=FormatDate(date, "00") %>" class="takvimyap_yeni form-control" />
                         </div>
                         <div class="col-sm-12 col-md-2">
                             <%=LNG("Bitiş")%><br />
-                            <input type="text" id="bitis_tarihi" value="<%=cdate(date) %>" class="takvimyap form-control" />
+                            <input type="text" id="bitis_tarihi" value="<%=FormatDate(date, "00") %>" class="takvimyap form-control" />
                         </div>
                         
 

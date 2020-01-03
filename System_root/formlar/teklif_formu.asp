@@ -14,6 +14,13 @@
     SQL="SELECT personel_ad,personel_soyad FROM ucgem_firma_kullanici_listesi kullanici INNER JOIN satinalma_listesi satinalma on satinalma.ekleyen_id = kullanici.id WHERE satinalma.id = '"& satinalma_id &"'"
     set kullanici = baglanti.execute(SQL)
 
+    SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+    set firmaBilgileri = baglanti.execute(SQL)
+
+    firmaLogo = firmaBilgileri("firma_logo")
+    if firmaBilgileri("firma_logo") = "undefined" then
+        firmaLogo = ""    
+    end if
 %>
 <html lang="tr">
 <head>
@@ -28,7 +35,7 @@
             <tr>
                 <td colspan="2" style="vertical-align: middle; padding-bottom: 50px;">
                     <span style="float: left;">
-                        <img src="/images/esotomasyon_logo.png" style="width: 150px;" />
+                        <img src="<%=firmaLogo %>" style="width: 150px;" />
                     </span>
                     <br />
                     <center>
