@@ -1009,7 +1009,7 @@ function parcalar_autocomplete_calistir2() {
                                 SiparisPopup(IsId, ui.item.id, result.Sayi, adet, durum, result.Parca);
                             }
                             if (result.Durum == 0) {
-                                is_detay_parca_sectim(IsId, ui.item.id, adet, 0);
+                                is_detay_parca_sectim(IsId, ui.item.id, 0, adet);
                             }
                         }
                     });

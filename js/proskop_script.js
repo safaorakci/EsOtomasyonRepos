@@ -110,7 +110,28 @@ function durum_guncelleme_calistir(tablo, id) {
             mesaj_ver("Durum", "Kayıt Güncellenemedi", "warning");
         }
     });
+}
 
+function proje_kodu_durum(tablo, id) {
+    $.ajax({
+        type: "POST",
+        url: "/System_Root/ajax/islem1.aspx/ProjeKoduDurumGuncelle",
+        data: "{'tablo':'" + tablo + "', 'id':'" + id + "'}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (msg) {
+            console.log(msg);
+            if (msg.d == "true") {
+                mesaj_ver("Durum", "Kayıt Başarıyla Güncellendi", "success");
+            } else {
+                mesaj_ver("Durum", "Kayıt Güncellenemedi", "warning");
+            }
+        },
+        fail: function () {
+            mesaj_ver("Durum", "Kayıt Güncellenemedi", "warning");
+        }
+    });
 }
 
 function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum, parcaBilgisi) {
@@ -4539,17 +4560,13 @@ function personel_ajandasi_getir(personel_id, nesne) {
     $(nesne).parent("li").addClass("tab-current");
 
     setTimeout(function () {
-
         var data = "islem=personel_ajandasi_getir";
         data += "&personel_id=" + personel_id;
         data = encodeURI(data);
         $("#personel_ajanda").loadHTML({ url: "/ajax_request/", data: data }, function () {
             ajanda_calistir();
         });
-
-
     }, 200);
-
 }
 
 
@@ -8828,7 +8845,6 @@ function talep_fisleri_getir() {
     $("#talep_listesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
         datatableyap();
     });
-
 }
 
 function user_list() {
@@ -8977,7 +8993,7 @@ function ServisBakimKaydiEkle() {
 
     var data = "islem=YeniServisBakimKaydiEkle&islem2=ekle";
     data += "&firmaunvani=" + $("#firmaadi").val();
-    if ($("#musteri_id").val() > 0) {
+    if ($("#textyetkili").is(':visible') == false) {
         var value = $("#selectyetkilikisi").find('option:selected');
         var result = value.attr("name");
         data += "&firmayetkili=" + result;
@@ -9013,7 +9029,7 @@ function ServisBakimKaydiEkle() {
     data += "&listeyeekle=" + $("#listeyeekle").is(":checked");
     data = encodeURI(data);
 
-    if ($("#servisbakimkaydi input:not(input[type=button])").valid("valid")) {
+    if ($("#servisbakimkaydi input:not(input[type=button], input#yetkilikisi)").valid("valid")) {
         if ($("#firmagorevli").val().length > 0) {
             $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
                 mesaj_ver("Servis Bakım Formu", "Kayıt Başarıyla Eklendi.", "success");
@@ -9140,7 +9156,7 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
     var data = "islem=YeniServisBakimKaydiEkle&islem2=duzenle";
     data += "&kayitId=" + kayitId;
     data += "&firmaunvani=" + $("#firmaadi").val();
-    if ($("#musteri_id").val() > 0) {
+    if ($("#textyetkili").is(':visible') == false) {
         var value = $("#selectyetkilikisi").find('option:selected');
         var result = value.attr("name");
         data += "&firmayetkili=" + result;
@@ -9178,7 +9194,7 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
     data += "&listeyeekle=" + $("#listeyeekle").is(":checked");
     data = encodeURI(data);
 
-    if ($("#servisbakimduzenle input:not(input[type=button])").valid("valid")) {
+    if ($("#servisbakimduzenle input:not(input[type=button], input#yetkilikisi)").valid("valid")) {
         if ($("#firmagorevli").val().length > 0) {
             $("#servis_kayit").loadHTML({ url: "/ajax_request5/", data: data }, function () {
                 mesaj_ver("Servis Bakım Formu", "Kayıt Başarıyla Düzenlendi.", "success");
@@ -9196,11 +9212,9 @@ function YeniMusteriOlustur() {
     //$("#musteri_id").attr("disabled");
 }
 
-function musteribilgilerial() {
+function musteribilgilerial(state) {
     var ID = $("#musteri_id").val();
     var pathname = window.location.origin;
-    $("#textyetkili").hide();
-    $("#selectyetkili").show();
 
     $.ajax({
         type: 'POST',
@@ -9241,28 +9255,215 @@ function musteribilgilerial() {
                 y4 = "<option name = '" + bilgi[0].yetkili4_adi + "' value='" + bilgi[0].yetkili4_adi.replace(' ', '') + "'>" + bilgi[0].yetkili4_adi + "</option >";
             }
             $("#selectyetkilikisi").children().remove().end().append(y1 + y2 + y3 + y4);
+            var yetkili = $("#yetkilikisi").val().replace(' ', '');
+            var txtYetkili = $("#yetkilikisi").val();
 
-            console.log($("#yetkilikisi").val());
-
-            $("#selectyetkilikisi option[value=" + $("#yetkilikisi").val().replace(' ', '') + "]").attr('selected', 'selected');
+            if (state === "edit") {
+                if (txtYetkili !== bilgi[0].yetkili1_adi && txtYetkili !== bilgi[0].yetkili2_adi && txtYetkili !== bilgi[0].yetkili3_adi && txtYetkili !== bilgi[0].yetkili4_adi && txtYetkili.length > 0) {
+                    $("#selectyetkili").hide();
+                    $("#textyetkili").show();
+                }
+                else {
+                    $("#textyetkili").hide();
+                    $("#selectyetkili").show();
+                    //$("#selectyetkilikisi option[value='" + yetkili + "']").attr('selected', 'selected');
+                }
+            }
+            else {
+                $("#textyetkili").hide();
+                $("#selectyetkili").show();
+                $("#selectyetkilikisi option[value='" + yetkili + "']").attr('selected', 'selected');
+            }
         }
     });
 }
 
-//function yetkiliBilgi() {
-//    $.ajax({
-//        type: 'POST',
-//        contentType: 'application/json; charset=utf-8',
-//        url: pathname + "/System_Root/ajax/islem1.aspx/yetkilibilgilerial",
-//        data: JSON.stringify({ Id: ID }),
-//        dataType: "JSON",
-//        error: function (xhr) {
+function ParametreDegerAl(url) {
+    var parametr = {
+        GrupId: $("#grupAdi").val()
+    };
+    GenericAjax(url, parametr, ParametreDegerAlSuccess, true);
+}
 
-//        },
-//        success: function (data) {
-//            var bilgi = jQuery.parseJSON(data.d);
+function ParametreDegerAlSuccess(data) {
+    $("#grupdegerleri").empty();
 
+    var result = jQuery.parseJSON(data.d);
 
-//        }
-//    });
-//}
+    var d = new Date();
+    var strDate = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+
+    for (var i = 0; i < result.length; i++) {
+        var tip = result[i].Tip;
+        var parametre = result[i].GrupParametre;
+        var Id = result[i].HatirlaticiGrupID;
+
+        if (tip === "Metin") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='text' paramId='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
+        }
+        if (tip === "Sayi") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='number' min='1' paramId='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
+        }
+        if (tip === "Tarih") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <div class='input-group input-group-primary mb-1' style='margin-bottom:0px'> <span class='input-group-addon'><i class='icon-prepend fa fa-calendar'></i></span> <input type='text' paramId='" + Id + "' class='takvimyap form-control' /> </div>");
+        }
+    }
+    $("#grupdegerleri").append("<button type='button' class='btn btn-success mt-3 float-right' onclick='GrupDegerKaydet();'>Kaydet</button>");
+    sayfa_yuklenince();
+}
+
+function GrupDegerKaydet() {
+    var grupId = $("#grupAdi").val();
+    var data = "islem=grup_deger_kaydet&islem2=ekle";
+    var elementCount = $("#grupDeger input").length;
+    var params = [];
+    $("#grupDeger input").each(function () {
+        params.push($(this).val());
+    });
+
+    for (var i = 0; i < params.length; i++) {
+        if (data === "") {
+            data = "value" + i + "=" + params[i];
+        }
+        else {
+            data += "&value" + i + "=" + params[i];
+        }
+    }
+    data += "&grupId=" + grupId;
+    data += "&count=" + elementCount;
+    console.log(data);
+
+    $("#parametreDeger").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        mesaj_ver("Parametre Değerleri", "Ekleme Işlemi Başarılı", "success");
+        datatableyap();
+    });
+}
+
+function GrupParametreKaydet(url) {
+    var parametr = {
+        grupId: $("#gruplar").val(),
+        parametreAdi: $("#parametreAdi").val(),
+        parametreTipi: $("#parametreTipi").val()
+    };
+    GenericAjax(url, parametr, GrupParametreSuccess, true);
+    datatableyap();
+}
+
+function GrupParametreSuccess() {
+    mesaj_ver("Parametre Tanımı", "Ekleme İşlemi Başarılı", "success");
+    GrupParametreleri();
+}
+
+function HatirlaticiGrupKaydet(url) {
+    var parametr = {
+        grupAdi: $("#grupAdi").val()
+    };
+    GenericAjax(url, parametr, HatirlaticiGrupSuccess, true);
+}
+
+function HatirlaticiGrupSuccess(data) {
+    $("#parametre").trigger("click");
+    mesaj_ver("Grup Tanımı", "Ekleme İşlemi Başarılı", "success");
+    $("#grupAdi").val("");
+    var result = jQuery.parseJSON(data.d);
+    if (result.grupId !== 0 || result.grupId !== null) {
+        $("#gruplar").append("<option selected value='" + result.grupId + "'> " + result.grupAdi + " </option>");
+    }
+}
+
+function GenericAjaxError() {
+
+    //var result = jQuery.parseJSON(data.d);
+    //if (result.durum === "false") {
+    //    mesaj_ver(loc, "Ekleme İşlemi Başarısız Bu Parametre Zaten Var.", "danger");
+    //}
+    //else { mesaj_ver(loc, "Ekleme İşlemi Başarısız", "danger"); }
+
+    mesaj_ver("Hatırlatıcı", "Ekleme İşlemi Başarısız", "danger");
+}
+
+function GenericAjax(url, parameters, successFunc, async) {
+    var pathname = window.location.origin;
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        url: pathname + url,
+        data: JSON.stringify(parameters),
+        dataType: "JSON",
+        async: async,
+        error: GenericAjaxError,
+        success: successFunc
+    });
+}
+
+function GrupParametreleri() {
+    var data = "islem=grup_parametreleri";
+    $("#grupList").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        datatableyap();
+    });
+}
+
+function ParametreDegerleri() {
+    var data = "islem=grup_deger_kaydet";
+    $("#parametreDeger").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        sayfa_yuklenince();
+    });
+}
+
+function Hatirlatma() {
+    $("#panel_hatirlatici").slideToggle();
+
+    if ($("#haritlatma").is(":checked") === true) {
+        var tip = $("#parametreTipi").val();
+        if (tip === "Tarih") {
+            $("#sayi").hide();
+            $("#hatirlama_adi1").html("Tarihinde Hatırlat");
+            $("#ilkYazi").html("Tarihinden");
+            $("#ikinciYazi").html("gün önce hatırlat");
+        }
+        else if (tip === "Sayi") {
+            $("#sayi").show();
+            $("#hatirlama_adi1").html("Bu sayıya gelince hatırlat");
+            $("#ilkYazi").html("Bu sayıya");
+            $("#ikinciYazi").html("kala hatırlat");
+        }
+    }
+}
+
+function tip() {
+    var tip = $("#parametreTipi").val();
+    if ($("#haritlatma").is(":checked") === true) {
+        if (tip === "Tarih") {
+            $("#panel_hatirlatici").show();
+            $("#hatirlatma").show();
+            $("#sayi").hide();
+            $("#hatirlama_adi1").html("Tarihinde Hatırlat");
+            $("#ilkYazi").html("Tarihinden");
+            $("#ikinciYazi").html("gün önce hatırlat");
+        }
+        else if (tip === "Sayi") {
+            $("#panel_hatirlatici").show();
+            $("#hatirlatma").show();
+            $("#sayi").show();
+            $("#hatirlama_adi1").html("Bu sayıya gelince hatırlat");
+            $("#ilkYazi").html("Bu sayıya");
+            $("#ikinciYazi").html("kala hatırlat");
+        }
+        else {
+            $("#panel_hatirlatici").hide();
+            $("#hatirlatma").hide();
+        }
+    }
+    else {
+        if (tip === "Tarih") {
+            $("#hatirlatma").show();
+        }
+        else if (tip === "Sayi") {
+            $("#hatirlatma").show();
+        }
+        else {
+            $("#panel_hatirlatici").hide();
+            $("#hatirlatma").hide();
+        }
+    }
+}

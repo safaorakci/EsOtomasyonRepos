@@ -72,11 +72,11 @@
                         <a href="/default.aspx">
                             <%if (firma.Title == "ESFLW")
                                 { %>
-                                <img class="img-fluid" style="max-height: 50px;" src="images/proyeni_logo.png" />
+                            <img class="img-fluid" style="max-height: 50px;" src="images/proyeni_logo.png" />
                             <%} %>
                             <%else
-                            { %>
-                                <img class="img-fluid" style="max-height: 50px;" src="images/ahtapot_buyuk2.png"/>
+                                { %>
+                            <img class="img-fluid" style="max-height: 50px;" src="images/ahtapot_buyuk2.png" />
                             <%} %>
                         </a>
                         <a class="mobile-options">
@@ -421,12 +421,28 @@
 
                                 <%if (yetkiler.hatirlatici == true)
                                     {%>
-                                <li class="">
-                                    <a href="javascript:void(0);" onclick="sayfagetir('/hatirlatici/','jsid=4559');">
-                                        <span class="pcoded-micon"><i class="fa fa-clock-o"></i><b>N</b></span>
-                                        <span class="pcoded-mtext">Hatırlatıcı</span>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="fa fa-clock-o"></i><b>BC</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Hatırlatıcı")); %></span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
+                                    <ul class="pcoded-submenu">
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/hatirlatici/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
+                                                <span class="pcoded-mtext">Grup & Paramerte Tanımı</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/parametredeger/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
+                                                <span class="pcoded-mtext">Parametre Değer Tanımı</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <%} %>
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",70,") > 0)
@@ -494,7 +510,7 @@
                                         <li class=" ">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/proje_adam_saat_raporu/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext"><% Response.Write(LNG("Proje Adam-Saat Raporu")); %></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Personel Adam-Saat Raporu")); %></span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
@@ -516,7 +532,7 @@
                                         <li class=" ">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/personel_adam_saat_raporu/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext"><% Response.Write(LNG("Personel Adam-Saat Raporu")); %></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Proje Adam-Saat Raporu")); %></span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>

@@ -27,7 +27,6 @@
     End If
 
     domainName= Request.ServerVariables("SERVER_NAME") 
-    queryString= Request.ServerVariables("QUERY_STRING")
     
     url = domainName
     If Len(queryString) <> 0 Then
@@ -544,6 +543,10 @@
                 <option value="KİLOGRAM">KİLOGRAM</option>
                 <option value="METRE">METRE</option>
                 <option value="ADET">ADET</option>
+                <option value="M2">M2</option>
+                <option value="MM">MM</option>
+                <option value="CM">CM</option>
+                <option value="SET">SET</option>
             </select>
         </div>
     </div>
@@ -659,6 +662,10 @@
                 <option <%if trim(parca("birim")) = "KİLOGRAM" then %> selected="selected" <%end if %> value="KİLOGRAM">KİLOGRAM</option>
                 <option <%if trim(parca("birim")) = "METRE" then %> selected="selected" <%end if %> value="METRE">METRE</option>
                 <option <%if trim(parca("birim")) = "ADET" then %> selected="selected" <%end if %> value="ADET">ADET</option>
+                <option <%if trim(parca("birim")) = "M2" then %> selected="selected" <%end if %> value="M2">M2</option>
+                <option <%if trim(parca("birim")) = "MM" then %> selected="selected" <%end if %> value="MM">MM</option>
+                <option <%if trim(parca("birim")) = "CM" then %> selected="selected" <%end if %> value="CM">CM</option>
+                <option <%if trim(parca("birim")) = "SET" then %> selected="selected" <%end if %> value="SET">SET</option>
             </select>
         </div>
     </div>
@@ -3770,9 +3777,6 @@ works properly when clicked or hovered */
 
                     SQL="update is_parca_listesi set Adet = Adet + '"& parcaAdet("adet") &"', StoktanKullanilanAdet = StoktanKullanilanAdet + '"& StoktanKullanilanSayi &"', SiparisVerilenAdet = SiparisVerilenAdet + '"& SiparisVerilenSayi &"' where ParcaId = '"& parcaAdet("id") &"' and IsID = '"& IsID &"'"
                     set guncelle = baglanti.execute(SQL)
-                    
-                    'SQL="insert into is_parca_listesi(IsID, ParcaId, Adet, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, StoktanKullanilanAdet, SiparisVerilenAdet) select '"& IsID &"', id, adet, 'true', 'false', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"', '"& StoktanKullanilanSayi &"', '"& SiparisVerilenSayi &"' from (SELECT (ROW_NUMBER() OVER(ORDER BY grup.adet)) AS sira, c.[Value] AS id, a.[Value] AS adet FROM parca_grup_listesi grup CROSS APPLY (SELECT Pos, Value FROM [dbo].[SplitString](grup.parcalar,',')) c CROSS APPLY (SELECT Pos, Value FROM [dbo].[SplitString](grup.adet,',')) a WHERE c.Pos = a.Pos and grup.id = '"& AgacId &"') as t where sira = '"& c &"'"
-                    'set ekle = baglanti.execute(SQL)
 
                     SQL = "select adi, case when departmanlar like '%proje-%' then SUBSTRING((select value from string_split(departmanlar, ',') where value like '%proje-%'), CHARINDEX('-', (select value from string_split(departmanlar, ',') where value like '%proje-%' )) + 1, 10) else '0' end as ProjeID from ucgem_is_listesi where id = '"& IsID &"'"
                     set isListesi = baglanti.execute(SQL)
@@ -3918,12 +3922,13 @@ works properly when clicked or hovered */
 
             StoktanKullanilanSayi = 0
             SiparisVerilenSayi = AdetSayisi
-            if CInt(stokSayisi("miktar")) > CInt(AdetSayisi) then
-                StoktanKullanilanSayi = AdetSayisi
-            elseif CInt(stokSayisi("miktar")) < CInt(AdetSayisi) then
+
+            if CInt(stokSayisi("miktar")) > CInt(ToplamAdet) then
+                StoktanKullanilanSayi = ToplamAdet
+            elseif CInt(stokSayisi("miktar")) < CInt(ToplamAdet) then
                 StoktanKullanilanSayi = stokSayisi("miktar")
             else
-                StoktanKullanilanSayi = stokSayisi("miktar")
+                StoktanKullanilanSayi = ToplamAdet
             end if
 
             if varmi.eof then
@@ -4021,43 +4026,43 @@ works properly when clicked or hovered */
 
                     sonuc = parcalar("miktar") - ToplamAdet
                     if sonuc < parcalar("minumum_miktar") then
-                        if parcalar("miktar") > AdetSayisi Then
-                            sonuc = parcalar("miktar") - AdetSayisi 
-                            SQL="update parca_listesi set miktar ='"& sonuc &"' where id = '"& ParcaId &"'"
+                        if parcalar("miktar") > ToplamAdet Then
+                            sonuc = parcalar("miktar") - ToplamAdet 
+                            SQL="update parca_listesi set miktar = '"& sonuc &"' where id = '"& ParcaId &"'"
                             set guncelle = baglanti.execute(SQL)
                         else
                             if sonuc < 0 then
                                 SQL="update parca_listesi set miktar = 0 where id = '"& ParcaId &"'"
                                 set guncelle = baglanti.execute(SQL)
                                 else
-                                SQL="update parca_listesi set miktar ='"& sonuc &"' where id = '"& ParcaId &"'"
+                                SQL="update parca_listesi set miktar = '"& sonuc &"' where id = '"& ParcaId &"'"
                                 set guncelle = baglanti.execute(SQL)
                             end if
                             
                         end if
                     else
-                        SQL="update parca_listesi set miktar = miktar - '"& AdetSayisi &"' where id = '"& ParcaId &"'"
+                        SQL="update parca_listesi set miktar = miktar - '"& ToplamAdet &"' where id = '"& ParcaId &"'"
                         set guncelle = baglanti.execute(SQL)
                     end if
                         
                 else
                     sonuc = parcalar("miktar") - ToplamAdet
                     if sonuc < parcalar("minumum_miktar") then
-                        if parcalar("miktar") > AdetSayisi then
-                            sonuc = parcalar("miktar") - AdetSayisi
-                            SQL="update parca_listesi set miktar ='"& sonuc &"' where id = '"& ParcaId &"'"
+                        if parcalar("miktar") > ToplamAdet then
+                            sonuc = parcalar("miktar") - ToplamAdet
+                            SQL="update parca_listesi set miktar = '"& sonuc &"' where id = '"& ParcaId &"'"
                             set guncelle = baglanti.execute(SQL)
                         else
                             if sonuc < 0 then
                                 SQL="update parca_listesi set miktar = 0 where id = '"& ParcaId &"'"
                                 set guncelle = baglanti.execute(SQL)
                             else
-                                SQL="update parca_listesi set miktar ='"& sonuc &"' where id = '"& ParcaId &"'"
+                                SQL="update parca_listesi set miktar = '"& sonuc &"' where id = '"& ParcaId &"'"
                                 set guncelle = baglanti.execute(SQL)
                             end if
                         end if
                     else
-                        SQL="update parca_listesi set miktar = miktar - '"& AdetSayisi &"' where id = '"& ParcaId &"'"
+                        SQL="update parca_listesi set miktar = miktar - '"& ToplamAdet &"' where id = '"& ParcaId &"'"
                         set guncelle = baglanti.execute(SQL)
                     end if
 
@@ -4068,18 +4073,7 @@ works properly when clicked or hovered */
                 SQL = "select * from parca_listesi where id = '"& ParcaId &"'"
                 set stokSayisi = baglanti.execute(SQL)
 
-                StoktanKullanilanSayi = 0
-                SiparisVerilenSayi = ToplamAdet
-
-                if CInt(stokSayisi("miktar")) > AdetSayisi then
-                    StoktanKullanilanSayi = AdetSayisi
-                elseif CInt(stokSayisi("miktar")) < AdetSayisi then
-                    StoktanKullanilanSayi = stokSayisi("miktar")
-                else
-                    StoktanKullanilanSayi = stokSayisi("miktar")
-                end if
-
-                SQL="update is_parca_listesi set Adet = Adet + '"& AdetSayisi &"', StoktanKullanilanAdet = StoktanKullanilanAdet + '"& StoktanKullanilanSayi &"', SiparisVerilenAdet = SiparisVerilenAdet + '"& SiparisVerilenSayi &"' where id = '"& varmi("id") &"'"
+                SQL="update is_parca_listesi set Adet = Adet + '"& ToplamAdet &"', StoktanKullanilanAdet = StoktanKullanilanAdet + '"& StoktanKullanilanSayi &"', SiparisVerilenAdet = SiparisVerilenAdet + '"& SiparisVerilenSayi &"' where id = '"& varmi("id") &"'"
                 set guncelle = baglanti.execute(SQL)
 
                SQL = "select * from parca_listesi where id = '"& ParcaId &"'"
@@ -4129,7 +4123,7 @@ works properly when clicked or hovered */
                          set siparisFormuVarmi = baglanti.execute(SQL)
 
                          if siparisFormuVarmi.eof then
-                                SQL = "SET NOCOUNT ON; insert into satinalma_listesi(IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& IsID &"', '"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', REPLACE('"& toplamTL &"', ',', '.'), REPLACE('"& toplamUSD &"', ',', '.'), REPLACE('"& toplamEUR &"', ',', '.'), '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
+                                SQL = "SET NOCOUNT ON; insert into satinalma_listesi(IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& IsID &"', '"& baslik &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& oncelik &"', '"& tedarikci &"', '"& projeID &"', REPLACE('"& toplamTL &"', ',', '.'), REPLACE('"& toplamUSD &"', ',', '.'), REPLACE('"& toplamEUR &"', ',', '.'), '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"'); SELECT SCOPE_IDENTITY() id;"
                                 set satinalmaListesi = baglanti.execute(SQL)
    
                                 satinalmaId = satinalmaListesi(0)
@@ -4167,8 +4161,8 @@ works properly when clicked or hovered */
 
                     sonuc = parcalar("miktar") - ToplamAdet
                     if sonuc < parcalar("minumum_miktar") then
-                        if parcalar("miktar") > AdetSayisi then
-                            sonuc = parcalar("miktar") - AdetSayisi
+                        if parcalar("miktar") > ToplamAdet then
+                            sonuc = parcalar("miktar") - ToplamAdet
                             SQL="update parca_listesi set miktar = '"& sonuc &"' where id = '"& ParcaId &"'"
                             set guncelle = baglanti.execute(SQL)
                         else
@@ -4181,15 +4175,15 @@ works properly when clicked or hovered */
                             end if
                         end if
                     else
-                        SQL="update parca_listesi set miktar = miktar - '"& AdetSayisi &"' where id = '"& ParcaId &"'"
+                        SQL="update parca_listesi set miktar = miktar - '"& ToplamAdet &"' where id = '"& ParcaId &"'"
                         set guncelle = baglanti.execute(SQL)
                     end if
                         
                 else
                     sonuc = parcalar("miktar") - ToplamAdet
                     if sonuc < parcalar("minumum_miktar") then
-                        if parcalar("miktar") > AdetSayisi then
-                            sonuc = parcalar("miktar") - AdetSayisi
+                        if parcalar("miktar") > ToplamAdet then
+                            sonuc = parcalar("miktar") - ToplamAdet
                             SQL="update parca_listesi set miktar ='"& sonuc &"' where id = '"& ParcaId &"'"
                             set guncelle = baglanti.execute(SQL)
                         else
@@ -4202,7 +4196,7 @@ works properly when clicked or hovered */
                             end if
                         end if
                     else
-                        SQL="update parca_listesi set miktar = miktar - '"& AdetSayisi &"' where id = '"& ParcaId &"'"
+                        SQL="update parca_listesi set miktar = miktar - '"& ToplamAdet &"' where id = '"& ParcaId &"'"
                         set guncelle = baglanti.execute(SQL)
                     end if
 

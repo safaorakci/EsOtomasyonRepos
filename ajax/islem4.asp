@@ -76,6 +76,7 @@
 
                         SQL="Exec [dbo].[ProjeIsYukuCetveli] @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @gosterim_tipi = '"& gosterim_tipi &"';"
                         set cetvel = baglanti.execute(sql)
+                        'response.Write(SQL)
 
                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
@@ -422,7 +423,7 @@
                                     <%
                                         SQL="EXEC dbo.DepartmanAdamSaatCetveli @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& cdate(dongu_baslangic) &"', @bitis = '"& cdate(dongu_bitis) &"', @etiketler = '"& etiketler &"', @rapor_personel_id = '"& rapor_personel_id &"';"
                                         set cetvel = baglanti.execute(sql)
-                                        response.Write(SQL)
+                                        'response.Write(SQL)
 
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
@@ -1060,7 +1061,7 @@
                                         proje_str = " AND proje.id = '"& yeni_is_yuku_proje_id &"'"
                                     end if
 
-                                    SQL="SELECT proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &")) AS gosterge_sayisi, ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &")) AS gosterge_sayisi2 FROM dbo.ucgem_proje_listesi proje where proje.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& proje_str  &" AND proje.cop = 'false' AND proje.durum = 'true' AND ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false'"& kullanici_str2 &  tarih_str & etiket_str &")) > 0 GROUP BY proje.proje_adi, proje.id;"
+                                    SQL="SELECT proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'" & kullanici_str2 &  tarih_str & etiket_str &")) AS gosterge_sayisi, ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'"& kullanici_str2 &  tarih_str & etiket_str &")) AS gosterge_sayisi2 FROM dbo.ucgem_proje_listesi proje where proje.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& proje_str  &" AND proje.cop = 'false' AND proje.durum = 'true' AND ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'"& kullanici_str2 &  tarih_str & etiket_str &")) > 0 GROUP BY proje.proje_adi, proje.id;"
                                     set sayilar = baglanti.execute(SQL)
                                     'response.Write(SQL)
         %>
@@ -1547,7 +1548,7 @@
                     <%               
 
                                         SQL="EXEC dbo.ProjeAdamSaatCetveliRapor @proje_id = '"& yeni_is_yuku_proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @rapor_personel_id = '"& rapor_personel_id &"', @etiketler = '"& etiketler &"';"
-                        'response.Write(SQL)
+                                        'response.Write(SQL)
                                         set cetvel = baglanti.execute(sql)
 
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1

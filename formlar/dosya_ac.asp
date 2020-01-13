@@ -25,6 +25,9 @@
        url = url & "?" & queryString
     End If
 
+    'url = Replace(url, "dosya_ac/localhost/", "")
+    'response.Write(url)
+
     if ubound(gp)<4 then
         Response.End
     end if
@@ -36,6 +39,7 @@
 
             SQL="select * from ahtapot_dosya_deposu where id = '"& dosya_id &"' and firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
             set dosya = baglanti.execute(SQL)
+
             if dosya.eof then
                 Response.Write "" & LNG("Bu Dosyayı Görmeye Yetkili Değilsiniz !") & ""
             else

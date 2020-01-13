@@ -10,6 +10,9 @@
     SQL="select gorev.gorev_adi, kullanici.* from ucgem_firma_kullanici_listesi kullanici join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.id = '"& personel_id &"' and kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
     set personel = baglanti.execute(SQL)
 
+    SQL = "select * from tbl_ModulYetkileri where FirmaId = '"& Request.Cookies("kullanici")("firma_id") &"'"
+    set tblModulYetkiler = baglanti.execute(SQL)
+
     personel_resim = personel("personel_resim")
     if len(trim(personel_resim))<15 then
         personel_resim = "/img/user.png"
@@ -49,6 +52,21 @@
     </div>
 </div>
 
+                    <%
+                        Bordro = False
+                        Dosyalar = False
+                        if not tblModulYetkiler.eof then
+                            do while not tblModulYetkiler.eof
+                                if tblModulYetkiler("ModulId") = 2 and tblModulYetkiler("Status") = True then
+                                    Bordro = True
+                                end if
+                                if tblModulYetkiler("ModulId") = 3 and tblModulYetkiler("Status") = True then
+                                    Dosyalar = True
+                                end if
+                            tblModulYetkiler.movenext
+                            loop
+                        end if
+                    %>
 
 <div class="row">
     <div class="col-lg-12">
@@ -60,8 +78,12 @@
                     <li class="nav-link_yeni"><a href="#giris_cikis" onclick="profil_personel_giris_cikis_getir('<%=personel_id %>', this);" class="icon icon-box"><span><%=LNG("Giriş-Çıkış Bilgileri")%></span></a></li>
                     <li class="nav-link_yeni"><a href="#izin_bilgileri" onclick="profil_personel_izin_getir('<%=personel_id %>', this);" class="icon icon-display"><span><%=LNG("İzin Bilgileri")%></span></a></li>
                     <li class="nav-link_yeni"><a href="#mesai_bilgileri" onclick="profil_personel_mesai_getir('<%=personel_id %>', this);" class="icon icon-upload"><span><%=LNG("Mesai Bilgileri")%></span></a></li>
+                    <%if Dosyalar = True then %>
                     <li class="nav-link_yeni"><a href="#dosyalar" onclick="profil_personel_dosya_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Dosyalar")%></span></a></li>
+                    <%end if %>
+                    <%if Bordro = True then %>
                     <li class="nav-link_yeni"><a href="#bordrolar" onclick="profil_personel_bordro_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Bordrolarım")%></span></a></li>
+                    <%end if %>
                 </ul>
             </nav>
             <div class="content-wrap">

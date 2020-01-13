@@ -44,7 +44,7 @@
     <section id="widget-grid">
         <div class="row">
             <div class="col-xs-12 col-sm-6">
-                <button onclick="is_listesi_gosterge('benim_tum');" type="button" class="btn btn-primary btn-lg btn-block" style="-webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size: 13px;"><i class="fa fa-child"></i>&nbsp;&nbsp;<% Response.Write(LNG("Bana Verilen İşler")); %></button>
+                <button onclick="is_listesi_gosterge('benim_tum');" type="button" class="btn btn-lg btn-block" style="-webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size: 13px; background-color: #e2e2e2; border: 1px solid #ccc; border-bottom: none;"><i class="fa fa-child"></i>&nbsp;&nbsp;<% Response.Write(LNG("Bana Verilen İşler")); %></button>
                 <div class="well well-sm well-light" style="padding: 0; background-color: white; -webkit-border-bottom-right-radius: 15px; -webkit-border-bottom-left-radius: 15px; -moz-border-radius-bottomright: 15px; -moz-border-radius-bottomleft: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;">
                     <div class="row" style="margin: 0;">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ustunegelince" style="border: 1px dotted #dfe5e9; margin: 0;">
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="col-xs-12 col-sm-6">
-                <button type="button" onclick="is_listesi_gosterge('baskasi_tumu');" class="btn btn-danger btn-lg btn-block" style="-webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size: 12px;">
+                <button type="button" onclick="is_listesi_gosterge('baskasi_tumu');" class="btn btn-lg btn-block" style="-webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size: 12px; background-color: #e2e2e2; border: 1px solid #ccc; border-bottom: none;">
                     <i class="fa fa-group"></i>&nbsp;&nbsp;<% Response.Write(LNG("Başkalarına Verdiğim İşler")); %></button>
                 <div class="well well-sm well-light" style="padding: 0; background-color: white; -webkit-border-bottom-right-radius: 15px; -webkit-border-bottom-left-radius: 15px; -moz-border-radius-bottomright: 15px; -moz-border-radius-bottomleft: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;">
                     <div class="row" style="margin: 0;">

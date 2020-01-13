@@ -64,7 +64,7 @@
         DIM objScript
         SET objScript = Server.CreateObject("ScriptControl")
         objScript.Language = "JavaScript"
-        URLDecodes = objScript.Eval("decodeURIComponent(""" & str & """.replace(/\+/g,"" ""))")
+        URLDecodes = objScript.Eval("decodeURIComponent(""" & str & """.replace(/\+/g,"", ""))")
         SET objScript = NOTHING
 
     END FUNCTION
@@ -194,8 +194,6 @@
         NoktalamaDegis = Deger
     End Function
 
-
-    
     Function NoktalamaDegisMutlak(Deger)
         Deger = trim(Deger)
         if instr(Deger,",")>0 and instr(Deger,".")>0 then
@@ -393,19 +391,18 @@ Function RelativeTime(dt)
 
 
     Function FormatDate(SourceDate, DateFormat)
-	If IsDate(SourceDate) = False Then 'This is not a date value - return an error.
-		FormatDate = "[##ERROR! - Invalid Date: " & SourceDate & "]"
-	Else
-		
-		If DateFormat <> "00" Then 'Either no format specified or it wasn't leading zeros.
-			FormatDate = Trim(CStr(Day(SourceDate))) & "."&Trim(Cstr(Month(SourceDate)))  &FormatDate
-		Else	'Format requested includes leading zeros
-			If Day(SourceDate) < 10 Then FormatDate = FormatDate & "0" & Trim(CStr(Day(SourceDate))) Else  FormatDate=   Trim(CStr(Day(SourceDate))) & "." & FormatDate
-            If Month(SourceDate) < 10 Then FormatDate = FormatDate & ".0" & Trim(CStr(Month(SourceDate))) Else FormatDate = FormatDate & "."&Trim(CStr(Month(SourceDate)))  
-		End If
-    FormatDate = FormatDate &"." &CStr(Year(SourceDate))
-	End If
-End Function
+	    If IsDate(SourceDate) = False Then 'This is not a date value - return an error.
+	    	FormatDate = "[##ERROR! - Invalid Date: " & SourceDate & "]"
+	    Else
+	    	If DateFormat <> "00" Then 'Either no format specified or it wasn't leading zeros.
+	    		FormatDate = Trim(CStr(Day(SourceDate))) & "." & Trim(Cstr(Month(SourceDate))) & FormatDate
+	    	Else	'Format requested includes leading zeros
+	    		If Day(SourceDate) < 10 Then FormatDate = FormatDate & "0" & Trim(CStr(Day(SourceDate))) Else FormatDate = Trim(CStr(Day(SourceDate))) & "" & FormatDate
+                If Month(SourceDate) < 10 Then FormatDate = FormatDate & ".0" & Trim(CStr(Month(SourceDate))) Else FormatDate = FormatDate & "." &Trim(CStr(Month(SourceDate)))  
+	    	End If
+        FormatDate = FormatDate & "." &CStr(Year(SourceDate))
+	    End If
+    End Function
 
    
 %>

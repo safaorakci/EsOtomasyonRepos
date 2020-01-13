@@ -745,6 +745,7 @@
         <tr>
             <th style="width: 30px; ">ID</th>
             <th><% Response.Write(LNG("Durum Adı")); %></th>
+            <th style="width: 100px; text-align:center;"><% Response.Write(LNG("Proje Kodu Üret")); %></th>
             <th style="width: 40px; text-align:center;"><% Response.Write(LNG("Durum")); %></th>
             <th style="width: 60px;"><% Response.Write(LNG("İşlem")); %></th>
         </tr>
@@ -762,15 +763,12 @@
             <td class="idler" id="<%# DataBinder.Eval(Container.DataItem, "id") %>"><%# DataBinder.Eval(Container.DataItem, "sira") %></td>
             <td><%# DataBinder.Eval(Container.DataItem, "durum_adi") %></td>
             <td style="text-align:center;">
+               <asp:Label runat="server" ID="proje_kodu_label">
+                    <asp:CheckBox ID="proje_kodu" runat="server"></asp:CheckBox>                   </asp:Label>
+            </td>
+            <td style="text-align:center;">
                <asp:Label runat="server" ID="str2santiye_label">
-                    <asp:CheckBox ID="st2_santiye" runat="server"></asp:CheckBox>                   </asp:Label>                <%--
-                    <span class="onoffswitch">
-                        <asp:Label runat="server" class="onoffswitch-label" ID="str2santiye_label">
-                        <span class="onoffswitch-inner" data-swchon-text="AKTİF" data-swchoff-text="PASİF"></span>
-                        <span class="onoffswitch-switch"></span>
-                    </asp:Label>
-                </span>
-                --%>
+                    <asp:CheckBox ID="st2_santiye" runat="server"></asp:CheckBox>                   </asp:Label>
             </td>
             <td class="icon-list-demo2">
                 <a href="javascript:void(0);" rel="tooltip" onclick="santiye_durum_duzenle(<%# DataBinder.Eval(Container.DataItem, "id") %>);" data-placement="top" data-original-title="<% Response.Write(LNG("Proje Durum Düzenle")); %>">

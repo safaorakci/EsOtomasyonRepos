@@ -2177,7 +2177,38 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "update ucgem_proje_listesi set proje_firma_id = @proje_firma_id, santiye_durum_id = @santiye_durum_id, proje_adi = @proje_adi, enlem = @enlem, boylam = @boylam, supervisor_id = @supervisor_id, proje_departmanlari = @proje_departmanlari where id = @proje_id;";
+            ayarlar.cmd.CommandText = "select proje_kodu from tanimlama_santiye_durum_listesi where cop = 'false' and id = @id";
+            ayarlar.cmd.Parameters.AddWithValue("id", santiye_durum_id);
+            bool proje_kodu_durum = Convert.ToBoolean(ayarlar.cmd.ExecuteScalar());
+
+            string proje_kodu = "-";
+            if (proje_kodu_durum == true)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "select proje_kodu from ucgem_proje_listesi where cop = 'false' and durum = 'true' and id = @id order by id desc";
+                ayarlar.cmd.Parameters.AddWithValue("id", proje_id);
+                proje_kodu = Convert.ToString(ayarlar.cmd.ExecuteScalar());
+
+                if (proje_kodu == "-")
+                {
+                    ayarlar.baglan();
+                    ayarlar.cmd.CommandText = "SELECT CASE WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc), 0) = 0 THEN(select SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4)) WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc), 0) != 0 THEN(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc) ELSE(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc) END";
+                    proje_kodu = Convert.ToString(ayarlar.cmd.ExecuteScalar()); 
+                }
+            }
+            else
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "select proje_kodu from ucgem_proje_listesi where cop = 'false' and durum = 'true' and id = @id order by id desc";
+                ayarlar.cmd.Parameters.AddWithValue("id", proje_id);
+                proje_kodu = Convert.ToString(ayarlar.cmd.ExecuteScalar());
+            }
+
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update ucgem_proje_listesi set proje_firma_id = @proje_firma_id, santiye_durum_id = @santiye_durum_id, proje_adi = @proje_adi, enlem = @enlem, boylam = @boylam, supervisor_id = @supervisor_id, proje_departmanlari = @proje_departmanlari, proje_kodu = @proje_kodu where id = @proje_id;";
             ayarlar.cmd.Parameters.Add("proje_firma_id", firma_id);
             ayarlar.cmd.Parameters.Add("santiye_durum_id", santiye_durum_id);
             ayarlar.cmd.Parameters.Add("proje_adi", UIHelper.trn(proje_adi));
@@ -2186,6 +2217,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             ayarlar.cmd.Parameters.Add("supervisor_id", firma_supervisor_id);
             ayarlar.cmd.Parameters.Add("proje_id", proje_id);
             ayarlar.cmd.Parameters.Add("proje_departmanlari", proje_departmanlari);
+            ayarlar.cmd.Parameters.Add("proje_kodu", proje_kodu);
             ayarlar.cmd.ExecuteNonQuery();
 
         }
@@ -2688,7 +2720,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                                     ayarlar.baglan();
                                     ayarlar.cmd.Parameters.Clear();
                                     ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate());";
-                                    ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + "'" + yeni_adi + "' adlı işti düzenledi.");
+                                    ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + "'" + yeni_adi + "' adlı işi düzenledi.");
                                     ayarlar.cmd.Parameters.Add("tip", "is_listesi");
                                     ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
                                     ayarlar.cmd.Parameters.Add("user_id", gorevliID);
@@ -3179,6 +3211,28 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         ayarlar.cnn.Close();
 
         return donus;
+    }
+
+    [WebMethod]
+    public static string ProjeKoduDurumGuncelle(string tablo, int id)
+    {
+        string ret = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.CommandText = "update " + tablo + " set proje_kodu = case when proje_kodu = 'true' then 'false' else 'true' end where id = @Id";
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.Parameters.AddWithValue("@Id", id);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            ret = "false";
+        }
+        ayarlar.cnn.Close();
+
+        return ret;
     }
 
 
@@ -3906,7 +3960,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "insert into tanimlama_santiye_durum_listesi(durum_adi, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@durum_adi, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, @ekleme_tarihi, @ekleme_saati);";
+            ayarlar.cmd.CommandText = "insert into tanimlama_santiye_durum_listesi(durum_adi, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, proje_kodu) values(@durum_adi, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, @ekleme_tarihi, @ekleme_saati, @proje_kodu);";
             ayarlar.cmd.Parameters.Add("durum_adi", UIHelper.trn(durum_adi));
             ayarlar.cmd.Parameters.Add("durum", "true");
             ayarlar.cmd.Parameters.Add("cop", "false");
@@ -3916,6 +3970,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             ayarlar.cmd.Parameters.Add("ekleyen_ip", Request.ServerVariables["Remote_Addr"]);
             ayarlar.cmd.Parameters.Add("ekleme_tarihi", DateTime.Now);
             ayarlar.cmd.Parameters.Add("ekleme_saati", DateTime.Now);
+            ayarlar.cmd.Parameters.Add("proje_kodu", true);
             ayarlar.cmd.ExecuteNonQuery();
         }
 
@@ -4074,7 +4129,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         }
 
-
         if (islem2 == "ekle")
         {
             string proje_firma_id = UIHelper.trn(Request.Form["proje_firma_id"].ToString());
@@ -4085,12 +4139,21 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             string santiye_durum_id = UIHelper.trn(Request.Form["santiye_durum_id"].ToString());
             string proje_departmanlari = UIHelper.trn(Request.Form["proje_departmanlari"].ToString());
             int uretim_sablon_id = Convert.ToInt32(UIHelper.trn(Request.Form["uretim_sablon_id"].ToString()));
-
+            string proje_Id = "-";
 
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "SELECT CASE WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' order by id desc), 0) = 0 THEN(select SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4)) WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' order by id desc), 0) != 0 THEN(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' order by id desc) ELSE(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' order by id desc) END";
-            int proje_Id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+            ayarlar.cmd.CommandText = "select proje_kodu from tanimlama_santiye_durum_listesi where cop = 'false' and id = @Id";
+            ayarlar.cmd.Parameters.AddWithValue("Id", santiye_durum_id);
+            bool proje_kodu = Convert.ToBoolean(ayarlar.cmd.ExecuteScalar());
+
+            if (proje_kodu == true)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "SELECT CASE WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc), 0) = 0 THEN(select SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4)) WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc), 0) != 0 THEN(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc) ELSE(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc) END";
+                proje_Id = Convert.ToString(ayarlar.cmd.ExecuteScalar()); 
+            }
 
             ayarlar.cmd.Parameters.Clear();
             ayarlar.cmd.CommandText = "SET NOCOUNT ON; insert into ucgem_proje_listesi(guncelleme_tarihi, guncelleme_saati, guncelleyen_id, proje_departmanlari, santiye_durum_id, proje_adi, proje_firma_id, enlem, boylam, supervisor_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, proje_kodu) values(getdate(), getdate(), @ekleyen_id, @proje_departmanlari, @santiye_durum_id, @proje_adi, @proje_firma_id, @enlem, @boylam, @supervisor_id, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate(), @proje_Id); SELECT SCOPE_IDENTITY() id;";
@@ -4469,8 +4532,21 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             //str1_label.AssociatedControlID = "st2_santiye";
             str1_label.Attributes.Add("onclick", "durum_guncelleme_calistir('tanimlama_santiye_durum_listesi', '" + drow["id"].ToString() + "');");
             //str1_label.Attributes.Add("for", checkbox.ClientID.ToString());
+        }
 
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+            DataRowView drow = (DataRowView)e.Item.DataItem;
+            CheckBox checkbox = (CheckBox)e.Item.FindControl("proje_kodu");
+            checkbox.InputAttributes.Add("class", "js-switch");
 
+            if (Convert.ToBoolean(drow["proje_kodu"]) == true)
+            {
+                checkbox.Checked = true;
+            }
+            checkbox.ClientIDMode = ClientIDMode.Predictable;
+            Label str1_label = (Label)e.Item.FindControl("proje_kodu_label");
+            str1_label.Attributes.Add("onclick", "proje_kodu_durum('tanimlama_santiye_durum_listesi', '" + drow["id"].ToString() + "');");
         }
     }
 
@@ -4618,10 +4694,124 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
             ayarlar.cmd.CommandText = "EXEC dbo.dilayikla @kelimeler =  @kelimeler , @cikisdili = 'ingilizce';";
-            ayarlar.cmd.Parameters.Add("kelimeler", kelime);
+            ayarlar.cmd.Parameters.AddWithValue("kelimeler", kelime);
             ayarlar.cmd.ExecuteNonQuery();
         }
 
         return kelime;
+    }
+
+    public class GrupResult
+    {
+        public int grupId { get; set; }
+        public string grupAdi { get; set; }
+    }
+
+    [WebMethod]
+    public static string GrupTanimi(string grupAdi)
+    {
+        GrupResult grupResult = new GrupResult();
+        int GrupId;
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "set nocount on; insert into Hatirlatici.Grup(GrupAdi, OlusturanID, OlusturmaTarihi, Silindi) values(@grupAdi, @olusturanId, @olusturmaTarihi, @silindi); SELECT SCOPE_IDENTITY();";
+            ayarlar.cmd.Parameters.AddWithValue("grupAdi", grupAdi);
+            ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now.ToString());
+            ayarlar.cmd.Parameters.AddWithValue("silindi", false);
+            GrupId = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+            if (GrupId != 0)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "select * from Hatirlatici.Grup where Silindi = 'false' and HatirlaticiGrupID = @grupID";
+                ayarlar.cmd.Parameters.AddWithValue("grupID", GrupId);
+                ayarlar.cmd.ExecuteNonQuery();
+
+                SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+
+                grupResult.grupId = Convert.ToInt32(dt.Rows[0].ItemArray[0]);
+                grupResult.grupAdi = dt.Rows[0].ItemArray[1].ToString();
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(grupResult);
+    }
+
+    public class ParametreResult
+    {
+        public string durum { get; set; }
+    }
+
+    [WebMethod]
+    public static string ParametreTanimi(int grupId, string parametreAdi, string parametreTipi)
+    {
+        string state = "true";
+        ParametreResult result = new ParametreResult();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "IF NOT EXISTS(SELECT * FROM Hatirlatici.GrupParametreleri WHERE GrupParametre = @parametreadi and HatirlaticiGrupId = @grupID) insert into Hatirlatici.GrupParametreleri(HatirlaticiGrupID, Tip, GrupParametre, OlusturanID, OlusturmaTarihi, Silindi) values(@grupID, @tip, @parametreadi, @olusturanId, @olusturmaTarihi, @silindi) ELSE SELECT 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("grupID", grupId);
+            ayarlar.cmd.Parameters.AddWithValue("tip", parametreTipi);
+            ayarlar.cmd.Parameters.AddWithValue("parametreadi", parametreAdi);
+            ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now.ToString());
+            ayarlar.cmd.Parameters.AddWithValue("silindi", false);
+            //ayarlar.cmd.ExecuteNonQuery();
+            string durum = Convert.ToString(ayarlar.cmd.ExecuteScalar());
+
+            if (durum == "false")
+            {
+                //result.durum = "false";
+                state = "false";
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        //return JsonConvert.SerializeObject(result);
+        return state;
+    }
+
+    public class ParametreDegerAlResult
+    {
+        public int HatirlaticiGrupID { get; set; }
+        public string Tip { get; set; }
+        public string GrupParametre { get; set; }
+    }
+
+    [WebMethod]
+    public static string ParametreDegerAl(int GrupId)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select * from Hatirlatici.GrupParametreleri where HatirlaticiGrupID = @grupID and Silindi = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("grupID", GrupId);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
     }
 }

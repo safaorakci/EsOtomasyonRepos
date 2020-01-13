@@ -146,6 +146,8 @@
         Server.Execute("/System_root/parcalar/ucunagaci.asp")
     elseif gp(3) = "hatirlatici" then
         Server.Execute("/System_root/hatirlatici/hatirlatici.asp")
+        elseif gp(3) = "parametredeger" then
+        Server.Execute("/System_root/hatirlatici/parametredeger.asp")
     elseif gp(3) = "yillik_izin_mevzuat" then
         Server.Execute("/System_root/yillik_izin_mevzuat/yillik_izin_mevzuat.asp")
     elseif gp(3) = "satinalma-siparisleri" then

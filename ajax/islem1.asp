@@ -4563,9 +4563,9 @@
                                         <% end if %>
                                     <tr class=" ustunegelince <%=klas %>">
                                         <%
-                                                'toplam_saat = cetvel("toplam_calisma_saati")
+                                                toplam_saat = cetvel("toplam_calisma_saati")
                                                 'toplam_saat = DakikadanSaatYap(cdbl(cetvel("kaynak_toplam_saat"))*60)
-                                                toplam_saat = cdbl(toplam_saat) + cdbl(cetvel("kaynak_toplam_saat"))
+                                                'toplam_saat = cdbl(toplam_saat) + cdbl(cetvel("kaynak_toplam_saat"))
                                                 toplam_tutar = cdbl(toplam_tutar) + cdbl(cetvel("kaynak_toplam_maliyet"))
                                         %>
                                         <td style="width: 150px;" class="ust_td2 headcol"><%=cetvel("kaynak") %></td>
@@ -4598,7 +4598,7 @@
                                     </tr>
                                     <tr>
                                         <td class="ust_td2 headcol" style="width: 150px; background-color: #4d7193; color: white!important;"><%=LNG("TOPLAM")%></td>
-                                        <td class="gosterge_td alt_td "><%=DakikadanSaatYap(toplam_saat * 60) %></td>
+                                        <td class="gosterge_td alt_td "><%=toplam_saat %></td>
                                         <td class=" gosterge_td alt_td sagcizgi"><%=toplam_tutar %> TL</td>
                                         <% for x = 0 to ubound(gun_toplam)-2 %>
                                         <td class="alt_td" style="background-color: #4d7193; color: white;">
@@ -5170,7 +5170,7 @@
                         set proje = baglanti.execute(SQL)
                         do while not proje.eof
                                     %>
-                                    <option value="<%=proje("id") %>"><%=proje("proje_adi")%>-<%=proje("proje_kodu") %></option>
+                                    <option value="<%=proje("id") %>"><%=proje("proje_adi")%> - <%=proje("proje_kodu") %></option>
                                     <%
                         proje.movenext
                         loop

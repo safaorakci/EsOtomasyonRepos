@@ -49,12 +49,12 @@
 <% 
     Response.End
     end if %>
-<script>
-    
-       $(function () {
-            personel_raporlarini_getir('<%=Request.cookies("kullanici")("kullanici_id") %>', '', 'true');
-            is_yuku_gosterim_proje_sectim('<%=cdate(dongu_baslangic) %>', '<%=cdate(dongu_bitis) %>');
-        });
+<script type="text/javascript">
+
+    $(function () {
+        personel_raporlarini_getir('<%=Request.cookies("kullanici")("kullanici_id") %>', '', 'true');
+        is_yuku_gosterim_proje_sectim('<%=cdate(dongu_baslangic) %>', '<%=cdate(dongu_bitis) %>');
+    });
 
 
     google.charts.load("current", { packages: ["corechart"] });
@@ -62,21 +62,21 @@
 
     function drawChartDonut() {
         var dataDonut = google.visualization.arrayToDataTable([
-    ['DEPARTMANLAR', '%'],
+            ['DEPARTMANLAR', '%'],
     <%
     do while not sayilar.eof
+        if sayilar("gosterge_sayisi") > 0 then
     %>
-            ['<%=sayilar("departman_adi") %>', <%=sayilar("gosterge_sayisi") %>],
+        ['<%=sayilar("departman_adi") %>', <%=sayilar("gosterge_sayisi") %>],
     <%
+        end if
     sayilar.movenext
     loop
     %>
         ]);
-
-
         var optionsDonut = {
-            pieHole: 0.4,
-            colors: ['#93BE52', '#69CEC6', '#FE8A7D', '#4680ff', '#FFB64D']
+            //pieHole: 0.4,
+            is3D: true
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('chart_Donut'));
@@ -269,7 +269,7 @@
                                                 set proje = baglanti.execute(SQL)
                                                 do while not proje.eof
                                     %>
-                                    <option value="<%=proje("id") %>"><%=proje("proje_adi") %>-<%=proje("proje_kodu") %></option>
+                                    <option value="<%=proje("id") %>"><%=proje("proje_adi") %> - <%=proje("proje_kodu") %></option>
                                     <%
                                                 proje.movenext
                                                 loop
@@ -368,7 +368,7 @@
                     <h5><%=LNG("Departmanlardaki İş Hacmi")%></h5>
                 </div>
                 <div class="card-block">
-                    <div id="chart_Donut" style="width: 100%; height: 300px;"></div>
+                    <div id="chart_Donut" style="width: 100%; height: 450px;"></div>
                 </div>
             </div>
         </div>
@@ -414,7 +414,7 @@
                                                     ilk_proje_id = projeler("id")
                                                 end if
                                         %>
-                                        <option <% if trim(ilk_proje_id)=trim(projeler("id")) then %> selected="selected" <% end if %> value="<%=projeler("id") %>"><%=projeler("proje_adi") %>-<%=projeler("proje_kodu") %></option>
+                                        <option <% if trim(ilk_proje_id)=trim(projeler("id")) then %> selected="selected" <% end if %> value="<%=projeler("id") %>"><%=projeler("proje_adi") %> - <%=projeler("proje_kodu") %></option>
                                         <%
                                             projeler.movenext
                                             loop

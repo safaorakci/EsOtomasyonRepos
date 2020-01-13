@@ -980,6 +980,7 @@
 
                         SQL="Exec [dbo].[ProjeIsYukuCetveli] @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @gosterim_tipi = '"& gosterim_tipi &"';"
                         set cetvel = baglanti.execute(sql)
+                        'response.Write(SQL)
 
                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
@@ -1142,7 +1143,7 @@
 
                 proje_id = trn(request("proje_id"))
 
-                Doc.ImportFromUrl site_url & "/proje_maliyet_formu/?jsid=4559&proje_id=" & proje_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=0"
+                Doc.ImportFromUrl site_url & "/proje_maliyet_formu/?jsid=4559&proje_id=" & proje_id, "pageWidth=900,DrawBackground=true,pageHeight=1200, LeftMargin=30, RightMargin=30, TopMargin=30, BottomMargin=28"
                 
                 dosya_yolu = "/downloadRapor/Rapor"& replace(replace(Replace(now(), ".", ""), " ", ""), ":","") &".pdf"
                 Filename = Doc.Save(server.MapPath(dosya_yolu), Overwrite = false)
@@ -1967,6 +1968,12 @@
 
 %>
 
+<%
+        SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
+        set firmaBilgileri = baglanti.execute(SQL)
+
+        if firmaBilgileri("mail_entegrasyon") = True then
+%>
 <center>
 <img src="/img/Gnome-Emblem-Default-48.png" /><br /><br />
     <h4><%=LNG("Belgeniz Hazır.")%></h4><br />
@@ -2021,7 +2028,9 @@
         });
     </script>
 </form>
-
+<%else %>
+<center><img src='/img/uyari.png' /><br><br><strong> Mail Entegrasyonunuz Yapılmamıştır.</strong></center>
+<%end if %>
 <%
 
 

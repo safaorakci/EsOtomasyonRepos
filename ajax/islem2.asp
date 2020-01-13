@@ -516,7 +516,7 @@
                 <td><%=zimmet("id") %></td>
                 <td><%=zimmet("zimmet_edilen") %></td>
                 <td><%=zimmet("zimmet_eden") %></td>
-                <td><%=cdate(zimmet("ekleme_tarihi")) & " " & left(zimmet("ekleme_saati"),5) %></td>
+                <td><%=cdate(zimmet("ekleme_tarihi")) %></td>
                 <td class="dropdown">
                     <button type="button" class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
                     <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
@@ -604,7 +604,7 @@
             <tr>
                 <td><%=depo("id") %></td>
                 <td><%=depo("depo_dosya_adi") %></td>
-                <td><%=cdate(depo("ekleme_tarihi")) %></td>
+                <td><%=FormatDate(depo("ekleme_tarihi"), "00") %></td>
                 <td><%=left(depo("ekleme_saati"),5) %></td>
                 <td><%=depo("ekleyen") %></td>
                 <td class="dropdown">
@@ -680,7 +680,7 @@
 
     SQL="update ucgem_firma_listesi set firma_adi = '"& firma_adi &"', taseron_saatlik_maliyet = CAST('"& taseron_saatlik_maliyet &"' AS DECIMAL(18, 4)) , taseron_maliyet_pb = '"& taseron_maliyet_pb &"', firma_logo = '" & firma_logo & "', firma_yetkili = '" & firma_yetkili & "', firma_telefon = '" & firma_telefon & "', firma_adres = '" & firma_adres & "', firma_mail = '" & firma_mail & "', firma_supervisor_id = '" & firma_supervisor_id & "', firma_vergi_no = '" & firma_vergi_no & "' , firma_vergi_daire = '" & firma_vergi_daire & "', yetkili1_telefon = '" & yetkili1_telefon & "', yetkili1_mail = '" & yetkili1_mail & "' " & yetkiliSorgu & "  where id = '"& firma_id &"'"
 
-    response.Write(SQL)
+    'response.Write(SQL)
     set guncelle = baglanti.execute(SQL)
 
     elseif trn(request("islem"))="cari_detay_tabela_getir" then
@@ -1499,7 +1499,7 @@
 
 
             SQL="select *, Isnull(IsID, 0) as is_id from ahtapot_ajanda_olay_listesi where id = '"& olay_id &"'"
-            response.Write(SQL)
+            'response.Write(SQL)
             set olay = baglanti.execute(SQL)
 
             acikmi = true
@@ -2605,7 +2605,7 @@
                 'response.Write(SQL & "- ")
                 set sapariskontrol = baglanti.execute(SQL)
 
-                SQL = "SELECT ROW_NUMBER() OVER(ORDER BY kullanici.id) AS Id, kullanici.personel_ad + ' ' + personel_soyad as ad_soyad, proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM ((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) AS calismaSuresi, CONVERT(decimal(18,2), ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))) * 0.016667, 0) * kullanici.personel_saatlik_maliyet FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id))) AS toplamMaliyet FROM dbo.ucgem_proje_listesi proje, ucgem_firma_kullanici_listesi kullanici where proje.firma_id = '1' AND proje.id = '"& proje_id &"' AND proje.cop = 'false' AND proje.durum = 'true' AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) > 0 " 
+                SQL = "SELECT ROW_NUMBER() OVER(ORDER BY kullanici.id) AS Id, kullanici.personel_ad + ' ' + personel_soyad as ad_soyad, proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM ((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) AS calismaSuresi, CONVERT(decimal(18,2), ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))) * 0.016667, 0) * kullanici.personel_saatlik_maliyet FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id))) AS toplamMaliyet, kullanici.personel_maliyet_pb FROM dbo.ucgem_proje_listesi proje, ucgem_firma_kullanici_listesi kullanici where proje.firma_id = '1' AND proje.id = '"& proje_id &"' AND proje.cop = 'false' AND proje.durum = 'true' AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) > 0 " 
                 set personelAdamSaat = baglanti.execute(SQL)
                 'response.Write(SQL)
 
@@ -2634,9 +2634,7 @@
                                 <a class="btn-link ml-2 mb-2" id="maliyetformu" onclick="maliyetDetayAc()"; style="cursor: pointer"><i id="sipico" class="fa fa-plus mr-2"></i>Proje Maliyet Detayı</a>
                             </td>
                             <td>
-                                   <span id="subTotal" class="label-warning text-dark" style="padding:4px 10px; margin-right:0px; font-weight:bold; border-radius:5px">
-
-                                   </span>
+                                <span id="subTotal" class="label-warning text-dark" style="padding:4px 10px; margin-right:0px; font-weight:bold; border-radius:5px"></span>
                             </td>
                             <td class="dropdown" style="width: 10px;">
                                 <button type="button" class="btn btn-mini btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
@@ -2656,7 +2654,7 @@
                                                     <th colspan="6" style="text-align:center; background-color: lightskyblue !important">Sipariş Verilen Parçalar</th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Parça</th>
+                                                    <th style="width:115px">Parça</th>
                                                     <th>Marka</th>
                                                     <th>Açıklama</th>
                                                     <th>Adet</th>
@@ -2715,14 +2713,24 @@
                                                    end if
                                                 end if
                                                 SatinalmaToplamMaliyet = Cdbl(parcaBilgi("birim_maliyet")) * adet
+
+                                                if birimPB = "TL" then
+                                                    SPTMTL = SPTMTL + Cdbl(parcaBilgi("birim_maliyet")) * adet
+                                                end if
+                                                if birimPB = "USD" then
+                                                    SPTMUSD = SPTMUSD + Cdbl(parcaBilgi("birim_maliyet")) * adet
+                                                end if
+                                                if birimPB = "EUR" then
+                                                    SPTMEUR = SPTMEUR + Cdbl(parcaBilgi("birim_maliyet")) * adet
+                                                end if
                                             %>
                                                 <tr>
                                                     <td><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
                                                     <td><%=parcaBilgi("marka") %></td>
                                                     <td><%=parcaBilgi("aciklama") %></td>
                                                     <td><% if durum = 1 then %> <%=CInt(sondurum("SiparisVerilenAdet") - parcaBilgi("minumum_miktar")) %> <%elseif durum = 2 then%> <%=sondurum("adet") %> <%end if %></td>
-                                                    <td><%=parcaBilgi("birim_maliyet") %>&nbsp;<%=birimPB %></td>
-                                                    <td class="toplamMaliyet"><%=SatinalmaToplamMaliyet %> &nbsp;<%=birimPB %></td>
+                                                    <td><%=Replace(FormatNumber(parcaBilgi("birim_maliyet"),,,,0),",",".") %>&nbsp;<%=birimPB %></td>
+                                                    <td class="toplamMaliyet"><%=Replace(FormatNumber(SatinalmaToplamMaliyet,,,,0),",",".") %>&nbsp;<%=birimPB %></td>
                                                 </tr>
                                             <%
                                                  siparisparca.movenext
@@ -2732,6 +2740,10 @@
                                                 satinalmaformu.movenext
                                                 loop
                                             %>
+                                                <tr>
+                                                    <td colspan="4" style="font-weight:bold; text-align:right">Toplam Maliyet</td>
+                                                    <td colspan="2" class="total" style="font-weight:bold"><%=SPTMTL %> TL - <%=SPTMUSD %> USD - <%=SPTMEUR %> EUR</td>
+                                                </tr>
                                             </tbody>
                                            </table>
                                         <table id="dt_basic" class="table table-bordered datatableyap ml-2 mt-3 mb-3">
@@ -2740,7 +2752,7 @@
                                                     <th colspan="6" style="text-align:center; background-color: lightskyblue !important">Stoktan Kullanılan Parçalar</th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Parça</th>
+                                                    <th style="width:115px">Parça</th>
                                                     <th>Marka</th>
                                                     <th>Açıklama</th>
                                                     <th>Adet</th>
@@ -2779,15 +2791,25 @@
                                                        end if
                                                     end if
 
-                                                    KullanilanToplamMaliyet = Cdbl(parcaBilgi("birim_maliyet")) * eksikparca("StoktanKullanilanAdet")
+                                                    KullanilanMaliyet = Cdbl(parcaBilgi("birim_maliyet")) * eksikparca("StoktanKullanilanAdet")
+                                                    
+                                                    if birimPB = "TL" then
+                                                        STMTL = STMTL + Cdbl(parcaBilgi("birim_maliyet")) * eksikparca("StoktanKullanilanAdet")
+                                                    end if
+                                                    if birimPB = "USD" then
+                                                        STMUSD = STMUSD + Cdbl(parcaBilgi("birim_maliyet")) * eksikparca("StoktanKullanilanAdet")
+                                                    end if
+                                                    if birimPB = "EUR" then
+                                                        STMEUR = STMEUR + Cdbl(parcaBilgi("birim_maliyet")) * eksikparca("StoktanKullanilanAdet")
+                                                    end if
                                                 %>
                                                     <tr>
                                                         <td><%=parcaBilgi("parca_kodu") %> - <%=parcaBilgi("parca_adi") %></td>
                                                         <td><%=parcaBilgi("marka") %></td>
                                                         <td><%=parcaBilgi("aciklama") %></td>
                                                         <td><%=eksikparca("StoktanKullanilanAdet") %></td>
-                                                        <td><%=parcaBilgi("birim_maliyet") %>&nbsp;<%=birimPB %></td>
-                                                        <td class="toplamMaliyet"><%=KullanilanToplamMaliyet %>&nbsp;<%=birimPB %></td>
+                                                        <td><%=Replace(FormatNumber(parcaBilgi("birim_maliyet"),,,,0),",",".") %>&nbsp;<%=birimPB %></td>
+                                                        <td class="toplamMaliyet"><%=Replace(FormatNumber(KullanilanMaliyet,,,,0),",",".") %>&nbsp;<%=birimPB %></td>
                                                     </tr>
                                                 <%
                                                     eksikparca.movenext
@@ -2797,6 +2819,10 @@
                                                     satinalmaformu2.movenext
                                                     loop
                                                 %>
+                                                <tr>
+                                                    <td colspan="4" style="font-weight:bold; text-align:right">Toplam Maliyet</td>
+                                                    <td colspan="2" class="total" style="font-weight:bold"><%=STMTL %> TL - <%=STMUSD %> USD - <%=STMEUR %> EUR</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                         <table class="table table-bordered ml-2 mt-3 mb-3">
@@ -2807,7 +2833,7 @@
                                                 <tr>
                                                     <th>Personel</th>
                                                     <th>Çalışma Süresi</th>
-                                                    <th>Toplam Maliyeti</th>
+                                                    <th>Maliyet</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -2820,16 +2846,35 @@
                                                     <%
                                                         end if
                                                         do while not personelAdamSaat.eof
+
+                                                        personelMaliyetPB = personelAdamSaat("personel_maliyet_pb")
+                                                        if personelMaliyetPB = "TL" then
+                                                            ASTL = Cdbl(ASTL + Cdbl(personelAdamSaat("toplamMaliyet")))
+                                                        end if
+                                                        if personelMaliyetPB = "USD" then
+                                                            ASUSD = Cdbl(ASUSD + Cdbl(personelAdamSaat("toplamMaliyet")))
+                                                        end if
+                                                        if personelMaliyetPB = "EUR" then
+                                                            ASEUR = Cdbl(ASEUR + Cdbl(personelAdamSaat("toplamMaliyet")))
+                                                        end if
                                                     %>
                                                         <tr>
                                                             <td><%=personelAdamSaat("ad_soyad") %></td>
                                                             <td><%=personelAdamSaat("calismaSuresi") %></td>
-                                                            <td class="toplamMaliyet"><%=Replace(personelAdamSaat("toplamMaliyet"),",",".") %> TL</td>
+                                                            <td class="toplamMaliyet"><%=Replace(FormatNumber(personelAdamSaat("toplamMaliyet"),,,,0),",",".") %>&nbsp<%=personelAdamSaat("personel_maliyet_pb") %></td>
                                                         </tr>
                                                     <%
                                                         personelAdamSaat.movenext
                                                         loop
                                                     %>
+                                                        <tr>
+                                                            <td colspan="2" style="font-weight:bold; text-align:right">Toplam Maliyet</td>
+                                                            <td class="total" style="font-weight:bold">
+                                                                <%=Replace(FormatNumber(ASTL,,,,0),",",".") %>&nbsp;TL - 
+                                                                <%=Replace(FormatNumber(ASUSD,,,,0),",",".") %>&nbsp;USD -
+                                                                <%=Replace(FormatNumber(ASEUR,,,,0),",",".") %>&nbsp;EUR
+                                                            </td>
+                                                        </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -2857,7 +2902,7 @@
                         if (sonucTL != -1) {
                             valueTL = $(this).text().replace('TL', '').replace(' ', '');
                             if (!isNaN(valueTL) && valueTL.length != 0 && valueTL > 0) {
-                                sumTL += parseFloat(valueTL);
+                                sumTL = sumTL + parseFloat(valueTL);
                                 $("#subTotal").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
                             }
                         }
@@ -3530,11 +3575,11 @@
 
             SQL="update ahtapot_ajanda_olay_listesi set cop = 'true' where color='"& renk &"'  and IsID = '"& IsID &"' and etiket = '"& etiket &"' and etiket_id = '"& etiket_id &"'"
             set guncelle = baglanti.execute(SQL)
-        response.Write(SQL)
+        'response.Write(SQL)
 
             SQL="insert into ahtapot_ajanda_olay_listesi(IsID, etiket, etiket_id, title, allDay, baslangic, bitis, baslangic_saati, bitis_saati, url, color, description, etiketler, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, kisiler, ana_kayit_id, tamamlandi) values('"& IsID &"', '"& etiket &"', '"& etiket_id &"', '"& title &"', '"& allDay &"', CONVERT(date,'"& baslangic &"',103),CONVERT(date,'"& bitis &"',103), '"& baslangic_saati &"', '"& bitis_saati &"', '"& url &"', '"& color &"', '"& description &"', '"& etiketler &"', '"& durum &"', '"& cop &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"',  CONVERT(date, '"& ekleme_tarihi &"',103), '"& ekleme_saati &"', '"& kisiler &"', '"& ana_kayit_id &"', '"& tamamlandi &"')"
             set ekle = baglanti.execute(SQL)
-        response.Write(SQL)
+        'response.Write(SQL)
 
         elseif trn(request("islem"))="is_yuku_gosterim_proje_sectim" then
 
@@ -3597,7 +3642,7 @@
 
                                         SQL="Exec [dbo].[ProjeIsYukuCetveli] @proje_id = '"& proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @gosterim_tipi = '"& gosterim_tipi &"';"
                                         set cetvel = baglanti.execute(sql)
-
+                                        'response.Write(SQL)
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
                                         Dim gun_toplam2()

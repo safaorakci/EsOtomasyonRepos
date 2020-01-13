@@ -176,7 +176,7 @@
                                         set proje = baglanti.execute(SQL)
                                         do while not proje.eof
                                     %>
-                                    <option value="<%=proje("id") %>"><%=proje("proje_adi") %>-<%=proje("proje_kodu") %></option>
+                                    <option value="<%=proje("id") %>"><%=proje("proje_adi") %> - <%=proje("proje_kodu") %></option>
                                     <%
                                         proje.movenext
                                         loop

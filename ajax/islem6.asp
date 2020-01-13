@@ -94,7 +94,6 @@
                                                 formatNumber = value 
                                             end if 
                                         End Function 
-
                                     %>
                                     <input type="text" class="takvimyap form-control" id="personel_dtarih" required value="<%=formatNumber(DAY(personel("personel_dtarih")),2)%>.<%=formatNumber(MONTH(personel("personel_dtarih")),2)%>.<%=YEAR(personel("personel_dtarih"))%>" />
                                 </div>
@@ -1716,12 +1715,12 @@
             <select name="izin_nedeni" id="izin_nedeni" class="select2">
                 <option>Yıllık İzin</option>
                 <option>Doğum İzni</option>
+                <option>Babalık İzni</option>
                 <option>Ölüm İzni</option>
                 <option>Diğer</option>
             </select>
         </div>
     </div>
-
 
     <div class="row">
         <label class="col-sm-12 col-form-label"><%=LNG("İzin Şekli")%></label>
@@ -1729,6 +1728,7 @@
             <select name="izin_turu" id="izin_turu" class="select2">
                 <option>Yıllık İzin</option>
                 <option>Ücretsiz İzin</option>
+                <option>Rapor</option>
             </select>
         </div>
     </div>
@@ -3391,6 +3391,102 @@
         </table>
     </div>
     <%
+    elseif trn(request("islem")) = "grup_parametreleri" then
+    %>
+                        <table id="dt_basic" class="table table-bordered table-sprited datatableyap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Grup Adı</th>
+                                <th>Grup Parametre</th>
+                                <th>Tip</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%
+                                SQL = "select Gparam.HatirlaticiGrupParametreleriID, gr.GrupAdi, Gparam.Tip, Gparam.GrupParametre from Hatirlatici.GrupParametreleri Gparam join Hatirlatici.Grup gr on Gparam.HatirlaticiGrupID = gr.HatirlaticiGrupID where Gparam.Silindi = 'false'"
+                                set GrupParametreleri = baglanti.execute(SQL)
+
+                                if GrupParametreleri.eof then
+                            %>
+                                <tr><td colspan="5" style="text-align:center">Kayıt Bulunamadı</td></tr>
+                            <%
+                                end if
+                                do while not GrupParametreleri.eof
+                                i = i + 1
+                            %>
+                                <tr>
+                                    <td><%=i %></td>
+                                    <td><%=GrupParametreleri("GrupAdi") %></td>
+                                    <td><%=GrupParametreleri("GrupParametre") %></td>
+                                    <td><%=GrupParametreleri("Tip") %></td>
+                                    <td>
+                                        <button type="button" class="btn btn-info btn-mini">Düzenle</button>
+                                        <button type="button" class="btn btn-danger btn-mini">Sil</button>
+                                    </td>
+                                </tr>
+                            <%
+                                GrupParametreleri.movenext
+                                loop
+                            %>
+                        </tbody>
+                    </table>
+    <%
+    elseif trn(request("islem"))="grup_deger_kaydet" then
+        if trn(request("islem2")) = "ekle" then
+            
+            elementCount = trn(request("count"))
+            grupId = trn(request("grupId"))
+            olusturanId = Request.Cookies("kullanici")("kullanici_id")
+            olusturmaTarihi = date
+
+            ar = Array()
+            For i = 0 To elementCount - 1
+                value = trn(request("value" & i))
+                SQL = "insert into Hatirlatici.GrupDegerleri(HatirlaticiGrupParametreID, GrupValue, OlusturanID, OlusturmaTarihi, Silindi) values('"& grupId &"', '"& value &"', '"& olusturanId &"', '"& olusturmaTarihi &"', 'false')"
+                set grupDeger = baglanti.execute(SQL)
+            next
+        end if
+    %>
+        <table class="table table-bordered table-sprited datatableyap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Grup</th>
+                    <th>Parametre Değeri</th>
+                    <th>İşlem</th>
+                </tr> 
+            </thead>
+            <tbody>
+                <%
+                    SQL = "select deger.HatirlaticiGrupParametreID, deger.GrupValue, prm.GrupAdi from Hatirlatici.GrupDegerleri deger inner join Hatirlatici.Grup prm on deger.HatirlaticiGrupParametreID = prm.HatirlaticiGrupID  where deger.Silindi = 'false'"
+                    set GrupDegerleri = baglanti.execute(SQL)
+
+                    if GrupDegerleri.eof then
+                %>
+                    <tr><td colspan="3" style="text-align:center">Kayıt Bulunamadı</td></tr>
+                <%
+                    end if
+                    do while not GrupDegerleri.eof
+                    k = k + 1
+                %>
+                    <tr>
+                        <td><%=k %></td>
+                        <td><%=GrupDegerleri("GrupAdi") %></td>
+                        <td><%=GrupDegerleri("GrupValue") %></td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-mini">Düzenle</button>
+                            <button type="button" class="btn btn-danger btn-mini">Sil</button>
+                        </td>
+                    </tr>
+                <%
+                    GrupDegerleri.movenext
+                    loop
+                %>
+            </tbody>
+        </table>
+    <%
 
     elseif trn(request("islem"))="satinalma_siparisleri" then
 
@@ -4691,14 +4787,14 @@ elseif trn(request("islem"))="uretim_sablonlari" then
         <div class="row">
             <label class="col-sm-11  col-lg-11 col-form-label"><%=LNG("Müşteri")%></label>
             <div class="col-sm-11 col-lg-11">
-                <select id="musteri_id" name="musteri_id" class="select2" onchange="musteribilgilerial();">
+                <select id="musteri_id" name="musteri_id" class="select2" onchange="musteribilgilerial('new');">
                     <option disabled selected>Müşteri Seç</option>
                     <%
                         SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where yetki_kodu = 'MUSTERI' and durum = 'true' and cop = 'false'"
                         set musteri = baglanti.execute(SQL)
                         do while not musteri.eof
                     %>
-                    <option value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
+                        <option value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
                     <%
                         musteri.movenext
                         loop
@@ -4721,14 +4817,14 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12" id="textyetkili">
                         <div class="form-group">
-                            <label class="col-from-label">Yetkili Kişi</label>
+                            <label class="col-from-label">Yetkili Kişi </label>
                             <input type="text" class="form-control" id="yetkilikisi" placeholder="Yetkili Kişi" required />
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12" id="selectyetkili" style="display: none">
                         <div class="form-group">
-                            <label class="col-from-label">Yetkili Kişi</label>
-                            <select class="form-control" id="selectyetkilikisi" required></select>
+                            <label class="col-from-label">Yetkili Kişi</label> <i class="fa fa-close" id="yetkiliSelectGizle" style="cursor:pointer; margin-left:5px"></i>
+                            <select class="form-control" id="selectyetkilikisi" required style="height:35px; padding: .4rem .75rem;"></select>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -5310,8 +5406,11 @@ works properly when clicked or hovered */
         </style>
         <script src="/js/jquery-ui.js"></script>
         <script type="text/javascript">
-
-</script>
+            $("#yetkiliSelectGizle").click(function () {
+                $("#selectyetkili").hide();
+                $("#textyetkili").show();
+            });
+        </script>
     </form>
     <%
         elseif trn(request("islem"))="YeniServisBakimKaydiDuzenle" then
@@ -5348,14 +5447,14 @@ works properly when clicked or hovered */
         <div class="row">
             <label class="col-sm-11  col-lg-11 col-form-label"><%=LNG("Müşteri")%></label>
             <div class="col-sm-11 col-lg-11">
-                <select id="musteri_id" name="musteri" class="select2" onchange="musteribilgilerial();">
+                <select id="musteri_id" name="musteri" class="select2" onchange="musteribilgilerial('edit');">
                     <option disabled selected>Müşteri Seç</option>
                     <%
                         SQL="select id, firma_adi, firma_yetkili from ucgem_firma_listesi where yetki_kodu = 'MUSTERI' and durum = 'true' and cop = 'false'"
                         set musteri = baglanti.execute(SQL)
                         do while not musteri.eof
                     %>
-                    <option <%if formduzenle("FirmaId") = musteri("id") then %> selected="selected" <%end if %> value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
+                        <option <%if formduzenle("FirmaId") = musteri("id") then %> selected="selected" <%end if %> value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
                     <%
                         musteri.movenext
                         loop
@@ -5384,8 +5483,8 @@ works properly when clicked or hovered */
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12" id="selectyetkili" style="display: none">
                         <div class="form-group">
-                            <label class="col-from-label">Yetkili Kişi</label>
-                            <select class="form-control yetiskinselect" id="selectyetkilikisi" required></select>
+                            <label class="col-from-label">Yetkili Kişi</label> <i class="fa fa-close" id="yetkiliSelectGizle" style="cursor:pointer; margin-left:5px"></i>
+                            <select class="form-control yetiskinselect" id="selectyetkilikisi" required style="height:35px; padding: .4rem .75rem;"></select>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -5638,7 +5737,7 @@ works properly when clicked or hovered */
                     var sonucEUR = $(this).text().indexOf("EUR");
 
                     if (sonucTL != -1) {
-                        valueTL = $(this).text().replace('TL', '').replace(' ', '').replace(',','.');
+                        valueTL = $(this).text().replace('TL', '').replace(' ', '').replace(',', '.');
                         if (!isNaN(valueTL) && valueTL.length != 0 && valueTL > 0) {
                             sumTL += parseFloat(valueTL);
                             $("#totalPrice").text(sumTL.toFixed(2) + " TL" + " - " + sumUSD.toFixed(2) + " USD" + " - " + sumEUR.toFixed(2) + " EUR");
@@ -5661,6 +5760,12 @@ works properly when clicked or hovered */
                         }
                     }
                 });
+            });
+        </script>
+        <script type="text/javascript">
+            $("#yetkiliSelectGizle").click(function () {
+                $("#selectyetkili").hide();
+                $("#textyetkili").show();
             });
         </script>
         <style>

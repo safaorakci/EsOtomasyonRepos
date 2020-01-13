@@ -545,7 +545,9 @@
             SQL="update ucgem_proje_listesi set selectedRow = '"& selectedRow &"',  zoom = '"& zoom &"', guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& proje_id &"'"
             set guncelle = baglanti.execute(SQL)
 
-
+            SQL = "select proje_departmanlari from ucgem_proje_listesi where id = '"& proje_id &"'"
+            set projeDepartman = baglanti.execute(SQL)
+            
             if trim(tip)="uygulama" then
                 olay = "Proje Planlama Güncellendi"
             else
@@ -553,7 +555,7 @@
             end if
             olay_tarihi = cdate(date)
             olay_saati = time
-            departman_id = 0
+            departman_id = projeDepartman("proje_departmanlari")
             durum = "true"
             cop = "false"
             firma_kodu = Request.Cookies("kullanici")("firma_kodu")
@@ -565,7 +567,6 @@
 
             SQL="insert into ucgem_proje_olay_listesi(proje_id, olay, olay_tarihi, olay_saati, departman_id, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& proje_id &"', '"& olay &"', CONVERT(date, '"& olay_tarihi &"', 103), '"& olay_saati &"', '"& departman_id &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', CONVERT(date, '"& ekleme_tarihi &"', 103), '"& ekleme_saati &"')"
             set olay_ekle = baglanti.execute(SQL) 
-
 
     elseif trn(request("islem")) = "sil" then
         
