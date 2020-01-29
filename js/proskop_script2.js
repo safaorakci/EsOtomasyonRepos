@@ -839,7 +839,6 @@ function gruba_parca_kayit(grup_id) {
 
     var grup_adi = $("#dgrup_adi").val();
     var parcalar = $("#parcalar").val();
-    //var selectLen = $("#parcalar").val().length.toString();
 
     var data = "islem=urun_grup_listesi&islem2=guncelle";
     data += "&grup_id=" + grup_id;
@@ -860,7 +859,7 @@ function adet_kaydi_guncelle(grup_id, count) {
     for (var i = 1; i <= count; i++) {
         $("#count" + grup_id +""+ i).each(function () {
             var Adet = $(this).val();
-            if (Adet != "") {
+            if (Adet !== "") {
                 if (i === 1) {
                     parcaId = $(this).attr("parca_id");
                     data += Adet;
@@ -1074,10 +1073,10 @@ function parcalar_autocomplete_calistir2() {
                         },
                         success: function (data) {
                             var result = jQuery.parseJSON(data.d);
-                            if (result.Durum == 1) {
+                            if (result.Durum === 1) {
                                 SiparisPopup(IsId, ui.item.id, result.Sayi, adet, durum, result.Parca);
                             }
-                            if (result.Durum == 0) {
+                            if (result.Durum === 0) {
                                 is_detay_parca_agaci_sectim(IsId, ui.item.id);
                             }
                         }

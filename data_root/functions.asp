@@ -64,7 +64,7 @@
         DIM objScript
         SET objScript = Server.CreateObject("ScriptControl")
         objScript.Language = "JavaScript"
-        URLDecodes = objScript.Eval("decodeURIComponent(""" & str & """.replace(/\+/g,"", ""))")
+        URLDecodes = objScript.Eval("decodeURIComponent(""" & str & """.replace(/\+/g,"" ""))")
         SET objScript = NOTHING
 
     END FUNCTION

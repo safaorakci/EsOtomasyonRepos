@@ -2194,7 +2194,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 {
                     ayarlar.baglan();
                     ayarlar.cmd.CommandText = "SELECT CASE WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc), 0) = 0 THEN(select SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4)) WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc), 0) != 0 THEN(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc) ELSE(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc) END";
-                    proje_kodu = Convert.ToString(ayarlar.cmd.ExecuteScalar()); 
+                    proje_kodu = Convert.ToString(ayarlar.cmd.ExecuteScalar());
                 }
             }
             else
@@ -2717,21 +2717,21 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
                                 //if (bildirim == false)
                                 //{
-                                    ayarlar.baglan();
-                                    ayarlar.cmd.Parameters.Clear();
-                                    ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate());";
-                                    ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + "'" + yeni_adi + "' adlı işi düzenledi.");
-                                    ayarlar.cmd.Parameters.Add("tip", "is_listesi");
-                                    ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
-                                    ayarlar.cmd.Parameters.Add("user_id", gorevliID);
-                                    ayarlar.cmd.Parameters.Add("okudumu", "False");
-                                    ayarlar.cmd.Parameters.Add("durum", "true");
-                                    ayarlar.cmd.Parameters.Add("cop", "false");
-                                    ayarlar.cmd.Parameters.Add("firma_kodu", SessionManager.CurrentUser.firma_kodu);
-                                    ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
-                                    ayarlar.cmd.Parameters.Add("ekleyen_id", SessionManager.CurrentUser.ekleyen_id);
-                                    ayarlar.cmd.Parameters.Add("ekleyen_ip", HttpContext.Current.Request.ServerVariables["Remote_Addr"]);
-                                    ayarlar.cmd.ExecuteNonQuery();
+                                ayarlar.baglan();
+                                ayarlar.cmd.Parameters.Clear();
+                                ayarlar.cmd.CommandText = "insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values(@bildirim, @tip, @click, @user_id, @okudumu, @durum, @cop, @firma_kodu, @firma_id, @ekleyen_id, @ekleyen_ip, getdate(), getdate());";
+                                ayarlar.cmd.Parameters.Add("bildirim", SessionManager.CurrentUser.kullanici_adsoyad + "'" + yeni_adi + "' adlı işi düzenledi.");
+                                ayarlar.cmd.Parameters.Add("tip", "is_listesi");
+                                ayarlar.cmd.Parameters.Add("click", "sayfagetir('/is_listesi/','jsid=4559&bildirim=true&bildirim_id=" + IsID + "');");
+                                ayarlar.cmd.Parameters.Add("user_id", gorevliID);
+                                ayarlar.cmd.Parameters.Add("okudumu", "False");
+                                ayarlar.cmd.Parameters.Add("durum", "true");
+                                ayarlar.cmd.Parameters.Add("cop", "false");
+                                ayarlar.cmd.Parameters.Add("firma_kodu", SessionManager.CurrentUser.firma_kodu);
+                                ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
+                                ayarlar.cmd.Parameters.Add("ekleyen_id", SessionManager.CurrentUser.ekleyen_id);
+                                ayarlar.cmd.Parameters.Add("ekleyen_ip", HttpContext.Current.Request.ServerVariables["Remote_Addr"]);
+                                ayarlar.cmd.ExecuteNonQuery();
                                 //}
 
                                 if (Personel["personel_telefon"].ToString().Length > 5)
@@ -4091,7 +4091,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
 
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select  ROW_NUMBER() OVER(ORDER BY kullanici.id asc) AS sira, kullanici.durum, kullanici.id, kullanici.personel_ad, kullanici.personel_soyad, kullanici.personel_telefon, kullanici.personel_eposta, left(left(ISNULL((select departman_adi + ', ' from tanimlama_departman_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'), len(ISNULL((select departman_adi + ', ' from tanimlama_departman_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') where value =  id ) > 0 and cop = 'false' for xml path('')), '----'))-1) ,20) + '...' as departmanlar, left(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'), len(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'))-1) as gorevler from ucgem_firma_kullanici_listesi kullanici with(nolock) where kullanici.firma_id = @firma_id and kullanici.cop = 'false' order by kullanici.id asc";
+        ayarlar.cmd.CommandText = "select  ROW_NUMBER() OVER(ORDER BY kullanici.id asc) AS sira, kullanici.durum, kullanici.id, kullanici.personel_ad, kullanici.personel_soyad, kullanici.personel_telefon, kullanici.personel_eposta, left(left(ISNULL((select departman_adi + ', ' from tanimlama_departman_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'), len(ISNULL((select departman_adi + ', ' from tanimlama_departman_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.departmanlar, ',') where value =  id ) > 0 and cop = 'false' for xml path('')), '----'))-1) ,20) + '...' as departmanlar, left(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'), len(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'))-1) as gorevler, case when (select Count(*) from ZorunluDosyalar where Zorunlu = 'true' and Silindi = 'false' and DosyaID not in(select dosya_id from ahtapot_dosya_deposu where kayit_id = kullanici.id and etiket = 'personel' and dosya_id is not null and cop = 'false')) > 0 then '<i class=\"fa fa-warning\" style=\"font-size: 20px; color: red; cursor:pointer\" title=\"Eksik Belge Var !\"></i>' else '<i class=\"fa fa-check-circle\" style=\"font-size: 20px; color: green; cursor:pointer\"></i>' end as eksik_dosya from ucgem_firma_kullanici_listesi kullanici with(nolock) where kullanici.firma_id = @firma_id and kullanici.cop = 'false' order by kullanici.id asc";
         ayarlar.cmd.Parameters.Add("firma_id", SessionManager.CurrentUser.firma_id);
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
         DataSet ds = new DataSet();
@@ -4110,7 +4110,6 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 personeller_repeater.DataSource = ds.Tables[0];
                 personeller_repeater.ItemCreated += personeller_repeater_ItemCreated;
                 personeller_repeater.DataBind();
-
             }
         }
         ayarlar.cnn.Close();
@@ -4152,7 +4151,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 ayarlar.baglan();
                 ayarlar.cmd.Parameters.Clear();
                 ayarlar.cmd.CommandText = "SELECT CASE WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc), 0) = 0 THEN(select SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4)) WHEN ISNULL((select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc), 0) != 0 THEN(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), (select Count(*) from ucgem_proje_listesi where cop = 'false' and not proje_kodu = '-' and SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3)) + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc) ELSE(select top 1 SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) + '' + FORMAT(getdate(), 'MM') + '' + RIGHT('000' + SUBSTRING(CONVERT(NVARCHAR(10), 0 + 1), 1, 4), 4) from ucgem_proje_listesi proje where SUBSTRING(CONVERT(varchar(15), datepart(yy, ekleme_tarihi)), 3, 3) = SUBSTRING(CONVERT(varchar(50), datepart(yy, getdate())), 3, 3) and proje.durum = 'true' and proje.cop = 'false' and not proje.proje_kodu = '-' order by id desc) END";
-                proje_Id = Convert.ToString(ayarlar.cmd.ExecuteScalar()); 
+                proje_Id = Convert.ToString(ayarlar.cmd.ExecuteScalar());
             }
 
             ayarlar.cmd.Parameters.Clear();
@@ -4585,7 +4584,9 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         if (parcaDurum == 1)
         {
             ayarlar.baglan();
-            ayarlar.cmd.CommandText = @"SELECT c.[Value] AS id, a.[Value] AS adet FROM parca_grup_listesi grup CROSS APPLY (SELECT Pos, Value FROM [dbo].[SplitString](grup.parcalar,',')) c CROSS APPLY (SELECT Pos, Value FROM [dbo].[SplitString](grup.adet,',')) a WHERE c.Pos = a.Pos and grup.id = " + ParcaID + "";
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = @"select * from UrunAgaciParcalar where Silindi = 'false' and GrupID = @GrupId";
+            ayarlar.cmd.Parameters.AddWithValue("GrupId", ParcaID);
             ayarlar.cmd.ExecuteNonQuery();
 
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(ayarlar.cmd);
@@ -4595,7 +4596,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             CalculateResult result = new CalculateResult();
             for (int i = 0; i < dataTable.Rows.Count; i++)
             {
-                int id = Convert.ToInt32(dataTable.Rows[i].ItemArray[0].ToString());
+                int id = Convert.ToInt32(dataTable.Rows[i].ItemArray[2].ToString());
                 ayarlar.baglan();
                 int Fark = 0;
                 ayarlar.cmd.CommandText = @"select * from parca_listesi where id = " + id + "";
@@ -4605,7 +4606,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                 DataTable dt = new DataTable();
                 sda.Fill(dt);
                 string parca = dt.Rows[0].ItemArray[1].ToString();
-                int agacParcaAdet = Convert.ToInt32(dataTable.Rows[i].ItemArray[1].ToString());
+                int agacParcaAdet = Convert.ToInt32(dataTable.Rows[i].ItemArray[3].ToString());
                 int miktar = Convert.ToInt32(dt.Rows[0].ItemArray[10]);
                 int minimummiktar = Convert.ToInt32(dt.Rows[0].ItemArray[12]);
                 Fark = miktar - minimummiktar;
@@ -4625,21 +4626,23 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
                         result.Durum = 1;
                     }
                 }
-                else
-                {
-                    if (result.Parca == null && result.Sayi == null)
-                    {
-                        result.Parca = parca;
-                        result.Sayi = Convert.ToString(agacParcaAdet);
-                        result.Durum = 0;
-                    }
-                    else
-                    {
-                        result.Parca += "," + parca;
-                        result.Sayi += "," + Convert.ToString(agacParcaAdet);
-                        result.Durum = 0;
-                    }
-                }
+                //else
+                //{
+                //    if (result.Parca == null && result.Sayi == null)
+                //    {
+                //        result.Parca = parca;
+                //        result.Sayi = Convert.ToString(agacParcaAdet);
+                //        if (result.Durum != 1)
+                //            result.Durum = 0;
+                //    }
+                //    else
+                //    {
+                //        result.Parca += "," + parca;
+                //        result.Sayi += "," + Convert.ToString(agacParcaAdet);
+                //        if (result.Durum != 1)
+                //            result.Durum = 0;
+                //    }
+                //}
             }
             return JsonConvert.SerializeObject(result);
         }
@@ -4701,10 +4704,12 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         return kelime;
     }
 
+    #region Hatırlatıcı
     public class GrupResult
     {
         public int grupId { get; set; }
         public string grupAdi { get; set; }
+        public string message { get; set; }
     }
 
     [WebMethod]
@@ -4716,27 +4721,39 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         {
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "set nocount on; insert into Hatirlatici.Grup(GrupAdi, OlusturanID, OlusturmaTarihi, Silindi) values(@grupAdi, @olusturanId, @olusturmaTarihi, @silindi); SELECT SCOPE_IDENTITY();";
-            ayarlar.cmd.Parameters.AddWithValue("grupAdi", grupAdi);
-            ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
-            ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now.ToString());
-            ayarlar.cmd.Parameters.AddWithValue("silindi", false);
-            GrupId = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+            ayarlar.cmd.CommandText = "select COUNT(*) from Hatirlatici.Grup where Silindi = 'false' and GrupAdi like N'%" + grupAdi + "%'";
+            int count = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
 
-            if (GrupId != 0)
+            if (count < 1)
             {
                 ayarlar.baglan();
                 ayarlar.cmd.Parameters.Clear();
-                ayarlar.cmd.CommandText = "select * from Hatirlatici.Grup where Silindi = 'false' and HatirlaticiGrupID = @grupID";
-                ayarlar.cmd.Parameters.AddWithValue("grupID", GrupId);
-                ayarlar.cmd.ExecuteNonQuery();
+                ayarlar.cmd.CommandText = "IF NOT EXISTS(select * from Hatirlatici.Grup where Silindi = 'false' and GrupAdi like N'%" + grupAdi + "%') set nocount on; insert into Hatirlatici.Grup(GrupAdi, OlusturanID, OlusturmaTarihi, Silindi) values(@grupAdi, @olusturanId, @olusturmaTarihi, @silindi); SELECT SCOPE_IDENTITY();";
+                ayarlar.cmd.Parameters.AddWithValue("grupAdi", grupAdi);
+                ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
+                ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now);
+                ayarlar.cmd.Parameters.AddWithValue("silindi", false);
+                GrupId = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
 
-                SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
-                DataTable dt = new DataTable();
-                sda.Fill(dt);
+                if (GrupId != 0)
+                {
+                    ayarlar.baglan();
+                    ayarlar.cmd.Parameters.Clear();
+                    ayarlar.cmd.CommandText = "select * from Hatirlatici.Grup where Silindi = 'false' and HatirlaticiGrupID = @grupID";
+                    ayarlar.cmd.Parameters.AddWithValue("grupID", GrupId);
+                    ayarlar.cmd.ExecuteNonQuery();
 
-                grupResult.grupId = Convert.ToInt32(dt.Rows[0].ItemArray[0]);
-                grupResult.grupAdi = dt.Rows[0].ItemArray[1].ToString();
+                    SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+                    DataTable dt = new DataTable();
+                    sda.Fill(dt);
+
+                    grupResult.grupId = Convert.ToInt32(dt.Rows[0].ItemArray[0]);
+                    grupResult.grupAdi = dt.Rows[0].ItemArray[1].ToString();
+                }
+            }
+            else
+            {
+                grupResult.message = "notBeAdded";
             }
         }
         catch (Exception e)
@@ -4752,7 +4769,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static string ParametreTanimi(int grupId, string parametreAdi, string parametreTipi)
+    public static string ParametreTanimi(int grupId, string parametreAdi, string parametreTipi, bool hatirlatma, bool tarihindeHatirlat, bool tarihindeOnceHatirlat, int tarihindenOnce, string tarihBildirim, bool sayiyaGeldiğindeHatirlat, int sayiyaGeldiğinde, bool sayiyaKalaHatirlat, int sayiyaKala, string sayiBildirim, int bildirimAlacakPersonelID)
     {
         string state = "true";
         ParametreResult result = new ParametreResult();
@@ -4760,20 +4777,57 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         {
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
-            ayarlar.cmd.CommandText = "IF NOT EXISTS(SELECT * FROM Hatirlatici.GrupParametreleri WHERE GrupParametre = @parametreadi and HatirlaticiGrupId = @grupID) insert into Hatirlatici.GrupParametreleri(HatirlaticiGrupID, Tip, GrupParametre, OlusturanID, OlusturmaTarihi, Silindi) values(@grupID, @tip, @parametreadi, @olusturanId, @olusturmaTarihi, @silindi) ELSE SELECT 'false'";
+            ayarlar.cmd.CommandText = "IF EXISTS(SELECT * FROM Hatirlatici.GrupParametreleri WHERE GrupParametre = @parametreadi and HatirlaticiGrupId = @grupID and Silindi = 'false') select 'true' ELSE select 'false'";
             ayarlar.cmd.Parameters.AddWithValue("grupID", grupId);
-            ayarlar.cmd.Parameters.AddWithValue("tip", parametreTipi);
             ayarlar.cmd.Parameters.AddWithValue("parametreadi", parametreAdi);
-            ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
-            ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now.ToString());
-            ayarlar.cmd.Parameters.AddWithValue("silindi", false);
-            //ayarlar.cmd.ExecuteNonQuery();
-            string durum = Convert.ToString(ayarlar.cmd.ExecuteScalar());
+            bool durum = Convert.ToBoolean(ayarlar.cmd.ExecuteScalar());
 
-            if (durum == "false")
+            if (durum == false)
             {
-                //result.durum = "false";
-                state = "false";
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "SET NOCOUNT ON; insert into Hatirlatici.GrupParametreleri(HatirlaticiGrupID, Tip, GrupParametre, OlusturanID, OlusturmaTarihi, Silindi, Hatirlatma) values(@grupID, @tip, @parametreadi, @olusturanId, @olusturmaTarihi, @silindi, @hatirlatma) select SCOPE_IDENTITY()";
+                ayarlar.cmd.Parameters.AddWithValue("grupID", grupId);
+                ayarlar.cmd.Parameters.AddWithValue("tip", parametreTipi);
+                ayarlar.cmd.Parameters.AddWithValue("parametreadi", parametreAdi);
+                ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
+                ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now);
+                ayarlar.cmd.Parameters.AddWithValue("silindi", false);
+                ayarlar.cmd.Parameters.AddWithValue("hatirlatma", hatirlatma);
+
+                int Id = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+                if (hatirlatma == true)
+                {
+                    ayarlar.baglan();
+                    ayarlar.cmd.Parameters.Clear();
+                    ayarlar.cmd.CommandText = "insert into Hatirlatici.Hatirlatma(ParametreID, TarihindeHatirlat, TarihindenOnceHatirlat, TarihindenOnce, TarihBildirim, SayiyaGeldigindeHatirlat, SayiyaGeldiginde, SayiyaKalaHatirlat, SayiyaKala, SayiBildirim, OlusturanID, OlusturmaTarihi, Silindi, BildirimiAlacakPersonelID, TarihindeHatirlatildi, TarihindenOnceHatirlatildi, SayiyaGelinceHatirlatildi, SayiyaKalaHatirlatildi) " +
+                        "values(@parametreId, @tarihindeHatirlat, @tarihindenOnceHatirlat, @tarihindenOnce, @tarihBildirim, @sayiyaGeldiğindeHatirlat, @sayiyaGeldiğinde, @sayiyaKalaHatirlat, @sayiyaKala, @sayiBildirim, @olusturanId, @olusturmaTarihi, @silindi, @bildirimAlacakPersonelID, @tarihindeHatirlatildi, @tarihindenOnceHatirlatildi, @sayiyaGelinceHatirlatildi, @sayiyaKalaHatirlatildi)";
+                    ayarlar.cmd.Parameters.AddWithValue("parametreId", Id);
+                    ayarlar.cmd.Parameters.AddWithValue("tarihindeHatirlat", tarihindeHatirlat);
+                    ayarlar.cmd.Parameters.AddWithValue("tarihindenOnceHatirlat", tarihindeOnceHatirlat);
+                    ayarlar.cmd.Parameters.AddWithValue("tarihindenOnce", tarihindenOnce);
+                    ayarlar.cmd.Parameters.AddWithValue("tarihBildirim", tarihBildirim);
+                    ayarlar.cmd.Parameters.AddWithValue("sayiyaGeldiğindeHatirlat", sayiyaGeldiğindeHatirlat);
+                    ayarlar.cmd.Parameters.AddWithValue("sayiyaGeldiğinde", sayiyaGeldiğinde);
+                    ayarlar.cmd.Parameters.AddWithValue("sayiyaKalaHatirlat", sayiyaKalaHatirlat);
+                    ayarlar.cmd.Parameters.AddWithValue("sayiyaKala", sayiyaKala);
+                    ayarlar.cmd.Parameters.AddWithValue("sayiBildirim", sayiBildirim);
+                    ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
+                    ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now);
+                    ayarlar.cmd.Parameters.AddWithValue("silindi", false);
+                    ayarlar.cmd.Parameters.AddWithValue("tarihindeHatirlatildi", false);
+                    ayarlar.cmd.Parameters.AddWithValue("tarihindenOnceHatirlatildi", false);
+                    ayarlar.cmd.Parameters.AddWithValue("sayiyaGelinceHatirlatildi", false);
+                    ayarlar.cmd.Parameters.AddWithValue("sayiyaKalaHatirlatildi", false);
+                    ayarlar.cmd.Parameters.AddWithValue("bildirimAlacakPersonelID", bildirimAlacakPersonelID);
+                    ayarlar.cmd.ExecuteNonQuery();
+                }
+            }
+
+            if (durum == true)
+            {
+                state = "notBeAdded";
             }
         }
         catch (Exception e)
@@ -4781,15 +4835,7 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
             HataLogTut(e);
             state = "false";
         }
-        //return JsonConvert.SerializeObject(result);
         return state;
-    }
-
-    public class ParametreDegerAlResult
-    {
-        public int HatirlaticiGrupID { get; set; }
-        public string Tip { get; set; }
-        public string GrupParametre { get; set; }
     }
 
     [WebMethod]
@@ -4814,4 +4860,723 @@ public partial class System_root_ajax_islem1 : System.Web.UI.Page
         }
         return JsonConvert.SerializeObject(dt);
     }
+
+    [WebMethod]
+    public static string ParametreTanimlamalariDuzenle(int paramID)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "IF EXISTS (select * from Hatirlatici.GrupParametreleri where HatirlaticiGrupParametreleriID = @paramId and Hatirlatma = 'true' and Silindi = 'false') select grupParams.HatirlaticiGrupParametreleriID, grupParams.HatirlaticiGrupID, grupParams.Tip, grupParams.GrupParametre, ISNULL(grupParams.Hatirlatma, 0) as Hatirlatma, hatirlatma.HatirlatmaID, hatirlatma.TarihindeHatirlat, hatirlatma.TarihindenOnceHatirlat, hatirlatma.TarihindenOnce, hatirlatma.TarihBildirim, hatirlatma.SayiyaGeldigindeHatirlat, hatirlatma.SayiyaGeldiginde, hatirlatma.SayiyaKalaHatirlat, hatirlatma.SayiyaKala, hatirlatma.SayiBildirim, hatirlatma.BildirimiAlacakPersonelID from Hatirlatici.GrupParametreleri grupParams join Hatirlatici.Hatirlatma hatirlatma on grupParams.HatirlaticiGrupParametreleriID = hatirlatma.ParametreID where grupParams.HatirlaticiGrupParametreleriID = @paramId and grupParams.Silindi = 'false' and hatirlatma.Silindi = 'false' ELSE select grupParams.HatirlaticiGrupParametreleriID, grupParams.HatirlaticiGrupID, grupParams.Tip, grupParams.GrupParametre, ISNULL(grupParams.Hatirlatma, 0) as Hatirlatma from Hatirlatici.GrupParametreleri grupParams where grupParams.HatirlaticiGrupParametreleriID = @paramId and grupParams.Silindi = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("paramId", paramID);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
+    }
+
+    [WebMethod]
+    public static string ParametreTanimlamalariDuzenlemeYap(int grupId, string parametreAdi, string parametreTipi, bool hatirlatma, int parametrId, int hatirlatmaId, bool tarihindeHatirlat, bool tarihindeOnceHatirlat, int tarihindenOnce, string tarihBildirim, bool sayiyaGeldigindeHatirlat, int sayiyaGeldiginde, bool sayiyaKalaHatirlat, int sayiyaKala, string sayiBildirim, int bildirimiAlacakPersonelID)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update Hatirlatici.GrupParametreleri set HatirlaticiGrupID = @hatirlaticiGrupId, Tip = @tip, GrupParametre = @grupParametre, GuncelleyenID = @guncelleyen, GuncellemeTarihi = @guncellemeTarihi, Hatirlatma = @hatirlatma where HatirlaticiGrupParametreleriID = @parametrId";
+            ayarlar.cmd.Parameters.AddWithValue("hatirlaticiGrupId", grupId);
+            ayarlar.cmd.Parameters.AddWithValue("tip", parametreTipi);
+            ayarlar.cmd.Parameters.AddWithValue("grupParametre", parametreAdi);
+            ayarlar.cmd.Parameters.AddWithValue("guncelleyen", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("guncellemeTarihi", DateTime.Now);
+            ayarlar.cmd.Parameters.AddWithValue("hatirlatma", hatirlatma);
+            ayarlar.cmd.Parameters.AddWithValue("parametrId", parametrId);
+            ayarlar.cmd.ExecuteNonQuery();
+
+
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "IF EXISTS (select * from Hatirlatici.Hatirlatma where ParametreID = @parametrId) select 'true' ELSE select 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("parametrId", hatirlatmaId);
+            bool param = Convert.ToBoolean(ayarlar.cmd.ExecuteScalar());
+
+            if (hatirlatma == true)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+
+                if (param == true)
+                {
+                    ayarlar.cmd.CommandText = "update Hatirlatici.Hatirlatma set TarihindeHatirlat = @tarihindeHatirlat, TarihindenOnceHatirlat = @tarihindenOnceHatirlat, TarihindenOnce = @tarihindenOnce, TarihBildirim = @tarihBildirim, SayiyaGeldigindeHatirlat = @sayiyaGeldigindeHatirlat, SayiyaGeldiginde = @sayiyaGeldiginde, SayiyaKalaHatirlat = @sayiyaKalaHatirlat, SayiyaKala = @sayiyaKala, SayiBildirim = @sayiBildirim, GuncelleyenID = @İslemYapanKullaniciId, GuncellemeTarihi = @İslemTarihi, Silindi = 'false', BildirimiAlacakPersonelID = @bildirimiAlacakPersonelID where HatirlatmaID = @hatirlatmaId and ParametreID = @parametreID";
+                }
+                else
+                {
+                    ayarlar.cmd.CommandText = "insert into Hatirlatici.Hatirlatma(ParametreID, TarihindeHatirlat, TarihindenOnceHatirlat, TarihindenOnce, TarihBildirim, SayiyaGeldigindeHatirlat, SayiyaGeldiginde, SayiyaKalaHatirlat, SayiyaKala, SayiBildirim, OlusturanID, OlusturmaTarihi, Silindi) values(@parametreID, @tarihindeHatirlat, @tarihindenOnceHatirlat, @tarihindenOnce, @tarihBildirim, @sayiyaGeldigindeHatirlat, @sayiyaGeldiginde, @sayiyaKalaHatirlat, @sayiyaKala, @sayiBildirim, @İslemYapanKullaniciId, @İslemTarihi, 'false', @bildirimiAlacakPersonelID)";
+                }
+                ayarlar.cmd.Parameters.AddWithValue("tarihindeHatirlat", tarihindeHatirlat);
+                ayarlar.cmd.Parameters.AddWithValue("tarihindenOnceHatirlat", tarihindeOnceHatirlat);
+                ayarlar.cmd.Parameters.AddWithValue("tarihindenOnce", tarihindenOnce);
+                ayarlar.cmd.Parameters.AddWithValue("tarihBildirim", tarihBildirim);
+                ayarlar.cmd.Parameters.AddWithValue("sayiyaGeldigindeHatirlat", sayiyaGeldigindeHatirlat);
+                ayarlar.cmd.Parameters.AddWithValue("sayiyaGeldiginde", sayiyaGeldiginde);
+                ayarlar.cmd.Parameters.AddWithValue("sayiyaKalaHatirlat", sayiyaKalaHatirlat);
+                ayarlar.cmd.Parameters.AddWithValue("sayiyaKala", sayiyaKala);
+                ayarlar.cmd.Parameters.AddWithValue("sayiBildirim", sayiBildirim);
+                ayarlar.cmd.Parameters.AddWithValue("İslemYapanKullaniciId", SessionManager.CurrentUser.kullanici_id);
+                ayarlar.cmd.Parameters.AddWithValue("İslemTarihi", DateTime.Now);
+                ayarlar.cmd.Parameters.AddWithValue("hatirlatmaId", hatirlatmaId);
+                ayarlar.cmd.Parameters.AddWithValue("parametreID", parametrId);
+                ayarlar.cmd.Parameters.AddWithValue("bildirimiAlacakPersonelID", bildirimiAlacakPersonelID);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "update Hatirlatici.Hatirlatma set Silindi = 'true' where HatirlatmaID = @hatirlatmaId and ParametreID = @parametreId";
+                ayarlar.cmd.Parameters.AddWithValue("hatirlatmaId", hatirlatmaId);
+                ayarlar.cmd.Parameters.AddWithValue("parametreId", parametrId);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+
+    [WebMethod]
+    public static string ParametreTanimlamalariSil(int parametreId)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select COUNT(*) from Hatirlatici.Hatirlatma where ParametreID = @parametreId and Silindi = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("parametreId", parametreId);
+            int Count = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+            if (Count < 1)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "update Hatirlatici.GrupParametreleri set Silindi = 'true' where HatirlaticiGrupParametreleriID = @parametreId";
+                ayarlar.cmd.Parameters.AddWithValue("parametreId", parametreId);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                state = "silinemez";
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+
+    [WebMethod]
+    public static string GrupDegerleriDuzenle(int degerId)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select grupDeger.HatirlaticiGrupDegerleriID, grupDeger.HatirlaticiGrupParametreID, grupDeger.GrupValue, grupParams.GrupParametre, grupParams.Tip, grup.GrupAdi, grup.HatirlaticiGrupID from Hatirlatici.GrupDegerleri as grupDeger INNER JOIN Hatirlatici.GrupParametreleri AS grupParams ON grupDeger.HatirlaticiGrupParametreID = grupParams.HatirlaticiGrupParametreleriID INNER JOIN Hatirlatici.Grup as grup On grupParams.HatirlaticiGrupID = grup.HatirlaticiGrupID where grupDeger.HatirlaticiGrupDegerleriID = @degerId and grupDeger.Silindi = 'false' and grupParams.Silindi = 'false' and grup.Silindi = 'false' order by HatirlaticiGrupDegerleriID desc";
+            ayarlar.cmd.Parameters.AddWithValue("degerId", degerId);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
+    }
+
+    [WebMethod]
+    public static string GrupDegerDuzenle(int degerID, string degerValue)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update Hatirlatici.GrupDegerleri set GrupValue = @grupValue, GuncelleyenID = @guncelleyenId, GuncellemeTarihi = @guncellemeTarihi where HatirlaticiGrupDegerleriID = @degerId";
+            ayarlar.cmd.Parameters.AddWithValue("grupValue", degerValue);
+            ayarlar.cmd.Parameters.AddWithValue("degerId", degerID);
+            ayarlar.cmd.Parameters.AddWithValue("guncelleyenId", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("guncellemeTarihi", DateTime.Now);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+
+    [WebMethod]
+    public static string GrupDegerleriSil(int degerID)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update Hatirlatici.GrupDegerleri set Silindi = 'true', GuncelleyenID = @guncelleyenId, GuncellemeTarihi = @guncellemeTarihi where HatirlaticiGrupDegerleriID = @degerId";
+            ayarlar.cmd.Parameters.AddWithValue("guncelleyenId", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("guncellemeTarihi", DateTime.Now);
+            ayarlar.cmd.Parameters.AddWithValue("degerId", degerID);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+
+    [WebMethod]
+    public static string ZorunluDosyaKayıt(string dosyaAdi, bool zorunlu)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "IF NOT EXISTS(select * from ZorunluDosyalar where DosyaAdi like N'%"+ dosyaAdi +"%' and Silindi = 'false') insert into ZorunluDosyalar(DosyaAdi, Zorunlu, OlusturanID, OlusturmaTarihi, Silindi) values(@dosyaAdi, @Zorunlu, @olusturanId, @olusturmaTarihi, 'false'); ELSE select 'notBeAdded'";
+            ayarlar.cmd.Parameters.AddWithValue("dosyaAdi", dosyaAdi);
+            ayarlar.cmd.Parameters.AddWithValue("Zorunlu", zorunlu);
+            ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now);
+
+            string durum = Convert.ToString(ayarlar.cmd.ExecuteScalar());
+
+            if (durum == "notBeAdded")
+            {
+                state = "notBeAdded";
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+
+    [WebMethod]
+    public static string ZorunluDosyaDuzenle(int dosyaId)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select * from ZorunluDosyalar where DosyaId = @dosyaId and Silindi = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("dosyaId", dosyaId);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
+    }
+
+    [WebMethod]
+    public static string ZorunluDosyaDuzenlemeYap(int dosyaId, string dosyaAdi, bool zorunlu)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update ZorunluDosyalar set DosyaAdi = @dosyaAdi, Zorunlu = @zorunlu where DosyaID = @dosyaId";
+            ayarlar.cmd.Parameters.AddWithValue("@dosyaId", dosyaId);
+            ayarlar.cmd.Parameters.AddWithValue("@dosyaAdi", dosyaAdi);
+            ayarlar.cmd.Parameters.AddWithValue("@zorunlu", zorunlu);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+
+    [WebMethod]
+    public static string ZorunluDosyaSil(int dosyaId)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select COUNT(*) as kullanimda from ahtapot_dosya_deposu where dosya_id = @dosyaId and cop = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("dosyaId", dosyaId);
+            int count = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+            if (count == 0)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "update ZorunluDosyalar set Silindi = 'true' where DosyaID = @dosyaId";
+                ayarlar.cmd.Parameters.AddWithValue("dosyaId", dosyaId);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+            else if (count > 0)
+                state = "indelible";
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+
+    [WebMethod]
+    public static string GrupDuzenle(int grupId)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select * from Hatirlatici.Grup where Silindi = 'false' and HatirlaticiGrupID = @grupId";
+            ayarlar.cmd.Parameters.AddWithValue("grupId", grupId);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
+    }
+
+    [WebMethod]
+    public static string GrupDuzenlemeYap(int grupId, string grupAdi)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update Hatirlatici.Grup set GrupAdi = @grupAdi where HatirlaticiGrupID = @grupId";
+            ayarlar.cmd.Parameters.AddWithValue("@grupId", grupId);
+            ayarlar.cmd.Parameters.AddWithValue("@grupAdi", grupAdi);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+
+    [WebMethod]
+    public static string GrupSil(int grupId)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select COUNT(*) from Hatirlatici.GrupParametreleri where HatirlaticiGrupID = @grupId and Silindi = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("grupId", grupId);
+            int count = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+            if (count < 1)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "update Hatirlatici.Grup set Silindi = 'true' where HatirlaticiGrupID = @grupId";
+                ayarlar.cmd.Parameters.AddWithValue("grupId", grupId);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                state = "kullanımda";
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+    #endregion
+
+    #region Araç Takip
+    public class AracTakipGrupResult
+    {
+        public int grupId { get; set; }
+        public string grupAdi { get; set; }
+        public string message { get; set; }
+    }
+    [WebMethod]
+    public static string AracTakipGrupKaydet(string grupAdi)
+    {
+        AracTakipGrupResult grupResult = new AracTakipGrupResult();
+        int GrupId;
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select COUNT(*) from AracTakip.Grup where Silindi = 'false' and GrupAdi like N'%" + grupAdi + "%'";
+            int count = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+            if (count < 1)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "IF NOT EXISTS(select * from AracTakip.Grup where Silindi = 'false' and GrupAdi like N'%" + grupAdi + "%') set nocount on; insert into AracTakip.Grup(GrupAdi, OlusturanID, OlusturmaTarihi, Silindi) values(@grupAdi, @olusturanId, @olusturmaTarihi, @silindi); SELECT SCOPE_IDENTITY();";
+                ayarlar.cmd.Parameters.AddWithValue("grupAdi", grupAdi);
+                ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
+                ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now);
+                ayarlar.cmd.Parameters.AddWithValue("silindi", false);
+                GrupId = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+                if (GrupId != 0)
+                {
+                    ayarlar.baglan();
+                    ayarlar.cmd.Parameters.Clear();
+                    ayarlar.cmd.CommandText = "select * from AracTakip.Grup where Silindi = 'false' and AracTakipGrupID = @grupID";
+                    ayarlar.cmd.Parameters.AddWithValue("grupID", GrupId);
+                    ayarlar.cmd.ExecuteNonQuery();
+
+                    SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+                    DataTable dt = new DataTable();
+                    sda.Fill(dt);
+
+                    grupResult.grupId = Convert.ToInt32(dt.Rows[0].ItemArray[0]);
+                    grupResult.grupAdi = dt.Rows[0].ItemArray[1].ToString();
+                }
+            }
+            else
+            {
+                grupResult.message = "notBeAdded";
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(grupResult);
+    }
+    [WebMethod]
+    public static string AracTakipGrupDuzenle(int grupId)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select * from AracTakip.Grup where Silindi = 'false' and AracTakipGrupID = @grupId";
+            ayarlar.cmd.Parameters.AddWithValue("grupId", grupId);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
+    }
+    [WebMethod]
+    public static string AracTakipGrupDuzenlemeYap(int grupId, string grupAdi)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update AracTakip.Grup set GrupAdi = @grupAdi where AracTakipGrupID = @grupId";
+            ayarlar.cmd.Parameters.AddWithValue("@grupId", grupId);
+            ayarlar.cmd.Parameters.AddWithValue("@grupAdi", grupAdi);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+    [WebMethod]
+    public static string AracTakipGrupSil(int grupId)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select COUNT(*) from AracTakip.GrupParametreleri where AracTakipGrupID = @grupId and Silindi = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("grupId", grupId);
+            int count = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+            if (count < 1)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "update AracTakip.Grup set Silindi = 'true' where AracTakipGrupID = @grupId";
+                ayarlar.cmd.Parameters.AddWithValue("grupId", grupId);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                state = "kullanımda";
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+    [WebMethod]
+    public static string AracTakipGrupParametreKaydet(int grupId, string parametreAdi, string parametreTipi, bool hatirlatma)
+    {
+        string state = "true";
+        ParametreResult result = new ParametreResult();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "IF EXISTS(SELECT * FROM AracTakip.GrupParametreleri WHERE GrupParametre = @parametreadi and AracTakipGrupId = @grupID and Silindi = 'false') select 'true' ELSE select 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("grupID", grupId);
+            ayarlar.cmd.Parameters.AddWithValue("parametreadi", parametreAdi);
+            bool durum = Convert.ToBoolean(ayarlar.cmd.ExecuteScalar());
+
+            if (durum == false)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "insert into AracTakip.GrupParametreleri(AracTakipGrupID, Tip, GrupParametre, OlusturanID, OlusturmaTarihi, Silindi, Hatirlatma) values(@grupID, @tip, @parametreadi, @olusturanId, @olusturmaTarihi, @silindi, @hatirlatma)";
+                ayarlar.cmd.Parameters.AddWithValue("grupID", grupId);
+                ayarlar.cmd.Parameters.AddWithValue("tip", parametreTipi);
+                ayarlar.cmd.Parameters.AddWithValue("parametreadi", parametreAdi);
+                ayarlar.cmd.Parameters.AddWithValue("olusturanId", SessionManager.CurrentUser.kullanici_id);
+                ayarlar.cmd.Parameters.AddWithValue("olusturmaTarihi", DateTime.Now);
+                ayarlar.cmd.Parameters.AddWithValue("silindi", false);
+                ayarlar.cmd.Parameters.AddWithValue("hatirlatma", hatirlatma);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+
+            if (durum == true)
+            {
+                state = "notBeAdded";
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+    [WebMethod] 
+    public static string AracTakipParametreTanimlamalariDuzenle(int paramID)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select grupParams.AracTakipGrupParametreleriID, grupParams.AracTakipGrupID, grupParams.Tip, grupParams.GrupParametre, ISNULL(grupParams.Hatirlatma, 0) as Hatirlatma from AracTakip.GrupParametreleri grupParams where grupParams.AracTakipGrupParametreleriID = @paramId and grupParams.Silindi = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("paramId", paramID);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
+    }
+    [WebMethod]
+    public static string AracTakipParametreTanimlamalariDuzenlemeYap(int paramId, int grupId, string parametreAdi, string parametreTipi, bool hatirlatma)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update AracTakip.GrupParametreleri set AracTakipGrupID = @hatirlaticiGrupId, Tip = @tip, GrupParametre = @grupParametre, GuncelleyenID = @guncelleyen, GuncellemeTarihi = @guncellemeTarihi, Hatirlatma = @hatirlatma where AracTakipGrupParametreleriID = @parametrId";
+            ayarlar.cmd.Parameters.AddWithValue("hatirlaticiGrupId", grupId);
+            ayarlar.cmd.Parameters.AddWithValue("tip", parametreTipi);
+            ayarlar.cmd.Parameters.AddWithValue("grupParametre", parametreAdi);
+            ayarlar.cmd.Parameters.AddWithValue("guncelleyen", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("guncellemeTarihi", DateTime.Now);
+            ayarlar.cmd.Parameters.AddWithValue("hatirlatma", hatirlatma);
+            ayarlar.cmd.Parameters.AddWithValue("parametrId", paramId);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+    [WebMethod]
+    public static string AracTakipParametreTanimlamalariSil(int paramId)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select COUNT(*) from AracTakip.GrupParametreleri where AracTakipGrupParametreleriID = @parametreId and Silindi = 'false' and Hatirlatma = 'true'";
+            ayarlar.cmd.Parameters.AddWithValue("parametreId", paramId);
+            int Count = Convert.ToInt32(ayarlar.cmd.ExecuteScalar());
+
+            if (Count < 1)
+            {
+                ayarlar.baglan();
+                ayarlar.cmd.Parameters.Clear();
+                ayarlar.cmd.CommandText = "update AracTakip.GrupParametreleri set Silindi = 'true' where AracTakipGrupParametreleriID = @parametreId";
+                ayarlar.cmd.Parameters.AddWithValue("parametreId", paramId);
+                ayarlar.cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                state = "silinemez";
+            }
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+    [WebMethod]
+    public static string AracTakipGrupDegerAl(int GrupId)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select * from AracTakip.GrupParametreleri where AracTakipGrupID = @grupID and Silindi = 'false'";
+            ayarlar.cmd.Parameters.AddWithValue("grupID", GrupId);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
+    }
+    [WebMethod]
+    public static string AracTakipGrupDegerleriDuzenle(int degerId)
+    {
+        DataTable dt = new DataTable();
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "select grupDeger.AracTakipGrupDegerleriID, grupDeger.AracTakipGrupParametreID, grupDeger.GrupValue, grupParams.GrupParametre, grupParams.Tip, grup.GrupAdi, grup.AracTakipGrupID from AracTakip.GrupDegerleri as grupDeger INNER JOIN AracTakip.GrupParametreleri AS grupParams ON grupDeger.AracTakipGrupParametreID = grupParams.AracTakipGrupParametreleriID INNER JOIN AracTakip.Grup as grup On grupParams.AracTakipGrupID = grup.AracTakipGrupID where grupDeger.AracTakipGrupDegerleriID = @degerId and grupDeger.Silindi = 'false' and grupParams.Silindi = 'false' and grup.Silindi = 'false' order by AracTakipGrupDegerleriID desc";
+            ayarlar.cmd.Parameters.AddWithValue("degerId", degerId);
+            ayarlar.cmd.ExecuteNonQuery();
+
+            SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
+            sda.Fill(dt);
+            ayarlar.cnn.Close();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+        }
+        return JsonConvert.SerializeObject(dt);
+    }
+    [WebMethod]
+    public static string AracTakipGrupDegerDuzenleYap(int degerID, string degerValue)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update AracTakip.GrupDegerleri set GrupValue = @grupValue, GuncelleyenID = @guncelleyenId, GuncellemeTarihi = @guncellemeTarihi where AracTakipGrupDegerleriID = @degerId";
+            ayarlar.cmd.Parameters.AddWithValue("grupValue", degerValue);
+            ayarlar.cmd.Parameters.AddWithValue("degerId", degerID);
+            ayarlar.cmd.Parameters.AddWithValue("guncelleyenId", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("guncellemeTarihi", DateTime.Now);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+    [WebMethod]
+    public static string AracTakipGrupDegerleriSil(int degerId)
+    {
+        string state = "true";
+        try
+        {
+            ayarlar.baglan();
+            ayarlar.cmd.Parameters.Clear();
+            ayarlar.cmd.CommandText = "update AracTakip.GrupDegerleri set Silindi = 'true', GuncelleyenID = @guncelleyenId, GuncellemeTarihi = @guncellemeTarihi where AracTakipGrupDegerleriID = @degerId";
+            ayarlar.cmd.Parameters.AddWithValue("guncelleyenId", SessionManager.CurrentUser.kullanici_id);
+            ayarlar.cmd.Parameters.AddWithValue("guncellemeTarihi", DateTime.Now);
+            ayarlar.cmd.Parameters.AddWithValue("degerId", degerId);
+            ayarlar.cmd.ExecuteNonQuery();
+        }
+        catch (Exception e)
+        {
+            HataLogTut(e);
+            state = "false";
+        }
+        return state;
+    }
+    #endregion
 }

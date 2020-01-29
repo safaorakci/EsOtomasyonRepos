@@ -349,7 +349,9 @@ function CokluIsYap(sayfa,personelid, subpage,IsID) {
     if (sayfa == "personel_detaylari") {
         sayfagetir('/' + sayfa + '/', 'jsid=4559&personel_id=' + personelid);
     } else if (sayfa == "is_listesi") {
-        sayfagetir('/' + sayfa + '/', 'jsid=4559&bildirim=true&bildirim_id=' + IsID );
+        sayfagetir('/' + sayfa + '/', 'jsid=4559&bildirim=true&bildirim_id=' + IsID);
+    } else if (sayfa == "bakim_yonetimi") {
+        sayfagetir('/' + sayfa + '/', 'jsid=4559');
     }
     
 

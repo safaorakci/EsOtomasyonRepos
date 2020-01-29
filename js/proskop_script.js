@@ -144,9 +144,13 @@ function SiparisPopup(IsID, ParcaId, adet, toplamAdet, durum, parcaBilgisi) {
         stParca += " " + arrParca[i] + " " + arrAdet[i] + " Adet | ";
     }
 
+    $.fn.toHtml = function () {
+        return $(this).html("<span class='label label-danger'>" + stParca + "</span>" + " " + "Sipariş verilecek. Siparişi Onaylıyor Musunuz ?");
+    };
+
     swal({
         title: "Satınalma Formu",
-        text: stParca + ": Sipariş verilecek. Siparişi Onaylıyor Musunuz ?",
+        text: stParca + " " + "Sipariş verilecek. Siparişi Onaylıyor Musunuz?",
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -3065,9 +3069,11 @@ function izin_talebi_gonder(personel_id) {
     var nedeni = $("#izin_nedeni").val();
     var turu = $("#izin_turu").val();
     var aciklama = $("#izin_aciklama").val();
+    var personel_adina = $("#personel_adina").val();
 
     var data = "islem=profil_personel_izin_kayitlarini_getir&islem2=talep_ekle";
     data += "&personel_id=" + personel_id;
+    data += "&personel_adina=" + personel_adina;
     data += "&baslangic_tarihi=" + baslangic_tarihi;
     data += "&baslangic_saati=" + baslangic_saati;
     data += "&bitis_tarihi=" + bitis_tarihi;
@@ -3740,6 +3746,7 @@ function depo_dosya_sil(etiket, kayit_id, dosya_id) {
         data = encodeURI(data);
         $("#depo_dosya_listesi").loadHTML({ url: "/ajax_request2/", data: data }, function () {
             mesaj_ver("Dosya Deposu", "Kayıt Başarıyla Silindi", "success");
+            zorunlu_dosyalar(etiket, kayit_id);
         });
     }
 }
@@ -3747,21 +3754,34 @@ function depo_dosya_sil(etiket, kayit_id, dosya_id) {
 
 function depo_dosya_yukle(etiket, kayit_id) {
 
-    if ($("#dosya_yukleme_form input[type=text]").valid("valid")) {
+    //if ($("#dosya_yukleme_form input[type=text]").valid("valid")) {
 
-        var depo_dosya_yolu = $("#depo_dosya_yolu").attr("filepath");
-        var depo_dosya_adi = $("#depo_dosya_adi").val();
+    if ($("#dosyalarSelect").val().length > 0) {
+        if ($("#depo_dosya_yolu").val().length > 0) {
+            var depo_dosya_yolu = $("#depo_dosya_yolu").attr("filepath");
+            var aciklama = $("#aciklama").val();
+            var dosyaAdi = $("#dosyalarSelect option:selected").html();
+            var dosyaId = $("#dosyalarSelect").val();
 
-        var data = "islem=depo_dosyalari_getir&islem2=ekle";
-        data += "&etiket=" + etiket;
-        data += "&kayit_id=" + kayit_id;
-        data += "&depo_dosya_yolu=" + depo_dosya_yolu;
-        data += "&depo_dosya_adi=" + depo_dosya_adi;
-        data = encodeURI(data);
-        $("#depo_dosya_listesi").loadHTML({ url: "/ajax_request2/", data: data }, function () {
-            mesaj_ver("Dosya Deposu", "", "Kayıt Başarıyla Eklendi");
-        });
+            var data = "islem=depo_dosyalari_getir&islem2=ekle";
+            data += "&etiket=" + etiket;
+            data += "&kayit_id=" + kayit_id;
+            data += "&depo_dosya_yolu=" + depo_dosya_yolu;
+            data += "&aciklama=" + aciklama;
+            data += "&depo_dosya_adi=" + dosyaAdi;
+            data += "&depo_dosya_id=" + dosyaId;
+            data = encodeURI(data);
+            $("#depo_dosya_listesi").loadHTML({ url: "/ajax_request2/", data: data }, function () {
+                mesaj_ver("Dosya Deposu", "", "Kayıt Başarıyla Eklendi");
+                zorunlu_dosyalar(etiket, kayit_id);
+            });
+        }
+        else
+            mesaj_ver("Dosyalar", "Dosya Zorunludur !", "danger");
     }
+    else
+        mesaj_ver("Dosyalar", "Dosya Tipi Zorunludur !", "danger");
+    //}
 }
 
 function depo_dosyalari_getir(etiket, kayit_id) {
@@ -9018,6 +9038,8 @@ function ServisBakimKaydiEkle() {
 
     data += "&musteri_id=" + $("#musteri_id").val();
     data += "&proje_id=" + $("#proje-bilgi").val();
+    data += "&rapor_durumu=" + $("#firmarapordurumu").val();
+    data += "&personelbildirim=" + $("#personelbildirim").val();
     data += "&firmamakinebilgi=" + $("#firmamakinebilgi").val();
     data += "&firmaariza=" + $("#firmaariza").val();
     data += "&baslangic_tarihi=" + $("#baslangic_tarihi").val();
@@ -9183,6 +9205,8 @@ function ServisBakimKaydiDuzenlemeYap(kayitId) {
     data += "&sonradaneklenensayi=" + $("#parcalarId").attr("sonradaneklenensayi");
     data += "&musteri_id=" + $("#musteri_id").val();
     data += "&proje_id=" + $("#proje-bilgi").val();
+    data += "&rapor_durumu=" + $("#firmarapordurumu").val();
+    data += "&personelbildirim=" + $("#personelbildirim").val();
     data += "&firmamakinebilgi=" + $("#firmamakinebilgi").val();
     data += "&firmaariza=" + $("#firmaariza").val();
     data += "&baslangic_tarihi=" + $("#baslangic_tarihi").val();
@@ -9278,6 +9302,368 @@ function musteribilgilerial(state) {
     });
 }
 
+//Araç Takip
+function AracaTakipParametreleri() {
+    var data = "islem=aracTakipParametreleri";
+    $("#aracTakipParametreleri").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        sayfa_yuklenince();
+    });
+}
+
+function AracTakipGrupList() {
+    var data = "islem=aractakipGrupList";
+    $("#AracTakipGrupListesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        sayfa_yuklenince();
+    });
+}
+
+function AracTakipGrupDegerleri() {
+    var data = "islem=aracTakipGrupDegerleri";
+    $("#AracTakipGrupDegerleri").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        sayfa_yuklenince();
+    });
+}
+
+function AracTakipGrupKaydet(url) {
+    var params = {
+        grupAdi: $("#grupAdi").val()
+    };
+
+    GenericAjax(url, params, AracTakipGrupKaydetSuccess, true);
+}
+
+function AracTakipGrupKaydetSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+    if (result.message !== "notBeAdded") {
+        $("#parametre").trigger("click");
+        mesaj_ver("Araç Takip", "Ekleme İşlemi Başarılı", "success");
+        $("#grupAdi").val("");
+        AracTakipGrupList();
+        if (result.grupId !== 0 || result.grupId !== null) {
+            $("#gruplar").append("<option selected value='" + result.grupId + "'> " + result.grupAdi + " </option>");
+        }
+    }
+    else {
+        mesaj_ver("Araç Takip", "Eklemek İstediğiniz Grup Adı Mevcut !", "danger");
+    }
+}
+
+function AracTakipGrupDuzenle(url, id) {
+    var params = {
+        grupId: id
+    };
+
+    GenericAjax(url, params, AracTakipGrupDuzenleSuccess, true);
+}
+
+function AracTakipGrupDuzenleSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+
+    $("#grupKaydet").hide();
+    $("#grupDuzenle").show().attr("onclick", "AracTakipGrupDuzenlemeYap('/System_Root/ajax/islem1.aspx/AracTakipGrupDuzenlemeYap', '" + result[0].AracTakipGrupID + "');");
+    $("#grupAdi").val(result[0].GrupAdi);
+}
+
+function AracTakipGrupDuzenlemeYap(url, id) {
+    var params = {
+        grupId: id,
+        grupAdi: $("#grupAdi").val()
+    };
+
+    GenericAjax(url, params, AracTakipGrupDuzenlemeYapSuccess, true);
+}
+
+function AracTakipGrupDuzenlemeYapSuccess(data) {
+    if (data.d === "true") {
+        mesaj_ver("Araç Takip", "Güncelleme İşlemi Başarılı", "success");
+        AracTakipGrupList();
+        $("#grupAdi").val("");
+        $("#grupKaydet").show();
+        $("#grupDuzenle").hide();
+    }
+    else
+        mesaj_ver("Araç Takip", "Güncelleme İşlemi Başarısız !", "danger");
+}
+
+function AracTakipGrupSil(url, id) {
+    var r = confirm("Grup Adını Silmek İstiyormusunuz ?");
+    if (r) {
+        var params = {
+            grupId: id
+        };
+        GenericAjax(url, params, AracTakipGrupSilSuccess, true);
+    }
+}
+
+function AracTakipGrupSilSuccess(data) {
+    if (data.d === "true") {
+        mesaj_ver("Araç Takip", "Silme İşlemi Başarılı", "success");
+        AracTakipGrupList();
+        $("#grupAdi").val("");
+        $("#grupKaydet").show();
+        $("#grupDuzenle").hide();
+    }
+    else if (data.d === "kullanımda")
+        mesaj_ver("Araç Takip", "Silmek İstediğiniz Grup Kullanımda", "danger");
+    else
+        mesaj_ver("Araç Takip", "Silme İşlemi Başarısız !", "danger");
+}
+
+function AracTakipGrupParametreKaydet(url) {
+    var params = {
+        grupId: $("#gruplar").val(),
+        parametreAdi: $("#parametreAdi").val(),
+        parametreTipi: $("#parametreTipi").val(),
+        hatirlatma: $("#hatirlatma_chk").is(":checked")
+    };
+
+    GenericAjax(url, params, AracTakipGrupParametreKaydetSuccess, true);
+}
+
+function AracTakipGrupParametreKaydetSuccess(data) {
+    if (data.d === "false")
+        mesaj_ver("Parametre Tanımı", "Ekleme İşlemi Başarısız !", "danger");
+    else if (data.d === "notBeAdded")
+        mesaj_ver("Araç Takip", "Girmiş Olduğunuz Parametre Mevcut.", "danger");
+    else {
+        mesaj_ver("Araç Takip", "Ekleme İşlemi Başarılı", "success");
+        $("#parametreAdi").val("");
+        $("#parametreTipi").val(0).select();
+        if ($("#hatirlatma_chk").is(":checked") === true)
+            $("#hatirlatma_chk").trigger("click");
+    }
+    AracaTakipParametreleri();
+}
+
+function AracTakipParametreTanimlamalariDuzenle(url, id) {
+    var params = {
+        paramID: id
+    };
+
+    GenericAjax(url, params, AracTakipParametreTanimlamalariDuzenleSuccess, true);
+}
+
+function AracTakipParametreTanimlamalariDuzenleSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+    console.log(result);
+    if ($("#parametreTanimi").height() < 363)
+        $("#parametre").trigger("click");
+
+    $("#ParametreKaydet").hide();
+    $("#ParametreDuzenle").show();
+
+    if (result[0].HatirlatmaID === undefined)
+        $("#ParametreDuzenle").attr("onclick", "AracTakipParametreTanimlamalariDuzenlemeYap('/System_Root/ajax/islem1.aspx/AracTakipParametreTanimlamalariDuzenlemeYap', '" + result[0].AracTakipGrupParametreleriID + "')");
+    else
+        $("#ParametreDuzenle").attr("onclick", "AracTakipParametreTanimlamalariDuzenlemeYap('/System_Root/ajax/islem1.aspx/AracTakipParametreTanimlamalariDuzenlemeYap', '" + result[0].AracTakipGrupParametreleriID + "', '" + result[0].HatirlatmaID + "')");
+
+    $("#gruplar").val(result[0].AracTakipGrupID).change();
+    $("#parametreAdi").val(result[0].GrupParametre);
+    $("#parametreTipi").val(result[0].Tip).change();
+
+    if (result[0].Hatirlatma === true) {
+        if ($("#hatirlatma_chk").is(":checked") === false)
+            $("#hatirlatma_chk").trigger('click');
+    }
+    else {
+        if ($("#hatirlatma_chk").is(":checked") === true)
+            $("#hatirlatma_chk").trigger('click');
+    }
+}
+
+function AracTakipParametreTanimlamalariDuzenlemeYap(url, id) {
+    var params = {
+        paramId: id,
+        grupId: $("#gruplar").val(),
+        parametreAdi: $("#parametreAdi").val(),
+        parametreTipi: $("#parametreTipi").val(),
+        hatirlatma: $("#hatirlatma_chk").is(":checked")
+    };
+
+    GenericAjax(url, params, AracTakipParametreTanimlamalariDuzenlemeYapSuccess, true);
+}
+
+function AracTakipParametreTanimlamalariDuzenlemeYapSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+    if (result === true) {
+        mesaj_ver("Araç Takip", "Güncelleme İşlemi Başarılı", "success");
+        AracaTakipParametreleri();
+        clearItem();
+        $("#ParametreDuzenle").hide();
+        $("#ParametreKaydet").show();
+    }
+    else {
+        mesaj_ver("Araç Takip", "Güncelleme İşlemi Başarısız", "danger");
+    }
+}
+
+function AracTakipParametreTanimlamalariSil(url, id) {
+    var r = confirm("Parametreyi Silmek İstiyormusunuz ?");
+    if (r) {
+        var params = {
+            paramId: id
+        };
+
+        GenericAjax(url, params, AracTakipParametreTanimlamalariSilSuccess, true);
+    }
+}
+
+function AracTakipParametreTanimlamalariSilSuccess(data) {
+    if (data.d === "true") {
+        mesaj_ver("Araç Takip", "Silme İşlemi Başarılı.", "success");
+        AracaTakipParametreleri();
+    }
+    else if (data.d === "silinemez")
+        mesaj_ver("Araç Takip", "Silmek İstediğiniz Parametreye Tanımlı Hatırlatma Var. Silinemez", "danger");
+    else
+        mesaj_ver("Araç Takip", "Silme İşlemi Başarısız.", "danger");
+}
+
+function AracTakipGrupDegerAl(url) {
+        var parametr = {
+        GrupId: $("#grupAdi").val()
+    };
+    GenericAjax(url, parametr, AracTakipGrupDegerAlSuccess, true);
+}
+
+function AracTakipGrupDegerAlSuccess(data) {
+
+    $("#grupdegerleri").empty();
+    var result = jQuery.parseJSON(data.d);
+    for (var i = 0; i < result.length; i++) {
+        var tip = result[i].Tip;
+        var parametre = result[i].GrupParametre;
+        var Id = result[i].AracTakipGrupParametreleriID;
+        //var paramsId = result[i].HatirlaticiGrupParametreleriID;
+
+        if (tip === "Metin") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='text' paramId='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
+        }
+        if (tip === "Sayi") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='number' min='1' paramId='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
+        }
+        if (tip === "Tarih") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <div class='input-group input-group-primary mb-1' style='margin-bottom:0px'> <span class='input-group-addon'><i class='icon-prepend fa fa-calendar'></i></span> <input type='text' paramId='" + Id + "' class='takvimyap form-control' /> </div>");
+        }
+    }
+    $("#grupdegerleri").append("<button type='button' class='btn btn-success mt-3 float-right' onclick='AracTakipGrupDegeriKaydet();'>Kaydet</button>");
+    sayfa_yuklenince();
+}
+
+function AracTakipGrupDegeriKaydet() {
+    var grupId = $("#grupAdi").val();
+    var data = "islem=aracTakipGrupDegerleri&islem2=ekle";
+    var elementCount = $("#grupDeger input").length;
+    var paramsId = [];
+    var params = [];
+    $("#grupDeger input").each(function () {
+        params.push($(this).val());
+        paramsId.push($(this).attr("paramId"));
+    });
+
+    for (var i = 0; i < params.length; i++) {
+        if (data === "") {
+            data = "value" + i + "=" + params[i];
+        }
+        else {
+            data += "&value" + i + "=" + params[i];
+        }
+        if (data === "") {
+            data = "paramId" + i + "=" + paramsId[i];
+        }
+        else {
+            data += "&paramId" + i + "=" + paramsId[i];
+        }
+    }
+    data += "&grupId=" + grupId;
+    data += "&count=" + elementCount;
+
+    $("#parametreDeger").loadHTML({ url: "/ajax_request6/", data: data }, function (data) {
+        mesaj_ver("Parametre Değerleri", "Ekleme Işlemi Başarılı", "success");
+        datatableyap();
+        AracTakipGrupDegerleri();
+        $("#grupAdi").val(0).select();
+        $("#grupdegerleri").empty();
+    });
+}
+
+function AracTakipGrupDegerleriDuzenle(url, Id) {
+    var params = {
+        degerId: Id
+    };
+    GenericAjax(url, params, AracTakipGrupDegerleriDuzenleSuccess, true);
+}
+
+function AracTakipGrupDegerleriDuzenleSuccess(data) {
+    $("#grupdegerleri").empty();
+    var result = jQuery.parseJSON(data.d);
+
+    $("#grupAdi").val(result[0].AracTakipGrupID).select();
+
+    for (var i = 0; i < result.length; i++) {
+        var tip = result[i].Tip;
+        var parametre = result[i].GrupParametre;
+        var Id = result[i].AracTakipGrupDegerleriID;
+        var grupValue = result[i].GrupValue;
+
+        if (tip === "Metin") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='text' value='" + grupValue + "' id='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
+        }
+        if (tip === "Sayi") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='number' value='" + grupValue + "' min='1' id='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
+        }
+        if (tip === "Tarih") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <div class='input-group input-group-primary mb-1' style='margin-bottom:0px'> <span class='input-group-addon'><i class='icon-prepend fa fa-calendar'></i></span> <input type='text' id='" + Id + "' value='" + grupValue + "' class='form-control takvimyap' /> </div>");
+        }
+    }
+    $("#grupdegerleri").append("<button type='button' class='btn btn-info mt-3 float-right' id='degerDuzenle'>Düzenle</button>");
+    $("#degerDuzenle").attr("onclick", "AracTakipGrupDegerDuzenleYap('/System_Root/ajax/islem1.aspx/AracTakipGrupDegerDuzenleYap', '" + Id + "');");
+    sayfa_yuklenince();
+}
+
+function AracTakipGrupDegerDuzenleYap(url, id) {
+    var params = {
+        degerID: id,
+        degerValue: $("#" + id).val()
+    };
+    GenericAjax(url, params, AracTakipGrupDegerDuzenleYapSuccess, true); 
+}
+
+function AracTakipGrupDegerDuzenleYapSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+
+    if (result === true) {
+        mesaj_ver("Hatırlatıcı", "Kayıt Başarıyla Güncellendi", "success");
+        AracTakipGrupDegerleri();
+        $("#grupAdi").val(0).select();
+        $("#grupdegerleri").empty();
+    }
+    else
+        mesaj_ver("Hatırlatıcı", "Güncelleme İşlemi Başarısız !", "danger");
+}
+
+function AracTakipGrupDegerleriSil(url, id) {
+    var r = confirm("Değeri Silmek İstiyormusunuz ?");
+    if (r) {
+        var params = {
+            degerId: id
+        };
+
+        GenericAjax(url, params, AracTakipGrupDegerleriSilSuccess, true);
+    }
+}
+
+function AracTakipGrupDegerleriSilSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+    if (result === true) {
+        mesaj_ver("Hatırlarıcı", "Silme İşlemi Başarılı", "success");
+        AracTakipGrupDegerleri();
+    }
+    else
+        mesaj_ver("Hatırlarıcı", "Silme İşlemi Başarısız !", "danger");
+}
+
+//Hatırlarıcı
 function ParametreDegerAl(url) {
     var parametr = {
         GrupId: $("#grupAdi").val()
@@ -9296,7 +9682,8 @@ function ParametreDegerAlSuccess(data) {
     for (var i = 0; i < result.length; i++) {
         var tip = result[i].Tip;
         var parametre = result[i].GrupParametre;
-        var Id = result[i].HatirlaticiGrupID;
+        var Id = result[i].HatirlaticiGrupParametreleriID;
+        //var paramsId = result[i].HatirlaticiGrupParametreleriID;
 
         if (tip === "Metin") {
             $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='text' paramId='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
@@ -9312,13 +9699,425 @@ function ParametreDegerAlSuccess(data) {
     sayfa_yuklenince();
 }
 
+function GrupList(){
+    var data = "islem=grup_list";
+    $("#GrupListesi").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        sayfa_yuklenince();
+    });
+}
+
+function GrupDuzenle(url, Id) {
+    var params = {
+        grupId: Id
+    };
+    GenericAjax(url, params, GrupDuzenleSuccess, true);
+}
+
+function GrupDuzenleSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+
+    $("#grupKaydet").hide();
+    $("#grupDuzenle").show().attr("onclick", "GrupDuzenlemeYap('/System_Root/ajax/islem1.aspx/GrupDuzenlemeYap', '" + result[0].HatirlaticiGrupID + "');");
+    $("#grupAdi").val(result[0].GrupAdi);
+}
+
+function GrupDuzenlemeYap(url, Id) {
+    var params = {
+        grupId: Id,
+        grupAdi: $("#grupAdi").val()
+    };
+    GenericAjax(url, params, GrupDuzenlemeYapSuccess, true);
+}
+
+function GrupDuzenlemeYapSuccess(data) {
+    if (data.d === "true") {
+        mesaj_ver("Hatırlatıcı", "Güncelleme İşlemi Başarılı", "success");
+        GrupList();
+        $("#grupAdi").val("");
+        $("#grupKaydet").show();
+        $("#grupDuzenle").hide();
+    }
+    else
+        mesaj_ver("Hatırlatıcı", "Güncelleme İşlemi Başarısız !", "danger");
+}
+
+function GrupSil(url, Id) {
+    var r = confirm("Grup Adını Silmek İstiyormusunuz ?");
+    if (r) {
+        var params = {
+            grupId: Id
+        };
+        GenericAjax(url, params, GrupSilSuccess, true);
+    }
+}
+
+function GrupSilSuccess(data) {
+    if (data.d === "true") {
+        mesaj_ver("Hatırlatıcı", "Silme İşlemi Başarılı", "success");
+        GrupList();
+        $("#grupAdi").val("");
+        $("#grupKaydet").show();
+        $("#grupDuzenle").hide();
+    }
+    else if (data.d === "kullanımda")
+        mesaj_ver("Hatırlatıcı", "Silmek İstediğiniz Grup Kullanımda", "danger");
+    else
+        mesaj_ver("Hatırlatıcı", "Silme İşlemi Başarısız !", "danger");
+}
+
+function ParametreTanimlamalariDuzenlemeYap(url, Id, hatirlatmaId) {
+    if (hatirlatmaId === undefined)
+        hatirlatmaId = 0;
+    var hatirlatma = $("#hatirlatma_Chk").is(":checked");
+    var bildirimiAlacakPersonelID = $("#bildirimAlacakPersonel").val();
+
+    var tarihindeHatirlat = false;
+    var tarihindeOnceHatirlat = false;
+    var tarihindenOnce = 0;
+    var tarihBildirim = "";
+
+    var sayiyaGeldiğindeHatirlat = false;
+    var sayiyaGeldiğinde = 0;
+    var sayiyaKalaHatirlat = false;
+    var sayiyaKala = 0;
+    var sayiBildirim = "";
+
+    if ($("#hatirlatma_Chk").is(":checked") === true) {
+        if ($("#parametreTipi").val() === "Tarih") {
+            if ($("#hatirlama_1").is(":checked") === true)
+                tarihindeHatirlat = true;
+            if ($("#degerile").is(":checked") === true) {
+                tarihindeOnceHatirlat = true;
+                tarihindenOnce = $("#inputValue").val();
+            }
+            if ($("#sms_ile").is(":checked") === true) {
+                if (tarihBildirim === "")
+                    tarihBildirim = "sms";
+                else
+                    tarihBildirim += "," + "sms";
+            }
+            if ($("#mail_ile").is(":checked") === true) {
+                if (tarihBildirim === "")
+                    tarihBildirim = "mail";
+                else
+                    tarihBildirim += "," + "mail";
+            }
+            if ($("#bildirim_ile").is(":checked") === true) {
+                if (tarihBildirim === "")
+                    tarihBildirim = "bildirim";
+                else
+                    tarihBildirim += "," + "bildirim";
+            }
+        }
+        if ($("#parametreTipi").val() === "Sayi") {
+            if ($("#hatirlama_1").is(":checked") === true) {
+                sayiyaGeldiğindeHatirlat = true;
+                sayiyaGeldiğinde = $("#sayi").val();
+            }
+            if ($("#degerile").is(":checked") === true) {
+                sayiyaKalaHatirlat = true;
+                sayiyaKala = $("#inputValue").val();
+            }
+            if ($("#sms_ile").is(":checked") === true) {
+                if (sayiBildirim === "")
+                    sayiBildirim = "sms";
+                else
+                    sayiBildirim = "," + "sms";
+            }
+            if ($("#mail_ile").is(":checked") === true) {
+                if (sayiBildirim === "")
+                    sayiBildirim = "mail";
+                else
+                    sayiBildirim += "," + "mail";
+            }
+            if ($("#bildirim_ile").is(":checked") === true) {
+                if (sayiBildirim === "")
+                    sayiBildirim = "bildirim";
+                else
+                    sayiBildirim += "," + "bildirim";
+            }
+        }
+    }
+
+    var parametr = {
+        grupId: $("#gruplar").val(),
+        parametreAdi: $("#parametreAdi").val(),
+        parametreTipi: $("#parametreTipi").val(),
+        hatirlatma: hatirlatma,
+        parametrId: Id,
+        hatirlatmaId: hatirlatmaId,
+        bildirimiAlacakPersonelID: bildirimiAlacakPersonelID,
+
+        tarihindeHatirlat: tarihindeHatirlat,
+        tarihindeOnceHatirlat: tarihindeOnceHatirlat,
+        tarihindenOnce: tarihindenOnce,
+        tarihBildirim: tarihBildirim,
+
+        sayiyaGeldigindeHatirlat: sayiyaGeldiğindeHatirlat,
+        sayiyaGeldiginde: sayiyaGeldiğinde,
+        sayiyaKalaHatirlat: sayiyaKalaHatirlat,
+        sayiyaKala: sayiyaKala,
+        sayiBildirim: sayiBildirim
+    };
+    GenericAjax(url, parametr, ParametreTanimlamalariDuzenlemeYapSuccess, true);
+    datatableyap();
+}
+
+function ParametreTanimlamalariDuzenlemeYapSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+    if (result === true) {
+        mesaj_ver("Parametre Tanımlamaları", "Güncelleme İşlemi Başarılı", "success");
+        GrupParametreleri();
+        clearItem();
+    }
+    else {
+        mesaj_ver("Parametre Tanımlamaları", "Güncelleme İşlemi Başarısız", "danger");
+    }
+}
+
+function ParametreTanimlamalariDuzenle(url, Id) {
+    var params = {
+        paramID: Id
+    };
+    GenericAjax(url, params, ParametreTanimlamalariDuzenleSuccess, true);
+}
+
+function ParametreTanimlamalariDuzenleSuccess(data) {
+
+    var result = jQuery.parseJSON(data.d);
+    console.log(result);
+    if ($("#parametreTanimi").height() < 363)
+        $("#parametre").trigger("click");
+
+    $("#ParametreKaydet").hide();
+    $("#ParametreDuzenle").show();
+
+    if (result[0].HatirlatmaID === undefined)
+        $("#ParametreDuzenle").attr("onclick", "ParametreTanimlamalariDuzenlemeYap('/System_Root/ajax/islem1.aspx/ParametreTanimlamalariDuzenlemeYap', '" + result[0].HatirlaticiGrupParametreleriID + "')");
+    else
+        $("#ParametreDuzenle").attr("onclick", "ParametreTanimlamalariDuzenlemeYap('/System_Root/ajax/islem1.aspx/ParametreTanimlamalariDuzenlemeYap', '" + result[0].HatirlaticiGrupParametreleriID + "', '" + result[0].HatirlatmaID + "')");
+
+    $("#gruplar").val(result[0].HatirlaticiGrupID).change();
+    $("#parametreAdi").val(result[0].GrupParametre);
+
+    $("#parametreTipi").val(result[0].Tip).change();
+
+    if ($("#hatirlama_1").is(":checked") === true)
+        $("#hatirlama_1").trigger('click');
+    $("#sayi").val("");
+    $("#inputValue").val("");
+    if ($("#degerile").is(":checked") === true)
+        $("#degerile").trigger('click');
+
+    if ($("#sms_ile").is(':checked') === true)
+        $("#sms_ile").trigger('click');
+    if ($("#mail_ile").is(':checked') === true)
+        $("#mail_ile").trigger('click');
+    if ($("#bildirim_ile").is(':checked') === true)
+        $("#bildirim_ile").trigger('click');
+
+    var id = 0;
+    if (result[0].Hatirlatma === true) {
+
+        if ($("#hatirlatma_Chk").is(":checked") === false)
+            $("#hatirlatma_Chk").trigger('click');
+
+        if (result[0].Tip === "Tarih") {
+
+            if (result[0].TarihindeHatirlat === true && $("#hatirlama_1").is(":checked") === false)
+                $("#hatirlama_1").trigger('click');
+            else if (result[0].TarihindeHatirlat === false && $("#hatirlama_1").is(":checked") === true)
+                $("#hatirlama_1").trigger('click');
+
+            if (result[0].TarihindenOnceHatirlat === true && $("#degerile").is(":checked") === false) {
+                $("#degerile").trigger('click');
+                $("#inputValue").val(result[0].TarihindenOnce);
+            }
+            else if (result[0].TarihindenOnceHatirlat === false && $("#degerile").is(":checked") === true) {
+                $("#degerile").trigger('click');
+                $("#inputValue").val("");
+            }
+            var tarihbildirim = result[0].TarihBildirim.split(',');
+            if (tarihbildirim !== -1) {
+                if ($("#sms_ile").is(':checked') === true)
+                    $("#sms_ile").trigger('click');
+                if ($("#mail_ile").is(':checked') === true)
+                    $("#mail_ile").trigger('click');
+                if ($("#bildirim_ile").is(':checked') === true)
+                    $("#bildirim_ile").trigger('click');
+                for (var t = 0; t < tarihbildirim.length; t++) {
+                    if (tarihbildirim[t] === "sms" && $("#sms_ile").is(":checked") === false)
+                        $("#sms_ile").trigger('click');
+                    if (tarihbildirim[t] === "mail" && $("#mail_ile").is(":checked") === false)
+                        $("#mail_ile").trigger('click');
+                    if (tarihbildirim[t] === "bildirim" && $("#bildirim_ile").is(":checked") === false)
+                        $("#bildirim_ile").trigger('click');
+
+                    
+                    if (result[0].BildirimiAlacakPersonelID > 0) {
+                        id = result[0].BildirimiAlacakPersonelID;
+                    }
+                    $("#bildirimAlacakPersonel").val(id).select();
+                }
+            }
+        }
+        if (result[0].Tip === "Sayi") {
+
+            if (result[0].SayiyaGeldigindeHatirlat === true && $("#hatirlama_1").is(':checked') === false) {
+                $("#hatirlama_1").trigger('click');
+                $("#sayi").val(result[0].SayiyaGeldiginde);
+            }
+            else if (result[0].SayiyaGeldigindeHatirlat === false && $("#hatirlama_1").is(':checked') === true) {
+                $("#hatirlama_1").trigger('click');
+                $("#sayi").val("");
+            }
+            if (result[0].SayiyaKalaHatirlat === true && $("#degerile").is(":checked") === false) {
+                $("#degerile").trigger('click');
+                $("#inputValue").val(result[0].SayiyaKala);
+            }
+            else if (result[0].SayiyaKalaHatirlat === false && $("#degerile").is(":checked") === true) {
+                $("#degerile").trigger('click');
+                $("#inputValue").val("");
+            }
+            var sayibildirim = result[0].SayiBildirim.split(',');
+            if (sayibildirim !== -1) {
+                if ($("#sms_ile").is(':checked') === true)
+                    $("#sms_ile").trigger('click');
+                if ($("#mail_ile").is(':checked') === true)
+                    $("#mail_ile").trigger('click');
+                if ($("#bildirim_ile").is(':checked') === true)
+                    $("#bildirim_ile").trigger('click');
+                for (var s = 0; s < sayibildirim.length; s++) {
+                    if (sayibildirim[s] === "sms" && $("#sms_ile").is(":checked") === false)
+                        $("#sms_ile").trigger('click');
+                    if (sayibildirim[s] === "mail" && $("#mail_ile").is(":checked") === false)
+                        $("#mail_ile").trigger('click');
+                    if (sayibildirim[s] === "bildirim" && $("#bildirim_ile").is(":checked") === false)
+                        $("#bildirim_ile").trigger('click');
+
+                    if (result[0].BildirimiAlacakPersonelID > 0) {
+                        id = result[0].BildirimiAlacakPersonelID;
+                    }
+                    $("#bildirimAlacakPersonel").val(id).select();
+                }
+            }
+        }
+    }
+    else {
+        if ($("#hatirlatma_Chk").is(":checked") === true)
+            $("#hatirlatma_Chk").trigger('click');
+
+        $("#panel_hatirlatici").slideUp('slow');
+    }
+}
+
+function ParametreTanimlamalariSil(url, parametreId) {
+    var r = confirm("Kaydı Silmek İstediğinize Emin misiniz?");
+    if (r) {
+        var params = {
+            parametreId: parametreId
+        };
+        GenericAjax(url, params, ParametreTanimlamalariSilSuccess, true);
+        datatableyap();
+    }
+}
+
+function ParametreTanimlamalariSilSuccess(data) {
+    if (data.d === "true")
+        mesaj_ver("Parametre Tanımlamaları", "Silme İşlemi Başarılı.", "success");
+    else if (data.d === "silinemez")
+        mesaj_ver("Parametre Tanımlamaları", "Silmek İstediğiniz Parametreye Tanımlı Hatırlatma Var. Silinemez", "danger");
+    else
+        mesaj_ver("Parametre Tanımlamaları", "Silme İşlemi Başarısız.", "danger");
+    GrupParametreleri();
+}
+
+function GrupDegerleriDuzenle(url, Id) {
+    var params = {
+        degerId: Id
+    };
+    GenericAjax(url, params, GrupDegerleriDuzenleSuccess, true);
+}
+
+function GrupDegerleriDuzenleSuccess(data) {
+    $("#grupdegerleri").empty();
+    var result = jQuery.parseJSON(data.d);
+
+    $("#grupAdi").val(result[0].HatirlaticiGrupID).select();
+
+    for (var i = 0; i < result.length; i++) {
+        var tip = result[i].Tip;
+        var parametre = result[i].GrupParametre;
+        var Id = result[i].HatirlaticiGrupDegerleriID;
+        var paramsId = result[i].HatirlaticiGrupDegerleriID;
+        var grupValue = result[i].GrupValue;
+
+        if (tip === "Metin") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='text' value='" + grupValue + "' id='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
+        }
+        if (tip === "Sayi") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <input type='number' value='" + grupValue + "' min='1' id='" + Id + "' class='form-control mb-1' placeholder='" + parametre + "'/>");
+        }
+        if (tip === "Tarih") {
+            $("#grupdegerleri").append("<label class='col-form-label'>" + parametre + "</label> <div class='input-group input-group-primary mb-1' style='margin-bottom:0px'> <span class='input-group-addon'><i class='icon-prepend fa fa-calendar'></i></span> <input type='text' id='" + Id + "' value='" + grupValue + "' class='form-control takvimyap' /> </div>");
+        }
+    }
+    $("#grupdegerleri").append("<button type='button' class='btn btn-info mt-3 float-right' id='degerDuzenle'>Düzenle</button>");
+    $("#degerDuzenle").attr("onclick", "GrupDegerDuzenle('/System_Root/ajax/islem1.aspx/GrupDegerDuzenle', '" + paramsId + "');");
+    sayfa_yuklenince();
+}
+
+function GrupDegerDuzenle(url, id) {
+    var params = {
+        degerID: id,
+        degerValue: $("#" + id).val()
+    };
+    GenericAjax(url, params, GrupDegerDuzenleSuccess, true);
+}
+
+function GrupDegerDuzenleSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+
+    if (result === true) {
+        mesaj_ver("Hatırlatıcı", "Kayıt Başarıyla Güncellendi", "success");
+        ParametreDegerleri();
+        $("#grupAdi").val(0).select();
+        $("#grupdegerleri").empty();
+    }
+    else
+        mesaj_ver("Hatırlatıcı", "Güncelleme İşlemi Başarısız !", "danger");
+}
+
+function GrupDegerleriSil(url, id) {
+    var r = confirm("Parametre Değerini Silmek İsiyormusunuz ?");
+    if (r) {
+        var params = {
+            degerID: id
+        };
+        GenericAjax(url, params, GrupDegerleriSilSuccess, true);
+    }
+}
+
+function GrupDegerleriSilSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+    if (result === true) {
+        mesaj_ver("Hatırlarıcı", "Silme İşlemi Başarılı", "success");
+        ParametreDegerleri();
+    }
+    else
+        mesaj_ver("Hatırlarıcı", "Silme İşlemi Başarısız !", "danger");
+}
+
 function GrupDegerKaydet() {
+
     var grupId = $("#grupAdi").val();
     var data = "islem=grup_deger_kaydet&islem2=ekle";
     var elementCount = $("#grupDeger input").length;
+    var paramsId = [];
     var params = [];
     $("#grupDeger input").each(function () {
         params.push($(this).val());
+        paramsId.push($(this).attr("paramId"));
     });
 
     for (var i = 0; i < params.length; i++) {
@@ -9328,29 +10127,129 @@ function GrupDegerKaydet() {
         else {
             data += "&value" + i + "=" + params[i];
         }
+        if (data === "") {
+            data = "paramId" + i + "=" + paramsId[i];
+        }
+        else {
+            data += "&paramId" + i + "=" + paramsId[i];
+        }
     }
     data += "&grupId=" + grupId;
     data += "&count=" + elementCount;
-    console.log(data);
 
-    $("#parametreDeger").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+    $("#parametreDeger").loadHTML({ url: "/ajax_request6/", data: data }, function (data) {
         mesaj_ver("Parametre Değerleri", "Ekleme Işlemi Başarılı", "success");
         datatableyap();
+        console.log(data);
+        $("#grupAdi").val(0).select();
+        $("#grupdegerleri").empty();
     });
 }
 
 function GrupParametreKaydet(url) {
+
+    var hatirlatma = $("#hatirlatma_Chk").is(":checked");
+    var bildirimAlacakPersonelID = $("#bildirimAlacakPersonel").val();
+
+    var tarihindeHatirlat = false;
+    var tarihindeOnceHatirlat = false;
+    var tarihindenOnce = 0;
+    var tarihBildirim = "";
+
+    var sayiyaGeldiğindeHatirlat = false;
+    var sayiyaGeldiğinde = 0;
+    var sayiyaKalaHatirlat = false;
+    var sayiyaKala = 0;
+    var sayiBildirim = "";
+
+    if ($("#hatirlatma_Chk").is(":checked") === true) {
+        if ($("#parametreTipi").val() === "Tarih") {
+            if ($("#hatirlama_1").is(":checked") === true)
+                tarihindeHatirlat = true;
+            if ($("#degerile").is(":checked") === true) {
+                tarihindeOnceHatirlat = true;
+                tarihindenOnce = $("#inputValue").val();
+            }
+            if ($("#sms_ile").is(":checked") === true) {
+                if (tarihBildirim === "")
+                    tarihBildirim = "sms";
+                else
+                    tarihBildirim += "," + "sms";
+            }
+            if ($("#mail_ile").is(":checked") === true) {
+                if (tarihBildirim === "")
+                    tarihBildirim = "mail";
+                else
+                    tarihBildirim += "," + "mail";
+            }
+            if ($("#bildirim_ile").is(":checked") === true) {
+                if (tarihBildirim === "")
+                    tarihBildirim = "bildirim";
+                else
+                    tarihBildirim += "," + "bildirim";
+            }
+        }
+        if ($("#parametreTipi").val() === "Sayi") {
+            if ($("#hatirlama_1").is(":checked") === true) {
+                sayiyaGeldiğindeHatirlat = true;
+                sayiyaGeldiğinde = $("#sayi").val();
+            }
+            if ($("#degerile").is(":checked") === true) {
+                sayiyaKalaHatirlat = true;
+                sayiyaKala = $("#inputValue").val();
+            }
+            if ($("#sms_ile").is(":checked") === true) {
+                if (sayiBildirim === "")
+                    sayiBildirim = "sms";
+                else
+                    sayiBildirim = "," + "sms";
+            }
+            if ($("#mail_ile").is(":checked") === true) {
+                if (sayiBildirim === "")
+                    sayiBildirim = "mail";
+                else
+                    sayiBildirim += "," + "mail";
+            }
+            if ($("#bildirim_ile").is(":checked") === true) {
+                if (sayiBildirim === "")
+                    sayiBildirim = "bildirim";
+                else
+                    sayiBildirim += "," + "bildirim";
+            }
+        }
+    }
+
     var parametr = {
         grupId: $("#gruplar").val(),
         parametreAdi: $("#parametreAdi").val(),
-        parametreTipi: $("#parametreTipi").val()
+        parametreTipi: $("#parametreTipi").val(),
+        hatirlatma: hatirlatma,
+        bildirimAlacakPersonelID: bildirimAlacakPersonelID,
+
+        tarihindeHatirlat: tarihindeHatirlat,
+        tarihindeOnceHatirlat: tarihindeOnceHatirlat,
+        tarihindenOnce: tarihindenOnce,
+        tarihBildirim: tarihBildirim,
+
+        sayiyaGeldiğindeHatirlat: sayiyaGeldiğindeHatirlat,
+        sayiyaGeldiğinde: sayiyaGeldiğinde,
+        sayiyaKalaHatirlat: sayiyaKalaHatirlat,
+        sayiyaKala: sayiyaKala,
+        sayiBildirim: sayiBildirim
     };
     GenericAjax(url, parametr, GrupParametreSuccess, true);
-    datatableyap();
+    //datatableyap();
 }
 
-function GrupParametreSuccess() {
-    mesaj_ver("Parametre Tanımı", "Ekleme İşlemi Başarılı", "success");
+function GrupParametreSuccess(data) {
+    if (data.d === "false")
+        mesaj_ver("Parametre Tanımı", "Ekleme İşlemi Başarısız !", "danger");
+    else if (data.d === "notBeAdded")
+        mesaj_ver("Parametre Tanımı", "Girmiş Olduğunuz Parametre Mevcut.", "danger");
+    else {
+        mesaj_ver("Parametre Tanımı", "Ekleme İşlemi Başarılı", "success");
+        clearItem();
+    }
     GrupParametreleri();
 }
 
@@ -9362,12 +10261,19 @@ function HatirlaticiGrupKaydet(url) {
 }
 
 function HatirlaticiGrupSuccess(data) {
-    $("#parametre").trigger("click");
-    mesaj_ver("Grup Tanımı", "Ekleme İşlemi Başarılı", "success");
-    $("#grupAdi").val("");
+
     var result = jQuery.parseJSON(data.d);
-    if (result.grupId !== 0 || result.grupId !== null) {
-        $("#gruplar").append("<option selected value='" + result.grupId + "'> " + result.grupAdi + " </option>");
+    if (result.message !== "notBeAdded") {
+        $("#parametre").trigger("click");
+        mesaj_ver("Grup Tanımı", "Ekleme İşlemi Başarılı", "success");
+        $("#grupAdi").val("");
+
+        if (result.grupId !== 0 || result.grupId !== null) {
+            $("#gruplar").append("<option selected value='" + result.grupId + "'> " + result.grupAdi + " </option>");
+        }
+    }
+    else {
+        mesaj_ver("Grup Tanımı", "Eklemek İstediğiniz Grup Adı Mevcut !", "danger");
     }
 }
 
@@ -9379,7 +10285,7 @@ function GenericAjaxError() {
     //}
     //else { mesaj_ver(loc, "Ekleme İşlemi Başarısız", "danger"); }
 
-    mesaj_ver("Hatırlatıcı", "Ekleme İşlemi Başarısız", "danger");
+    mesaj_ver("Hatırlatıcı", "İşlem Başarısız", "danger");
 }
 
 function GenericAjax(url, parameters, successFunc, async) {
@@ -9413,7 +10319,7 @@ function ParametreDegerleri() {
 function Hatirlatma() {
     $("#panel_hatirlatici").slideToggle();
 
-    if ($("#haritlatma").is(":checked") === true) {
+    if ($("#hatirlatma_Chk").is(":checked") === true) {
         var tip = $("#parametreTipi").val();
         if (tip === "Tarih") {
             $("#sayi").hide();
@@ -9432,7 +10338,7 @@ function Hatirlatma() {
 
 function tip() {
     var tip = $("#parametreTipi").val();
-    if ($("#haritlatma").is(":checked") === true) {
+    if ($("#hatirlatma_Chk").is(":checked") === true) {
         if (tip === "Tarih") {
             $("#panel_hatirlatici").show();
             $("#hatirlatma").show();
@@ -9465,5 +10371,165 @@ function tip() {
             $("#panel_hatirlatici").hide();
             $("#hatirlatma").hide();
         }
+    }
+}
+
+function clearItem() {
+    $("#gruplar").val(0).select();
+    $("#parametreAdi").val("");
+    $("#parametreTipi").val(0).select();
+    if ($("#hatirlatma_Chk").is(":checked") === true)
+        $("#hatirlatma_Chk").trigger("click");
+    if ($("#hatirlatma_1").is(":checked") === true)
+        $("#hatirlatma_1").trigger("click");
+    if ($("#degerile").is(":checked") === true)
+        $("#degerile").trigger("click");
+    $("#inputValue").val("");
+    $("#sayi").val("");
+    if ($("#sms_ile").is(":checked") === true)
+        $("#sms_ile").trigger("click");
+    if ($("#mail_ile").is(":checked") === true)
+        $("#mail_ile").trigger("click");
+    if ($("#bildirim_ile").is(":checked") === true)
+        $("#bildirim_ile").trigger("click");
+}
+
+function raporDurumKontrol() {
+    var rapor = $("#firmarapordurumu").val();
+
+    if (rapor === "Faturası Kesildi") {
+        $("#faturagorevli").css("display", "");
+    }
+    if (rapor === "Faturası Kesilecek") {
+        $("#faturagorevli").css("display", "");
+    }
+    if (rapor === "Durum Seç") {
+        $("#faturagorevli").slideUp('slow');
+    }
+    if (rapor === "Garanti Kapsamında") {
+        $("#faturagorevli").slideUp('slow');
+    }
+}
+
+function ZorunluDosyaListesi() {
+    var data = "islem=zorunlu_dosyalar";
+    $("#dosyalar").loadHTML({ url: "/ajax_request6/", data: data }, function () {
+        datatableyap();
+    });
+}
+
+function zorunlu_dosyalar(etiket, kayit_id) {
+
+    var data = "islem=zorunlu_dosyalar";
+    data += "&etiket=" + etiket;
+    data += "&kayit_id=" + kayit_id;
+    data = encodeURI(data);
+    $("#zorunlu_dosyalar").loadHTML({ url: "/ajax_request2/", data: data }, function () {
+        datatableyap();
+    });
+}
+
+function ZorunluDosyaKayıt(url) {
+    if ($("#dosyaAdi").val().length > 0) {
+        var params = {
+            dosyaAdi: $("#dosyaAdi").val(),
+            zorunlu: $("#zorunlu").is(":checked")
+        };
+        GenericAjax(url, params, ZorunluDosyaListesiSuccess, true);
+    }
+    else
+        mesaj_ver("Dosyalar", "Dosya Adı Giriniz.", "danger");
+}
+
+function ZorunluDosyaListesiSuccess(data) {
+    if (data.d === "notBeAdded")
+        mesaj_ver("Zorunlu Belgeler", "Girmiş Olduğunuz Dosya Adı Mevcuttur !", "danger");
+    else if (data.d === "true") {
+        mesaj_ver("Zorunlu Belgeler", "Ekleme İşlemi Başarılı", "success");
+        ZorunluDosyaListesi();
+        $("#dosyaAdi").val("");
+        if ($("#zorunlu").is(":checked") === true)
+            $("#zorunlu").trigger("click");
+    }
+    else if (data.d === "false")
+        mesaj_ver("Zorunlu Belgeler", "Ekleme İşlemi Başarısız !", "danger");
+}
+
+function ZorunluDosyaDuzenle(url, dosyaId) {
+    var params = {
+        dosyaId: dosyaId
+    };
+    GenericAjax(url, params, ZorunluDosyaDuzenleSuccess, true);
+}
+
+function ZorunluDosyaDuzenleSuccess(data) {
+    var result = jQuery.parseJSON(data.d);
+    console.log(result);
+    $("#dosyaKaydet").hide();
+    $("#dosyaDuzenle").show().attr("onclick", "ZorunluDosyaDuzenlemeYap('/System_Root/ajax/islem1.aspx/ZorunluDosyaDuzenlemeYap', '" + result[0].DosyaID + "')");
+    $("#dosyaAdi").val(result[0].DosyaAdi);
+    if (result[0].Zorunlu === true) {
+        if ($("#zorunlu").is(":checked") === false)
+            $("#zorunlu").trigger("click");
+    }
+    else {
+        if ($("#zorunlu").is(":checked") === true)
+            $("#zorunlu").trigger("click");
+    }
+}
+
+function ZorunluDosyaDuzenlemeYap(url, dosyaId) {
+    var params = {
+        dosyaId: dosyaId,
+        dosyaAdi: $("#dosyaAdi").val(),
+        zorunlu: $("#zorunlu").is(":checked")
+    };
+    GenericAjax(url, params, ZorunluDosyaDuzenlemeYapSuccess, true);
+}
+
+function ZorunluDosyaDuzenlemeYapSuccess(data) {
+
+    if (data.d === "true") {
+        mesaj_ver("Zorunlu Belgeler", "Ekleme İşlemi Başarılı", "success");
+        $("#dosyaKaydet").show();
+        $("#dosyaDuzenle").hide();
+        ZorunluDosyaListesi();
+        $("#dosyaAdi").val("");
+        if ($("#zorunlu").is(":checked") === true)
+            $("#zorunlu").trigger("click");
+    }
+    else if (data.d === "false")
+        mesaj_ver("Zorunlu Belgeler", "Ekleme İşlemi Başarısız !", "danger");
+}
+
+function ZorunluDosyaSil(url, dosyaId) {
+    var r = confirm("Belgeyi Silmek İstiyormusunuz ?");
+    if (r) {
+        var params = {
+            dosyaId: dosyaId
+        };
+        GenericAjax(url, params, ZorunluDosyaSilSuccess, true);
+    }
+}
+
+function ZorunluDosyaSilSuccess(data) {
+    if (data.d === "true") {
+        mesaj_ver("Zorunlu Belgeler", "Silme İşlemi Başarılı.", "success");
+        ZorunluDosyaListesi();
+    }
+    else if (data.d === "false") {
+        mesaj_ver("Zorunlu Belgeler", "Silme İşlemi Başarısız !", "danger");
+    }
+    else if (data.d === "indelible") {
+        mesaj_ver("Zorunlu Belgeler", "Silmek İstediğiniz Belge Kullanımda !", "danger");
+    }
+}
+
+function bildirimAlacakKullanici() {
+    if ($("#sms_ile").is(":checked") === false && $("#mail_ile").is(":checked") === false && $("#bildirim_ile").is(":checked") === false) {
+        $("#bildirimiAlan").slideUp('slow');
+    }
+    else {
+        $("#bildirimiAlan").slideDown('slow');
     }
 }

@@ -89,14 +89,14 @@
                                 <input type="text" id="grupAdi" class="form-control" placeholder="Grup Adı" required />
                             </div>
                             <div class="form-group">
-                                <button id="grupKaydet" class="btn btn-success mb-3 float-right btn-mini" onclick="HatirlaticiGrupKaydet('/System_Root/ajax/islem1.aspx/GrupTanimi');">Kaydet</button>
+                                <button id="grupKaydet" class="btn btn-success mb-3 float-right btn-mini" onclick="AracTakipGrupKaydet('/System_Root/ajax/islem1.aspx/AracTakipGrupKaydet');">Kaydet</button>
                                 <button id="grupDuzenle" class="btn btn-info mb-3 float-right btn-mini" style="display:none">Duzenle</button>
                                 <!--<button class="btn btn-info btn-mini mb-1" style="cursor: pointer" onclick="GrupListesi();">Grup Listesi</button>-->
                             </div>
-                            <div class="form-group" id="GrupListesi">
+                            <div class="form-group" id="AracTakipGrupListesi">
                                 <script>
-                                    $(function (){
-                                        GrupList();
+                                    $(function () {
+                                        AracTakipGrupList();
                                     });
                                 </script>
                             </div>
@@ -117,12 +117,13 @@
                                 <select id="gruplar" class="form-control">
                                     <option value="0">Grup Seç</option>
                                     <%
-                                        SQL = "select * from Hatirlatici.Grup where Silindi = 'false'"
+                                        SQL = "select * from AracTakip.Grup where Silindi = 'false'"
                                         set grup = baglanti.execute(SQL)
+
                                         if not grup.eof then
                                         do while not grup.eof
                                     %>
-                                    <option value="<%=grup("HatirlaticiGrupID") %>"><%=grup("GrupAdi") %></option>
+                                        <option value="<%=grup("AracTakipGrupID") %>"><%=grup("GrupAdi") %></option>
                                     <%
                                         grup.movenext
                                         loop
@@ -147,65 +148,11 @@
                                 <label class="col-form-label">Hatırlatma</label>
                                 <label class="col-form-label" style="margin-bottom: 0px">
                                     <span style="margin-left: 30px; margin-right: 7px; font-size: 13px; font-weight: 600;">Hayır</span>
-                                    <input type="checkbox" class="js-switch" id="hatirlatma_Chk" onclick="Hatirlatma();" />
+                                    <input type="checkbox" class="js-switch" id="hatirlatma_chk" />
                                     <span style="margin-left: 7px; font-size: 13px; font-weight: 600;">Evet</span>
                                 </label>
                             </div>
-                            <div id="panel_hatirlatici" style="display: none">
-                                <hr style="margin-bottom: 5px; margin-top: 5px" />
-                                <div class="form-group" style="margin-bottom: 5px">
-                                    <i class="fa fa-caret-right mr-2"></i>
-                                    <input type="text" class="mr-2" min="1" style="width: 60px; display: none" id="sayi" />
-                                    <label class="col-form-label mr-2" id="hatirlama_adi1">Tarihinde Hatırlat</label>
-                                    <label class="col-form-label" style="margin-bottom: 0px">
-                                        <input type="checkbox" class="form-control js-switch" id="hatirlama_1" />
-                                    </label>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 5px">
-                                    <i class="fa fa-caret-right mr-2"></i>
-                                    <label class="col-form-label mr-1" id="ilkYazi">Tarihinden </label>
-                                    <input type="text" style="width: 60px" id="inputValue" />
-                                    <label class="col-form-label ml-1 mr-1" id="ikinciYazi">gün önce hatırlat</label>
-                                    <label class="col-form-label" style="margin-bottom: 0px">
-                                        <input type="checkbox" class="form-control js-switch" id="degerile" />
-                                    </label>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 5px">
-                                    <label class="col-form-label" style="margin-bottom: 0px">
-                                        <input type="checkbox" class="form-control js-switch" id="sms_ile" onclick="bildirimAlacakKullanici();"/>
-                                        <span class="mr-4" style="margin-left: 5px; font-size: 13px">Sms ile</span>
-                                    </label>
-                                    <label class="col-form-label" style="margin-bottom: 0px">
-                                        <input type="checkbox" class="form-control js-switch" id="mail_ile" onclick="bildirimAlacakKullanici();"/>
-                                        <span class="mr-4" style="margin-left: 5px; font-size: 13px">Mail ile</span>
-                                    </label>
-                                    <label class="col-form-label" style="margin-bottom: 0px">
-                                        <input type="checkbox" class="form-control js-switch" id="bildirim_ile" onclick="bildirimAlacakKullanici();"/>
-                                        <span class="" style="margin-left: 5px; font-size: 13px">Bildirim ile</span>
-                                    </label>
-                                </div>
-                                <div class="form-group" id="bildirimiAlan" style="display:none">
-                                    <label class="col-form-label">Bildirimi Alacak Personel</label>
-                                    <select class="form-control" id="bildirimAlacakPersonel">
-                                        <option value="0" selected>Personel Seç...</option>
-                                        <%
-                                            SQL = "select kullanici.id, kullanici.personel_ad +' '+ kullanici.personel_soyad as ad_soyad, gorev.gorev_adi from ucgem_firma_kullanici_listesi kullanici join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.durum = 'true' and kullanici.cop = 'false'"
-                                            set personeller = baglanti.execute(SQL)
-
-                                            if not personeller.eof then
-                                            do while not personeller.eof
-                                        %>
-                                            <option value="<%=personeller("id") %>"><%=personeller("ad_soyad") %> <%if personeller("gorev_adi") = "" then %> <%else %> - [<%=personeller("gorev_adi") %>] <%end if %></option>
-                                        <%
-                                            personeller.movenext
-                                            loop
-                                            end if
-                                        %>
-                                    </select>
-                                </div>
-                                <hr style="margin-bottom: 15px; margin-top: 5px" />
-                            </div>
-                            <button id="ParametreKaydet" class="btn btn-success mb-3 float-right" onclick="GrupParametreKaydet('/System_Root/ajax/islem1.aspx/ParametreTanimi');">Kaydet</button>
+                            <button id="ParametreKaydet" class="btn btn-success mb-3 float-right" onclick="AracTakipGrupParametreKaydet('/System_Root/ajax/islem1.aspx/AracTakipGrupParametreKaydet');">Kaydet</button>
                             <button id="ParametreDuzenle" class="btn btn-info mb-3 float-right" style="display: none">Düzenle</button>
                         </div>
                     </div>
@@ -217,10 +164,10 @@
                 <div class="card-header" style="border-bottom: 1px solid #ccc; padding: 15px">
                     <h6 class="mb-0">Parametre Tanımlamaları</h6>
                 </div>
-                <div class="card-body" id="grupList">
+                <div class="card-body" id="aracTakipParametreleri">
                     <script>
                         $(function (){
-                            GrupParametreleri();
+                            AracaTakipParametreleri();
                         });
                     </script>
                 </div>
@@ -240,22 +187,3 @@
         background: #ffffff !important;
     }
 </style>
-<!--<script type="text/javascript">
-    $(function () {
-        var elem = Array.prototype.slice.call(document.querySelectorAll('.js-switch:not(.yapilan)'));
-        elem.forEach(function (html) {
-            var switchery = new Switchery(html, { color: '#4099ff', jackColor: '#fff', size: 'small' });
-        });
-        $(".js-switch").addClass("yapilan");
-        $('select:not(.yapilan)').select2().addClass("yapilan");
-    });
-</script>-->
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#parametreTipi").trigger("onchange");
-    });
-    function GrupListesi() {
-        $("#GrupListesi").slideToggle();
-    }
-</script>
-

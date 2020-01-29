@@ -427,7 +427,7 @@
                 </style>
                 <div class="col-lg-8 col-xl-9" style="padding-top: 15px;">
                     <h5 class="card-header-text"><%=LNG("Giriş Çıkış Bilgilerim")%></h5>
-                    <input type="button" style="float: right; margin-top: 10px; display:none" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" />
+                    <input type="button" style="float: right; margin-top: 10px; display: none" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" />
                     <br />
                     <br />
                     <div id="giris_cikis_kayitlari">
@@ -642,8 +642,14 @@
     elseif trn(request("islem"))="profil_personel_izin_kayitlarini_getir" then
 
         personel_id = trn(request("personel_id"))
+        personel_adina = trn(request("personel_adina"))
 
         if trn(request("islem2"))="talep_ekle" then
+
+            if personel_adina = 0 or personel_adina = "0" or personel_adina = "" or personel_adina = null then
+            else
+                personel_id = personel_adina
+            end if
 
             baslangic_tarihi = trn(request("baslangic_tarihi"))
             baslangic_saati = trn(request("baslangic_saati"))
@@ -675,7 +681,7 @@
 
                 bildirim = kullanicicek("personel_ad") & " " & kullanicicek("personel_soyad") & " "& cdate(baslangic_tarihi) &" "& left(baslangic_saati,5) &" ile "& cdate(bitis_tarihi) &" "& left(bitis_saati,5) &" tarihleri için izin talebinde bulundu." & chr(13) & chr(13) & "Açıklama :" & aciklama & chr(13) & chr(13)
                 tip = "personel_detaylari"
-                click = "CokluIsYap(''personel_detaylari'',''"& kullanicicek("id") &"'',''izin'',0);" 
+                click = "CokluIsYap(''personel_detaylari'',''"& personel_id &"'',''izin'',0);" 
                 user_id = kcek("id")
                 okudumu = "0"
                 durum = "true"
@@ -722,7 +728,7 @@
         </thead>
         <tbody>
             <%
-                SQL="select * from ucgem_personel_izin_talepleri where personel_id = '"& personel_id &"' and cop = 'false'"
+                SQL="select * from ucgem_personel_izin_talepleri where personel_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' and cop = 'false'"
                 set izin = baglanti.execute(SQL)
 
                 if izin.eof then
@@ -1629,6 +1635,17 @@
 
        personel_id = trn(request("personel_id"))
 
+       SQL = "select * from ucgem_firma_kullanici_listesi where id = '"& Request.Cookies("kullanici")("kullanici_id") &"' and cop = 'false'"
+       set personel = baglanti.execute(SQL)
+
+       yetki = "false"
+       visible = ""
+       if personel("yonetici_yetkisi") = "true" then
+           yetki = "true"
+       else
+           visible = "style='display:none'"
+       end if
+
        SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and talep.cop = 'false' and talep.personel_id = kullanici.id and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin') and talep.durum = 'Onaylandi'),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
        set personel = baglanti.execute(SQL)
 
@@ -1639,7 +1656,6 @@
        else
             personel_yillik_izin_hakedis = cdate(personel_yillik_izin_hakedis)+1
        end if
-
 %>
 <form id="koftiforms"></form>
 <div class="modal-header">
@@ -1656,6 +1672,28 @@
 </div>
 
 <form autocomplete="off" id="yeni_gundem_form" class="smart-form validateform" style="padding: 15px;">
+
+    <div class="row" <%=visible %>>
+        <label class="col-sm-12 col-form-label"><%=LNG("Personel Adına")%></label>
+        <div class="col-sm-12">
+            <select id="personel_adina" class="select2">
+                <option value="0">Personel Seç</option>
+                <%
+                    SQL = "select id, personel_ad +' '+ personel_soyad as ad_soyad from ucgem_firma_kullanici_listesi where cop = 'false'"
+                    set personeller = baglanti.execute(SQL)
+
+                    if not personeller.eof then
+                    do while not personeller.eof
+                %>
+                    <option value="<%=personeller("id") %>""><%=personeller("ad_soyad") %></option>
+                <%
+                    personeller.movenext
+                    loop
+                    end if
+                %>
+            </select>
+        </div>
+    </div>
 
     <div class="row">
         <label class="col-sm-12 col-form-label"><%=LNG("İzin Başlangıç Tarihi")%></label>
@@ -1759,7 +1797,7 @@
 
         SQL="select * from ucgem_personel_mesai_bildirimleri where id = '"& kayit_id &"'"
         set talep = baglanti.execute(SQL)
-    
+        
         if personel_id=Request.Cookies("kullanici")("kullanici_id") then
 %>
 <script>
@@ -1963,7 +2001,7 @@
             <div class="row">
                 <div class="col-lg-12 col-xl-12">
                     <h5 class="card-header-text"><%=LNG("Personel Mesai Bilgileri")%> </h5>
-                    <span style="float: right; margin-bottom:15px">
+                    <span style="float: right; margin-bottom: 15px">
                         <button onclick="modal_mesai_bildirimi_yap('<%=personel_id %>', 'Onaylandı');" class="btn btn-primary">Mesai Bilgisi Ekle</button>
                     </span>
                     <br />
@@ -2809,9 +2847,22 @@
             grup_id = trn(request("grup_id"))
             grup_adi = trn(request("grup_adi"))
             parcalar = trn(request("parcalar"))
+            olusturanId = Request.Cookies("kullanici")("kullanici_id")
+            olusturmaTarihi = date
 
-            SQL="update parca_grup_listesi set grup_adi = '"& grup_adi &"', parcalar = '"& parcalar &"' where id = '"& grup_id &"'"
-            set guncelle = baglanti.execute(SQL)
+            for x = 0 to ubound(split(parcalar, ","))
+                parcaid = split(parcalar, ",")(x)
+                SQL = "IF NOT EXISTS (select * from UrunAgaciParcalar where GrupID = '"& grup_id &"' and ParcaId = '"& parcaid &"' and Silindi = 'false') insert into UrunAgaciParcalar(GrupID, ParcaId, OlusturanID, OlusturmaTarihi, Silindi) values('"& grup_id &"', '"& parcaid &"', '"& olusturanId &"', getdate(), 'false')"
+                set grupParcalar = baglanti.execute(SQL)
+            next
+
+            if IsNULL(parcalar) or parcalar = "" then
+                SQL = "update UrunAgaciParcalar set Silindi = 'true', GuncelleyenID = '"& olusturanId &"', GuncellemeTarihi = getdate() where GrupID = '"& grup_id &"' and Silindi = 'false'"
+                set urunAgaciGuncelle = baglanti.execute(SQL)
+            else
+                SQL = "update UrunAgaciParcalar set Silindi = 'true', GuncelleyenID = '"& olusturanId &"', GuncellemeTarihi = getdate() where not ParcaId in("& parcalar &") and GrupID = '"& grup_id &"' and Silindi = 'false'"
+                set urunAgaciGuncelle = baglanti.execute(SQL)
+            end if
 
         elseif trn(request("islem2")) = "agacgrubuguncelle" then
 
@@ -2819,9 +2870,12 @@
             grup_id = trn(request("grup_id"))
             adet = trn(request("adet"))
 
-            SQL = "update parca_grup_listesi set adet = '"& adet &"' where id = '"& grup_id &"'"
-            set grupGuncelle = baglanti.execute(SQL)
-        'response.Write(SQL)
+            for x = 0 to ubound(split(parca_id, ","))
+                parcaid = split(parca_id, ",")(x)
+                miktar = split(adet, ",")(x)
+                SQL = "update UrunAgaciParcalar set ParcaAdet = '"& miktar &"' where ParcaId = '"& parcaid &"' and GrupID = '"& grup_id &"'"
+                set grupParcalar = baglanti.execute(SQL)
+            next
 
         elseif trn(request("islem2"))="sil" then
 
@@ -2832,15 +2886,18 @@
             silen_tarihi = date
             silen_saati = time
 
-            SQL="update parca_grup_listesi set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silen_tarihi = CONVERT(date, '"& silen_tarihi &"', 103), silen_saati = '"& silen_saati &"' where id = '"& kayit_id &"'"
+            SQL="update parca_grup_listesi set cop = 'true', silen_id = '"& silen_id &"', silen_ip = '"& silen_ip &"', silen_tarihi = CONVERT(date, getdate(), 103), silen_saati = '"& silen_saati &"' where id = '"& kayit_id &"'"
             set sil = baglanti.execute(SQL)
+
+            SQL = "update UrunAgaciParcalar set Silindi = 'true', GuncelleyenID = '"& silen_id &"', GuncellemeTarihi = getdate() where GrupID = '"& kayit_id &"'"
+            set grup_parca_sil = baglanti.execute(SQL)
 
         end if
 
     %>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script>
-        $(function() {
+    <script type="text/javascript">
+        $(function () {
             $("#accordion").accordion({
                 heightStyle: "content"
             });
@@ -2851,18 +2908,23 @@
 
             SQL="select * from parca_grup_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and cop = 'false'"
             set grup = baglanti.execute(SQL)
+            if grup.eof then
+        %>
+            Kayıt Bulunamadı...
+        <%
+            end if
             x = 0
             do while not grup.eof
                 x = x + 1
         %>
-        <h3 onclick="grup_detay_getir('<%=grup("id") %>');"><a href="javascript:void(0);"><%=grup("grup_adi") %></a></h3>
+        <h3 onclick="grup_detay_getir('<%=grup("id") %>');" id="grup_detay_getir<%=grup("id") %>"><a href="javascript:void(0);"><%=grup("grup_adi") %></a></h3>
         <div id="grup_detay_donus<%=grup("id") %>">
             &nbsp;
         <% if x = 1 then %>
-            <script>
-            $(function (){
-                grup_detay_getir('<%=grup("id") %>');
-            });
+            <script type="text/javascript">
+                $(function () {
+                    grup_detay_getir('<%=grup("id") %>');
+                });
             </script>
             <% end if %>
         </div>
@@ -2876,12 +2938,12 @@
 
         grup_id = trn(request("grup_id"))
 
-        SQL="select * from parca_grup_listesi where id = '"& grup_id &"'"
+        SQL="select * from UrunAgaciParcalar where GrupID = '"& grup_id &"' and Silindi = 'false'"
+        set grup_parcalar = baglanti.execute(SQL)
+
+        SQL = "select * from parca_grup_listesi where id = '"& grup_id &"' and cop = 'false'"
         set grup = baglanti.execute(SQL)
-
-        parcalar = trim(grup("parcalar"))
-        'response.Write(parcalar)
-
+        
     %>
     <div class="modal-header">
         <%=LNG("Ürün Ağacı Düzenle")%>
@@ -2935,15 +2997,14 @@
 
                     
                     function formatRepo(repo) {
-                        console.log(repo);
                         if (repo.loading) return repo.text;
                         var markup = '<div class="select2-result-repository clearfix" style="padding:0;">' +
                             '<div class="select2-result-repository__meta">' +
+                            '<div class="select2-result-repository__title">' + repo.kodu + '</div>' +
                             '<div class="select2-result-repository__title">' + repo.parcaadi + ' (' + repo.marka + ')' + '</div>';
 
                         markup += '<div class="select2-result-repository__statistics">' +
-                            '<div class="select2-result-repository__stargazers">' + repo.aciklama + '</div>' +        
-                            '<div class="select2-result-repository__forks">' + repo.kategori + '</div>' +
+                            '<div class="select2-result-repository__stargazers">' + repo.aciklama + '</div>' +
                             '</div>' +
                             '</div></div>';
 
@@ -2957,14 +3018,13 @@
                 </script>
                 <select name="parcalar[]" multiple="multiple" class="parcalarr" id="parcalar">
                     <%
-                        SQL="select top 50 * from parca_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and dbo.iceriyormu('"& parcalar &"', id)=1"
+                        do while not grup_parcalar.eof
+                        SQL = "select * from parca_listesi where id = '"& grup_parcalar("ParcaId") &"' and cop = 'false'"
                         set parca = baglanti.execute(SQL)
-                        'response.Write(SQL)
-                        do while not parca.eof
                     %>
-                        <option selected value="<%=parca("id") %>"> <%=parca("parca_kodu") %> </option>
+                    <option selected value="<%=parca("id") %>"><%=parca("parca_kodu") %> </option>
                     <%
-                        parca.movenext
+                        grup_parcalar.movenext
                         loop
                     %>
                 </select>
@@ -3003,74 +3063,84 @@
     elseif trn(request("islem"))="grup_detay_getir" then
 
         grup_id = trn(request("grup_id"))
-        count = 0
         durum = ""
-        SQL="select * from parca_grup_listesi where id = '"& grup_id &"'"
-        set grup = baglanti.execute(SQL)
-
-
     %>
     <span style="float: right;">
-        <input type="button" class="btn btn-danger btn-mini" onclick="grubu_sil('<%=grup("id") %>');" value="Grubu Sil" />&nbsp;<input type="button" class="btn btn-success btn-mini" onclick="gruba_parca_ekle('<%=grup("id") %>');" value="Grubu Düzenle" /><br />
+        <input type="button" class="btn btn-danger btn-mini" onclick="grubu_sil('<%=grup_id %>');" value="Grubu Sil" />&nbsp;
+        <input type="button" class="btn btn-success btn-mini" onclick="gruba_parca_ekle('<%=grup_id %>');" value="Grubu Düzenle" />
+        <br />
         <br />
     </span>
     <div id="grup_listesi<%=grup_id %>">
         <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th style="width: 45px;">Id</th>
-                <th>Parça</th>
-                <th>Marka</th>
-                <th>Açıklama</th>
-                <th>Adet</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% 
-                SQL = "select * from string_split((select adet from parca_grup_listesi where id = '"& grup_id &"'), ',')"
+            <thead>
+                <tr>
+                    <th style="width: 45px;">Id</th>
+                    <th>Parça</th>
+                    <th>Marka</th>
+                    <th>Açıklama</th>
+                    <th>Adet</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <% 
+                SQL = "select * from UrunAgaciParcalar where GrupID = '"& grup_id &"' and Silindi = 'false'"
                 set grup_parca = baglanti.execute(SQL)
 
                 if grup_parca.eof then
-                    
-                end if
-                Dim parcaAdet(1500)
-                do while not grup_parca.eof
-                    count = count + 1
-                    parcaAdet(count) = grup_parca(0)
-                grup_parca.movenext
-                loop
-
-                SQL="select * from parca_listesi where dbo.iceriyormu('"& trim(grup("parcalar")) &"', id)=1"
-                'response.Write(SQL)
-                set parca = baglanti.execute(SQL)
-                if parca.eof then
-                durum = "style='display:none'"
-            %>
-            <tr>
-                <td colspan="5" style="text-align: center;">Bu Gruba Tanımlanan Parça Bulunamadı</td>
-            </tr>
-            <%
+                %>
+                <tr>
+                    <td colspan="5" style="text-align: center;">Bu Gruba Tanımlanan Parça Bulunamadı</td>
+                </tr>
+                <%
                 end if
                 p = 0
-                do while not parca.eof
+                do while not grup_parca.eof    
                     p = p + 1
-            %>
-            <tr>
-                <td style="width: 30px;"><%=p %></td>
-                <td><% if parca("parca_adi") = "" then %> - <%else %> <%=parca("parca_adi") %> <%end if %></td>
-                <td><% if parca("marka") = "" then %> - <%else %> <%=parca("marka") %> <%end if %></td>
-                <td><% if parca("aciklama") = "" then %> - <%else %> <%=parca("aciklama") %> <%end if %></td>
-                <td><input type="number" min="1" style="width:50px" value="<%=parcaAdet(p) %>" id="count<%=grup("id") %><%=p %>" parca_id="<%=parca("id") %>""/></td>
-            </tr>
-            <% 
-                parca.movenext
+                    SQL = "select * from parca_listesi where id = '"& grup_parca("ParcaId") &"' and cop = 'false'"
+                    set parca = baglanti.execute(SQL)
+                %>
+                <tr>
+                    <td style="width: 30px;"><%=p %></td>
+                    <td>
+                        <%
+                        parcaDetay = ""
+                        if parca("parca_adi") <> "" then
+                            if parcaDetay = "" then
+                                parcaDetay = parca("parca_adi")
+                            else
+                                parcaDetay = parcaDetay & " - " & parca("parca_adi")
+                            end if
+                        end if
+                        if parca("parca_kodu") <> "" then 
+                            if parcaDetay = "" then
+                                parcaDetay = parca("parca_kodu")
+                            else
+                                parcaDetay = parcaDetay & " - " & parca("parca_kodu")
+                            end if
+                        end if
+                        if parcaDetay = "" then
+                            parcaDetay = "-"
+                        end if
+                        %>
+                        <%=parcaDetay %>
+                    </td>
+                    <td><% if parca("marka") = "" then %> - <%else %> <%=parca("marka") %> <%end if %></td>
+                    <td><% if parca("aciklama") = "" then %> - <%else %> <%=parca("aciklama") %> <%end if %></td>
+                    <td>
+                        <input type="number" min="1" style="width: 50px" value="<%=grup_parca("ParcaAdet") %>" id="count<%=grup_id %><%=p %>" parca_id="<%=grup_parca("ParcaId") %>" /></td>
+                </tr>
+                <% 
+                grup_parca.movenext
                 loop
-            %>
-        </tbody>
-    </table>
+                %>
+            </tbody>
+        </table>
     </div>
     <span style="float: right;">
-        <input type="button" class="btn btn-info btn-mini" onclick="adet_kaydi_guncelle('<%=grup("id") %>', '<%=p %>');" value="Kayıtları Güncelle" <%=durum %> />
+        <input type="button" class="btn btn-info btn-mini" onclick="adet_kaydi_guncelle('<%=grup_id %>', '<%=p %>');" value="Kayıtları Güncelle" <%=durum %> />
     </span>
     <%
     elseif trn(request("islem"))="parcalar_auto" then
@@ -3081,7 +3151,7 @@
 
         Response.AddHeader "Content-Type", "application/json"
 
-        SQL="SELECT top 20 parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet, parca.birim_pb FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca.cop = 'false' and parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet, parca.birim_pb ORDER BY parca.parca_adi asc;"
+        SQL="SELECT top 20 parca.id, marka, parca.parca_kodu, parca_adi, aciklama, kat.kategori_adi, parca.birim_maliyet, parca.birim_pb FROM parca_listesi parca LEFT JOIN tanimlama_kategori_listesi kat ON kat.id = parca.kategori where parca.cop = 'false' and parca_adi collate French_CI_AI like '%"& q &"%' or aciklama collate French_CI_AI like '%"& q &"%' or parca_kodu collate French_CI_AI like '%"& q &"%' or marka collate French_CI_AI like '%"& q &"%' GROUP BY parca.id, marka, parca_adi, aciklama, kat.kategori_adi, parca.parca_kodu, parca.birim_maliyet, parca.birim_pb;"
         set parca = baglanti.execute(SQL)
 
         Response.Write "["
@@ -3104,7 +3174,7 @@
         set parca = baglanti.execute(SQL)
         Response.Write "["
         do while not parca.eof
-            %>{"id":<%=parca("id") %>, "agacadi":"<%=parca("grup_adi") %>"},<%
+    %>{"id":<%=parca("id") %>, "agacadi":"<%=parca("grup_adi") %>"},<%
         parca.movenext
         loop
 
@@ -3393,101 +3463,386 @@
     <%
     elseif trn(request("islem")) = "grup_parametreleri" then
     %>
-                        <table id="dt_basic" class="table table-bordered table-sprited datatableyap" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Grup Adı</th>
-                                <th>Grup Parametre</th>
-                                <th>Tip</th>
-                                <th>İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%
-                                SQL = "select Gparam.HatirlaticiGrupParametreleriID, gr.GrupAdi, Gparam.Tip, Gparam.GrupParametre from Hatirlatici.GrupParametreleri Gparam join Hatirlatici.Grup gr on Gparam.HatirlaticiGrupID = gr.HatirlaticiGrupID where Gparam.Silindi = 'false'"
+    <table id="dt_basic" class="table table-bordered table-sprited datatableyap" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Grup Adı</th>
+                <th>Grup Parametre</th>
+                <th>Tip</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                                SQL = "select Gparam.HatirlaticiGrupParametreleriID, gr.GrupAdi, Gparam.Tip, Gparam.GrupParametre from Hatirlatici.GrupParametreleri Gparam join Hatirlatici.Grup gr on Gparam.HatirlaticiGrupID = gr.HatirlaticiGrupID where Gparam.Silindi = 'false' UNION select Gprm.AracTakipGrupParametreleriID, gr.GrupAdi, Gprm.Tip, Gprm.GrupParametre  from AracTakip.GrupParametreleri Gprm join AracTakip.Grup gr on Gprm.AracTakipGrupID = gr.AracTakipGrupID where Gprm.Silindi = 'false' and Hatirlatma = 'true'"
                                 set GrupParametreleri = baglanti.execute(SQL)
 
                                 if GrupParametreleri.eof then
-                            %>
-                                <tr><td colspan="5" style="text-align:center">Kayıt Bulunamadı</td></tr>
-                            <%
+            %>
+            <tr>
+                <td colspan="5" style="text-align: center">Kayıt Bulunamadı</td>
+            </tr>
+            <%
                                 end if
                                 do while not GrupParametreleri.eof
                                 i = i + 1
-                            %>
-                                <tr>
-                                    <td><%=i %></td>
-                                    <td><%=GrupParametreleri("GrupAdi") %></td>
-                                    <td><%=GrupParametreleri("GrupParametre") %></td>
-                                    <td><%=GrupParametreleri("Tip") %></td>
-                                    <td>
-                                        <button type="button" class="btn btn-info btn-mini">Düzenle</button>
-                                        <button type="button" class="btn btn-danger btn-mini">Sil</button>
-                                    </td>
-                                </tr>
-                            <%
+            %>
+            <tr>
+                <td><%=i %></td>
+                <td><%=GrupParametreleri("GrupAdi") %></td>
+                <td><%=GrupParametreleri("GrupParametre") %></td>
+                <td><%=GrupParametreleri("Tip") %></td>
+                <td>
+                    <button type="button" class="btn btn-info btn-mini" onclick="ParametreTanimlamalariDuzenle('/System_Root/ajax/islem1.aspx/ParametreTanimlamalariDuzenle', '<%=GrupParametreleri("HatirlaticiGrupParametreleriID") %>')">Düzenle</button>
+                    <button type="button" class="btn btn-danger btn-mini" onclick="ParametreTanimlamalariSil('/System_Root/ajax/islem1.aspx/ParametreTanimlamalariSil', '<%=GrupParametreleri("HatirlaticiGrupParametreleriID") %>')">Sil</button>
+                </td>
+            </tr>
+            <%
                                 GrupParametreleri.movenext
                                 loop
-                            %>
-                        </tbody>
-                    </table>
+            %>
+        </tbody>
+    </table>
+    <%
+        elseif trn(request("islem")) = "aracTakipParametreleri" then
+    %>
+    <table id="dt_basic" class="table table-bordered table-sprited datatableyap" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Grup Adı</th>
+                <th>Grup Parametre</th>
+                <th>Tip</th>
+                <th>Hatırlatma</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                                SQL = "select Gparam.AracTakipGrupParametreleriID, gr.GrupAdi, Gparam.Tip, Gparam.GrupParametre, Gparam.Hatirlatma from AracTakip.GrupParametreleri Gparam join AracTakip.Grup gr on Gparam.AracTakipGrupID = gr.AracTakipGrupID where Gparam.Silindi = 'false' order by AracTakipGrupParametreleriID desc"
+                                set GrupParametreleri = baglanti.execute(SQL)
+
+                                if GrupParametreleri.eof then
+            %>
+            <tr>
+                <td colspan="5" style="text-align: center">Kayıt Bulunamadı</td>
+            </tr>
+            <%
+                                end if
+                                do while not GrupParametreleri.eof
+                                i = i + 1
+            %>
+            <tr>
+                <td><%=i %></td>
+                <td><%=GrupParametreleri("GrupAdi") %></td>
+                <td><%=GrupParametreleri("GrupParametre") %></td>
+                <td><%=GrupParametreleri("Tip") %></td>
+                <td>
+                    <%if GrupParametreleri("Hatirlatma") = True then %>
+                        <label class="label label-success" style="width: 50px; font-size: 12px;">Var</label>
+                    <%else %>
+                        <label class="label label-warning" style="width: 50px; font-size: 12px;">Yok</label>
+                    <%end if %>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-info btn-mini" onclick="AracTakipParametreTanimlamalariDuzenle('/System_Root/ajax/islem1.aspx/AracTakipParametreTanimlamalariDuzenle', '<%=GrupParametreleri("AracTakipGrupParametreleriID") %>')">Düzenle</button>
+                    <button type="button" class="btn btn-danger btn-mini" onclick="AracTakipParametreTanimlamalariSil('/System_Root/ajax/islem1.aspx/AracTakipParametreTanimlamalariSil', '<%=GrupParametreleri("AracTakipGrupParametreleriID") %>')">Sil</button>
+                </td>
+            </tr>
+            <%
+                                GrupParametreleri.movenext
+                                loop
+            %>
+        </tbody>
+    </table>
+    <%
+    elseif trn(request("islem")) = "grup_list" then
+    %>
+    <table class="table table-bordered table-sprited table-mini" style="width: 100%">
+         <thead>
+             <tr>
+                 <th colspan="3" style="text-align: center; padding: 6px !important;">Tanımlanan Gruplar</th>
+             </tr>
+             <tr>
+                 <th>Id</th>
+                 <th>Grup Adı</th>
+                 <th>İşlem</th>
+             </tr>
+         </thead>
+         <tbody>
+             <%
+                 SQL = "select * from Hatirlatici.Grup where Silindi = 'false'"
+                 set Grup = baglanti.execute(SQL)
+
+                 if not Grup.eof then
+                 i = 0
+                 do while not Grup.eof
+                 i = i + 1
+             %>
+             <tr>
+                 <td><%=i %></td>
+                 <td><%=Grup("GrupAdi") %></td>
+                 <td>
+                     <button class="btn btn-info btn-mini" onclick="GrupDuzenle('/System_Root/ajax/islem1.aspx/GrupDuzenle', '<%=Grup("HatirlaticiGrupID") %>');">Düzenle</button>
+                     <button class="btn btn-danger btn-mini" onclick="GrupSil('/System_Root/ajax/islem1.aspx/GrupSil', '<%=Grup("HatirlaticiGrupID") %>');">Sil</button>
+                 </td>
+             </tr>
+             <%
+                 Grup.movenext
+                 loop
+                 end if
+             %>
+         </tbody>
+    </table>
+    <%
+        elseif trn(request("islem")) = "aractakipGrupList" then
+    %>
+    <table class="table table-bordered table-sprited table-mini" style="width: 100%">
+         <thead>
+             <tr>
+                 <th colspan="3" style="text-align: center; padding: 6px !important;">Tanımlanan Gruplar</th>
+             </tr>
+             <tr>
+                 <th>Id</th>
+                 <th>Grup Adı</th>
+                 <th>İşlem</th>
+             </tr>
+         </thead>
+         <tbody>
+             <%
+                 SQL = "select * from AracTakip.Grup where Silindi = 'false'"
+                 set Grup = baglanti.execute(SQL)
+
+                 if Grup.eof then
+             %>
+                <tr>
+                    <td colspan="3" style="text-align:center">Kayıt Bulunamadı</td>
+                </tr>
+             <%
+                 end if
+
+                 if not Grup.eof then
+                 i = 0
+                 do while not Grup.eof
+                 i = i + 1
+             %>
+             <tr>
+                 <td><%=i %></td>
+                 <td><%=Grup("GrupAdi") %></td>
+                 <td>
+                     <button class="btn btn-info btn-mini" onclick="AracTakipGrupDuzenle('/System_Root/ajax/islem1.aspx/AracTakipGrupDuzenle', '<%=Grup("AracTakipGrupID") %>');">Düzenle</button>
+                     <button class="btn btn-danger btn-mini" onclick="AracTakipGrupSil('/System_Root/ajax/islem1.aspx/AracTakipGrupSil', '<%=Grup("AracTakipGrupID") %>');">Sil</button>
+                 </td>
+             </tr>
+             <%
+                 Grup.movenext
+                 loop
+                 end if
+             %>
+         </tbody>
+    </table>
+    <%
+    elseif trn(request("islem")) = "zorunlu_dosyalar" then
+    %>
+    <table id="dt_basic" class="table table-bordered table-sprited datatableyap" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Dosya Adı</th>
+                <th>Zorunlu</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                 SQL = "select * from ZorunluDosyalar where Silindi = 'false' order by DosyaID desc"
+                 set dosyalar = baglanti.execute(SQL)
+
+                 if dosyalar.eof then
+            %>
+            <tr>
+                <td colspan="5" style="text-align: center">Kayıt Bulunamadı</td>
+            </tr>
+            <%
+                 end if
+                 do while not dosyalar.eof
+                 i = i + 1
+            %>
+            <tr>
+                <td><%=i %></td>
+                <td><%=dosyalar("DosyaAdi") %></td>
+                <td>
+                    <%if dosyalar("Zorunlu") = True then %>
+                        <label class="label label-danger" style="padding: 4px; font-size: 11px; font-weight: 600;">Zorunlu</label>
+                    <%elseif dosyalar("Zorunlu") = False then %>
+                        <label class="label label-success" style="padding: 4px; font-size: 11px; font-weight: 600;">Zorunlu Değil</label>
+                    <%end if %>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-info btn-mini" onclick="ZorunluDosyaDuzenle('/System_Root/ajax/islem1.aspx/ZorunluDosyaDuzenle', '<%=dosyalar("DosyaID") %>');">Düzenle</button>
+                    <button type="button" class="btn btn-danger btn-mini" onclick="ZorunluDosyaSil('/System_Root/ajax/islem1.aspx/ZorunluDosyaSil', '<%=dosyalar("DosyaID") %>');">Sil</button>
+                </td>
+            </tr>
+            <%
+                  dosyalar.movenext
+                  loop
+            %>
+        </tbody>
+    </table>
     <%
     elseif trn(request("islem"))="grup_deger_kaydet" then
         if trn(request("islem2")) = "ekle" then
             
             elementCount = trn(request("count"))
             grupId = trn(request("grupId"))
+            'paramId = trn(request("paramId"))
             olusturanId = Request.Cookies("kullanici")("kullanici_id")
             olusturmaTarihi = date
 
             ar = Array()
             For i = 0 To elementCount - 1
                 value = trn(request("value" & i))
-                SQL = "insert into Hatirlatici.GrupDegerleri(HatirlaticiGrupParametreID, GrupValue, OlusturanID, OlusturmaTarihi, Silindi) values('"& grupId &"', '"& value &"', '"& olusturanId &"', '"& olusturmaTarihi &"', 'false')"
-                set grupDeger = baglanti.execute(SQL)
+                Id = trn(request("paramId" & i))
+
+                'SQL ="select * from Hatirlatici.GrupDegerleri where Silindi = 'false' and HatirlaticiGrupParametreID = '"& Id &"'"
+                'set control = baglanti.Execute(SQL)
+
+                'if not control.eof then
+                'Response.Clear()
+    %>
+    <!--<script type="text/javascript">
+        $(function () {
+            mesaj_ver("Hatırlatıcı", "Eklemek İstediğiniz Kayıt Mevcut", "danger");
+        });
+    </script>-->
+    <%
+                'Response.End
+                'return   
+                'end if
+
+                SQL = "insert into Hatirlatici.GrupDegerleri(HatirlaticiGrupParametreID, GrupValue, OlusturanID, OlusturmaTarihi, Silindi) values('"& Id &"', '"& value &"', '"& olusturanId &"', Convert(date, '"& olusturmaTarihi &"', 103), 'false')"
+                set grupDeger = baglanti.execute(SQL)     
             next
         end if
     %>
-        <table class="table table-bordered table-sprited datatableyap" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Grup</th>
-                    <th>Parametre Değeri</th>
-                    <th>İşlem</th>
-                </tr> 
-            </thead>
-            <tbody>
-                <%
-                    SQL = "select deger.HatirlaticiGrupParametreID, deger.GrupValue, prm.GrupAdi from Hatirlatici.GrupDegerleri deger inner join Hatirlatici.Grup prm on deger.HatirlaticiGrupParametreID = prm.HatirlaticiGrupID  where deger.Silindi = 'false'"
+    <table class="table table-bordered table-sprited datatableyap" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Grup</th>
+                <th>Parametre</th>
+                <th>Parametre Değeri</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                    SQL = "select grupDeger.HatirlaticiGrupDegerleriID, grupDeger.HatirlaticiGrupParametreID, grupDeger.GrupValue, grupParams.GrupParametre, grup.GrupAdi from Hatirlatici.GrupDegerleri as grupDeger INNER JOIN Hatirlatici.GrupParametreleri AS grupParams ON grupDeger.HatirlaticiGrupParametreID = grupParams.HatirlaticiGrupParametreleriID INNER JOIN Hatirlatici.Grup as grup On grupParams.HatirlaticiGrupID = grup.HatirlaticiGrupID where grupDeger.Silindi = 'false' and grupParams.Silindi = 'false' and grup.Silindi = 'false' order by HatirlaticiGrupDegerleriID desc"
                     set GrupDegerleri = baglanti.execute(SQL)
-
+                'response.Write(SQL)
                     if GrupDegerleri.eof then
-                %>
-                    <tr><td colspan="3" style="text-align:center">Kayıt Bulunamadı</td></tr>
-                <%
+            %>
+            <tr>
+                <td colspan="4" style="text-align: center">Kayıt Bulunamadı</td>
+            </tr>
+            <%
                     end if
                     do while not GrupDegerleri.eof
                     k = k + 1
-                %>
-                    <tr>
-                        <td><%=k %></td>
-                        <td><%=GrupDegerleri("GrupAdi") %></td>
-                        <td><%=GrupDegerleri("GrupValue") %></td>
-                        <td>
-                            <button type="button" class="btn btn-info btn-mini">Düzenle</button>
-                            <button type="button" class="btn btn-danger btn-mini">Sil</button>
-                        </td>
-                    </tr>
-                <%
+            %>
+            <tr>
+                <td><%=k %></td>
+                <td><%=GrupDegerleri("GrupAdi") %></td>
+                <td><%=GrupDegerleri("GrupParametre") %></td>
+                <td><%=GrupDegerleri("GrupValue") %></td>
+                <td>
+                    <button type="button" class="btn btn-info btn-mini" onclick="GrupDegerleriDuzenle('/System_Root/ajax/islem1.aspx/GrupDegerleriDuzenle', '<%=GrupDegerleri("HatirlaticiGrupDegerleriID") %>')">Düzenle</button>
+                    <button type="button" class="btn btn-danger btn-mini" onclick="GrupDegerleriSil('/System_Root/ajax/islem1.aspx/GrupDegerleriSil', '<%=GrupDegerleri("HatirlaticiGrupDegerleriID") %>')">Sil</button>
+                </td>
+            </tr>
+            <%
                     GrupDegerleri.movenext
                     loop
-                %>
-            </tbody>
-        </table>
+            %>
+        </tbody>
+    </table>
     <%
+    elseif trn(request("islem")) = "aracTakipGrupDegerleri" then
+        if trn(request("islem2")) = "ekle" then
+            elementCount = trn(request("count"))
+            grupId = trn(request("grupId"))
+            'paramId = trn(request("paramId"))
+            olusturanId = Request.Cookies("kullanici")("kullanici_id")
+            olusturmaTarihi = date
 
+            ar = Array()
+            For i = 0 To elementCount - 1
+                value = trn(request("value" & i))
+                Id = trn(request("paramId" & i))
+
+                'SQL ="select * from Hatirlatici.GrupDegerleri where Silindi = 'false' and HatirlaticiGrupParametreID = '"& Id &"'"
+                'set control = baglanti.Execute(SQL)
+
+                'if not control.eof then
+                'Response.Clear()
+    %>
+    <!--<script type="text/javascript">
+        $(function () {
+            mesaj_ver("Hatırlatıcı", "Eklemek İstediğiniz Kayıt Mevcut", "danger");
+        });
+    </script>-->
+    <%
+                'Response.End
+                'return   
+                'end if
+
+                SQL = "insert into AracTakip.GrupDegerleri(AracTakipGrupParametreID, GrupValue, OlusturanID, OlusturmaTarihi, Silindi) values('"& Id &"', '"& value &"', '"& olusturanId &"', Convert(date, '"& olusturmaTarihi &"', 103), 'false')"
+                set grupDeger = baglanti.execute(SQL)     
+            next
+        end if
+    %>
+    <table class="table table-bordered table-sprited datatableyap" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Grup</th>
+                <th>Parametre</th>
+                <th>Parametre Değeri</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                    SQL = "select grupDeger.AracTakipGrupDegerleriID, grupDeger.AracTakipGrupParametreID, grupDeger.GrupValue, grupParams.GrupParametre, grup.GrupAdi from AracTakip.GrupDegerleri as grupDeger INNER JOIN AracTakip.GrupParametreleri AS grupParams ON grupDeger.AracTakipGrupParametreID = grupParams.AracTakipGrupParametreleriID INNER JOIN AracTakip.Grup as grup On grupParams.AracTakipGrupID = grup.AracTakipGrupID where grupDeger.Silindi = 'false' and grupParams.Silindi = 'false' and grup.Silindi = 'false' order by AracTakipGrupDegerleriID desc"
+                    set GrupDegerleri = baglanti.execute(SQL)
+                    if GrupDegerleri.eof then
+            %>
+            <tr>
+                <td colspan="5" style="text-align: center">Kayıt Bulunamadı</td>
+            </tr>
+            <%
+                    end if
+                    do while not GrupDegerleri.eof
+                    k = k + 1
+            %>
+            <tr>
+                <td><%=k %></td>
+                <td><%=GrupDegerleri("GrupAdi") %></td>
+                <td><%=GrupDegerleri("GrupParametre") %></td>
+                <td><%=GrupDegerleri("GrupValue") %></td>
+                <td>
+                    <button type="button" class="btn btn-info btn-mini" onclick="AracTakipGrupDegerleriDuzenle('/System_Root/ajax/islem1.aspx/AracTakipGrupDegerleriDuzenle', '<%=GrupDegerleri("AracTakipGrupDegerleriID") %>')">Düzenle</button>
+                    <button type="button" class="btn btn-danger btn-mini" onclick="AracTakipGrupDegerleriSil('/System_Root/ajax/islem1.aspx/AracTakipGrupDegerleriSil', '<%=GrupDegerleri("AracTakipGrupDegerleriID") %>')">Sil</button>
+                </td>
+            </tr>
+            <%
+                    GrupDegerleri.movenext
+                    loop
+            %>
+        </tbody>
+    </table>
+    <%
     elseif trn(request("islem"))="satinalma_siparisleri" then
 
         if trn(request("islem2"))="ekle" then
@@ -3727,19 +4082,19 @@
                     <%end if %>
                     <td>
                         <% if not formatnumber(satinalma("toplamtl"),2) = "00" then %>
-                            <%=formatnumber(satinalma("toplamtl"),2) %> TL
+                        <%=formatnumber(satinalma("toplamtl"),2) %> TL
                         <% end if  %>
                         <% if Cdbl(satinalma("toplamtl")) > 0 and Cdbl(satinalma("toplamusd")) > 0 or Cdbl(satinalma("toplamtl")) > 0 and Cdbl(satinalma("toplameur")) > 0 then %>
                             -
                         <%end if %>
                         <% if not formatnumber(satinalma("toplamusd"),2) = "00" then %>
-                            <%=formatnumber(satinalma("toplamusd"),2) %> USD
+                        <%=formatnumber(satinalma("toplamusd"),2) %> USD
                         <% end if  %>
                         <% if Cdbl(satinalma("toplamusd")) > 0 and Cdbl(satinalma("toplameur")) > 0 then %>
                             -
                         <%end if %>
                         <% if not formatnumber(satinalma("toplameur"),2) = "00" then %>
-                            <%=formatnumber(satinalma("toplameur"),2) %> EUR
+                        <%=formatnumber(satinalma("toplameur"),2) %> EUR
                         <% end if  %></td>
                     <td><%=satinalma("ekleyen") %><br />
                         <%=cdate(satinalma("ekleme_tarihi")) %></td>
@@ -4794,7 +5149,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                         set musteri = baglanti.execute(SQL)
                         do while not musteri.eof
                     %>
-                        <option value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
+                    <option value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
                     <%
                         musteri.movenext
                         loop
@@ -4823,8 +5178,9 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12" id="selectyetkili" style="display: none">
                         <div class="form-group">
-                            <label class="col-from-label">Yetkili Kişi</label> <i class="fa fa-close" id="yetkiliSelectGizle" style="cursor:pointer; margin-left:5px"></i>
-                            <select class="form-control" id="selectyetkilikisi" required style="height:35px; padding: .4rem .75rem;"></select>
+                            <label class="col-from-label">Yetkili Kişi</label>
+                            <i class="fa fa-close" id="yetkiliSelectGizle" style="cursor: pointer; margin-left: 5px"></i>
+                            <select class="form-control" id="selectyetkilikisi" required style="height: 35px; padding: .4rem .75rem;"></select>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -4903,7 +5259,7 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                             <input type="text" id="bitis_saati" required class="timepicker form-control" style="padding-left: 10px" value="" />
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label>Proje</label>
                         <div class="form-group">
                             <select class="form-control select2" id="proje-bilgi">
@@ -4922,35 +5278,39 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label class="col-from-label">Yapılan İşlemler</label>
-                            <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height: 100px"></textarea>
+                            <label>Rapor Durumu</label>
+                            <select id="firmarapordurumu" class="form-control select2" onchange="raporDurumKontrol();">
+                                <option selected value="">Durum Seç</option>
+                                <option value="Faturası Kesildi">Faturası Kesildi</option>
+                                <option value="Faturası Kesilecek">Faturası Kesilecek</option>
+                                <option value="Garanti Kapsamında">Garanti Kapsamında</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="faturagorevli" style="display:none">
+                            <label>Personel</label>
+                            <select id="personelbildirim" class="form-control select2">
+                                <option selected value="0">Personel Seç</option>
+                                <%
+                                    SQL = "select id, personel_ad + ' ' + personel_soyad as ad_soyad from ucgem_firma_kullanici_listesi where cop = 'false'"
+                                    set user = baglanti.execute(SQL)
+
+                                    if not user.eof then
+                                    do while not user.eof
+                                %>
+                                <option value="<%=user("id") %>"><%=user("ad_soyad") %></option>
+                                <%
+                                    user.movenext
+                                    loop
+                                    end if
+                                %>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label class="col-from-label">Not</label>
-                            <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height: 100px"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="border-top: 1px solid #dedede; padding-top: 10px;" id="parcaTable">
-                    <div class="col-md-4 col-sm-4 col-xs-8">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Parça Adı</label>
-                            <input type="text" name="parcalar" form_id="" id="parcalar1" i="<1" data="0" class="form-control parcalar" />
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-2 col-xs-4">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Adet</label>
-                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1" value="1" />
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Görevli</label>
+                            <label>Görevli</label>
                             <select id="firmagorevli" class="form-control select2" multiple required>
                                 <%
                                     SQL = "select id, personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'"
@@ -4963,6 +5323,34 @@ elseif trn(request("islem"))="uretim_sablonlari" then
                                     loop        
                                 %>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-from-label">Yapılan İşlemler</label>
+                            <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height: 100px"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-from-label">Not</label>
+                            <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height: 100px"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row" style="border-top: 1px solid #dedede; padding-top: 10px;" id="parcaTable">
+                    <div class="col-md-4 col-sm-4 col-xs-8">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Parça Adı</label>
+                            <input type="text" name="parcalar" form_id="" id="parcalar1" i="<1" data="0" class="form-control parcalar" />
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-4">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Adet</label>
+                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1" value="1" />
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
@@ -5428,7 +5816,7 @@ works properly when clicked or hovered */
 
         $("#musteri_id option[value=" + '<%=formduzenle("FirmaId") %>' + "]").attr('selected', 'selected');
         if ($("#musteri_id").val().length > 0) {
-            $("#musteri_id").trigger("change");
+            //$("#musteri_id").trigger("change");
         }
         $("#proje-bilgi option[value=" + '<%=formduzenle("ProjeId")%>' + "]").attr('selected', 'selected');
     </script>
@@ -5454,7 +5842,7 @@ works properly when clicked or hovered */
                         set musteri = baglanti.execute(SQL)
                         do while not musteri.eof
                     %>
-                        <option <%if formduzenle("FirmaId") = musteri("id") then %> selected="selected" <%end if %> value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
+                    <option <%if formduzenle("FirmaId") = musteri("id") then %> selected="selected" <%end if %> value="<%=musteri("id") %>"><%=musteri("firma_adi") %></option>
                     <%
                         musteri.movenext
                         loop
@@ -5483,8 +5871,9 @@ works properly when clicked or hovered */
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12" id="selectyetkili" style="display: none">
                         <div class="form-group">
-                            <label class="col-from-label">Yetkili Kişi</label> <i class="fa fa-close" id="yetkiliSelectGizle" style="cursor:pointer; margin-left:5px"></i>
-                            <select class="form-control yetiskinselect" id="selectyetkilikisi" required style="height:35px; padding: .4rem .75rem;"></select>
+                            <label class="col-from-label">Yetkili Kişi</label>
+                            <i class="fa fa-close" id="yetkiliSelectGizle" style="cursor: pointer; margin-left: 5px"></i>
+                            <select class="form-control yetiskinselect" id="selectyetkilikisi" required style="height: 35px; padding: .4rem .75rem;"></select>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -5563,7 +5952,7 @@ works properly when clicked or hovered */
                             <input type="text" id="bitis_saati" required class="timepicker form-control" style="padding-left: 10px" value="<%=formduzenle("BitisSaati") %>" />
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label>Proje</label>
                         <div class="form-group">
                             <select class="select2" id="proje-bilgi">
@@ -5582,35 +5971,62 @@ works properly when clicked or hovered */
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label class="col-from-label">Yapılan İşlemler</label>
-                            <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height: 100px"><%=formduzenle("YapilanIslemler") %></textarea>
+                            <label>Rapor Durumu</label>
+                            <select id="firmarapordurumu" class="form-control select2" onchange="raporDurumKontrol();">
+                                <%
+                                    r0 = ""
+                                    r1 = ""
+                                    r2 = ""
+                                    r3 = ""
+                                    if IsNULL(formduzenle("RaporDurumu")) or formduzenle("RaporDurumu") = "" then
+                                        r0 = "selected"
+                                    end if
+                                    if formduzenle("RaporDurumu") = "Faturasi Kesildi" then
+                                        r1 = "selected"
+                                    end if
+                                    if formduzenle("RaporDurumu") = "Faturasi Kesilecek" then
+                                        r2 = "selected"
+                                    end if
+                                    if formduzenle("RaporDurumu") = "Garanti Kapsaminda" then
+                                        r3 = "selected"
+                                    end if
+                                %>
+                                <option <%=r0%> value="" >Durum Seç</option>
+                                <option <%=r1%> value="Faturası Kesildi">Faturası Kesildi</option>
+                                <option <%=r2%> value="Faturası Kesilecek">Faturası Kesilecek</option>
+                                <option <%=r3%> value="Garanti Kapsamında">Garanti Kapsamında</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="faturagorevli" style="display:none">
+                            <label>Bildirim Gönderilecek Personel</label>
+                            <select id="personelbildirim" class="form-control select2">
+                                <option selected value="0">Personel Seç</option>
+                                <%
+                                    SQL = "select id, personel_ad + ' ' + personel_soyad as ad_soyad from ucgem_firma_kullanici_listesi where cop = 'false'"
+                                    set user = baglanti.execute(SQL)
+
+                                    if not user.eof then
+                                    do while not user.eof
+
+                                    state = ""
+                                    if user("id") = formduzenle("BildirimGonderilecekPersonelID") then
+                                        state = "selected"
+                                    end if
+                                %>
+                                <option <%=state %> value="<%=user("id") %>"><%=user("ad_soyad") %></option>
+                                <%
+                                    user.movenext
+                                    loop
+                                    end if
+                                %>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label class="col-from-label">Not</label>
-                            <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height: 100px"><%=formduzenle("FormNot") %></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="border-top: 1px solid #dedede; padding-top: 10px">
-                    <div class="col-md-4 col-sm-4 col-xs-8">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Parça Adı</label>
-                            <input type="text" name="parcalar" id="parcalar1" i="1" data="" class="form-control parcalar" />
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-2 col-xs-4">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Adet</label>
-                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1" value="1" />
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Görevli</label>
+                            <label>Görevli</label>
                             <select id="firmagorevli" class="form-control select2" multiple required>
                                 <%
                                     SQL = "select id, personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where durum = 'true' and cop = 'false'"
@@ -5631,6 +6047,32 @@ works properly when clicked or hovered */
                                     loop        
                                 %>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-from-label">Yapılan İşlemler</label>
+                            <textarea class="form-control" id="firmayapilanislemler" placeholder="Yapılan İşlemler" style="min-height: 100px"><%=formduzenle("YapilanIslemler") %></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-from-label">Not</label>
+                            <textarea class="form-control" id="firmanot" placeholder="Not" style="min-height: 100px"><%=formduzenle("FormNot") %></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="border-top: 1px solid #dedede; padding-top: 10px">
+                    <div class="col-md-4 col-sm-4 col-xs-8">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Parça Adı</label>
+                            <input type="text" name="parcalar" id="parcalar1" i="1" data="" class="form-control parcalar" />
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-4">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Adet</label>
+                            <input type="number" class="form-control adeti" name="musteriparcaadeti" id="musteriparcaadeti" min="1" value="1" />
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-12 col-lg-12">
@@ -5695,7 +6137,8 @@ works properly when clicked or hovered */
                                     <td><%=Adet %></td>
                                     <td class="price"><%=toplamMaliyet %>&nbsp<%=birim %></td>
                                     <td><%=parcadetay("aciklama") %></td>
-                                    <td><button type="button" onclick="parcaDuzenle('<%=parcadetay("id")%>');" class="btn btn-danger btn-mini">Sil</button></td>
+                                    <td>
+                                        <button type="button" onclick="parcaDuzenle('<%=parcadetay("id")%>');" class="btn btn-danger btn-mini">Sil</button></td>
                                 </tr>
                                 <% 
                                         parcadetay.movenext 
@@ -5761,6 +6204,7 @@ works properly when clicked or hovered */
                     }
                 });
             });
+            $("#firmarapordurumu").trigger("onchange");
         </script>
         <script type="text/javascript">
             $("#yetkiliSelectGizle").click(function () {

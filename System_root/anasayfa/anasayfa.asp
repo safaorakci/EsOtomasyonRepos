@@ -5,6 +5,159 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    'Hatırlatma
+    SQL = "select id, firma_kodu, yetki_kodu, ISNULL(sms_entegrasyon, 0) as sms_entegrasyon, ISNULL(mail_entegrasyon, 0) as mail_entegrasyon from ucgem_firma_listesi where cop = 'false' and yetki_kodu = 'BOSS'"
+    set firmaBilgileri = baglanti.execute(SQL)
+
+    SQL = "select HatirlaticiGrupParametreleriID, HatirlaticiGrupID, Tip, GrupParametre, Hatirlatma from Hatirlatici.GrupParametreleri where Silindi = 'false' and Hatirlatma = 'true'"
+    set grupParametreleri = baglanti.execute(SQL)
+
+    if not grupParametreleri.eof then
+        do while not grupParametreleri.eof
+            SQL = "select * from Hatirlatici.Hatirlatma where ParametreID = '"& grupParametreleri("HatirlaticiGrupParametreleriID") &"' and Silindi = 'false'"
+            set hatirlatma = baglanti.execute(SQL)
+ 
+            SQL = "select * from Hatirlatici.GrupDegerleri where HatirlaticiGrupParametreID = '"& grupParametreleri("HatirlaticiGrupParametreleriID") &"' and Silindi = 'false'"
+            set grupDegerleri = baglanti.execute(SQL)
+
+            if not hatirlatma.eof then
+                if hatirlatma("TarihindeHatirlat") = True then
+                    tarihinde = grupDegerleri("GrupValue")
+                    if Cdate(tarihinde) = Date then
+                        for i = 0 to ubound(split(hatirlatma("TarihBildirim"), ","))
+                            bildirim = split(hatirlatma("TarihBildirim"), ",")(i)
+                            if hatirlatma("TarihindeHatirlatildi") = False then
+                                if bildirim = "bildirim" then
+                                    SQL = "select GrupAdi from Hatirlatici.Grup where HatirlaticiGrupID = '"& grupParametreleri("HatirlaticiGrupID") &"' and Silindi = 'false'"
+                                    set grup = baglanti.execute(SQL)
+                                    
+                                    bildirim = grup("GrupAdi") & " Grubunun " & grupParametreleri("GrupParametre") & " gelmiştir."
+                                    tip = "hatirlatici"
+                                    click = "CokluIsYap(''hatirlatici'',0,'' '',''0'');"
+                                    okudumu = "0"
+                                    durum = "true"
+                                    cop = "false"
+                                    firma_kodu = Request.Cookies("kullanici")("firma_kodu")
+                                    firma_id = Request.Cookies("kullanici")("firma_id")
+                                    ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
+                                    ekleyen_ip = Request.ServerVariables("Remote_Addr")
+                                
+                                    SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', ISNULL('"& hatirlatma("BildirimiAlacakPersonelID") &"', 0), '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate())"
+                                    set hatirlatmaBildirim = baglanti.execute(SQL)
+
+                                    SQL = "update Hatirlatici.Hatirlatma set TarihindeHatirlatildi = 'true' where HatirlatmaID = '"& hatirlatma("HatirlatmaID") &"'"
+                                    set hatirlatildi = baglanti.execute(SQL)
+                                end if
+                            end if
+                        next
+                    end if
+                end if
+                if hatirlatma("TarihindenOnceHatirlat") = True then
+                    tarihindenOnce = grupDegerleri("GrupValue")
+                    fark = DateDiff("d", Date, tarihindenOnce)
+                    if fark = hatirlatma("TarihindenOnce") or fark < hatirlatma("TarihindenOnce") then
+
+                        for i = 0 to ubound(split(hatirlatma("TarihBildirim"), ","))
+                            bildirim = split(hatirlatma("TarihBildirim"), ",")(i)
+                            if hatirlatma("TarihindenOnceHatirlatildi") = False then
+                                if bildirim = "bildirim" then
+                                    SQL = "select GrupAdi from Hatirlatici.Grup where HatirlaticiGrupID = '"& grupParametreleri("HatirlaticiGrupID") &"' and Silindi = 'false'"
+                                    set grup = baglanti.execute(SQL)
+                                    
+                                    bildirim = grup("GrupAdi") & " Grubunun " & grupParametreleri("GrupParametre") & "ne " & fark & " gün kaldı."
+                                    tip = "hatirlatici"
+                                    click = "CokluIsYap(''hatirlatici'',0,'' '',''0'');"
+                                    okudumu = "0"
+                                    durum = "true"
+                                    cop = "false"
+                                    firma_kodu = Request.Cookies("kullanici")("firma_kodu")
+                                    firma_id = Request.Cookies("kullanici")("firma_id")
+                                    ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
+                                    ekleyen_ip = Request.ServerVariables("Remote_Addr")
+                                
+                                    SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', ISNULL('"& hatirlatma("BildirimiAlacakPersonelID") &"', 0), '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate())"
+                                    set hatirlatmaBildirim = baglanti.execute(SQL)
+
+                                    SQL = "update Hatirlatici.Hatirlatma set TarihindenOnceHatirlatildi = 'true' where HatirlatmaID = '"& hatirlatma("HatirlatmaID") &"'"
+                                    set hatirlatildi = baglanti.execute(SQL)
+                                end if
+                            end if
+                        next
+                    end if
+                end if
+                if hatirlatma("SayiyaKalaHatirlat") = True then
+                    sayiyaGeldiginde = hatirlatma("SayiyaGeldiginde")
+                    sonuc = 0
+                    sonuc = hatirlatma("SayiyaGeldiginde") - grupDegerleri("GrupValue")
+                    if sonuc > 0 and sonuc < hatirlatma("SayiyaKala") or sonuc = hatirlatma("SayiyaKala") then
+                       for i = 0 to ubound(split(hatirlatma("SayiBildirim"), ","))
+                            bildirim = split(hatirlatma("SayiBildirim"), ",")(i)
+                            if hatirlatma("SayiyaKalaHatirlatildi") = False then
+                                if bildirim = "bildirim" then
+                                    SQL = "select GrupAdi from Hatirlatici.Grup where HatirlaticiGrupID = '"& grupParametreleri("HatirlaticiGrupID") &"' and Silindi = 'false'"
+                                    set grup = baglanti.execute(SQL)
+                                    
+                                    bildirim = grup("GrupAdi") & " Grubunun " & grupParametreleri("GrupParametre") & " sayısı " & sayiyaGeldiginde & " ulaşmasına " & sonuc & " kaldı."
+                                    tip = "hatirlatici"
+                                    click = "CokluIsYap(''hatirlatici'',0,'' '',''0'');"
+                                    okudumu = "0"
+                                    durum = "true"
+                                    cop = "false"
+                                    firma_kodu = Request.Cookies("kullanici")("firma_kodu")
+                                    firma_id = Request.Cookies("kullanici")("firma_id")
+                                    ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
+                                    ekleyen_ip = Request.ServerVariables("Remote_Addr")
+                                
+                                    SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', ISNULL('"& hatirlatma("BildirimiAlacakPersonelID") &"', 0), '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate())"
+                                    set hatirlatmaBildirim = baglanti.execute(SQL)
+
+                                    SQL = "update Hatirlatici.Hatirlatma set SayiyaKalaHatirlatildi = 'true' where HatirlatmaID = '"& hatirlatma("HatirlatmaID") &"'"
+                                    set hatirlatildi = baglanti.execute(SQL)
+                                end if
+                            end if
+                        next 
+                    end if
+                end if
+                if hatirlatma("SayiyaGeldigindeHatirlat") = True then
+                    sayiyaGeldiginde = Int(hatirlatma("SayiyaGeldiginde"))
+                    grupValue = Int(grupDegerleri("GrupValue"))
+
+                    if grupValue = sayiyaGeldiginde or grupValue > sayiyaGeldiginde then
+                        for i = 0 to ubound(split(hatirlatma("SayiBildirim"), ","))
+                            bildirim = split(hatirlatma("SayiBildirim"), ",")(i)
+                            if hatirlatma("SayiyaGelinceHatirlatildi") = False then
+                                if bildirim = "bildirim" then
+                                    SQL = "select GrupAdi from Hatirlatici.Grup where HatirlaticiGrupID = '"& grupParametreleri("HatirlaticiGrupID") &"' and Silindi = 'false'"
+                                    set grup = baglanti.execute(SQL)
+
+                                    bildirim = grup("GrupAdi") & " Grubunun " & grupParametreleri("GrupParametre") & " sayısını " & grupDegerleri("GrupValue") & " ulaştı."
+                                    tip = "hatirlatici"
+                                    click = "CokluIsYap(''hatirlatici'',0,'' '',''0'');"
+                                    okudumu = "0"
+                                    durum = "true"
+                                    cop = "false"
+                                    firma_kodu = Request.Cookies("kullanici")("firma_kodu")
+                                    firma_id = Request.Cookies("kullanici")("firma_id")
+                                    ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
+                                    ekleyen_ip = Request.ServerVariables("Remote_Addr")
+                                
+                                    SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', ISNULL('"& hatirlatma("BildirimiAlacakPersonelID") &"', 0), '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate())"
+                                    set hatirlatmaBildirim = baglanti.execute(SQL)
+
+                                    SQL = "update Hatirlatici.Hatirlatma set SayiyaGelinceHatirlatildi = 'true' where HatirlatmaID = '"& hatirlatma("HatirlatmaID") &"'"
+                                    set hatirlatildi = baglanti.execute(SQL)
+                                end if
+                            end if
+                        next
+                    end if
+                end if
+            end if
+        grupParametreleri.movenext
+        loop
+    end if
+    'Hatırlatma
+
+
     SQL="SELECT ROW_NUMBER() OVER (ORDER BY departman.id ASC) AS rowid, 0 AS santiye_sayi, departman.id, departman.departman_adi, departman.departman_tipi, departman.sirano, ( SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false' AND (ISNULL(tamamlanma_orani, 0) != 100) AND dbo.iceriyormu(departmanlar, 'departman-' + CONVERT(NVARCHAR(10), departman.id)) = 1 ) + ( SELECT COUNT(id) FROM ucgem_proje_olay_listesi olay WHERE olay.departman_id = departman.id AND olay.durum = 'true' AND olay.cop = 'false' ) AS gosterge_sayisi, ( SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false' ) + ( SELECT COUNT(id) FROM ucgem_proje_olay_listesi olay WHERE olay.durum = 'true' AND olay.cop = 'false' ) AS tum_sayi FROM tanimlama_departman_listesi departman LEFT JOIN ucgem_firma_kullanici_listesi kullanici ON dbo.iceriyormu(kullanici.departmanlar, departman.id) = 1 WHERE departman.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' AND departman.durum = 'true' AND departman.cop = 'false' AND departman.departman_tipi = 'santiye' GROUP BY departman.id, departman.departman_adi, departman.departman_tipi, departman.sirano ORDER BY departman.sirano ASC;"
     set sayilar = baglanti.execute(SQL)
     'response.Write(SQL)

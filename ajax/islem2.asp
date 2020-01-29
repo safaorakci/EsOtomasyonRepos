@@ -540,10 +540,15 @@
         etiket = trn(request("etiket"))
         kayit_id = trn(request("kayit_id"))
 
+        SQL = "select yonetici_yetkisi from ucgem_firma_kullanici_listesi where id = '"& Request.Cookies("kullanici")("kullanici_id") &"'"
+        set personel = baglanti.execute(SQL)
+
         if trim(request("islem2"))="ekle" then
 
             depo_dosya_yolu = trn(request("depo_dosya_yolu"))
             depo_dosya_adi = trn(request("depo_dosya_adi"))
+            aciklama = trn(request("aciklama"))
+            depo_dosya_id = trn(request("depo_dosya_id"))
 
             durum = "true"
             cop = "false"
@@ -551,7 +556,7 @@
             firma_id = Request.Cookies("kullanici")("firma_id")
             ekleyen_id = Request.Cookies("kullanici")("kullanici_id")
 
-            SQL="insert into ahtapot_dosya_deposu(etiket, kayit_id, depo_dosya_yolu, depo_dosya_adi, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('" & etiket & "', '" & kayit_id & "', '" & depo_dosya_yolu & "', '" & depo_dosya_adi & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', GETDATE(), GETDATE())"
+            SQL="insert into ahtapot_dosya_deposu(etiket, kayit_id, depo_dosya_yolu, depo_dosya_adi, durum, cop, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati, aciklama, dosya_id) values('" & etiket & "', '" & kayit_id & "', '" & depo_dosya_yolu & "', '" & depo_dosya_adi & "', '" & durum & "', '" & cop & "', '" & firma_id & "', '" & ekleyen_id & "', '" & ekleyen_ip & "', GETDATE(), GETDATE(), '"& aciklama &"', '"& depo_dosya_id &"')"
             set ekle = baglanti.execute(SQL)
 
             if trim(etiket)="proje" then
@@ -576,37 +581,45 @@
         end if
 
 %>
-<div class="dt-responsive table-responsive" style="padding-bottom:85px">
+<div class="dt-responsive table-responsive" style="padding-bottom:15px">
     <table id="new-cons" class="table table-striped table-bordered table-hover" width="100%">
         <thead>
             <tr>
                 <th style="width: 20px; text-align: center;">ID</th>
                 <th><%=LNG("Dosya Adı")%></th>
+                <th><%=LNG("Açıklama")%></th>
                 <th><%=LNG("Ekleme Tarihi")%></th>
                 <th><%=LNG("Ekleme Saati")%></th>
                 <th><%=LNG("Ekleyen")%></th>
-                <th><%=LNG("İşlem")%></th>
+                <%if personel("yonetici_yetkisi") = "true" then %>
+                    <th><%=LNG("İşlem")%></th>
+                <%end if %>
             </tr>
         </thead>
         <tbody>
             <%
                 SQL="select kullanici.personel_ad + ' ' + kullanici.personel_soyad as ekleyen, depo.* from ahtapot_dosya_deposu depo join ucgem_firma_kullanici_listesi kullanici on kullanici.id = depo.ekleyen_id where depo.etiket = '"& etiket &"' and depo.kayit_id = '"& kayit_id &"' and depo.cop = 'false'"
                 set depo = baglanti.execute(SQL)
+
                 if depo.eof then
             %>
             <tr>
-                <td colspan="6" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
+                <td colspan="7" style="text-align: center;"><%=LNG("Kayıt Yok")%></td>
             </tr>
             <%
                 end if
+                d = 0
                 do while not depo.eof
+                d = d + 1
             %>
             <tr>
-                <td><%=depo("id") %></td>
+                <td><%=d %></td>
                 <td><%=depo("depo_dosya_adi") %></td>
+                <td><%=depo("aciklama") %></td>
                 <td><%=FormatDate(depo("ekleme_tarihi"), "00") %></td>
                 <td><%=left(depo("ekleme_saati"),5) %></td>
                 <td><%=depo("ekleyen") %></td>
+                <%if personel("yonetici_yetkisi") = "true" then %>
                 <td class="dropdown">
                     <button type="button" class="btn btn-primary dropdown-toggle btn-mini" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button>
                     <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
@@ -615,9 +628,58 @@
                         <a class="dropdown-item" href="javascript:void(0);" onclick="depo_dosya_sil('<%=etiket %>', '<%=kayit_id %>', '<%=depo("id") %>');"><i class="icofont icofont-ui-delete"></i><%=LNG("Sil")%></a>
                     </div>
                 </td>
+                <%end if %>
             </tr>
             <%
                 depo.movenext
+                loop
+            %>
+        </tbody>
+    </table>
+</div>
+<%
+    elseif trn(request("islem")) = "zorunlu_dosyalar" then
+        etiket = trn(request("etiket"))
+        kayit_id = trn(request("kayit_id"))
+%>
+<div class="dt-responsive table-responsive" style="padding-bottom:25px">
+    <table id="new-cons" class="table table-striped table-bordered table-hover" width="100%">
+        <thead>
+            <tr>
+                <th style="width: 20px; text-align: center;">ID</th>
+                <th><%=LNG("Dosya Adı")%></th>
+                <th><%=LNG("Zorunlu")%></th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                SQL = "select * from ZorunluDosyalar where Zorunlu = 'true' and Silindi = 'false' and DosyaID not in(select dosya_id from ahtapot_dosya_deposu where kayit_id = '"& kayit_id &"' and etiket = '"& etiket &"' and dosya_id is not null and cop = 'false')"
+                set zorunluDosya = baglanti.execute(SQL)
+
+                if zorunluDosya.eof then
+            %>
+            <tr>
+                <td colspan="6" style="text-align: center;"><%=LNG("Eksik Belge Yok")%></td>
+            </tr>
+            <%
+                end if
+                d = 0
+                do while not zorunluDosya.eof
+                d = d + 1
+            %>
+            <tr>
+                <td><%=d %></td>
+                <td><%=zorunluDosya("DosyaAdi") %></td>
+                <td>
+                    <%if zorunluDosya("Zorunlu") = True then %>
+                        <label class="label label-danger" style="padding: 4px; font-size: 11px; font-weight: 600; text-align:center">Zorunlu</label>
+                    <%elseif zorunluDosya("Zorunlu") = False then %>
+                        <label class="label label-success" style="padding: 4px; font-size: 11px; font-weight: 600; text-align:center">Zorunlu Değil</label>
+                    <%end if %>
+                </td>
+            </tr>
+            <%
+                zorunluDosya.movenext
                 loop
             %>
         </tbody>
@@ -2742,7 +2804,11 @@
                                             %>
                                                 <tr>
                                                     <td colspan="4" style="font-weight:bold; text-align:right">Toplam Maliyet</td>
-                                                    <td colspan="2" class="total" style="font-weight:bold"><%=SPTMTL %> TL - <%=SPTMUSD %> USD - <%=SPTMEUR %> EUR</td>
+                                                    <td colspan="2" class="total" style="font-weight:bold">
+                                                        <%=Replace(FormatNumber(SPTMTL,,,,0),",",".") %>&nbsp;TL - 
+                                                        <%=Replace(FormatNumber(SPTMUSD,,,,0),",",".") %>&nbsp;USD - 
+                                                        <%=Replace(FormatNumber(SPTMEUR,,,,0),",",".") %>&nbsp;EUR
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                            </table>
@@ -2821,7 +2887,11 @@
                                                 %>
                                                 <tr>
                                                     <td colspan="4" style="font-weight:bold; text-align:right">Toplam Maliyet</td>
-                                                    <td colspan="2" class="total" style="font-weight:bold"><%=STMTL %> TL - <%=STMUSD %> USD - <%=STMEUR %> EUR</td>
+                                                    <td colspan="2" class="total" style="font-weight:bold">
+                                                        <%=Replace(FormatNumber(STMTL,,,,0),",",".")%>&nbsp;TL - 
+                                                        <%=Replace(FormatNumber(STMUSD,,,,0),",",".") %>&nbsp; USD - 
+                                                        <%=Replace(FormatNumber(STMEUR,,,,0),",",".") %>&nbsp; EUR
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>

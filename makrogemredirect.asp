@@ -164,5 +164,16 @@
         Server.Execute("/ajax/uretim_sablon.asp")  
     elseif gp(3) = "bakim_yonetimi" then
         Server.Execute("/System_root/bakim/bakim_yonetimi.asp")
+    elseif gp(3) = "zorunlu_dosya" then
+        Server.Execute("/System_root/tanimlamalar/zorunlu_dosya.asp")
+    elseif gp(3) = "tanimlamalar" then
+        Server.Execute("/System_root/aractakip/tanimlamalar.asp")
+    elseif gp(3) = "arac" then
+        Server.Execute("/System_root/aractakip/arac.asp")
     end if
 %>
+
+
+
+
+

@@ -620,7 +620,7 @@
 
     <asp:panel id="personeller_panel" runat="server">
         <div  class="dt-responsive table-responsive">
-        <table id="dt_basic" class="table table-striped table-bordered table-hover datatableyap" width="100%">
+        <table id="dt_basic" class="table table-striped table-bordered table-hover datatableyap text-nowrap" width="100%">
     <thead>
         <tr>
             <th data-hide="phone">ID</th>
@@ -630,6 +630,7 @@
             <th data-hide="phone" style="display:none;"><% Response.Write(LNG("Departman")); %></th>
             <th><% Response.Write(LNG("Görev")); %></th>
             <th style="text-align:center;"><% Response.Write(LNG("Durum")); %></th>
+            <th style="text-align:center;"><% Response.Write(LNG("Belge")); %></th>
             <th><% Response.Write(LNG("İşlem")); %></th>
         </tr>
     </thead>
@@ -650,14 +651,19 @@
             <td style="display:none;"><%# DataBinder.Eval(Container.DataItem, "departmanlar") %></td>
             <td><%# DataBinder.Eval(Container.DataItem, "gorevler") %></td>
             <td style="text-align:center;">
-                <span class="onoffswitch">
-                
+                <span class="onoffswitch"> 
                 <asp:Label runat="server" ID="st3_label">
                         <asp:CheckBox ID="st3" runat="server"></asp:CheckBox>
                 </asp:Label>
-            </span></td>
+            </span>
+            </td>
+            <td>
+                <a <%--onclick="PersonelEksikBelge('<%# DataBinder.Eval(Container.DataItem, "id") %>');"--%>>
+                    <%# DataBinder.Eval(Container.DataItem, "eksik_dosya") %>
+                </a>
+            </td>       
             <td class="icon-list-demo2">
-                <a href="javascript:void(0);" onclick="sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id=<%# DataBinder.Eval(Container.DataItem, "id") %>');" rel="tooltip" data-placement="top" data-original-title="<% Response.Write(LNG("Personel Detaylarını Görüntüle")); %>">
+                <a href="javascript:void(0);" id="personel<%# DataBinder.Eval(Container.DataItem, "id") %>" onclick="sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id=<%# DataBinder.Eval(Container.DataItem, "id") %>');" rel="tooltip" data-placement="top" data-original-title="<% Response.Write(LNG("Personel Detaylarını Görüntüle")); %>">
                     <i class="fa fa-external-link"></i>
                 </a>
                 &nbsp;

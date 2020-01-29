@@ -2716,9 +2716,9 @@
                 'response.Write(SQL)
                 if firma.eof then
             %>
-                <tr>
-                    <td colspan="5">Kayıt Bulunamadı</td>
-                </tr>
+            <tr>
+                <td colspan="5">Kayıt Bulunamadı</td>
+            </tr>
             <%
                 end if
             %>
@@ -2780,10 +2780,10 @@
         <h5 class="card-header-text"><% if trim(firma("yetki_kodu"))="MUSTERI" then %><%=LNG("Müşteri ")%><% else %><%=LNG("Taşeron ")%><% end if %> <%=LNG("Bilgileri")%></h5>
         <% if trim(firma("yetki_kodu"))="MUSTERI" then %>
         <a href="javascript:void(0);" onclick="sayfagetir('/firma_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i> Geri Dön</span></a>
+            <i class="fa fa-history"></i>Geri Dön</span></a>
         <% else %>
         <a href="javascript:void(0);" onclick="sayfagetir('/taseron_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i> Geri Dön</span></a>
+            <i class="fa fa-history"></i>Geri Dön</span></a>
         <% end if %>
     </div>
     <div class="card-block">
@@ -2834,7 +2834,7 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" id="firma_telefon" class="form-control" value="<%=firma("firma_telefon") %>" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67" >
+                                    <input type="text" id="firma_telefon" class="form-control" value="<%=firma("firma_telefon") %>" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
                                 </div>
                             </div>
                         </div>
@@ -2845,22 +2845,22 @@
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" id="firma_vergi_no" class="form-control" value="<%=firma("firma_vergi_no") %>" >
+                                    <input type="text" id="firma_vergi_no" class="form-control" value="<%=firma("firma_vergi_no") %>">
                                 </div>
                             </div>
                         </div>
-                         <div class="row">
+                        <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Firma Adres")%></label>
                             <div class="col-sm-12 col-lg-12">
                                 <div class="input-group input-group-primary">
                                     <span class="input-group-addon">
                                         <i class="icon-prepend fa fa-user"></i>
                                     </span>
-                                    <input type="text" id="firma_adres" class="form-control" value="<%=firma("firma_adres") %>" >
+                                    <input type="text" id="firma_adres" class="form-control" value="<%=firma("firma_adres") %>">
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row" <% if not trim(firma("yetki_kodu"))="TASERON" then %> style="display: none;" <% end if %>>
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Taşeron Saatlik Maliyet")%></label>
                             <div class="col-sm-9 col-lg-9">
@@ -2892,10 +2892,10 @@
 
                             </div>
 
-                        </div>                    
+                        </div>
                     </div>
                     <div class="col-md-4 col-lg-4  ">
-                        
+
                         <div class="row">
                             <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Firma Logo")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
@@ -2924,192 +2924,192 @@
                 </div>
 
                 <div class="row">
-                    
+
                     <div class="col-md-12">
-                    <div class="row">
-                       <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Yetkili Adı")%></label>
-                            <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="text" id="yetkili1_adi" required value="<%=firma("firma_yetkili") %>" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili Telefon")%></label>
-                                <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="tel" id="yetkili1_telefon" value="<%=firma("yetkili1_telefon") %>" class="form-control" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili Mail")%></label>
-                            <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="mail" id="yetkili1_mail" class="form-control" value="<%=firma("yetkili1_mail") %>" required >
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                    <div class="col-md-12">
-                                    <button class="btn btn-link" id="yetkili2ac" type="button">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Yetkili Adı")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="text" id="yetkili1_adi" required value="<%=firma("firma_yetkili") %>" class="form-control">
+                                    </div>
                                 </div>
-                   <%  
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili Telefon")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="tel" id="yetkili1_telefon" value="<%=firma("yetkili1_telefon") %>" class="form-control" required data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili Mail")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="mail" id="yetkili1_mail" class="form-control" value="<%=firma("yetkili1_mail") %>" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-link" id="yetkili2ac" type="button">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                    <%  
                        stil = ""
                        if IsNull(firma("yetkili2_adi")) or firma("yetkili2_adi") = "" then stil = "style='display:none;'" end if 
-                   %>
-                    <div class="col-md-12" id="yetkili2form" <%=stil%> >
-                      <div class="row">
-                       <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Yetkili 2 Adı")%></label>
-                            <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="text" id="yetkili2_adi" value="<%=firma("yetkili2_adi") %>" class="form-control">
-                            </div>
-                        </div>
-                       </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 2 Telefon")%></label>
-                                <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="text" id="yetkili2_telefon" value="<%=firma("yetkili2_telefon") %>" class="form-control" data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 2 Mail")%></label>
-                            <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="mail" id="yetkili2_mail" class="form-control" value="<%=firma("yetkili2_mail") %>"  >
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                                <div class="col-md-12">
-                                    <button class="btn btn-link" id="yetkili3ac" type="button">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
+                    %>
+                    <div class="col-md-12" id="yetkili2form" <%=stil%>>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Yetkili 2 Adı")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="text" id="yetkili2_adi" value="<%=firma("yetkili2_adi") %>" class="form-control">
+                                    </div>
                                 </div>
                             </div>
-                            
-                   <%  
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 2 Telefon")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="text" id="yetkili2_telefon" value="<%=firma("yetkili2_telefon") %>" class="form-control" data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 2 Mail")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="mail" id="yetkili2_mail" class="form-control" value="<%=firma("yetkili2_mail") %>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <button class="btn btn-link" id="yetkili3ac" type="button">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <%  
                        stil = ""
                        if IsNull(firma("yetkili3_adi")) or firma("yetkili3_adi") = "" then stil = "style='display:none;'" end if 
-                   %>
+                    %>
                     <div class="col-md-12" id="yetkili3form" <%=stil %>>
-                                <div class="row">
-                       <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Yetkili 3 Adı")%></label>
-                            <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="text" id="yetkili3_adi" value="<%=firma("yetkili3_adi") %>" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 3 Telefon")%></label>
-                                <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="text" id="yetkili3_telefon" value="<%=firma("yetkili3_telefon") %>" class="form-control" data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 3 Mail")%></label>
-                            <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="mail" id="yetkili3_mail" class="form-control" value="<%=firma("yetkili3_mail") %>" >
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                                <div class="col-md-12">
-                                    <button class="btn btn-link" id="yetkili4ac" type="button">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Yetkili 3 Adı")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="text" id="yetkili3_adi" value="<%=firma("yetkili3_adi") %>" class="form-control">
+                                    </div>
                                 </div>
                             </div>
-                            
-                    
-                   <%  
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 3 Telefon")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="text" id="yetkili3_telefon" value="<%=firma("yetkili3_telefon") %>" class="form-control" data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 3 Mail")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="mail" id="yetkili3_mail" class="form-control" value="<%=firma("yetkili3_mail") %>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <button class="btn btn-link" id="yetkili4ac" type="button">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <%  
                        stil = ""
                        if IsNull(firma("yetkili4_adi")) or firma("yetkili4_adi") = "" then stil = "style='display:none;'" end if 
-                   %>   
+                    %>
                     <div class="col-md-12" id="yetkili4form" <%=stil %>>
-                    <div class="row">
-                       <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Yetkili 4 Adı")%></label>
-                            <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="text" id="yetkili4_adi" value="<%=firma("yetkili4_adi") %>" class="form-control">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12 col-lg-12 col-form-label"><%=LNG("Yetkili 4 Adı")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="text" id="yetkili4_adi" value="<%=firma("yetkili4_adi") %>" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 4 Telefon")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="text" id="yetkili4_telefon" value="<%=firma("yetkili4_telefon") %>" class="form-control" data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 4 Mail")%></label>
+                                    <div class="input-group input-group-primary">
+                                        <span class="input-group-addon">
+                                            <i class="icon-prepend fa fa-user"></i>
+                                        </span>
+                                        <input type="mail" id="yetkili4_mail" class="form-control" value="<%=firma("yetkili4_mail") %>">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 4 Telefon")%></label>
-                                <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="text" id="yetkili4_telefon" value="<%=firma("yetkili4_telefon") %>" class="form-control" data-mask="0(999) 999 99 99" placeholder="0(532) 123 45 67">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yetkili 4 Mail")%></label>
-                            <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="mail" id="yetkili4_mail" class="form-control" value="<%=firma("yetkili4_mail") %>"  >
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                        
-                    
+
+
                 </div>
 
-                <div class="col-sm-12"  >
-                 <br />
-                    <input type="button" style="float:right;" class="btn btn-primary btn-mini" onclick="firma_bilgilerini_guncelle('<%=firma("id")%>');" value="<%=LNG("Müşteri Bilgilerini Güncelle")%>" />
+                <div class="col-sm-12">
+                    <br />
+                    <input type="button" style="float: right;" class="btn btn-primary btn-mini" onclick="firma_bilgilerini_guncelle('<%=firma("id")%>');" value="<%=LNG("Müşteri Bilgilerini Güncelle")%>" />
                 </div>
             </form>
 
@@ -3548,7 +3548,7 @@
     <div class="card-header">
         <h5 class="card-header-text"><%=LNG("Personel Bilgileri")%></h5>
         <a href="javascript:void(0);" onclick="sayfagetir('/personel_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i> Geri Dön</span></a>
+            <i class="fa fa-history"></i>Geri Dön</span></a>
     </div>
     <div class="card-block">
         <div class="view-info">
@@ -3999,7 +3999,7 @@
                 </style>
                 <div class="col-lg-8 col-xl-9" style="padding-top: 15px;">
                     <h5 class="card-header-text"><%=LNG("Personel Giriş Çıkış Bilgileri")%></h5>
-                    <input type="button" style="float: right; margin-top: 10px;" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" /><input type="button" class="btn btn-inverse btn-mini btn-rnd" onclick="giris_cikis_izin_ekle('<%=personel_id%>', '<%=cdate(date)%>');" style="float: right; margin-right: 15px; margin-top: 10px; display:none;" value="<%=LNG("İzin Ekle")%>" />
+                    <input type="button" style="float: right; margin-top: 10px;" onclick="giris_cikis_kaydi_ekle('<%=personel_id%>', '<%=cdate(date)%>');" class="btn btn-primary btn-mini btn-rnd" value="<%=LNG("Giriş Çıkış Kaydı Ekle")%>" /><input type="button" class="btn btn-inverse btn-mini btn-rnd" onclick="giris_cikis_izin_ekle('<%=personel_id%>', '<%=cdate(date)%>');" style="float: right; margin-right: 15px; margin-top: 10px; display: none;" value="<%=LNG("İzin Ekle")%>" />
                     <br />
                     <br />
                     <div id="giris_cikis_kayitlari">
@@ -4230,10 +4230,27 @@
                         <input class="form-control required" required type="file" id="depo_dosya_yolu" tip="kucuk" folder="Personel" />
                         <img src="/img/loader_green.gif" id="fileLoading" style="display: none" />
                         <br>
-                        <%=LNG("Dosya Adı:")%><br>
-                        <input name="depo_dosya_adi" type="text" id="depo_dosya_adi" required class="form-control required" style="max-width: 300px;" /><br>
-                        <br>
-                        <input type="button" class="btn btn-primary btn-mini" onclick="depo_dosya_yukle('<%=etiket%>', '<%=kayit_id%>');" value="<%=LNG("Dosya Yükle")%>" />
+                        <label class="col-form-label">Dosya Tipi</label>
+                        <select class="form-control select2" id="dosyalarSelect">
+                            <option value="" selected>Dosya Seç</option>
+                            <%
+                                SQL = "select * from ZorunluDosyalar where Silindi = 'false'"
+                                set dosyalar = baglanti.execute(SQL)
+                                if not dosyalar.eof then
+                                do while not dosyalar.eof
+                            %>
+                            <option value="<%=dosyalar("DosyaID") %>"><%=dosyalar("DosyaAdi") %></option>
+                            <%
+                                dosyalar.movenext
+                                loop
+                                end if
+                            %>
+                        </select>
+                        <br />
+                        <label class="col-form-label">Açıklama</label>
+                        <textarea class="form-control" id="aciklama"></textarea>
+                        <br />
+                        <input type="button" class="btn btn-success btn-mini float-right" onclick="depo_dosya_yukle('<%=etiket%>', '<%=kayit_id%>');" value="<%=LNG("Dosya Yükle")%>" />
                     </form>
                 </div>
                 <div class="col-md-8" style="padding-top: 15px;">
@@ -4241,9 +4258,19 @@
                     <br>
                     <div id="depo_dosya_listesi">
                         <script>
-                                    $(function (){
-                                        depo_dosyalari_getir('<%=etiket%>', '<%=kayit_id%>');
-                                    });
+                            $(function (){
+                                depo_dosyalari_getir('<%=etiket%>', '<%=kayit_id%>');
+                            });
+                        </script>
+                    </div>
+
+                    <h5 style="font-size: 15px;"><%=LNG("Eksik Belgeler")%></h5>
+                    <br>
+                    <div id="zorunlu_dosyalar">
+                        <script>
+                            $(function (){
+                                zorunlu_dosyalar('<%=etiket%>', '<%=kayit_id%>');
+                            });
                         </script>
                     </div>
                 </div>
@@ -4603,9 +4630,9 @@
                                         <% for x = 0 to ubound(gun_toplam)-2 %>
                                         <td class="alt_td" style="background-color: #4d7193; color: white;">
                                             <% if trim(gosterim_tipi)="0" then %>
-                                                <%=gun_toplam(x) %> TL
+                                            <%=gun_toplam(x) %> TL
                                             <% else %>
-                                                <%=DakikadanSaatYap(gun_toplam(x)) %>
+                                            <%=DakikadanSaatYap(gun_toplam(x)) %>
                                             <% end if %>
                                         </td>
                                         <% next %>
@@ -5302,7 +5329,7 @@
                 </script>
             </div>
         </div>
-        <div class="col-sm-2" style="display:none">
+        <div class="col-sm-2" style="display: none">
             <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Renk")%></label>
             <!--<input type="hidden" id="renk" class="demo" value="#FC6180">-->
             <input type='text' id="renk" value="rgb(231, 76, 60)" />
@@ -5744,7 +5771,7 @@
                 </script>
             </div>
         </div>
-        <div class="col-sm-2" style="display:none">
+        <div class="col-sm-2" style="display: none">
             <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Renk")%></label>
             <input type='text' id="renk" value="<%=olay("color") %>" />
         </div>

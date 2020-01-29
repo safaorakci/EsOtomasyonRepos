@@ -81,21 +81,20 @@
                 <div class="card-body" id="grupDeger">
                     <div class="form-group">
                         <label class="col-form-label">Grup Adı</label>
-                        <select id="grupAdi" class="form-control" onchange="ParametreDegerAl('/System_Root/ajax/islem1.aspx/ParametreDegerAl');">
+                        <select id="grupAdi" class="form-control" onchange="AracTakipGrupDegerAl('/System_Root/ajax/islem1.aspx/AracTakipGrupDegerAl');">
                             <option value="0">Grup Seç...</option>
-                        <%
-                            SQL = "select * from Hatirlatici.Grup where Silindi = 'false'"
-                            set Grup = baglanti.execute(SQL)
-
-                            if not Grup.eof then
-                            do while not Grup.eof
-                        %>
-                            <option value="<%=Grup("HatirlaticiGrupID") %>"><%=Grup("GrupAdi") %></option>
-                        <%
-                            Grup.movenext
-                            loop
-                            end if
-                        %>
+                            <%
+                                SQL = "select * from AracTakip.Grup where Silindi = 'false'"
+                                set gruplar = baglanti.execute(SQL)
+                                if not gruplar.eof then
+                                do while not gruplar.eof
+                            %>
+                                <option value="<%=gruplar("AracTakipGrupID") %>"><%=gruplar("GrupAdi") %></option>
+                            <% 
+                                gruplar.movenext
+                                loop
+                                end if
+                            %>
                         </select>
                     </div>
                     <hr />
@@ -110,10 +109,10 @@
                 <div class="card-header" style="padding: 15px !important; border-bottom: 1px solid #ccc">
                     <h6 class="mb-0">Parametre Değerleri</h6>
                 </div>
-                <div class="card-body" id="parametreDeger">
+                <div class="card-body" id="AracTakipGrupDegerleri">
                     <script>
-                        $(function (){
-                            ParametreDegerleri();
+                        $(function(){
+                            AracTakipGrupDegerleri();
                         });
                     </script>
                 </div>
@@ -133,14 +132,3 @@
         background: #ffffff !important;
     }
 </style>
-<!--<script type="text/javascript">
-    $(function () {
-        var elem = Array.prototype.slice.call(document.querySelectorAll('.js-switch:not(.yapilan)'));
-        elem.forEach(function (html) {
-            var switchery = new Switchery(html, { color: '#4099ff', jackColor: '#fff', size: 'small' });
-        });
-        $(".js-switch").addClass("yapilan");
-        $('select:not(.yapilan)').select2().addClass("yapilan");
-    });
-</script>-->
-

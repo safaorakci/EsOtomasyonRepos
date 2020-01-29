@@ -445,6 +445,29 @@
                                     </ul>
                                 </li>
                                 <%} %>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="fa fa-car"></i><b>BC</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Araç Takip")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/tanimlamalar/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
+                                                <span class="pcoded-mtext">Tanımlamalar</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/arac/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
+                                                <span class="pcoded-mtext">Araçlar</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",70,") > 0)
                                     {%>
                                 <li class="">
@@ -634,6 +657,13 @@
                                             </a>
                                         </li>
                                         <% } %>
+                                        <li class=" ">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/zorunlu_dosya/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Zorunlu Belgeler")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                                 <% } %>

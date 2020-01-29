@@ -73,47 +73,49 @@
 <section id="widget-grid">
     <div class="row">
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header" style="padding: 15px !important; border-bottom: 1px solid #ccc">
-                    <h6 class="mb-0">Paramerte Değer Tanımı</h6>
-                </div>
-
-                <div class="card-body" id="grupDeger">
-                    <div class="form-group">
-                        <label class="col-form-label">Grup Adı</label>
-                        <select id="grupAdi" class="form-control" onchange="ParametreDegerAl('/System_Root/ajax/islem1.aspx/ParametreDegerAl');">
-                            <option value="0">Grup Seç...</option>
-                        <%
-                            SQL = "select * from Hatirlatici.Grup where Silindi = 'false'"
-                            set Grup = baglanti.execute(SQL)
-
-                            if not Grup.eof then
-                            do while not Grup.eof
-                        %>
-                            <option value="<%=Grup("HatirlaticiGrupID") %>"><%=Grup("GrupAdi") %></option>
-                        <%
-                            Grup.movenext
-                            loop
-                            end if
-                        %>
-                        </select>
+            <div class="accordion" id="accordionExample">
+                <div class="card" style="margin-bottom: 15px">
+                    <div class="card-header" id="headingOne" style="padding: 15px !important; border-bottom: 1px solid #ccc">
+                        <h6 class="mb-0">
+                            Zorunlu Belgeler
+                        </h6>
                     </div>
-                    <hr />
-                    <div class="form-group" id="grupdegerleri">
 
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="col-form-label">Dosya Adı</label>
+                                <input type="text" id="dosyaAdi" class="form-control" placeholder="Dosya Adı" required />
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label" style="margin-right: 10px">Zorunlu</label>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <label id="sms_label" class="col-form-label" style="margin-bottom: 0px">
+                                            <span style="margin-right: 3px; font-size: 13px; font-weight: 600;">Hayır</span>
+                                            <input type="checkbox" class="form-control js-switch" id="zorunlu" />
+                                            <span style="margin-left: 3px; font-size: 13px; font-weight: 600;">Evet</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <hr style="margin-bottom: 5px; margin-top: 5px" />
+                            </div>
+                            <button id="dosyaDuzenle" class="btn btn-info mb-3 float-right" style="display:none">Düzenle</button>
+                            <button id="dosyaKaydet" class="btn btn-success mb-3 float-right" onclick="ZorunluDosyaKayıt('/System_Root/ajax/islem1.aspx/ZorunluDosyaKayıt');">Kaydet</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header" style="padding: 15px !important; border-bottom: 1px solid #ccc">
-                    <h6 class="mb-0">Parametre Değerleri</h6>
+                <div class="card-header" style="border-bottom: 1px solid #ccc; padding: 15px">
+                    <h6 class="mb-0">Tanımlanan Belgeler</h6>
                 </div>
-                <div class="card-body" id="parametreDeger">
+                <div class="card-body" id="dosyalar">
                     <script>
                         $(function (){
-                            ParametreDegerleri();
+                            ZorunluDosyaListesi();
                         });
                     </script>
                 </div>
@@ -133,14 +135,4 @@
         background: #ffffff !important;
     }
 </style>
-<!--<script type="text/javascript">
-    $(function () {
-        var elem = Array.prototype.slice.call(document.querySelectorAll('.js-switch:not(.yapilan)'));
-        elem.forEach(function (html) {
-            var switchery = new Switchery(html, { color: '#4099ff', jackColor: '#fff', size: 'small' });
-        });
-        $(".js-switch").addClass("yapilan");
-        $('select:not(.yapilan)').select2().addClass("yapilan");
-    });
-</script>-->
 

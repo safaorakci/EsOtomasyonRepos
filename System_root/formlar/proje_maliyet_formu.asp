@@ -148,7 +148,11 @@
             %>
             <tr>
                 <td colspan="4" style="font-weight: bold; text-align: right; padding: 5px;">Toplam Maliyet</td>
-                <td colspan="2" class="total" style="font-weight: bold; padding: 5px;"><%=SPTMTL %> TL - <%=SPTMUSD %> USD - <%=SPTMEUR %> EUR</td>
+                <td colspan="2" class="total" style="font-weight: bold; padding: 5px;">
+                    <%=Replace(FormatNumber(SPTMTL,,,,0),",",".") %>&nbsp;TL - 
+                    <%=Replace(FormatNumber(SPTMUSD,,,,0),",",".") %>&nbsp;USD - 
+                    <%=Replace(FormatNumber(SPTMEUR,,,,0),",",".") %>&nbsp;EUR
+                </td>
             </tr>
         </tbody>
     </table>
@@ -220,7 +224,11 @@
             %>
             <tr>
                 <td colspan="4" style="font-weight: bold; text-align: right; padding: 5px;">Toplam Maliyet</td>
-                <td colspan="2" class="total" style="font-weight: bold; padding: 5px;"><%=STMTL %> TL - <%=STMUSD %> USD - <%=STMEUR %> EUR</td>
+                <td colspan="2" class="total" style="font-weight: bold; padding: 5px;">
+                    <%=Replace(FormatNumber(STMTL,,,,0),",",".")%>&nbsp;TL - 
+                    <%=Replace(FormatNumber(STMUSD,,,,0),",",".") %>&nbsp; USD - 
+                    <%=Replace(FormatNumber(STMEUR,,,,0),",",".") %>&nbsp; EUR
+                </td>
             </tr>
         </tbody>
     </table>
@@ -284,11 +292,10 @@
 
     <br />
     <br />
-    <table style="font-family: Arial; font-size: 13px; float:right">
+    <table style="font-family: Arial; font-size: 13px; float: right">
         <thead>
             <tr>
-                <th style="padding:6px 10px; margin-right:0px; text-align:right; font-weight:700; background: linear-gradient(45deg, #FFB64D, #ffcb80)">
-                    Toplam Proje Maliyeti: <%=ProjeToplamTL %>&nbsp;TL - <%=ProjeToplamUSD %>&nbsp;USD - <%=ProjeToplamEUR %>&nbsp;EUR
+                <th style="padding: 6px 10px; margin-right: 0px; text-align: right; font-weight: 700; background: linear-gradient(45deg, #FFB64D, #ffcb80)">Toplam Proje Maliyeti: <%=ProjeToplamTL %>&nbsp;TL - <%=ProjeToplamUSD %>&nbsp;USD - <%=ProjeToplamEUR %>&nbsp;EUR
                 </th>
             </tr>
         </thead>
