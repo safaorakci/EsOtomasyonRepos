@@ -4,7 +4,6 @@
     Response.AddHeader "Content-Type", "text/html;charset=UTF-8"
     Response.CodePage = 65001
 
-
     if gp(3) = "taseron_yonetimi" then
         Server.Execute("/System_root/taseron/taseron_ans.asp")
     elseif gp(3)="taseron_detay" then
@@ -67,6 +66,8 @@
         Server.Execute("/System_root/anasayfa/bildirim_merkezi.asp")
     elseif gp(3) = "beta_hatalari" then
         Server.Execute("/system_root/beta/beta_hatalari.asp")
+    elseif gp(3) = "video_destek" then
+        Server.Execute("/system_root/beta/video_destek.asp")
     elseif gp(3) = "logout" then
         Server.Execute("/logout.asp")
     elseif gp(3) = "ajax_planlama" then
@@ -91,6 +92,10 @@
         Server.Execute("/System_root/raporlar/proje_maliyet_raporu.asp")
     elseif gp(3) = "personel_adam_saat_raporu" then
         Server.Execute("/System_root/raporlar/personel_adam_saat_raporu.asp")
+    elseif gp(3) = "personel_giris_cikis_raporu" then
+        Server.Execute("/System_root/raporlar/personel_giris_cikis_raporu.asp")
+    elseif gp(3) = "personel_giris_cikis_mesai_raporu" then
+        Server.Execute("/System_root/raporlar/personel_giris_cikis_mesai_raporu.asp")
     elseif gp(3) = "tahsilatlar_raporu" then
         Server.Execute("/System_root/raporlar/tahsilatlar_raporu.asp")
     elseif gp(3) = "odemeler_raporu" then
@@ -170,10 +175,25 @@
         Server.Execute("/System_root/aractakip/tanimlamalar.asp")
     elseif gp(3) = "arac" then
         Server.Execute("/System_root/aractakip/arac.asp")
+    elseif gp(3) = "aracTakip" then
+        Server.Execute("/System_root/aractakip/aracTakip.asp")
+    elseif gp(3) = "aracDetay" then
+        Server.Execute("/System_root/aractakip/aracDetay.asp")
+
+    elseif gp(3) = "ajax_request7" then
+        Server.Execute("/ajax/islem7.asp")
+    elseif gp(3) = "toplantilar" then
+        Server.Execute("/System_root/toplantilar/toplantilar.asp")
+
+    elseif gp(3) = "sirket_kulturu" then
+        Server.Execute("/System_root/sirket_kulturu/sirket_kulturu.asp")
+
+    elseif gp(3) = "oneri_kutusu" then
+        Server.Execute("/System_root/oneri_kutusu/oneri_kutusu.asp")
+
+    elseif gp(3) = "personel_puanlama" then
+        Server.Execute("/System_root/PesonelPrformans/personel_puanlama.asp")
+    elseif gp(3) = "performans" then
+        Server.Execute("/System_root/PesonelPrformans/performans.asp")
     end if
 %>
-
-
-
-
-

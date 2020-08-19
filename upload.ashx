@@ -15,6 +15,9 @@ public class upload : IHttpHandler
     string fileExt = "";
     string filePath = "";
     string folderName = "";
+    public string name = "";
+    string path = "";
+    string host = HttpContext.Current.Request.Url.Authority;
     public void ProcessRequest(HttpContext context)
     {
         context.Response.ContentType = "text/plain";
@@ -36,14 +39,39 @@ public class upload : IHttpHandler
 
             System.IO.Stream str = context.Request.Files["FileUpload"].InputStream;
             folderName = context.Request.Form["folderName"].ToString();
+            string fullFileName = "upload/" + folderName + "/" + GenerateFileName(context.Request.Files["FileUpload"].FileName);
 
-            using (System.IO.FileStream output = new System.IO.FileStream(HttpContext.Current.Server.MapPath("upload/" + folderName + "/" + GenerateFileName(context.Request.Files["FileUpload"].FileName)), FileMode.Create))
+            int width = 140;
+            int height = 145;
+
+            using (System.IO.FileStream output = new System.IO.FileStream(HttpContext.Current.Server.MapPath(fullFileName), FileMode.Create))
             {
                 str.CopyTo(output);
+
+                if ((fileExt != ".xls" || fileExt != ".xlsx") && context.Request.Files["FileUpload"].FileName.Substring(0, 5) != "_Stok")
+                {
+                    if (folderName == "PersonelResim" || folderName == "FirmaLogo")
+                    {
+                        System.Drawing.Bitmap Resim = new System.Drawing.Bitmap(output);
+                        System.Drawing.Size size = new System.Drawing.Size(width, height);
+
+                        System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(Resim, size);
+
+                        bitmap.Save(HttpContext.Current.Server.MapPath("upload/" + folderName + "/" + GenerateFileName(context.Request.Files["FileUpload"].FileName)));
+                    }
+                }
             }
 
             if ((fileExt == ".xls" || fileExt == ".xlsx") && context.Request.Files["FileUpload"].FileName.Substring(0, 5) == "_Stok")
                 ExcellToDataBase(HttpContext.Current.Server.MapPath(filePath), firmaKodu, firmaID, userID, userIP);
+            else
+            {
+                if (folderName == "PersonelResim" || folderName == "FirmaLogo")
+                {
+                    string filePath = context.Request.MapPath(fullFileName, context.Request.ApplicationPath, false);
+                    File.Delete(filePath);
+                }
+            }
 
             var responseData = new
             {
@@ -88,6 +116,10 @@ public class upload : IHttpHandler
 
             FileName = "Proskop_" + DateTime.Now.Ticks.ToString() + fileExt;
             filePath = "upload/" + folderName + "/" + FileName;
+            if (name == "")
+            {
+                name = FileName;
+            }
             return FileName;
         }
         catch (Exception ex)
@@ -135,7 +167,7 @@ public class upload : IHttpHandler
                         while (dReader.Read())
                         {
                             kodu = dReader["kodu"].ToString();
-                            
+
 
 
                             if (kodu == "")
@@ -148,7 +180,7 @@ public class upload : IHttpHandler
                             sda.Fill(dt);
                             if (dt.Rows.Count > 0)
                             {
-                                    logText = logText + Environment.NewLine + kodu + " - update";
+                                logText = logText + Environment.NewLine + kodu + " - update";
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
                                 ayarlar.cmd.CommandText = "update [dbo].[parca_listesi] set miktar=@miktar, birim_maliyet=@birim_maliyet, minumum_miktar = @minumum_miktar  where id=@id";
@@ -160,7 +192,7 @@ public class upload : IHttpHandler
                             }
                             else
                             {
-                                    logText = logText + Environment.NewLine + kodu + " - insert";
+                                logText = logText + Environment.NewLine + kodu + " - insert";
                                 ayarlar.baglan();
                                 ayarlar.cmd.Parameters.Clear();
                                 ayarlar.cmd.CommandText = "insert into [dbo].[parca_listesi] " +
@@ -202,5 +234,4 @@ public class upload : IHttpHandler
             throw ex;
         }
     }
-
 }

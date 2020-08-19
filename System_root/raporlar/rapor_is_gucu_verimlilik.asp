@@ -203,9 +203,11 @@
                                     <% next %>
                                 </select>
                             </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div style="text-align: right;">
-                                    <a class="btn btn-labeled btn-success btn-sm" href="javascript:void(0);" onclick="rapor_pdf_indir('personel_is_yuku_verimlilik');"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-warning btn-sm" href="javascript:void(0);" onclick="rapor_pdf_yazdir('personel_is_yuku_verimlilik');"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-primary btn-sm" href="javascript:void(0);" onclick="rapor_pdf_gonder('personel_is_yuku_verimlilik');" ><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
+                            <div class="col-sm-12 col-md-6 align-self-end mt-2">
+                                <div class="float-right">
+                                    <a class="btn btn-labeled btn-success btn-sm mr-1 text-white" onclick="rapor_pdf_indir('personel_is_yuku_verimlilik');"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>
+                                    <a class="btn btn-labeled btn-warning btn-sm mr-1 text-white" onclick="rapor_pdf_yazdir('personel_is_yuku_verimlilik');"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>
+                                    <a class="btn btn-labeled btn-primary btn-sm text-white" onclick="rapor_pdf_gonder('personel_is_yuku_verimlilik');" ><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
                                 </div>
                             </div>
 

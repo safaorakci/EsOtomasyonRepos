@@ -6,21 +6,12 @@
     Response.CodePage = 65001
 
 %>
-<section id="widget-grid" class="">
-    <div class="row">
-        <article class="col-xs-12 ">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Personel İş Yükü Raporu</h5>
-                </div>
-                <div id="beta_donus" class="card-block">
+<html lang="tr">
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+    <body>
 
-                </div>
-            </div>
-
-        </article>
-
-        
-    </div>
-    
-</section>
+    </body>
+</html>

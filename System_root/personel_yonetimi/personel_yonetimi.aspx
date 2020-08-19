@@ -75,7 +75,7 @@
                     <div id="personel_listesi">
                         <script>
                             $(function () {
-                                personel_listesi();
+                                personel_listesi(<%=Request.QueryString["ustId"] %>);
                             });
                         </script>
                     </div>

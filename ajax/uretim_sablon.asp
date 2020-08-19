@@ -63,12 +63,12 @@
 </script>
 <%
     
-
     Response.Clear()
     Response.AddHeader "Content-Type", "application/json"
 
     proje_id = trn(request("proje_id"))
     tip = trn(request("tip"))
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 
     Function IIf(bClause, sTrue, sFalse)
     If CBool(bClause) Then
@@ -114,6 +114,7 @@
                 status = task.status
                 depends = task.depends
                 start = task.start
+                etiket = task.etiket
                 duration = task.duration
                 iend = task.end
                 startIsMilestone = task.startIsMilestone
@@ -142,7 +143,7 @@
                 adimID = 0
                 yenikayit = false
                 if isnumeric(id) = true then
-                    SQL="select * from ahtapot_sablon_gantt_adimlari where proje_id = '"& proje_id &"' and id = '"& id &"' and cop = 'false'"
+                    SQL="select * from ahtapot_sablon_gantt_adimlari where proje_id = '"& proje_id &"' and id = '"& id &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
                     set varmi = baglanti.execute(SQL)
                     if varmi.eof then
                         yenikayit = true
@@ -150,15 +151,15 @@
 
                     progressByWorklog = IIf(progressByWorklog = "Yanlis", 0, 1)
   
-                        SQL="update ahtapot_sablon_gantt_adimlari set start_tarih"& tip_str &" = CONVERT(date, '"& start_tarih &"', 103), end_tarih"& tip_str &" = CONVERT(date, '"& end_tarih &"', 103), proje_id = '" & proje_id & "', name = '" & name & "', progress = '" & progress & "', progressByWorklog = '" & progressByWorklog & "', irelevance = '" & irelevance & "', type = '" & itype & "', typeId = '" & typeId & "', description = '" & description & "', code = '" & code & "', ilevel = '" & ilevel & "', status = '" & status & "', depends = '" & depends & "', start"& tip_str &" = '" & start & "', duration"& tip_str &" = '" & duration & "', iend"& tip_str &" = '" & iend & "', startIsMilestone = '" & startIsMilestone & "', endIsMilestone = '" & endIsMilestone & "', collapsed = '" & collapsed & "', canWrite = '" & canWrite & "', canAdd = '" & canAdd & "', canDelete = '" & canDelete & "', canAddIssue = '" & canAddIssue & "', hasChild = '" & hasChild & "' where id = '"& varmi("id") &"'"
+                        SQL="update ahtapot_sablon_gantt_adimlari set start_tarih"& tip_str &" = CONVERT(date, '"& start_tarih &"', 103), end_tarih"& tip_str &" = CONVERT(date, '"& end_tarih &"', 103), proje_id = '" & proje_id & "', name = '" & name & "', progress = '" & progress & "', progressByWorklog = '" & progressByWorklog & "', irelevance = '" & irelevance & "', type = '" & itype & "', typeId = '" & typeId & "', description = '" & description & "', code = '" & code & "', ilevel = '" & ilevel & "', status = '" & status & "', depends = '" & depends & "', start"& tip_str &" = '" & start & "', duration"& tip_str &" = '" & duration & "', iend"& tip_str &" = '" & iend & "', startIsMilestone = '" & startIsMilestone & "', endIsMilestone = '" & endIsMilestone & "', collapsed = '" & collapsed & "', canWrite = '" & canWrite & "', canAdd = '" & canAdd & "', canDelete = '" & canDelete & "', canAddIssue = '" & canAddIssue & "', hasChild = '" & hasChild & "' where id = '"& varmi("id") &"' and firma_id = '"& FirmaID &"'"
                         set guncelle = baglanti.execute(SQL)
 
-                        SQL="update ucgem_is_listesi set durum = 'false' where GantAdimID = '"& varmi("id") &"' and cop = 'false'"
+                        SQL="update ucgem_is_listesi set durum = 'false' where GantAdimID = '"& varmi("id") &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
                         'set guncelle = baglanti.execute(SQL)
 
                         adimID = varmi("id")
 
-                        SQL="select sablon_adi as proje_adi from uretim_sablonlari where id = '"& proje_id &"'"
+                        SQL="select sablon_adi as proje_adi from uretim_sablonlari where id = '"& proje_id &"' and firma_id = '"& FirmaID &"'"
                         set projeCek = baglanti.execute(SQL)
 
                         gorevliler = ""
@@ -215,7 +216,7 @@
                                 toplam_gun = 1
                             end if
 
-                            SQL="select id from ucgem_is_listesi where GantAdimID = '"& GantAdimID &"' and cop = 'false'"
+                            SQL="select id from ucgem_is_listesi where GantAdimID = '"& GantAdimID &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
                             set varmi = baglanti.execute(SQL)
                             if varmi.eof then
 
@@ -226,7 +227,7 @@
 
                             else
 
-                                SQL="update ucgem_is_listesi  set durum = 'true',adi = '"& adi &"', aciklama = '"& aciklama &"', gorevliler = '"& gorevliler &"', departmanlar = '"& departmanlar &"', baslangic_tarihi = '"& baslangic_tarihi &"', baslangic_saati = '"& baslangic_saati &"', bitis_tarihi = '"& bitis_tarihi &"', bitis_saati = '"& bitis_saati &"', guncelleme_tarihi = '"& guncelleme_tarihi &"', guncelleme_saati = '"& guncelleme_saati &"', guncelleyen = '"& guncelleyen  &"' where id = '"& varmi("id") &"'"
+                                SQL="update ucgem_is_listesi  set durum = 'true',adi = '"& adi &"', aciklama = '"& aciklama &"', gorevliler = '"& gorevliler &"', departmanlar = '"& departmanlar &"', baslangic_tarihi = '"& baslangic_tarihi &"', baslangic_saati = '"& baslangic_saati &"', bitis_tarihi = '"& bitis_tarihi &"', bitis_saati = '"& bitis_saati &"', guncelleme_tarihi = '"& guncelleme_tarihi &"', guncelleme_saati = '"& guncelleme_saati &"', guncelleyen = '"& guncelleyen  &"' where id = '"& varmi("id") &"' and firma_id = '"& FirmaID &"'"
                                 'set guncelle = baglanti.execute(SQL)
 
                                 'IsID = varmi("id")
@@ -260,7 +261,7 @@
 
                                         gorevli_personeller = gorevli_personeller & gorevli_id & ","
 
-                                        SQL="select id from ucgem_is_gorevli_durumlari where is_id = '"& is_id &"' and gorevli_id = '"& gorevli_id &"' and cop = 'false'"
+                                        SQL="select id from ucgem_is_gorevli_durumlari where is_id = '"& is_id &"' and gorevli_id = '"& gorevli_id &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
                                         set gorevli_varmi = baglanti.execute(SQL)
 
                                         if gorevli_varmi.eof then
@@ -285,7 +286,7 @@
                                                 SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& gorevli_id &"', @mesaj = '"& bildirim &"';"
                                                 ' set ekle2 = baglanti.execute(SQL)
 
-                                                SQL="select personel_ad + ' ' + personel_soyad as personel_adsoyad, * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"';"
+                                                SQL="select personel_ad + ' ' + personel_soyad as personel_adsoyad, * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"' and firma_id = '"& FirmaID &"'"
                                                 ' Set personelcek = baglanti.execute(SQL)
 
                                                 ' NetGSM_SMS personelcek("personel_telefon"), bildirim
@@ -294,10 +295,10 @@
 
                                         else
 
-                                            SQL="update ucgem_is_gorevli_durumlari set toplam_sure = '"& toplam_sure &"', gunluk_sure = '"& gunluk_sure &"', toplam_gun = '"& toplam_gun &"' where id = '"& gorevli_varmi("id") &"'"
+                                            SQL="update ucgem_is_gorevli_durumlari set toplam_sure = '"& toplam_sure &"', gunluk_sure = '"& gunluk_sure &"', toplam_gun = '"& toplam_gun &"' where id = '"& gorevli_varmi("id") &"' and firma_id = '"& FirmaID &"'"
                                             ' set guncelle = baglanti.execute(SQL)
 
-                                            SQL="update ucgem_is_listesi set durum = 'true' where GantAdimID = '"& GantAdimID &"' and cop = 'false';"
+                                            SQL="update ucgem_is_listesi set durum = 'true' where GantAdimID = '"& GantAdimID &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
                                             ' set guncelle = baglanti.execute(SQL)
 
                                         end if
@@ -312,7 +313,7 @@
 
                                     gorevli_personeller = gorevli_personeller & "0"
 
-                                    SQL="delete from ucgem_is_gorevli_durumlari where is_id = '"& is_id &"' and gorevli_id not in ("& gorevli_personeller &")"
+                                    SQL="delete from ucgem_is_gorevli_durumlari where is_id = '"& is_id &"' and gorevli_id not in ("& gorevli_personeller &") and firma_id = '"& FirmaID &"'"
                                     'set sil = baglanti.execute(SQL)
 
                                 end if
@@ -334,13 +335,13 @@
 
                     progressByWorklog = IIf(progressByWorklog = "Yanlis", 0, 1)
 
-                    SQL="SET NOCOUNT ON; insert into ahtapot_sablon_gantt_adimlari(start_tarih"& tip_str &", end_tarih"& tip_str &", start_tarih"& ters_str &", end_tarih"& ters_str &", cop, proje_id , name , progress , progressByWorklog , irelevance , type , typeId , description , code , ilevel , status , depends , start"& tip_str &" , duration"& tip_str &", iend"& tip_str &" , start"& ters_str &" , duration"& ters_str &", iend"& ters_str &" , startIsMilestone , endIsMilestone , collapsed , canWrite , canAdd , canDelete , canAddIssue , hasChild) values(CONVERT(date, '"& start_tarih &"', 103), CONVERT(date, '"& end_tarih &"', 103), CONVERT(date, '"& start_tarih &"', 103), CONVERT(date, '"& end_tarih &"', 103), 'false', '" & proje_id & "', '" & name & "', '" & progress & "', '" & progressByWorklog & "', '" & irelevance & "', '" & itype & "', '" & typeId & "', '" & description & "', '" & code & "', '" & ilevel & "', '" & status & "', '" & depends & "', '" & start & "', '" & duration & "', '" & iend & "', '" & start & "', '" & duration & "', '" & iend & "', '" & startIsMilestone & "', '" & endIsMilestone & "', '" & collapsed & "', '" & canWrite & "', '" & canAdd & "', '" & canDelete & "', '" & canAddIssue & "', '" & hasChild & "'); SELECT SCOPE_IDENTITY() id;"
+                    SQL="SET NOCOUNT ON; insert into ahtapot_sablon_gantt_adimlari(start_tarih"& tip_str &", end_tarih"& tip_str &", start_tarih"& ters_str &", end_tarih"& ters_str &", cop, proje_id , name , progress , progressByWorklog , irelevance , type , typeId , description , code , ilevel , status , depends , start"& tip_str &" , duration"& tip_str &", iend"& tip_str &" , start"& ters_str &" , duration"& ters_str &", iend"& ters_str &" , startIsMilestone , endIsMilestone , collapsed , canWrite , canAdd , canDelete , canAddIssue , hasChild, firma_id) values(CONVERT(date, '"& start_tarih &"', 103), CONVERT(date, '"& end_tarih &"', 103), CONVERT(date, '"& start_tarih &"', 103), CONVERT(date, '"& end_tarih &"', 103), 'false', '" & proje_id & "', '" & name & "', '" & progress & "', '" & progressByWorklog & "', '" & irelevance & "', '" & itype & "', '" & typeId & "', '" & description & "', '" & code & "', '" & ilevel & "', '" & status & "', '" & depends & "', '" & start & "', '" & duration & "', '" & iend & "', '" & start & "', '" & duration & "', '" & iend & "', '" & startIsMilestone & "', '" & endIsMilestone & "', '" & collapsed & "', '" & canWrite & "', '" & canAdd & "', '" & canDelete & "', '" & canAddIssue & "', '" & hasChild & "', '"& FirmaID &"'); SELECT SCOPE_IDENTITY() id;"
     
                     set ekle = baglanti.execute(SQL)
 
                     adimID = ekle(0)
 
-                    SQL="select sablon_adi as proje_adi from uretim_sablonlari where id = '"& proje_id &"'"
+                    SQL="select sablon_adi as proje_adi from uretim_sablonlari where id = '"& proje_id &"' and firma_id = '"& FirmaID &"'"
                     set projeCek = baglanti.execute(SQL)
                     
                     gorevliler = ""
@@ -429,7 +430,7 @@
 
                                         gorevli_personeller = gorevli_personeller & gorevli_id & ","
 
-                                        SQL="select id from ucgem_is_gorevli_durumlari where is_id = '"& is_id &"' and gorevli_id = '"& gorevli_id &"'"
+                                        SQL="select id from ucgem_is_gorevli_durumlari where is_id = '"& is_id &"' and gorevli_id = '"& gorevli_id &"' and firma_id = '"& FirmaID &"'"
                                         set gorevli_varmi = baglanti.execute(SQL)
 
                                         if gorevli_varmi.eof then
@@ -457,7 +458,7 @@
                                                 SQL="insert into ahtapot_bildirim_listesi(bildirim, tip, click, user_id, okudumu, durum, cop, firma_kodu, firma_id, ekleyen_id, ekleyen_ip, ekleme_tarihi, ekleme_saati) values('"& bildirim &"', '"& tip &"', N'"& click &"', '"& user_id &"', '"& okudumu &"', '"& durum &"', '"& cop &"', '"& firma_kodu &"', '"& firma_id &"', '"& ekleyen_id &"', '"& ekleyen_ip &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = '"& gorevli_id &"', @mesaj = '"& bildirim &"';"
                                                 ' set ekle2 = baglanti.execute(SQL)
 
-                                                SQL="select personel_ad + ' ' + personel_soyad as personel_adsoyad, * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"';"
+                                                SQL="select personel_ad + ' ' + personel_soyad as personel_adsoyad, * from ucgem_firma_kullanici_listesi where id = '"& gorevli_id &"' and firma_id = '"& FirmaID &"'"
                                                 ' Set personelcek = baglanti.execute(SQL)
 
                                                 ' NetGSM_SMS personelcek("personel_telefon"), bildirim
@@ -466,7 +467,7 @@
 
                                         else
 
-                                            SQL="update ucgem_is_gorevli_durumlari set toplam_sure = '"& toplam_sure &"', gunluk_sure = '"& gunluk_sure &"', toplam_gun = '"& toplam_gun &"' where id = '"& gorevli_varmi("id") &"'"
+                                            SQL="update ucgem_is_gorevli_durumlari set toplam_sure = '"& toplam_sure &"', gunluk_sure = '"& gunluk_sure &"', toplam_gun = '"& toplam_gun &"' where id = '"& gorevli_varmi("id") &"' and firma_id = '"& FirmaID &"'"
                                             ' set guncelle = baglanti.execute(SQL)
 
                                         end if
@@ -478,7 +479,7 @@
 
                                 gorevli_personeller = gorevli_personeller & "0"
 
-                                SQL="delete from ucgem_is_gorevli_durumlari where is_id = '"& is_id &"' and gorevli_id not in ("& gorevli_personeller &")"
+                                SQL="delete from ucgem_is_gorevli_durumlari where is_id = '"& is_id &"' and gorevli_id not in ("& gorevli_personeller &") and firma_id = '"& FirmaID &"'"
                                 ' set sil = baglanti.execute(SQL)
 
                             end if
@@ -488,7 +489,7 @@
                 end if
 
 
-                SQL="delete from sablon_gantt_adim_kaynaklari where adimID = '"& adimID &"'"
+                SQL="delete from sablon_gantt_adim_kaynaklari where adimID = '"& adimID &"' and firma_id = '"& FirmaID &"'"
                 set guncelle = baglanti.execute(SQL)
                 
                 If CheckProperty(task, "assigs") Then
@@ -525,14 +526,14 @@
             next
 
             if len(trim(myJSON.deletedTaskIds))>0 then
-                SQL="update ahtapot_proje_gantt_adimlari set cop = 'true' where id in ("& myJSON.deletedTaskIds &")"
+                SQL="update ahtapot_proje_gantt_adimlari set cop = 'true' where id in ("& myJSON.deletedTaskIds &") and firma_id = '"& FirmaID &"'"
                 set guncelle = baglanti.execute(SQL)
             end if
 
             selectedRow = 0
             zoom = myJSON.zoom
 
-            SQL="update uretim_sablonlari set selectedRow = '"& selectedRow &"',  zoom = '"& zoom &"', guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& proje_id &"'"
+            SQL="update uretim_sablonlari set selectedRow = '"& selectedRow &"',  zoom = '"& zoom &"', guncelleme_tarihi = getdate(), guncelleme_saati = getdate(), guncelleyen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' where id = '"& proje_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
             if trim(tip)="uygulama" then
@@ -567,7 +568,7 @@
         silme_saati = time
         guncelleyen = Request.Cookies("kullanici")("kullanici_adsoyad")
 
-        SQL = "update ahtapot_sablon_gantt_adimlari set cop = '"& cop &"' where proje_id = '"& proje_id &"' and cop = 'false'"
+        SQL = "update ahtapot_sablon_gantt_adimlari set cop = '"& cop &"' where proje_id = '"& proje_id &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
         set gantUpdate = baglanti.execute(SQL)
 
         'SQL = "update ucgem_is_listesi set durum = 'false' where departmanlar = 'proje-"& proje_id &"'"
@@ -575,7 +576,7 @@
 
     end if
 
-    SQL="select * from ucgem_proje_listesi where id = '" & proje_id &"'"
+    SQL="select * from ucgem_proje_listesi where id = '" & proje_id &"' and firma_id = '"& FirmaID &"'"
     set proje = baglanti.execute(SQL)
     
     Set  oJSON = New aspJSON
@@ -583,9 +584,10 @@
     oJSON.data.Add "project", oJSON.Collection()
     oJSON.data("project").Add "tasks", oJSON.Collection()
     With oJSON.data("project")("tasks")
-        SQL="select STRING_ESCAPE(name, 'json') as name2, STRING_ESCAPE(description, 'json') as description2, * from ahtapot_sablon_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false'"
+        SQL="select STRING_ESCAPE(name, 'json') as name2, STRING_ESCAPE(description, 'json') as description2, * from ahtapot_sablon_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
         set adim = baglanti.execute(SQL)
         x = 0
+        e = ""
         
         do while not adim.eof
             .Add x, oJSON.Collection()
@@ -601,6 +603,7 @@
                 .Add "code", trim(adim("code"))
                 .Add "level", cint(adim("ilevel"))
                 .Add "status", trim(adim("status"))
+                if not adim("etiket") = "NULL" then .Add "etiket", trim(adim("etiket")) else .Add "etiket", e end if
                 .Add "depends", trim(adim("depends"))
                 .Add "start", cdbl(adim("start" & tip_str))
                 .Add "duration", cint(adim("duration" & tip_str))
@@ -617,7 +620,7 @@
                 .Add "canAddIssue", true
                 .Add "hasChild", cbool(adim("hasChild"))
                 .Add "assigs", oJSON.Collection()
-                SQL="select * from sablon_gantt_adim_kaynaklari where adimID = '"& adim("id") &"'"
+                SQL="select * from sablon_gantt_adim_kaynaklari where adimID = '"& adim("id") &"' and firma_id = '"& FirmaID &"'"
                 set kaynak = baglanti.execute(SQL)
                 k = 0
                 do while not kaynak.eof

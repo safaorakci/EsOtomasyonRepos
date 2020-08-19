@@ -5,6 +5,8 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
+
     SQL="select isnull(firma.firma_tema, 1) as firma_tema2, firma.*, sehir.sehir, LEFT(firma.haftaici_baslangic_saati,5) as haftaici_baslangic_saati, LEFT(firma.haftaici_bitis_saati,5) as haftaici_bitis_saati , LEFT(firma.cumartesi_baslangic_saati,5) as cumartesi_baslangic_saati, LEFT(firma.cumartesi_bitis_saati,5) as cumartesi_bitis_saati , LEFT(firma.pazar_baslangic_saati,5) as pazar_baslangic_saati, LEFT(firma.pazar_bitis_saati,5) as pazar_bitis_saati from ucgem_firma_listesi firma left join tanimlama_destinasyon_sehir sehir on sehir.id = firma.firma_sehir where firma.id = '"& Request.Cookies("kullanici")("firma_id") &"'"
     set firma = baglanti.execute(SQL)
 
@@ -52,6 +54,7 @@
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Firma Logo")%></label>
                             <div class="col-sm-12 col-lg-12" style="margin-bottom: 15px;">
                                 <input type="file" value="<%=firma("firma_logo") %>" id="firma_logo" tip="buyuk" filepath="<%=firma("firma_logo") %>" folder="FirmaLogo" yol="firma_logo/" class="form-control" />
+                                <span style="color: #a7a7a7; font-weight: 500;">Max resim boyutu 140 x 145</span>
                             </div>
                         </div>
                          <div class="row">
@@ -163,7 +166,7 @@
                                     <%
 
                                     bolge_id = 0
-                                    SQL="select id, sehir from tanimlama_destinasyon_sehir where ulke_id = '85' order by sehir asc"
+                                    SQL="select id, sehir from tanimlama_destinasyon_sehir where ulke_id = '85' and firma_id = '"& FirmaID &"' order by sehir asc"
                                     set sehircek = baglanti.execute(SQL)
                                     firma_sehir = firma("firma_sehir")
 
@@ -192,7 +195,7 @@
                             <div class="col-sm-12 col-lg-12" id="ilce_yeri">
                                 <select name="firma_ilce" id="firma_ilce" class="select2">
                                     <%
-                                        SQL="select id, bolge from tanimlama_destinasyon_bolge where sehir_id = '"& firma_sehir &"' order by bolge asc"
+                                        SQL="select id, bolge from tanimlama_destinasyon_bolge where sehir_id = '"& firma_sehir &"' and firma_id = '"& FirmaID &"' order by bolge asc"
                                         set bolgecek = baglanti.execute(SQL)
                                         do while not bolgecek.eof
                                     %>

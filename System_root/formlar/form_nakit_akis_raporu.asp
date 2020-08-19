@@ -7,15 +7,13 @@
 
     firma_id = trn(request("firma_id"))
     kullanici_id = trn(request("kullanici_id"))
-
-        
+      
     baslangic_tarihi = trn(request("baslangic_tarihi"))
     bitis_tarihi = trn(request("bitis_tarihi"))
 
     if isdate(baslangic_tarihi) = false then
         baslangic_tarihi = cdate(date)
     end if
-
 
     if isdate(bitis_tarihi) = false then
         bitis_tarihi = cdate(date)+180

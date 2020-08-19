@@ -1,10 +1,10 @@
 ﻿<!-- #include virtual="/data_root/conn.asp" -->
 <!-- #include virtual="/data_root/functions.asp" -->
 <% 
-
-    
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
+
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 
     if trn(request("islem"))="J206re15" then
 
@@ -30,7 +30,7 @@
             <tr>
                 <td style="text-align: center;">1</td>
                 <td>Taşeron 1 Ltd Şti.</td>
-                <td>Salih ŞAHİN</td>
+                <td>Safa Orakçı</td>
                 <td>Bursa</td>
                 <td style="text-align: center;">
                     <span class="onoffswitch">
@@ -60,7 +60,7 @@
 %>
 <select name="firma_ilce" id="firma_ilce" class="select2">
     <%
-        SQL="select id, bolge from tanimlama_destinasyon_bolge where sehir_id = '"& sehir_id &"' order by bolge asc"
+        SQL="select id, bolge from tanimlama_destinasyon_bolge where sehir_id = '"& sehir_id &"' and firma_id = '"& FirmaID &"' order by bolge asc"
         set bolgecek = baglanti.execute(SQL)
         do while not bolgecek.eof
     %>
@@ -71,7 +71,6 @@
     %>
 </select>
 <% 
-        
     elseif trn(request("islem"))="firma_bilgilerimi_guncelle" then
 
         kayit_id = Request.Cookies("kullanici")("firma_id")
@@ -95,8 +94,7 @@
         pazar_baslangic = trn(request("pazar_baslangic"))
         pazar_bitis  = trn(request("pazar_bitis"))
 
-        SQL="update ucgem_firma_listesi set firma_tema = '"& firma_tema &"', firma_logo = '"& firma_logo &"', firma_adi = '"& firma_adi &"', firma_yetkili = '"& firma_yetkili &"', firma_adres = '"& firma_adres &"', firma_telefon = '"& firma_telefon &"', firma_gsm = '"& firma_gsm &"', firma_vergi_daire = '"& firma_vergi_daire &"', firma_vergi_no = '"& firma_vergi_no &"', haftaici_baslangic_saati = '"& haftaici_baslangic &"', haftaici_bitis_saati = '"& haftaici_bitis &"', cumartesi_baslangic_saati = '"& cumartesi_baslangic &"', cumartesi_bitis_saati = '"& cumartes_bitis &"', pazar_baslangic_saati = '"& pazar_baslangic &"', pazar_bitis_saati = '"& pazar_bitis &"' where id = '"& kayit_id &"'"
-        Response.Write(SQL)
+        SQL="update ucgem_firma_listesi set firma_tema = '"& firma_tema &"', firma_logo = '"& firma_logo &"', firma_adi = '"& firma_adi &"', firma_yetkili = '"& firma_yetkili &"', firma_adres = '"& firma_adres &"', firma_telefon = '"& firma_telefon &"', firma_gsm = '"& firma_gsm &"', firma_vergi_daire = '"& firma_vergi_daire &"', firma_vergi_no = '"& firma_vergi_no &"', haftaici_baslangic_saati = '"& haftaici_baslangic &"', haftaici_bitis_saati = '"& haftaici_bitis &"', cumartesi_baslangic_saati = '"& cumartesi_baslangic &"', cumartesi_bitis_saati = '"& cumartes_bitis &"', pazar_baslangic_saati = '"& pazar_baslangic &"', pazar_bitis_saati = '"& pazar_bitis &"' where id = '"& kayit_id &"' and firma_id = '"& FirmaID &"'"
         set guncelle = baglanti.execute(SQL)
 
     
@@ -140,7 +138,7 @@
         toplanti_id = trn(request("toplanti_id"))
         gundem_id = trn(request("gundem_id"))
 
-        SQL="select * from ahtapot_toplanti_gundem_listesi where id = '"& gundem_id &"'"
+        SQL="select * from ahtapot_toplanti_gundem_listesi where id = '"& gundem_id &"' and firma_id = '"& FirmaID &"'"
         set gundem = baglanti.execute(SQL)
 
 %>
@@ -493,7 +491,7 @@
     
         toplanti_id = trn(request("toplanti_id"))
 
-        SQL="select * from ahtapot_toplanti_kaydi where id = '"& toplanti_id &"'"
+        SQL="select * from ahtapot_toplanti_kaydi where id = '"& toplanti_id &"' and firma_id = '"& FirmaID &"'"
         set toplanti = baglanti.execute(SQL)
 
 %>
@@ -1130,10 +1128,10 @@
 
 
 
-            SQL="update ahtapot_toplanti_kaydi set toplanti_adi= '" & toplanti_adi & "',  toplanti_tipi= '" & toplanti_tipi & "',  yineleme_donemi= '" & yineleme_donemi & "',  gunluk_yineleme_secim= '" & gunluk_yineleme_secim & "',  gunluk_yineleme_gun_aralik= '" & gunluk_yineleme_gun_aralik & "',  haftalik_yineleme_sikligi= '" & haftalik_yineleme_sikligi & "',  gunler= '" & gunler & "',  aylik_yenileme_tipi= '" & aylik_yenileme_tipi & "',  aylik_gun= '" & aylik_gun & "',  aylik_aralik= '" & aylik_aralik & "',  aylik_yineleme1= '" & aylik_yineleme1 & "',  aylik_yineleme2= '" & aylik_yineleme2 & "',  aylik_yineleme3= '" & aylik_yineleme3 & "',  yineleme_baslangic= '" & yineleme_baslangic & "',  yineleme_bitis= '" & yineleme_bitis & "',  toplanti_tarihi= '" & toplanti_tarihi & "',  toplanti_saati= '" & toplanti_saati & "',  katilimcilar= '" & katilimcilar & "',  toplanti_suresi= '" & toplanti_suresi & "',  gundem= '" & gundem & "',  etiketler = '" & etiketler & "' where id = '"& toplanti_kayit_id &"'"
+            SQL="update ahtapot_toplanti_kaydi set toplanti_adi= '" & toplanti_adi & "',  toplanti_tipi= '" & toplanti_tipi & "',  yineleme_donemi= '" & yineleme_donemi & "',  gunluk_yineleme_secim= '" & gunluk_yineleme_secim & "',  gunluk_yineleme_gun_aralik= '" & gunluk_yineleme_gun_aralik & "',  haftalik_yineleme_sikligi= '" & haftalik_yineleme_sikligi & "',  gunler= '" & gunler & "',  aylik_yenileme_tipi= '" & aylik_yenileme_tipi & "',  aylik_gun= '" & aylik_gun & "',  aylik_aralik= '" & aylik_aralik & "',  aylik_yineleme1= '" & aylik_yineleme1 & "',  aylik_yineleme2= '" & aylik_yineleme2 & "',  aylik_yineleme3= '" & aylik_yineleme3 & "',  yineleme_baslangic= '" & yineleme_baslangic & "',  yineleme_bitis= '" & yineleme_bitis & "',  toplanti_tarihi= '" & toplanti_tarihi & "',  toplanti_saati= '" & toplanti_saati & "',  katilimcilar= '" & katilimcilar & "',  toplanti_suresi= '" & toplanti_suresi & "',  gundem= '" & gundem & "',  etiketler = '" & etiketler & "' where id = '"& toplanti_kayit_id &"' and firma_id = '"& FirmaID &"'"
             set ekle = baglanti.execute(SQL)
 
-            SQL="update ahtapot_toplanti_listesi set cop = 'true' where toplanti_kayit_id = '"& toplanti_kayit_id &"'"
+            SQL="update ahtapot_toplanti_listesi set cop = 'true' where toplanti_kayit_id = '"& toplanti_kayit_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
             if trim(toplanti_tipi) = "gundeme_ozel" then
@@ -1518,7 +1516,7 @@
 %>
 <script src="/files/assets/pages/store-js/note.js"></script>
 <%
-    SQL="select nots.*, kullanici.personel_ad + ' ' + kullanici.personel_soyad as personel from ahtapot_toplanti_not_listesi nots join ucgem_firma_kullanici_listesi kullanici on kullanici.id = nots.ekleyen_id where nots.toplanti_id = '"& toplanti_id &"'"
+    SQL="select nots.*, kullanici.personel_ad + ' ' + kullanici.personel_soyad as personel from ahtapot_toplanti_not_listesi nots join ucgem_firma_kullanici_listesi kullanici on kullanici.id = nots.ekleyen_id where nots.toplanti_id = '"& toplanti_id &"' and kullanici.firma_id = '"& FirmaID &"' and nots.firma_id = '"& FirmaID &"'"
     set notlar = baglanti.execute(SQL)
     do while not notlar.eof
 %>
@@ -1658,21 +1656,21 @@
             gundem_id = trn(request("gundem_id"))
             gundem = trn(request("gundem"))
 
-            SQL="update ahtapot_toplanti_gundem_listesi set gundem = N'"& gundem &"' where id = '"& gundem_id &"'"
+            SQL="update ahtapot_toplanti_gundem_listesi set gundem = N'"& gundem &"' where id = '"& gundem_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
         elseif trn(request("islem2"))="sil" then
 
             gundem_id = trn(request("gundem_id"))
 
-            SQL="update ahtapot_toplanti_gundem_listesi set cop = 'true' where id = '"& gundem_id &"'"
+            SQL="update ahtapot_toplanti_gundem_listesi set cop = 'true' where id = '"& gundem_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
         elseif trn(request("islem2"))="iptal" then
 
             gundem_id = trn(request("gundem_id"))
 
-            SQL="update ahtapot_toplanti_gundem_listesi set durum = case when durum = 'true' then 'false' else 'true' end where id = '"& gundem_id &"'"
+            SQL="update ahtapot_toplanti_gundem_listesi set durum = case when durum = 'true' then 'false' else 'true' end where id = '"& gundem_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
         end if
@@ -1708,7 +1706,7 @@
             SQL="select toplanti_kayit_id from ahtapot_toplanti_listesi where id = '"& toplanti_id &"';"
             set toplanti = baglanti.execute(SQL)
 
-            SQL="select gundem.*, kullanici.personel_ad + ' ' + kullanici.personel_soyad as personel from ahtapot_toplanti_gundem_listesi gundem join ucgem_firma_kullanici_listesi kullanici on kullanici.id = gundem.ekleyen_id where gundem.toplanti_id = '"& toplanti_id &"' and gundem.cop = 'false' order by gundem.id asc"
+            SQL="select gundem.*, kullanici.personel_ad + ' ' + kullanici.personel_soyad as personel from ahtapot_toplanti_gundem_listesi gundem join ucgem_firma_kullanici_listesi kullanici on kullanici.id = gundem.ekleyen_id where gundem.toplanti_id = '"& toplanti_id &"' and gundem.cop = 'false' and kullanici.firma_id = '"& FirmaID &"' and gundem.firma_id = '"& FirmaID &"' order by gundem.id asc"
             set gundem = baglanti.execute(SQL)
             if gundem.eof then
         %>
@@ -1877,20 +1875,20 @@
             karar = trn(HTMLDecode(urldecodes(request("karar"))))
             etiketler = trn(request("etiketler"))
 
-            SQL="update ahtapot_toplanti_karar_listesi set karar = N'"& karar &"', etiketler = '"& etiketler &"' where id = '"& karar_id &"'"
+            SQL="update ahtapot_toplanti_karar_listesi set karar = N'"& karar &"', etiketler = '"& etiketler &"' where id = '"& karar_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
         elseif trn(request("islem2"))="sil" then
 
             karar_id = trn(request("karar_id"))
 
-            SQL="update ahtapot_toplanti_karar_listesi set cop = 'true' where id = '"& karar_id &"'"
+            SQL="update ahtapot_toplanti_karar_listesi set cop = 'true' where id = '"& karar_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
         end if
 
 
-        SQL="select karar.*, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(karar.etiketler, '') + ',')>0 for xml path(''))), 1, 1, '') as etiketler, kullanici.personel_ad + ' ' + kullanici.personel_soyad as personel from ahtapot_toplanti_karar_listesi karar join ucgem_firma_kullanici_listesi kullanici on kullanici.id = karar.ekleyen_id where karar.toplanti_id = '"& toplanti_id &"' and karar.cop = 'false' order by karar.id asc"
+        SQL="select karar.*, STUFF(((select '~' + etiket.adi from etiketler etiket with(nolock) where CHARINDEX(',' + isnull(etiket.sorgu, '') + ',', ',' + isnull(karar.etiketler, '') + ',')>0 for xml path(''))), 1, 1, '') as etiketler, kullanici.personel_ad + ' ' + kullanici.personel_soyad as personel from ahtapot_toplanti_karar_listesi karar join ucgem_firma_kullanici_listesi kullanici on kullanici.id = karar.ekleyen_id where karar.toplanti_id = '"& toplanti_id &"' and karar.cop = 'false' and karar.firma_id = '"& FirmaID &"' and kullanici.firma_id = '"& FirmaID &"' order by karar.id asc"
         set karar = baglanti.execute(SQL)
         if karar.eof then
 %><br />
@@ -1937,7 +1935,7 @@
         toplanti_id = trn(request("toplanti_id"))
         karar_id = trn(request("karar_id"))
 
-        SQL="select * from ahtapot_toplanti_karar_listesi where id = '"& karar_id &"'"
+        SQL="select * from ahtapot_toplanti_karar_listesi where id = '"& karar_id &"' and firma_id = '"& FirmaID &"'"
         set karar = baglanti.execute(SQL)
 
 %>
@@ -2250,7 +2248,7 @@
         islem_tipi = trn(request("islem_tipi"))
         yer = trn(request("yer"))
 
-        SQL="select * from cari_hareketler where id = '"& kayit_id &"'"
+        SQL="select * from cari_hareketler where id = '"& kayit_id &"' and firma_id = '"& FirmaID &"'"
         set cari = baglanti.execute(SQL)
 
         if trim(islem_tipi)="Ödeme" then
@@ -2495,7 +2493,7 @@
 
             kayit_id = trn(request("kayit_id"))
 
-            SQL="update cari_hareketler set cop = 'true', silen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"', silen_ip = '"& Request.ServerVariables("Remote_Addr") &"', silme_tarihi = getdate(), silme_saati = getdate() where id = '"& kayit_id &"'"
+            SQL="update cari_hareketler set cop = 'true', silen_id = '"& Request.Cookies("kullanici")("kullanici_id") &"', silen_ip = '"& Request.ServerVariables("Remote_Addr") &"', silme_tarihi = getdate(), silme_saati = getdate() where id = '"& kayit_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
         elseif trn(request("islem2"))="tahsilat_guncelle" then
@@ -2514,7 +2512,7 @@
             end if
             meblag = NoktalamaDegis(meblag)
 
-            SQL="update cari_hareketler set islem_tarihi = '"& islem_tarihi &"', vade_tarihi = '"& vade_tarihi &"', meblag = '"& meblag &"', parabirimi = '"& parabirimi &"', aciklama = '"& aciklama &"', akis_tipi = '"& akis_tipi &"' where id = '"& kayit_id &"'"
+            SQL="update cari_hareketler set islem_tarihi = '"& islem_tarihi &"', vade_tarihi = '"& vade_tarihi &"', meblag = '"& meblag &"', parabirimi = '"& parabirimi &"', aciklama = '"& aciklama &"', akis_tipi = '"& akis_tipi &"' where id = '"& kayit_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
         elseif trn(request("islem2"))="odeme_guncelle" then
@@ -2533,7 +2531,7 @@
             end if
             meblag = NoktalamaDegis(meblag)
 
-            SQL="update cari_hareketler set islem_tarihi = '"& islem_tarihi &"', vade_tarihi = '"& vade_tarihi &"', meblag = '"& meblag &"', parabirimi = '"& parabirimi &"', aciklama = '"& aciklama &"', akis_tipi = '"& akis_tipi &"' where id = '"& kayit_id &"'"
+            SQL="update cari_hareketler set islem_tarihi = '"& islem_tarihi &"', vade_tarihi = '"& vade_tarihi &"', meblag = '"& meblag &"', parabirimi = '"& parabirimi &"', aciklama = '"& aciklama &"', akis_tipi = '"& akis_tipi &"' where id = '"& kayit_id &"' and firma_id = '"& FirmaID &"'"
             set guncelle = baglanti.execute(SQL)
 
 
@@ -2595,7 +2593,7 @@
         </thead>
         <tbody>
             <%  
-                SQL="select * from cari_hareketler where cop = 'false' and ((borclu_tipi = '"& tip &"' and borclu_id = '"& cari_id &"') or (alacakli_tipi = '"& tip &"' and alacakli_id = '"& cari_id &"')) order by id asc"
+                SQL="select * from cari_hareketler where cop = 'false' and ((borclu_tipi = '"& tip &"' and borclu_id = '"& cari_id &"') or (alacakli_tipi = '"& tip &"' and alacakli_id = '"& cari_id &"')) and firma_id = '"& FirmaID &"' order by id asc"
                 set liste = baglanti.execute(SQL)
                 if liste.eof then
             %>
@@ -3298,23 +3296,409 @@
 
         proje_id = trn(request("proje_id"))
 %>
+<style type="text/css">
+    .border-bottom {
+        border-bottom: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border-right {
+        border-right: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border {
+        border: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .main-body .page-wrapper {
+        padding: 1.8rem;
+    }
+
+    .f-11 {
+        font-size: 11px !important;
+    }
+
+    .f-13 {
+        font-size: 13px !important;
+    }
+
+    .cursor-pointer {
+        cursor: pointer !important;
+    }
+
+    .img-40 {
+        width: 40px;
+    }
+
+    .img-30 {
+        width: 30px;
+    }
+
+    .round {
+        border-radius: 5px;
+    }
+
+    .card:hover {
+        -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+    }
+
+    .progress .progress-bar {
+        line-height: 17px !important;
+    }
+
+    .progress {
+        height: 1rem !important;
+    }
+
+    .display-inline-block {
+        display: inline-block !important;
+    }
+
+    .m-auto {
+        margin: auto !important;
+    }
+
+    .mt-default {
+        margin-top: .7rem !important;
+    }
+
+    .align-items-center {
+        align-items: center !important;
+    }
+
+    .text-align {
+        text-align: center !important;
+    }
+
+    .taskBoard:hover {
+        box-shadow: none;
+    }
+
+    .round-none {
+        border-radius: 0px;
+    }
+
+    .border-top {
+        border-top: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border-bottom-0 {
+        border-bottom: none !important;
+    }
+
+    #tabs {
+        background: #007b5e;
+        color: #eee;
+    }
+
+        #tabs h6.section-title {
+            color: #eee;
+        }
+
+        #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            font-weight: normal !important;
+            color: black !important;
+            border: 1px solid rgba(0, 0, 0, .1) !important;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+            margin-top: 0px !important;
+        }
+
+    .nav-item:hover {
+        padding-bottom: 0px !important;
+    }
+
+    .nav-link {
+        padding: 10px !important;
+    }
+
+    #tabs .nav-tabs .nav-link {
+        border: 1px solid transparent;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+        color: #eee;
+        font-size: 20px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        padding: 8px 25px 8px 10px;
+    }
+
+    .select2-container .select2-selection--single {
+        cursor: pointer;
+        height: 31px !important;
+    }
+
+    .wt-70 {
+        width: 70px !important;
+    }
+
+    .justify-content-end {
+        -webkit-box-pack: end !important;
+        -ms-flex-pack: end !important;
+        justify-content: flex-end !important;
+    }
+
+    .f-30 {
+        font-size: 30px !important;
+    }
+
+    .f-15 {
+        font-size: 15px !important;
+    }
+
+    .f-27 {
+        font-size: 27px !important;
+    }
+
+    .img-50 {
+        width: 50px !important;
+    }
+
+    .line-height {
+        line-height: 15px !important;
+    }
+</style>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <input type="hidden" name="proje_varmi" id="proje_varmi" value="true" proje_id="<%=proje_id %>" />
 <div class="card">
-    <div class="card-header">
-        <h5 class="card-header-text"><%=LNG("İş Listesi")%></h5>
-        <button id="edit-btn" type="button" onclick="etiketli_yeni_is_ekle('proje', '<%=proje_id %>');" class="btn btn-sm btn-primary waves-effect waves-light f-right">
+    <div class="card-header border-bottom pl-3 pt-2 pb-2 pr-3">
+        <h6 class="card-title d-inline-block mt-2">İŞ LİSTESİ</h6>
+        <button type="button" onclick="etiketli_yeni_is_ekle('proje', '<%=proje_id %>');" class="btn btn-sm btn-primary waves-effect waves-light f-right">
             <i class="fa  fa-cube"></i>&nbsp;<%=LNG("Yeni İş Ekle")%>
         </button>
     </div>
-    <div class="card-block">
-        <div class="view-info">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div id="tum_isler"></div>
+    <div class="card-body p-0 border-left border-right border-bottom">
+        <nav class="navbar navbar-light bg-light border-bottom p-2">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-8 p-1">
+                        <select class="wt-70 d-none">
+                            <option>25</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-6 p-0" id="Mob-Task-States">
+                                <div class="button-group">
+                                    <select id="framework" name="framework[]" multiple class="form-control">
+                                        <option value="TaskAttendant">Görevliler</option>
+                                        <option value="TaskAddPersonel">Ekleyen</option>
+                                        <option value="TaskTag">Etiketler</option>
+                                        <option value="TaskProgress">İlerleme</option>
+                                        <option value="TaskStartDate">Başlangıç</option>
+                                        <option value="TaskEndDate">Bitiş</option>
+                                        <option value="TaskPriority">Öncelik</option>
+                                        <option value="TaskState">Durum</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-0">
+                                <input type="text" class="form-control form-control-sm" placeholder="Arama" id="SearchTaskInput" onkeyup="SearchTask();" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </nav>
+        <nav class="navbar navbar-light bg-light border-bottom p-1" id="mob-Filter">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                    </div>
+                    <div class="col p-1 TaskView TaskAttendant" style="padding-right: 0px !important;">
+                        <select id="TaskAttendantSelect" filterkey="attendantname" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 TaskView TaskAddPersonel" style="padding-right: 0px !important;">
+                        <select id="TaskAddPersonelSelect" filterkey="addpersonel" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskTag" style="padding-right: 0px !important;">
+                        <select id="TaskTagSelect" filterkey="tasktag" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskProgress" style="padding-right: 0px !important;">
+                        <select id="TaskProgressSelect" filterkey="progres" name="framework[]" multiple class="form-control framework">
+                            <option value="25">%25'den Az</option>
+                            <option value="50">%50'den fazla</option>
+                            <option value="75">%75'ten fazla</option>
+                            <option value="100">%100</option>
+                        </select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskStartDate" style="padding-right: 0px !important;">
+                        <select id="TaskStartDateSelect" filterkey="startdate" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskEndDate" style="padding-right: 0px !important;">
+                        <select id="TaskEndDateSelect" filterkey="enddate" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskPriority" style="padding-right: 0px !important;">
+                        <select id="TaskPrioritySelect" filterkey="property" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskState" style="padding-right: 0px !important;">
+                        <select id="TaskStateSelect" filterkey="state" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-light bg-light border-bottom p-2" id="mob-Header">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 p-1">
+                        <h6 class="mb-0">İş Tanımı</h6>
+                    </div>
+                    <div class="col-xs-12 col p-1 TaskView TaskAttendant">
+                        <h6 class="mb-0">Görevliler</h6>
+                    </div>
+                    <div class="col-xs-12 col p-1 TaskView TaskAddPersonel">
+                        <h6 class="mb-0">Ekleyen Kişi</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskTag">
+                        <h6 class="mb-0">Etiketler</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskProgress">
+                        <h6 class="mb-0">Tamamlanma</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskStartDate">
+                        <h6 class="mb-0">Başlangıç</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskEndDate">
+                        <h6 class="mb-0">Bitiş</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskPriority">
+                        <h6 class="mb-0">Öncelik</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskState">
+                        <h6 class="mb-0">Durum</h6>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="m-1" id="tum_isler"></div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#framework').multiselect({
+                nonSelectedText: 'Gösterim Türü',
+                enableFiltering: false,
+                enableCaseInsensitiveFiltering: false,
+                buttonWidth: '200px',
+                language: 'tr',
+                buttonClass: 'btn btn-default btn-mini mr-3 border p-2 line-height filter-button',
+                onDropdownHide: function () {
+                    var search = [];
+                    var view = "";
+                    $.each($('#framework option:selected'), function () {
+                        search.push($(this).val());
+                        if (view === "") {
+                            if ($(this).val() === "TaskAttendant")
+                                view = "gorevliler";
+                            else if ($(this).val() === "TaskAddPersonel")
+                                view = "ekleyen";
+                            else if ($(this).val() === "TaskTag")
+                                view = "etiketler";
+                            else if ($(this).val() === "TaskProgress")
+                                view = "tamamlanma";
+                            else if ($(this).val() === "TaskStartDate")
+                                view = "baslangic";
+                            else if ($(this).val() === "TaskEndDate")
+                                view = "bitis";
+                            else if ($(this).val() === "TaskPriority")
+                                view = "oncelik";
+                            else if ($(this).val() === "TaskState")
+                                view = "durum";
+                        }
+                        else {
+                            if ($(this).val() === "TaskAttendant")
+                                view += " , " + "gorevliler";
+                            else if ($(this).val() === "TaskAddPersonel")
+                                view += " , " + "ekleyen";
+                            else if ($(this).val() === "TaskTag")
+                                view += " , " + "etiketler";
+                            else if ($(this).val() === "TaskProgress")
+                                view += " , " + "tamamlanma";
+                            else if ($(this).val() === "TaskStartDate")
+                                view += " , " + "baslangic";
+                            else if ($(this).val() === "TaskEndDate")
+                                view += " , " + "bitis";
+                            else if ($(this).val() === "TaskPriority")
+                                view += " , " + "oncelik";
+                            else if ($(this).val() === "TaskState")
+                                view += " , " + "durum";
+                        }
+                    });
+                    TaskViewSave(view);
+                }
+            });
+
+            $(".filter-button").find("span:first-child").addClass("f-13");
+
+            $("#isler_var_new_panel .taskBoard:last-child").removeClass("mb-3").addClass("mb-0");
+
+            if (window.innerWidth < 450) {
+                $("#mob-Filter").hide();
+                $("#mob-Header").hide();
+                $("#Mob-Task-States").hide();
+
+                $(".TaskTitle").addClass("border-bottom").removeClass("m-auto").addClass("pt-2 pb-2 mb-2");
+                $(".TaskAddPersonel").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Ekleyen :</span>");
+                $(".TaskProgress").removeClass("col").addClass("col-xs-12");
+                $(".TaskEndDate").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Termin Tarihi :</span>");
+                $(".TaskAttendant").hide();
+                $(".TaskTag").hide();
+                $(".TaskStartDate").hide();
+                $(".TaskDetails").slideUp();
+            }
+        });
+
+        TaskPagination();
+
+        TaskFilterSelect();
+
+        FilterSelect();
+
+        $(document).ready(function () {
+
+            $(".filter-button").find("span:first-child").addClass("f-13");
+
+            $("#isler_var_new_panel .taskBoard:last-child").removeClass("mb-3").addClass("mb-0");
+
+            if (window.innerWidth < 450) {
+                $("#mob-Filter").hide();
+                $("#mob-Header").hide();
+                $("#Mob-Task-States").hide();
+
+                $(".TaskTitle").addClass("border-bottom").removeClass("m-auto").addClass("pt-2 pb-2 mb-2");
+                $(".TaskAddPersonel").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Ekleyen :</span>");
+                $(".TaskProgress").removeClass("col").addClass("col-xs-12");
+                $(".TaskEndDate").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Termin Tarihi :</span>");
+                $(".TaskAttendant").hide();
+                $(".TaskTag").hide();
+                $(".TaskStartDate").hide();
+                $(".TaskDetails").slideUp();
+            }
+        });
+        $(document).ready(function () {
+            TaskFilter();
+
+            $("#framework").on('change', function () {
+                var search = [];
+                $.each($('#framework option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                $("#is_listesi_new_panel").find(".taskBoard").find(".TaskView").hide();
+                $("#mob-Header").find(".TaskView").hide();
+                $("#mob-Filter").find(".TaskView").hide();
+                $.each(search, function (key, value) {
+                    $("#mob-Header").find("." + value).show();
+                    $("#mob-Filter").find("." + value).show();
+                    $("#is_listesi_new_panel").find(".taskBoard").find("." + value).show();
+                });
+            });
+        });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 </div>
 <%
     elseif trn(request("islem"))="musteri_raporlarini_getir" then
@@ -3540,15 +3924,11 @@
         personel_id = trn(request("personel_id"))
 
         SQL="select * from ucgem_firma_kullanici_listesi where id = '"& personel_id &"' and firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
-        set personel = baglanti.execute(SQL)
-
-       
+        set personel = baglanti.execute(SQL)   
 %>
 <div class="card">
     <div class="card-header">
         <h5 class="card-header-text"><%=LNG("Personel Bilgileri")%></h5>
-        <a href="javascript:void(0);" onclick="sayfagetir('/personel_yonetimi/','jsid=4559');" class="btn btn-mini btn-labeled btn-success  btn-round" style="color: white; float: right; margin-right: 10px;"><span class="btn-label" style="color: white;">
-            <i class="fa fa-history"></i>Geri Dön</span></a>
     </div>
     <div class="card-block">
         <div class="view-info">
@@ -3669,7 +4049,7 @@
                         </div>
 
 
-                        <div class="row" style="display: none">
+                        <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Yönetici Yetkisi")%></label>
                             <div class="col-sm-12 col-lg-12">
                                 <select id="yonetici_yetkisi" name="yonetici_yetkisi" class="select2">
@@ -3739,9 +4119,9 @@
                         <div class="row">
                             <label class="col-sm-12  col-lg-12 col-form-label"><%=LNG("Görev")%></label>
                             <div class="col-sm-12 col-lg-12">
-                                <select name="gorevler" id="gorevler" class="select2">
+                                <select name="gorevler" id="gorevler" class="form-control select2" multiple>
                                     <%
-                                        SQL="select id, gorev_adi from tanimlama_gorev_listesi where firma_id = '"&  REquest.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' order by gorev_adi asc"
+                                        SQL="select id, gorev_adi from tanimlama_gorev_listesi where firma_id = '"&  Request.Cookies("kullanici")("firma_id") &"' and durum = 'true' and cop = 'false' order by gorev_adi asc"
                                         set gorev = baglanti.execute(SQL)
                                         do while not gorev.eof
                                     %>
@@ -3825,7 +4205,7 @@
 
         personel_id = trn(request("personel_id"))
 
-        sql="select * from ucgem_firma_kullanici_listesi where id = '"& personel_id &"'"
+        sql="select * from ucgem_firma_kullanici_listesi where id = '"& personel_id &"' and firma_id = '"& FirmaID &"'"
         set personel = baglanti.execute(SQL)
 
 %>
@@ -3851,66 +4231,67 @@
                             <tbody>
                                 <tr>
                                     <td style="padding: 5px; font-weight: bold;"><%=LNG("Pazartesi")%></td>
+
                                     <td style="padding-left: 20px;">
-                                        <input type="checkbox" onchange="calisma_gunu_sectim(1);" class="js-switch" <% if trim(personel("gun1"))="True" then %> checked="checked" <% end if %> name="gun1" id="gun1" /></td>
+                                        <input type="checkbox" onchange="calisma_gunu_sectim(1);" class="js-switch" <% if personel("gun1") = True then %> checked="checked" <% end if %> name="gun1" id="gun1" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun1"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun1_saat1" required class="timepicker form-control" value="<%=left(personel("gun1_saat1"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun1")= True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun1_saat1" required class="timepicker form-control" value="<%=left(personel("gun1_saat1"),5) %>" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun1"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun1_saat2" required class="timepicker form-control" value="<%=left(personel("gun1_saat2"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun1") = True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun1_saat2" required class="timepicker form-control" value="<%=left(personel("gun1_saat2"),5) %>" /></td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 5px; font-weight: bold;"><%=LNG("Salı")%></td>
                                     <td style="padding-left: 20px;">
-                                        <input type="checkbox" onchange="calisma_gunu_sectim(2);" class="js-switch" <% if trim(personel("gun2"))="True" then %> checked="checked" <% end if %> name="gun2" id="gun2" /></td>
+                                        <input type="checkbox" onchange="calisma_gunu_sectim(2);" class="js-switch" <% if personel("gun2") = True then %> checked="checked" <% end if %> name="gun2" id="gun2" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun2"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun2_saat1" required class="timepicker form-control" value="<%=left(personel("gun2_saat1"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun2")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun2_saat1" required class="timepicker form-control" value="<%=left(personel("gun2_saat1"),5) %>" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun2"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun2_saat2" required class="timepicker form-control" value="<%=left(personel("gun2_saat2"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun2")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun2_saat2" required class="timepicker form-control" value="<%=left(personel("gun2_saat2"),5) %>" /></td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 5px; font-weight: bold;"><%=LNG("Çarşamba")%></td>
                                     <td style="padding-left: 20px;">
-                                        <input type="checkbox" onchange="calisma_gunu_sectim(3);" class="js-switch" <% if trim(personel("gun3"))="True" then %> checked="checked" <% end if %> name="gun3" id="gun3" /></td>
+                                        <input type="checkbox" onchange="calisma_gunu_sectim(3);" class="js-switch" <% if personel("gun3")=True then %> checked="checked" <% end if %> name="gun3" id="gun3" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun3"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun3_saat1" required class="timepicker form-control" value="<%=left(personel("gun3_saat1"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun3")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun3_saat1" required class="timepicker form-control" value="<%=left(personel("gun3_saat1"),5) %>" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun3"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun3_saat2" required class="timepicker form-control" value="<%=left(personel("gun3_saat2"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun3")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun3_saat2" required class="timepicker form-control" value="<%=left(personel("gun3_saat2"),5) %>" /></td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 5px; font-weight: bold;"><%=LNG("Perşembe")%></td>
                                     <td style="padding-left: 20px;">
-                                        <input type="checkbox" onchange="calisma_gunu_sectim(4);" class="js-switch" <% if trim(personel("gun4"))="True" then %> checked="checked" <% end if %> name="gun4" id="gun4" /></td>
+                                        <input type="checkbox" onchange="calisma_gunu_sectim(4);" class="js-switch" <% if personel("gun4")=True then %> checked="checked" <% end if %> name="gun4" id="gun4" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun4"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun4_saat1" required class="timepicker form-control" value="<%=left(personel("gun4_saat1"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun4")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun4_saat1" required class="timepicker form-control" value="<%=left(personel("gun4_saat1"),5) %>" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun4"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun4_saat2" required class="timepicker form-control" value="<%=left(personel("gun4_saat2"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun4")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun4_saat2" required class="timepicker form-control" value="<%=left(personel("gun4_saat2"),5) %>" /></td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 5px; font-weight: bold;"><%=LNG("Cuma")%></td>
                                     <td style="padding-left: 20px;">
-                                        <input type="checkbox" onchange="calisma_gunu_sectim(5);" class="js-switch" <% if trim(personel("gun5"))="True" then %> checked="checked" <% end if %> name="gun5" id="gun5" /></td>
+                                        <input type="checkbox" onchange="calisma_gunu_sectim(5);" class="js-switch" <% if personel("gun5")= True then %> checked="checked" <% end if %> name="gun5" id="gun5" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun5"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun5_saat1" required class="timepicker form-control" value="<%=left(personel("gun5_saat1"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun5")= True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun5_saat1" required class="timepicker form-control" value="<%=left(personel("gun5_saat1"),5) %>" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun5"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun5_saat2" required class="timepicker form-control" value="<%=left(personel("gun5_saat2"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun5")= True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun5_saat2" required class="timepicker form-control" value="<%=left(personel("gun5_saat2"),5) %>" /></td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 5px; font-weight: bold;"><%=LNG("Cumartesi")%></td>
                                     <td style="padding-left: 20px;">
-                                        <input type="checkbox" onchange="calisma_gunu_sectim(6);" class="js-switch" <% if trim(personel("gun6"))="True" then %> checked="checked" <% end if %> name="gun6" id="gun6" /></td>
+                                        <input type="checkbox" onchange="calisma_gunu_sectim(6);" class="js-switch" <% if personel("gun6")=True then %> checked="checked" <% end if %> name="gun6" id="gun6" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun6"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun6_saat1" required class="timepicker form-control" value="<%=left(personel("gun6_saat1"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun6")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun6_saat1" required class="timepicker form-control" value="<%=left(personel("gun6_saat1"),5) %>" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun6"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun6_saat2" required class="timepicker form-control" value="<%=left(personel("gun6_saat2"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun6")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun6_saat2" required class="timepicker form-control" value="<%=left(personel("gun6_saat2"),5) %>" /></td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 5px; font-weight: bold;"><%=LNG("Pazar")%></td>
                                     <td style="padding-left: 20px;">
-                                        <input type="checkbox" onchange="calisma_gunu_sectim(7);" class="js-switch" <% if trim(personel("gun7"))="True" then %> checked="checked" <% end if %> name="gun1" id="gun7" /></td>
+                                        <input type="checkbox" onchange="calisma_gunu_sectim(7);" class="js-switch" <% if personel("gun7")=True then %> checked="checked" <% end if %> name="gun1" id="gun7" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun7"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun7_saat1" required class="timepicker form-control" value="<%=left(personel("gun7_saat1"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun7")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun7_saat1" required class="timepicker form-control" value="<%=left(personel("gun7_saat1"),5) %>" /></td>
                                     <td style="text-align: center;">
-                                        <input type="text" <% if trim(personel("gun7"))="True" then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun7_saat2" required class="timepicker form-control" value="<%=left(personel("gun7_saat2"),5) %>" /></td>
+                                        <input type="text" <% if personel("gun7")=True then %><% else %> disabled="disabled" <% end if %> style="width: 65px;" id="gun7_saat2" required class="timepicker form-control" value="<%=left(personel("gun7_saat2"),5) %>" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -4080,8 +4461,7 @@
 
                 <div class="col-lg-12">
                     <%
-                        SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and talep.cop = 'false' and talep.personel_id = kullanici.id and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin') and talep.durum = 'Onaylandi'),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"'"
-                        
+                        SQL = "select isnull(kullanici.personel_yillik_izin, 0) - isnull((select Count(giris.id) from ucgem_personel_mesai_girisleri giris, ucgem_personel_izin_talepleri talep where giris.personel_id = kullanici.id and giris_tipi = 2 and talep.cop = 'false' and talep.personel_id = kullanici.id and giris.tarih between talep.baslangic_tarihi and talep.bitis_tarihi and NOT(talep.turu='Ücretsiz Izin') and talep.durum = 'Onaylandi'),0) as kalan, kullanici.* from ucgem_firma_kullanici_listesi kullanici where kullanici.id = '"& personel_id &"' and kullanici.firma_id = '"& FirmaID&"'"
                         set personel = baglanti.execute(SQL)
                     %>
                     <h5 class="card-header-text"><%=LNG("Personel İzin Talepleri")%></h5>
@@ -4106,7 +4486,7 @@
                             </thead>
                             <tbody>
                                 <%
-                                    SQL="select * from ucgem_personel_izin_talepleri where personel_id = '"& personel_id &"' and cop = 'false'"
+                                    SQL="select * from ucgem_personel_izin_talepleri where personel_id = '"& personel_id &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
                                     
                                     set izin = baglanti.execute(SQL)
 
@@ -4234,7 +4614,7 @@
                         <select class="form-control select2" id="dosyalarSelect">
                             <option value="" selected>Dosya Seç</option>
                             <%
-                                SQL = "select * from ZorunluDosyalar where Silindi = 'false'"
+                                SQL = "select * from ZorunluDosyalar where Silindi = 'false' and FirmaID = '"& FirmaID &"'"
                                 set dosyalar = baglanti.execute(SQL)
                                 if not dosyalar.eof then
                                 do while not dosyalar.eof
@@ -4274,6 +4654,45 @@
                         </script>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%
+    elseif trn(request("islem")) = "proje_file_depo_getir" then
+
+    kayit_id = trn(request("kayit_id"))
+    etiket = trn(request("etiket"))
+%>
+<div class="card">
+    <div class="card-block">
+        <div class="view-info">
+            <div class="row">
+
+                <div class="col-md-4" style="padding-top: 15px;">
+                    <form autocomplete="off" id="dosya_yukleme_form">
+                        <h5 style="font-size: 15px;"><%=LNG("Dosya Ekle")%></h5>
+                        <br>
+                        <input class="form-control required" required type="file" id="depo_dosya_yolu" tip="kucuk" folder="Personel" />
+                        <img src="/img/loader_green.gif" id="fileLoading" style="display: none" />
+                        <br>
+                        <%=LNG("Dosya Adı:")%><br>
+                        <input name="depo_dosya_adi" type="text" id="depo_dosya_adi" required class="form-control required" style="max-width: 300px;" /><br>
+                        <br>
+                        <input type="button" class="btn btn-primary btn-mini" onclick="proje_depo_dosya_yukle('<%=etiket%>', '<%=kayit_id%>');" value="<%=LNG("Dosya Yükle")%>" />
+                    </form>
+                </div>
+                <div class="col-md-8" style="padding-top: 15px;">
+                    <h5 style="font-size: 15px;"><%=LNG("Dosya Listesi")%></h5>
+                    <br>
+                    <div id="depo_dosya_listesi">
+                        <script>
+                                    $(function (){
+                                        proje_depo_dosyalari_getir('<%=etiket%>', '<%=kayit_id%>');
+                                    });
+                        </script>
+                    </div>
+                </div>
 
 
             </div>
@@ -4283,7 +4702,6 @@
 </div>
 <%
     elseif trn(request("islem"))="personel_ajandasi_getir" then
-
         personel_id = trn(request("personel_id"))
 %>
 <div class="row">
@@ -4306,7 +4724,7 @@
 
         personel_id = trn(request("personel_id"))
 %>
-<div class="card">
+<!--<div class="card d-none">
     <div class="card-header">
         <h5 class="card-header-text"><%=LNG("İş Listesi")%></h5>
         <button id="edit-btn" type="button" onclick="etiketli_yeni_is_ekle('personel', '<%=personel_id %>');" class="btn btn-sm btn-primary waves-effect waves-light f-right">
@@ -4317,20 +4735,422 @@
         <div class="view-info">
             <div class="row">
                 <div class="col-lg-12">
-
                     <div id="tum_isler">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>-->
+
+<style type="text/css">
+    .border-bottom {
+        border-bottom: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border-right {
+        border-right: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border-left {
+        border-left: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border {
+        border: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .f-11 {
+        font-size: 11px !important;
+    }
+
+    .f-13 {
+        font-size: 13px !important;
+    }
+
+    .cursor-pointer {
+        cursor: pointer !important;
+    }
+
+    .img-40 {
+        width: 40px;
+    }
+
+    .img-30 {
+        width: 30px;
+    }
+
+    .round {
+        border-radius: 5px;
+    }
+
+    .card:hover {
+        -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+    }
+
+    .progress .progress-bar {
+        line-height: 17px !important;
+    }
+
+    .progress {
+        height: 1rem !important;
+    }
+
+    .display-inline-block {
+        display: inline-block !important;
+    }
+
+    .m-auto {
+        margin: auto !important;
+    }
+
+    .mt-default {
+        margin-top: .7rem !important;
+    }
+
+    .align-items-center {
+        align-items: center !important;
+    }
+
+    .text-align {
+        text-align: center !important;
+    }
+
+    .taskBoard:hover {
+        box-shadow: none;
+    }
+
+    .round-none {
+        border-radius: 0px;
+    }
+
+    .border-top {
+        border-top: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border-bottom-0 {
+        border-bottom: none !important;
+    }
+
+    #tabs {
+        background: #007b5e;
+        color: #eee;
+    }
+
+        #tabs h6.section-title {
+            color: #eee;
+        }
+
+        #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            font-weight: normal !important;
+            color: black !important;
+            border: 1px solid rgba(0, 0, 0, .1) !important;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+            margin-top: 0px !important;
+        }
+
+    .nav-item:hover {
+        padding-bottom: 0px !important;
+    }
+
+    .nav-link {
+        padding: 10px !important;
+    }
+
+    #tabs .nav-tabs .nav-link {
+        border: 1px solid transparent;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+        color: #eee;
+        font-size: 20px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        padding: 8px 25px 8px 10px;
+    }
+
+    .select2-container .select2-selection--single {
+        cursor: pointer;
+        height: 31px !important;
+    }
+
+    .wt-70 {
+        width: 70px !important;
+    }
+
+    .justify-content-end {
+        -webkit-box-pack: end !important;
+        -ms-flex-pack: end !important;
+        justify-content: flex-end !important;
+    }
+
+    .f-30 {
+        font-size: 30px !important;
+    }
+
+    .f-15 {
+        font-size: 15px !important;
+    }
+
+    .f-27 {
+        font-size: 27px !important;
+    }
+
+    .img-50 {
+        width: 50px !important;
+    }
+
+    .line-height {
+        line-height: 15px !important;
+    }
+</style>
+<div class="card">
+    <div class="card-header border-bottom pl-3 pt-2 pb-2 pr-3">
+        <h6 class="card-title d-inline-block mt-2">İŞ LİSTESİ</h6>
+        <button type="button" onclick="etiketli_yeni_is_ekle('proje', '<%=proje_id %>');" class="btn btn-sm btn-primary waves-effect waves-light f-right">
+            <i class="fa  fa-cube"></i>&nbsp;<%=LNG("Yeni İş Ekle")%>
+        </button>
+    </div>
+    <div class="card-body p-0 border-left border-right border-bottom">
+        <nav class="navbar navbar-light bg-light border-bottom p-2">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-8 p-1">
+                        <select class="wt-70 d-none">
+                            <option>25</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-6 p-0" id="Mob-Task-States">
+                                <div class="button-group">
+                                    <select id="framework" name="framework[]" multiple class="form-control">
+                                        <option value="TaskAttendant">Görevliler</option>
+                                        <option value="TaskAddPersonel">Ekleyen</option>
+                                        <option value="TaskTag">Etiketler</option>
+                                        <option value="TaskProgress">İlerleme</option>
+                                        <option value="TaskStartDate">Başlangıç</option>
+                                        <option value="TaskEndDate">Bitiş</option>
+                                        <option value="TaskPriority">Öncelik</option>
+                                        <option value="TaskState">Durum</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-0">
+                                <input type="text" class="form-control form-control-sm" placeholder="Arama" id="SearchTaskInput" onkeyup="SearchTask();" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-light bg-light border-bottom p-1" id="mob-Filter">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                    </div>
+                    <div class="col p-1 TaskView TaskAttendant" style="padding-right: 0px !important;">
+                        <select id="TaskAttendantSelect" filterkey="attendantname" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 TaskView TaskAddPersonel" style="padding-right: 0px !important;">
+                        <select id="TaskAddPersonelSelect" filterkey="addpersonel" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskTag" style="padding-right: 0px !important;">
+                        <select id="TaskTagSelect" filterkey="tasktag" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskProgress" style="padding-right: 0px !important;">
+                        <select id="TaskProgressSelect" filterkey="progres" name="framework[]" multiple class="form-control framework">
+                            <option value="25">%25'den Az</option>
+                            <option value="50">%50'den fazla</option>
+                            <option value="75">%75'ten fazla</option>
+                            <option value="100">%100</option>
+                        </select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskStartDate" style="padding-right: 0px !important;">
+                        <select id="TaskStartDateSelect" filterkey="startdate" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskEndDate" style="padding-right: 0px !important;">
+                        <select id="TaskEndDateSelect" filterkey="enddate" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskPriority" style="padding-right: 0px !important;">
+                        <select id="TaskPrioritySelect" filterkey="property" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskState" style="padding-right: 0px !important;">
+                        <select id="TaskStateSelect" filterkey="state" name="framework[]" multiple class="form-control framework"></select>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-light bg-light border-bottom p-2" id="mob-Header">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 p-1">
+                        <h6 class="mb-0">İş Tanımı</h6>
+                    </div>
+                    <div class="col-xs-12 col p-1 TaskView TaskAttendant">
+                        <h6 class="mb-0">Görevliler</h6>
+                    </div>
+                    <div class="col-xs-12 col p-1 TaskView TaskAddPersonel">
+                        <h6 class="mb-0">Ekleyen Kişi</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskTag">
+                        <h6 class="mb-0">Etiketler</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskProgress">
+                        <h6 class="mb-0">Tamamlanma</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskStartDate">
+                        <h6 class="mb-0">Başlangıç</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskEndDate">
+                        <h6 class="mb-0">Bitiş</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskPriority">
+                        <h6 class="mb-0">Öncelik</h6>
+                    </div>
+                    <div class="col p-1 col-xs-12 TaskView TaskState">
+                        <h6 class="mb-0">Durum</h6>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="m-1" id="tum_isler"></div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#framework').multiselect({
+                nonSelectedText: 'Gösterim Türü',
+                enableFiltering: false,
+                enableCaseInsensitiveFiltering: false,
+                buttonWidth: '200px',
+                language: 'tr',
+                buttonClass: 'btn btn-default btn-mini mr-3 border p-2 line-height filter-button',
+                onDropdownHide: function () {
+                    var search = [];
+                    var view = "";
+                    $.each($('#framework option:selected'), function () {
+                        search.push($(this).val());
+                        if (view === "") {
+                            if ($(this).val() === "TaskAttendant")
+                                view = "gorevliler";
+                            else if ($(this).val() === "TaskAddPersonel")
+                                view = "ekleyen";
+                            else if ($(this).val() === "TaskTag")
+                                view = "etiketler";
+                            else if ($(this).val() === "TaskProgress")
+                                view = "tamamlanma";
+                            else if ($(this).val() === "TaskStartDate")
+                                view = "baslangic";
+                            else if ($(this).val() === "TaskEndDate")
+                                view = "bitis";
+                            else if ($(this).val() === "TaskPriority")
+                                view = "oncelik";
+                            else if ($(this).val() === "TaskState")
+                                view = "durum";
+                        }
+                        else {
+                            if ($(this).val() === "TaskAttendant")
+                                view += " , " + "gorevliler";
+                            else if ($(this).val() === "TaskAddPersonel")
+                                view += " , " + "ekleyen";
+                            else if ($(this).val() === "TaskTag")
+                                view += " , " + "etiketler";
+                            else if ($(this).val() === "TaskProgress")
+                                view += " , " + "tamamlanma";
+                            else if ($(this).val() === "TaskStartDate")
+                                view += " , " + "baslangic";
+                            else if ($(this).val() === "TaskEndDate")
+                                view += " , " + "bitis";
+                            else if ($(this).val() === "TaskPriority")
+                                view += " , " + "oncelik";
+                            else if ($(this).val() === "TaskState")
+                                view += " , " + "durum";
+                        }
+                    });
+                    TaskViewSave(view);
+                }
+            });
+
+            $(".filter-button").find("span:first-child").addClass("f-13");
+
+            $("#isler_var_new_panel .taskBoard:last-child").removeClass("mb-3").addClass("mb-0");
+
+            if (window.innerWidth < 450) {
+                $("#mob-Filter").hide();
+                $("#mob-Header").hide();
+                $("#Mob-Task-States").hide();
+
+                $(".TaskTitle").addClass("border-bottom").removeClass("m-auto").addClass("pt-2 pb-2 mb-2");
+                $(".TaskAddPersonel").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Ekleyen :</span>");
+                $(".TaskProgress").removeClass("col").addClass("col-xs-12");
+                $(".TaskEndDate").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Termin Tarihi :</span>");
+                $(".TaskAttendant").hide();
+                $(".TaskTag").hide();
+                $(".TaskStartDate").hide();
+                $(".TaskDetails").slideUp();
+            }
+        });
+
+        TaskPagination();
+
+        TaskFilterSelect();
+
+        FilterSelect();
+
+        $(document).ready(function () {
+
+            $(".filter-button").find("span:first-child").addClass("f-13");
+
+            $("#isler_var_new_panel .taskBoard:last-child").removeClass("mb-3").addClass("mb-0");
+
+            if (window.innerWidth < 450) {
+                $("#mob-Filter").hide();
+                $("#mob-Header").hide();
+                $("#Mob-Task-States").hide();
+
+                $(".TaskTitle").addClass("border-bottom").removeClass("m-auto").addClass("pt-2 pb-2 mb-2");
+                $(".TaskAddPersonel").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Ekleyen :</span>");
+                $(".TaskProgress").removeClass("col").addClass("col-xs-12");
+                $(".TaskEndDate").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Termin Tarihi :</span>");
+                $(".TaskAttendant").hide();
+                $(".TaskTag").hide();
+                $(".TaskStartDate").hide();
+                $(".TaskDetails").slideUp();
+            }
+        });
+        $(document).ready(function () {
+            TaskFilter();
+
+            $("#framework").on('change', function () {
+                var search = [];
+                $.each($('#framework option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                $("#is_listesi_new_panel").find(".taskBoard").find(".TaskView").hide();
+                $("#mob-Header").find(".TaskView").hide();
+                $("#mob-Filter").find(".TaskView").hide();
+                $.each(search, function (key, value) {
+                    $("#mob-Header").find("." + value).show();
+                    $("#mob-Filter").find("." + value).show();
+                    $("#is_listesi_new_panel").find(".taskBoard").find("." + value).show();
+                });
+            });
+        });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 </div>
 <%
     elseif trn(request("islem"))="personel_adamsaat_getir" then
 
         personel_id = trn(request("personel_id"))
-        ay = trn(request("ay"))
-        yil = trn(request("yil"))
+        ay = month(date)
+        yil = year(date)
         gosterim_tipi = trn(request("gosterim_tipi"))
         proje_id = trn(request("proje_id"))
 
@@ -5262,7 +6082,7 @@
         personel_resim = trn(request("personel_resim"))
         personel_tcno = trn(request("personel_tcno"))
 
-        SQL="update ucgem_firma_kullanici_listesi set personel_resim = '"& personel_resim &"', personel_ad = '"& personel_ad &"', personel_soyad = '"& personel_soyad &"', personel_dtarih = '"& personel_dtarih &"', personel_cinsiyet = '"& personel_cinsiyet &"', personel_eposta = '"& personel_eposta &"', personel_telefon = '"& personel_telefon &"', personel_parola = '"& personel_parola &"', tcno = '"& personel_tcno &"' where id = '"& personel_id &"'"
+        SQL="update ucgem_firma_kullanici_listesi set personel_resim = '"& personel_resim &"', personel_ad = '"& personel_ad &"', personel_soyad = '"& personel_soyad &"', personel_dtarih = '"& personel_dtarih &"', personel_cinsiyet = '"& personel_cinsiyet &"', personel_eposta = '"& personel_eposta &"', personel_telefon = '"& personel_telefon &"', personel_parola = '"& personel_parola &"', tcno = '"& personel_tcno &"' where id = '"& personel_id &"' and firma_id = '"& FirmaID &"'"
         set guncelle = baglanti.execute(SQL)
 
 
@@ -5300,7 +6120,7 @@
         end if
 
 
-        if cdate(bitis_tarihi)<cdate(baslangic_Tarihi) then
+        if cdate(bitis_tarihi) < cdate(baslangic_Tarihi) then
             bitis_tarihi = cdate(right(bitis, 2) & "." & mid(bitis, 6,2) & "." & left(bitis, 4))
         end if
 
@@ -5314,6 +6134,16 @@
 <form id="koftiform"></form>
 <form autocomplete="off" id="yeni_olay_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
     <div class="row">
+        <div class="col-md-12">
+            <div class="form-group mb-1">
+                <label class="col-form-label">İş Emri Oluştur</label>
+                <div>
+                    <span class="mr-1 font-weight-bold">Hayır</span>
+                    <input type="checkbox" checked="checked" class="form-control form-control-sm js-switch" id="AjandaIsEmriOlursurma">
+                    <span class="ml-1 font-weight-bold">Evet</span>
+                </div>
+            </div>
+        </div>
         <div class="col-sm-12">
             <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Başlık")%></label>
             <div class="input-group input-group-primary">
@@ -5332,7 +6162,7 @@
         <div class="col-sm-2" style="display: none">
             <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Renk")%></label>
             <!--<input type="hidden" id="renk" class="demo" value="#FC6180">-->
-            <input type='text' id="renk" value="rgb(231, 76, 60)" />
+            <input type='text' id="renk" value="rgb(52, 152, 219)" />
         </div>
     </div>
     <% if trim(yinelemeli)="false" then %>
@@ -5344,7 +6174,7 @@
                     <span class="input-group-addon">
                         <i class="icon-prepend fa fa-calendar"></i>
                     </span>
-                    <input type="text" required class="required form-control takvimyap" value="<%=cdate(baslangic_tarihi) %>" name="baslangic_tarihi" id="baslangic_tarihi" />
+                    <input type="text" required class="required form-control takvimyap" value="<%=FormatDate(cdate(baslangic_tarihi), "00") %>" name="baslangic_tarihi" id="baslangic_tarihi" />
                 </div>
             </div>
         </div>
@@ -5368,7 +6198,7 @@
                     <span class="input-group-addon">
                         <i class="icon-prepend fa fa-calendar"></i>
                     </span>
-                    <input type="text" required class="required form-control takvimyap" value="<%=cdate(bitis_tarihi) %>" name="bitis_tarihi" id="bitis_tarihi" />
+                    <input type="text" required class="required form-control takvimyap" value="<%=FormatDate(cdate(bitis_tarihi), "00") %>" name="bitis_tarihi" id="bitis_tarihi" />
                 </div>
             </div>
         </div>
@@ -5386,12 +6216,12 @@
     </div>
     <% else %>
 
-    <div class="row">
+    <div class="row" style="display: none">
         <label class="col-sm-12 col-form-label"><%=LNG("Olay Tipi :")%></label>
         <div class="col-sm-12">
             <select name="olay_tipi" class="select2" onchange="toplanti_tipi_sectim(this.value);" id="olay_tipi">
                 <option value="gundeme_ozel"><%=LNG("Tek")%></option>
-                <option value="rutin"><%=LNG("Rutin")%></option>
+                <option selected="selected" value="rutin"><%=LNG("Rutin")%></option>
             </select>
         </div>
     </div>
@@ -5717,10 +6547,17 @@
             </select>
         </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer p-0 pt-3">
         <input type="button" onclick="ajanda_olay_kaydet(this, '<%=etiket%>', '<%=etiket_id%>', '<%=yinelemeli%>');" class="btn btn-primary" value="<%=LNG("Yeni Olay Ekle")%>" />
-
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#olay_tipi").select2({
+                dropdownParent: $("#modal_div")
+            });
+        });
+    </script>
 </form>
 <link rel="stylesheet" type="text/css" href="/files/bower_components/jquery-minicolors/css/jquery.minicolors.css" />
 <script src="/files/bower_components/jquery-minicolors/js/jquery.minicolors.min.js"></script>
@@ -5730,10 +6567,10 @@
         etiket = trn(request("etiket"))
         etiket_id = trn(request("etiket_id"))
         olay_id = trn(request("olay_id"))
+        user_id = Request.Cookies("kullanici")("kullanici_id")
 
         SQL="select *, Isnull(IsID, 0) as is_id from ahtapot_ajanda_olay_listesi where id = '"& olay_id &"'"
         set olay = baglanti.execute(SQL)
-
 
         acikmi = true
         if cdbl(olay("is_id"))>0 then
@@ -5746,7 +6583,7 @@
             end if
 
         end if
-
+        if CInt(etiket_id) = CInt(olay("ekleyen_id")) and olay("manuel_kayit") = true then
 %>
 <div class="modal-header">
     <%=LNG("Ajanda Kayıt Düzenle")%>
@@ -5755,7 +6592,6 @@
 <form id="koftiform"></form>
 <form autocomplete="off" id="yeni_olay_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
     <div class="row">
-
         <div class="col-sm-12">
             <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Başlık")%></label>
             <div class="input-group input-group-primary">
@@ -5785,6 +6621,195 @@
                     <span class="input-group-addon">
                         <i class="icon-prepend fa fa-calendar"></i>
                     </span>
+                    <input type="text" <% if acikmi = false then %> title="Ortak görevli Olduğunuz kayıtlarda güncelleme işlemi yapamazsınız. !" disabled="disabled" <% end if %> required class="required form-control takvimyap" value="<%=FormatDate(olay("baslangic"), "00") %>" name="baslangic_tarihi" id="baslangic_tarihi" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6" style="padding: 0;">
+            <label class="col-sm-12 col-form-label"><%=LNG("Saat")%></label>
+            <div class="col-sm-12">
+                <div class="input-group input-group-primary">
+                    <span class="input-group-addon">
+                        <i class="icon-prepend fa fa-calendar"></i>
+                    </span>
+                    <input type="text" required <% if acikmi = false then %> disabled="disabled" title="Ortak görevli Olduğunuz kayıtlarda güncelleme işlemi yapamazsınız. !" <% end if %> class="required form-control timepicker" value="<%=left(olay("baslangic_saati"),5) %>" name="baslangic_saati" id="baslangic_saati" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6" style="padding: 0;">
+            <label class="col-sm-12 col-form-label"><%=LNG("Planlanan Bitiş :")%></label>
+            <div class="col-sm-12">
+                <div class="input-group input-group-primary">
+                    <span class="input-group-addon">
+                        <i class="icon-prepend fa fa-calendar"></i>
+                    </span>
+                    <input type="text" required <% if acikmi = false then %> disabled="disabled" title="Ortak görevli Olduğunuz kayıtlarda güncelleme işlemi yapamazsınız. !" <% end if %> class="required form-control takvimyap" value="<%=FormatDate(olay("bitis"), "00") %>" name="bitis_tarihi" id="bitis_tarihi" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6" style="padding: 0;">
+            <label class="col-sm-12 col-form-label"><%=LNG("Saat :")%></label>
+            <div class="col-sm-12">
+                <div class="input-group input-group-primary">
+                    <span class="input-group-addon">
+                        <i class="icon-prepend fa fa-calendar"></i>
+                    </span>
+                    <input type="text" required <% if acikmi = false then %> disabled="disabled" title="Ortak görevli Olduğunuz kayıtlarda güncelleme işlemi yapamazsınız. !" <% end if %> class="required form-control timepicker" value="<%=left(olay("bitis_saati"),5) %>" name="bitis_saati" id="bitis_saati" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-sm-12 col-form-label">Gündem</label>
+        <div class="col-sm-12">
+            <div class="input-group input-group-primary">
+                <span class="input-group-addon">
+                    <i class="icon-prepend fa fa-cubes"></i>
+                </span>
+                <textarea id="aciklama" name="aciklama" class="required form-control" style="width: 93%; padding-left: 35px; padding-top: 6px;" required><%=olay("description") %></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            setTimeout(function () { $("#baslik").focus() }, 500);
+            autosize($("#aciklama"));
+            $("#renk").spectrum({
+                color: $(this).val(),
+                showPaletteOnly: true,
+                showPalette: true,
+                hideAfterPaletteSelect: true,
+                change: function (color) {
+                    $(this).val(color);
+                },
+                palette: [
+                    ["rgb(231, 76, 60)", "rgb(26, 188, 156)", "rgb(46, 204, 113)", "rgb(52, 152, 219)", "rgb(241, 196, 15)", "rgb(52, 73, 94)"]
+                ]
+            });
+        });
+        $(function () {
+            if ($("#baslangic_tarihi").is(":disabled") === true) {
+                console.log("true");
+                $("#baslangic_tarihi").attr("title", "Ortak görevli Olduğunuz kayıtlarda güncelleme işlemi yapamazsınız. !");
+            }
+        });
+    </script>
+
+    <div class="row" <% if trim(etiket)<>"personel" then %> style="display: none;" <% end if %>>
+        <label class="col-sm-12 col-form-label"><%=LNG("Ajanda kaydı senkronize edilecek kişiler :")%></label>
+        <div class="col-sm-12">
+            <select class="select2" name="kisiler" id="kisiler" multiple="multiple">
+                <%
+
+                    kisiler = olay("kisiler")
+
+                    SQL="select id, personel_ad + ' ' + personel_soyad as personel_ad_soyad from ucgem_firma_kullanici_listesi where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and id != '"& Request.Cookies("kullanici")("kullanici_id") &"' and durum = 'true' and cop = 'false';"
+                    set katilimci = baglanti.execute(SQL)
+                    do while not katilimci.eof
+                %>
+                <option <% if instr("," & olay("kisiler") & ",", "," & katilimci("id") & ",")>0 then %> selected="selected" <% end if %> value="<%=katilimci("id") %>"><%=katilimci("personel_ad_soyad") %></option>
+                <%
+                    katilimci.movenext
+                    loop
+                %>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <label class="col-sm-12 col-form-label"><%=LNG("Etiketler :")%></label>
+        <div class="col-sm-12">
+            <select class="select2" name="etiketler" id="etiketler" multiple="multiple">
+                <%
+                    songrup = ""
+                    SQL="select * from etiketler etiket with(nolock) where etiket.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' order by grup, adi asc;"
+                    set etiketler = baglanti.execute(SQL)
+                    do while not etiketler.eof
+                        if not trim(songrup) = trim(etiketler("grup")) then
+                            if not songrup = "" then
+                %>
+                            </optgroup>
+                            <% end if %>
+                <optgroup label="<%=etiketler("grup") %>">
+                    <%
+                            songrup = etiketler("grup")
+                        end if
+                    %>
+                    <option <% if instr("," & olay("etiketler") & ",", "," & etiketler("tip") & "-" & etiketler("id") & ",")>0 then %> selected="selected" <% end if %> value="<%=etiketler("tip") %>-<%=etiketler("id") %>"><%=etiketler("adi") %></option>
+                    <%
+                    etiketler.movenext
+                    loop
+                    %>
+                </optgroup>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer p-0 pt-3">
+        <div class="row">
+            <div class="col-sm-12">
+                <% if olay("tamamlandi") = True then %>
+                <input style="float: left;" type="button" onclick="ajanda_olay_durum_guncelle_button('<%=olay("id")%>', '0');" class="btn btn-mini btn-warning" value="<%=LNG("Gerçekleşmedi")%>" />
+                <% else %>
+                <input style="float: left;" type="button" onclick="ajanda_olay_durum_guncelle_button('<%=olay("id")%>', '1');" class="btn btn-mini btn-success" value="<%=LNG("Gerçekleşti")%>" />
+                <% end if %>
+                <input style="float: right;" type="button" onclick="ajanda_olay_guncelle(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("id")%>');" class="btn btn-mini btn-primary" value="<%=LNG("Olay Güncelle")%>" />
+                <input style="float: right; margin-right: 10px;" type="button" onclick="ajanda_olay_sil(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("id")%>');" class="btn btn-mini btn-danger" value="<%=LNG("Olay Sil")%>" />
+                <%
+                ana_kayit_id = olay("ana_kayit_id")
+                if isnumeric(ana_kayit_id)=false then
+                    ana_kayit_id = 0
+                end if
+                %>
+                <% if cdbl(ana_kayit_id)>0 and trim(olay("ekleyen_id")) = trim(Request.Cookies("kullanici")("kullanici_id")) then %>
+                <input style="float: right; margin-right: 10px;" type="button" onclick="ajanda_olay_komple_sil(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("ana_kayit_id")%>');" class="btn btn-mini btn-inverse" value="<%=LNG("Tüm Olay Dizisini Sil")%>" />
+                <% end if %>
+            </div>
+        </div>
+    </div>
+</form>
+<link rel="stylesheet" type="text/css" href="/files/bower_components/jquery-minicolors/css/jquery.minicolors.css" />
+<script src="/files/bower_components/jquery-minicolors/js/jquery.minicolors.min.js"></script>
+<% 
+        elseif olay("manuel_kayit") = false then
+%>
+<div class="modal-header">
+    <%=LNG("Ajanda Kayıt Düzenle")%>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<form id="koftiform"></form>
+<form autocomplete="off" id="yeni_olay_form" class="smart-form validateform" novalidate="novalidate" style="padding: 15px;">
+    <div class="row">
+        <div class="col-sm-12">
+            <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Başlık")%></label>
+            <div class="input-group input-group-primary">
+                <span class="input-group-addon">
+                    <i class="icon-prepend fa fa-cubes"></i>
+                </span>
+                <textarea id="baslik" name="baslik" class="required form-control" style="width: 93%; padding-left: 5px; padding-top: 6px;" required><%=olay("title") %></textarea>
+                <script>
+                    $(function () {
+                        setTimeout(function () { $("#baslik").focus();$("window").resize(); }, 500);
+                        autosize($("#baslik"));
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="col-sm-2" style="display: none">
+            <label class="col-sm-12 col-form-label" style="padding-left: 0;"><%=LNG("Renk")%></label>
+            <input type='text' id="renk" value="<%=olay("color") %>" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6" style="padding: 0;">
+            <label class="col-sm-12 col-form-label"><%=LNG("Planlanan Başlangıç")%></label>
+            <div class="col-sm-12">
+                <div class="input-group input-group-primary">
+                    <span class="input-group-addon">
+                        <i class="icon-prepend fa fa-calendar"></i>
+                    </span>
                     <input type="text" <% if acikmi = false then %> disabled="disabled" <% end if %> required class="required form-control takvimyap" value="<%=FormatDate(olay("baslangic"), "00") %>" name="baslangic_tarihi" id="baslangic_tarihi" />
                 </div>
             </div>
@@ -5801,7 +6826,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-sm-6" style="padding: 0;">
             <label class="col-sm-12 col-form-label"><%=LNG("Planlanan Bitiş :")%></label>
@@ -5906,31 +6930,43 @@
             </select>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <% if trim(olay("tamamlandi"))="True" then %>
-            <input style="float: left;" type="button" onclick="ajanda_olay_durum_guncelle_button('<%=olay("id")%>', '0');" class="btn btn-mini btn-warning" value="<%=LNG("Gerçekleşmedi")%>" />
-            <% else %>
-            <input style="float: left;" type="button" onclick="ajanda_olay_durum_guncelle_button('<%=olay("id")%>', '1');" class="btn btn-mini btn-success" value="<%=LNG("Gerçekleşti")%>" />
-            <% end if %>
-            <input style="float: right;" type="button" onclick="ajanda_olay_guncelle(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("id")%>');" class="btn btn-mini btn-primary" value="<%=LNG("Olay Güncelle")%>" />
-            <input style="float: right; margin-right: 10px;" type="button" onclick="ajanda_olay_sil(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("id")%>');" class="btn btn-mini btn-danger" value="<%=LNG("Olay Sil")%>" />
-            <%
-                ana_kayit_id = olay("ana_kayit_id")
-                if isnumeric(ana_kayit_id)=false then
-                    ana_kayit_id = 0
-                end if
-            %>
-            <% if cdbl(ana_kayit_id)>0 and trim(olay("ekleyen_id")) = trim(Request.Cookies("kullanici")("kullanici_id")) then %>
-            <input style="float: right; margin-right: 10px;" type="button" onclick="ajanda_olay_komple_sil(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("ana_kayit_id")%>');" class="btn btn-mini btn-inverse" value="<%=LNG("Tüm Olay Dizisini Sil")%>" />
-            <% end if %>
-        </div>
-    </div>
 </form>
+<div class="modal-footer p-2">
+    <div class="col-md-4 text-left p-0 pl-3">
+        <% if olay("tamamlandi") = True then %>
+        <input type="button" onclick="ajanda_olay_durum_guncelle_button('<%=olay("id")%>', '0');" class="btn btn-mini btn-warning" value="<%=LNG("Gerçekleşmedi")%>" />
+        <% else %>
+        <input type="button" onclick="ajanda_olay_durum_guncelle_button('<%=olay("id")%>', '1');" class="btn btn-mini btn-success" value="<%=LNG("Gerçekleşti")%>" />
+        <% end if %>
+    </div>
+    <div class="col-md-8 text-right p-0 pl-2">
+        <input type="button" onclick="ajanda_olay_guncelle(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("id")%>');" class="btn btn-mini btn-primary" value="<%=LNG("Olay Güncelle")%>" />
+        <input type="button" onclick="ajanda_olay_sil(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("id")%>');" class="btn btn-mini btn-danger mr-2" value="<%=LNG("Olay Sil")%>" />
+        <%
+        ana_kayit_id = olay("ana_kayit_id")
+        if isnumeric(ana_kayit_id)=false then
+            ana_kayit_id = 0
+        end if
+        %>
+        <% if cdbl(ana_kayit_id)>0 and trim(olay("ekleyen_id")) = trim(Request.Cookies("kullanici")("kullanici_id")) then %>
+        <input style="float: right; margin-right: 10px;" type="button" onclick="ajanda_olay_komple_sil(this, '<%=etiket%>', '<%=etiket_id%>', '<%=olay("ana_kayit_id")%>');" class="btn btn-mini btn-inverse" value="<%=LNG("Tüm Olay Dizisini Sil")%>" />
+        <% end if %>
+    </div>
+</div>
 <link rel="stylesheet" type="text/css" href="/files/bower_components/jquery-minicolors/css/jquery.minicolors.css" />
 <script src="/files/bower_components/jquery-minicolors/js/jquery.minicolors.min.js"></script>
-<% 
-    
+<%
+        else
+%>
+<script type="text/javascript">
+    $(function () {
+        $(".modal-backdrop").hide();
+        $("#Modal-overflow").css("display", "none");
+        mesaj_ver("Ajanda Kayıtları", "Manuel Eklenen Ajanda Kaydını Sadece Ekleyen Kişi Düzenleyebilir", "warning");
+    });
+</script>
+<%
+        end if
     elseif trn(request("islem"))="anasayfa_proje_durum_bilgisi_getir" then
     
     proje_id = trn(request("proje_id"))
@@ -6015,7 +7051,6 @@
     
     elseif trn(request("islem"))="beta_bildirim_yap" then
 
-
         bildirim_tipi = trn(request("bildirim_tipi"))
         baslik = trn(request("baslik"))
         dosya_eki = trn(request("dosya_eki"))
@@ -6030,11 +7065,42 @@
         SQL="insert into ahtapot_beta_bildirimleri(bildirim_tipi, baslik, dosya_eki, beta_aciklama, durum, cop, ekleyen_ip, firma_id, ekleyen_id, ekleme_tarihi, ekleme_saati) values('"& bildirim_tipi &"', '"& baslik &"', '"& dosya_eki &"', '"& beta_aciklama &"', '"& durum &"', '"& cop &"', '"& ekleyen_ip &"', '"& firma_id &"', '"& ekleyen_id &"', getdate(), getdate()); SET NOCOUNT ON; EXEC MailGonderBildirim @personel_id = 27, @mesaj = '"& bildirim_tipi & "<br>" & baslik & "<br>" & beta_aciklama & "<br>" & Request.Cookies("kullanici")("kullanici_adsoyad") &"';"
         set ekle = baglanti.execute(SQL)
 
+        e_posta = "proskopdestek@makrogem.com.tr"
+        konu = firmaBilgileri("firma_adi") & " - " & bildirim_tipi & " - " & baslik
+        maill = beta_aciklama
+        mail_antet = ""
 
-        
-        
-        
+        SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS' and firma_id = '"& FirmaID &"'"
+        set firmaBilgileri = baglanti.execute(SQL)
 
+        antet_ust = "<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd""> <html lang=""en""> <head> <meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8""> <meta name=""viewport"" content=""width=device-width, initial-scale=1""> <meta http-equiv=""X-UA-Compatible"" content=""IE=edge""> <title>Proskop</title> <style type=""text/css""> </style> </head> <body style=""margin:0; padding:0; background-color:#F2F2F2;""> <center> <img src=""http://makrogem.com.tr/images/makrogem_orta.png"" width=""150"" style=""width:150px;"" /><br /><br /> <table width=""640"" cellpadding=""0"" cellspacing=""0"" border=""0"" class=""wrapper"" bgcolor=""#FFFFFF""> <tr> <td height=""10"" style=""font-size:10px; line-height:10px;"">&nbsp;</td> </tr> <tr> <td align=""center"" valign=""top""> <table width=""600"" cellpadding=""0"" cellspacing=""0"" border=""0"" class=""container""> <tr> <td align=""left"" valign=""top""> <p style=""font-family:Tahoma; font-size:12px;""> "
+        
+        antet_alt = "</p> <p style=""font-family:Tahoma; font-size:12px;""> İyi Çalışmalar,<br /><strong>"& firmaBilgileri("firma_adi") &" </strong> </p> </td> </tr> </table> </td> </tr> <tr> <td height=""10"" style=""font-size:10px; line-height:10px;"">&nbsp;</td></tr></table><p style=""font-family:Tahoma; font-size:12px; color:#808080;""> <br /> <strong>PROSKOP</strong><br /><br /><br /></p></center></body></html>"
+        
+		Set Mail = Server.CreateObject("Persits.MailSender")
+		'Mail.Host = "mail.makrogem.com.tr"                                                     ' Es-Posta sunucu adresi
+		Mail.Host = "smtp.yandex.com.tr"                                           ' E-Posta sunucu adresi
+        Mail.Port = 587
+        Mail.TLS = true
+		Mail.Username = "proskopdestek@makrogem.com.tr"                                            ' Gönderim adresi
+		Mail.Password = "ProskopD@stek123."                                      ' Gönderen hesabın şifresi
+		Mail.From = "proskopdestek@makrogem.com.tr"                                                ' E-Postayı gönderen adres
+		Mail.FromName = Mail.EncodeHeader(firmaBilgileri("firma_adi"), "UTF-8")                 ' E-Posta gönderen isim
+		Mail.AddAddress e_posta                                                                 ' Alıcı e-posta adresi
+		Mail.AddReplyTo "proskopdestek@makrogem.com.tr"                                            ' Alıcı yanıtladığında gidecek adres
+		Mail.Subject = Mail.EncodeHeader(konu, "UTF-8")                                         ' Mail konusu
+		Mail.Body = antet_ust & maill & antet_alt                                               ' Mail içeriği
+		Mail.IsHTML = True
+        Mail.CharSet = "UTF-8"
+		Mail.Send
+
+        If err Then
+            Response.Write err.Description
+            Response.Write "<center><strong>Gönderim Hatası.</strong><br><br>" & LNG("Lütfen Tekrar Deneyiniz.") & "</center>"
+        else
+            Response.Write "<center><img src='/img/Gnome-Emblem-Default-48.png' /><br><br><strong>" & LNG("Mail Başarıyla Gönderildi") & "</strong></center>"
+        End If
+        Response.End
 
 %>
 <br />

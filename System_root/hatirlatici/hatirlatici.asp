@@ -5,6 +5,7 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 %>
 <style>
     .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
@@ -117,7 +118,7 @@
                                 <select id="gruplar" class="form-control">
                                     <option value="0">Grup Seç</option>
                                     <%
-                                        SQL = "select * from Hatirlatici.Grup where Silindi = 'false'"
+                                        SQL = "select * from Hatirlatici.Grup where Silindi = 'false' and FirmaID = '"& FirmaID &"'"
                                         set grup = baglanti.execute(SQL)
                                         if not grup.eof then
                                         do while not grup.eof
@@ -189,7 +190,7 @@
                                     <select class="form-control" id="bildirimAlacakPersonel">
                                         <option value="0" selected>Personel Seç...</option>
                                         <%
-                                            SQL = "select kullanici.id, kullanici.personel_ad +' '+ kullanici.personel_soyad as ad_soyad, gorev.gorev_adi from ucgem_firma_kullanici_listesi kullanici join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.durum = 'true' and kullanici.cop = 'false'"
+                                            SQL = "select kullanici.id, left(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'), len(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'))-1) as gorev_adi, kullanici.personel_ad +' '+ kullanici.personel_soyad as ad_soyad from ucgem_firma_kullanici_listesi kullanici with(nolock) where kullanici.cop = 'false' and kullanici.durum = 'true' and kullanici.firma_id = '"& FirmaID &"'"
                                             set personeller = baglanti.execute(SQL)
 
                                             if not personeller.eof then

@@ -69,40 +69,42 @@
     .dataTables_filter .input-group-addon + .form-control {
         height: 32px !important;
     }
+
+    .border-bottom {
+        border-bottom: 1px solid rgba(0, 0, 0, .1) !important;
+    }
 </style>
 <section id="widget-grid" class="">
     <div class="row">
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
             <div class="card">
-                <div class="card-header">
-                    <h5><% Response.Write(LNG("Kategori Ekle")) %></h5>
+                <div class="card-header border-bottom p-3">
+                    <h5 class="card-title">Kategori Ekle</h5>
                 </div>
-                <div class="card-block">
+                <div class="card-block p-3">
                     <form autocomplete="off" id="departman_ekle_form">
-                        <div class="row">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Kategori Adı")) %></label>
-                            <div class="col-sm-12 col-lg-12">
-                                <div class="input-group input-group-primary">
-                                    <span class="input-group-addon">
-                                        <i class="icon-prepend fa fa-user"></i>
-                                    </span>
-                                    <input type="text" id="kategori_adi" class="form-control" required data-msg="<% Response.Write(LNG("Kategori Giriniz")) %>" />
-                                </div>
+                        <div class="form-group">
+                            <label class="col-form-label"><% Response.Write(LNG("Kategori Adı")) %></label>
+                            <div class="input-group input-group-primary">
+                                <span class="input-group-addon">
+                                    <i class="icon-prepend fa fa-user"></i>
+                                </span>
+                                <input type="text" id="kategori_adi" class="form-control" required data-msg="<% Response.Write(LNG("Kategori Giriniz")) %>" />
                             </div>
                         </div>
                     </form>
-                    <div class="row modal-footer" style="margin-top: 20px;">
-                        <input type="button" class="btn btn-primary" onclick="kategori_ekle();" value="<% Response.Write(LNG("Kategori Ekle")) %>" />
-                    </div>
+                </div>
+                <div class="modal-footer p-3">
+                    <input type="button" class="btn btn-primary btn-mini" onclick="kategori_ekle();" value="<% Response.Write(LNG("Kategori Ekle")) %>" />
                 </div>
             </div>
         </article>
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header border-bottom p-3">
                     <h5><% Response.Write(LNG("Kategori Listesi")) %></h5>
                 </div>
-                <div class="card-block">
+                <div class="card-block p-3">
                     <div id="kategori_listesi">
                         <script>
                             $(function (){

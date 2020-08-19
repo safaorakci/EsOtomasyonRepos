@@ -5,8 +5,9 @@
     Response.CodePage = 65001
 
     izin_id = trn(request("izin_id"))
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 
-    SQL="SELECT bildirim.baslangic_tarihi, kullanici.personel_ad, kullanici.personel_soyad, bildirim.aciklama, LEFT(bildirim.baslangic_saati,5) as baslangic_saati , LEFT(bildirim.bitis_saati,5) as bitis_saati, DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati) - ((DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati) / 60 ) *60) as dakika, DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati)/60 as saat FROM ucgem_personel_mesai_bildirimleri bildirim INNER JOIN ucgem_firma_kullanici_listesi kullanici on kullanici.id = bildirim.personel_id WHERE bildirim.id =  '"& izin_id &"'"
+    SQL="SELECT bildirim.baslangic_tarihi, kullanici.personel_ad, kullanici.personel_soyad, bildirim.aciklama, LEFT(bildirim.baslangic_saati,5) as baslangic_saati , LEFT(bildirim.bitis_saati,5) as bitis_saati, DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati) - ((DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati) / 60 ) *60) as dakika, DATEDIFF(MINUTE,bildirim.baslangic_saati,bildirim.bitis_saati)/60 as saat FROM ucgem_personel_mesai_bildirimleri bildirim INNER JOIN ucgem_firma_kullanici_listesi kullanici on kullanici.id = bildirim.personel_id WHERE bildirim.id =  '"& izin_id &"' and bildirim.firma_id = '"& FirmaID &"' and kullanici.firma_id = '"& FirmaID &"'"
     set mesai = baglanti.execute(SQL)
 
     SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"

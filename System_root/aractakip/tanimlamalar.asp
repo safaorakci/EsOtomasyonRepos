@@ -1,10 +1,10 @@
 ﻿<!-- #include virtual="/data_root/conn.asp" -->
 <!-- #include virtual="/data_root/functions.asp" -->
 <% 
-    
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 %>
 <style>
     .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
@@ -117,7 +117,7 @@
                                 <select id="gruplar" class="form-control">
                                     <option value="0">Grup Seç</option>
                                     <%
-                                        SQL = "select * from AracTakip.Grup where Silindi = 'false'"
+                                        SQL = "select * from AracTakip.Grup where Silindi = 'false' and FirmaID = '"& FirmaID &"'"
                                         set grup = baglanti.execute(SQL)
 
                                         if not grup.eof then
@@ -148,7 +148,7 @@
                                 <label class="col-form-label">Hatırlatma</label>
                                 <label class="col-form-label" style="margin-bottom: 0px">
                                     <span style="margin-left: 30px; margin-right: 7px; font-size: 13px; font-weight: 600;">Hayır</span>
-                                    <input type="checkbox" class="js-switch" id="hatirlatma_chk" />
+                                    <input type="checkbox" class="js-switch" id="hatirlatma_Chk" />
                                     <span style="margin-left: 7px; font-size: 13px; font-weight: 600;">Evet</span>
                                 </label>
                             </div>
@@ -167,7 +167,7 @@
                 <div class="card-body" id="aracTakipParametreleri">
                     <script>
                         $(function (){
-                            AracaTakipParametreleri();
+                            AracaTakipParametreleri("arac");
                         });
                     </script>
                 </div>

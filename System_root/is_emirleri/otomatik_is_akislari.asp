@@ -7,10 +7,10 @@
 
 %>
  <script>
-                                  $( function() {
-                                    $( "#accordion").accordion();
-                                  });
-                            </script>
+    $( function() {
+        $("#accordion").accordion();
+    });
+</script>
 <style>
     .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
         border-top: 1px solid #ccc !important;

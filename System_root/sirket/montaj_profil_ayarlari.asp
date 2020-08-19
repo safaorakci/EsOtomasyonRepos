@@ -6,8 +6,9 @@
     Response.CodePage = 65001
 
     personel_id = request("personel_id")
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 
-    SQL="select isnull(gorev.yetkili_sayfalar,1) as yetkili_sayfalar , kullanici.*, firma.firma_hid, firma.id as firma_id from ucgem_firma_kullanici_listesi kullanici join ucgem_firma_listesi firma on firma.id = kullanici.firma_id join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.id = '"& personel_id &"'"
+    SQL="select isnull(gorev.yetkili_sayfalar,1) as yetkili_sayfalar , kullanici.*, firma.firma_hid, firma.id as firma_id from ucgem_firma_kullanici_listesi kullanici join ucgem_firma_listesi firma on firma.id = kullanici.firma_id join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.id = '"& personel_id &"' and kullanici.firma_id = '"& FirmaID &"'"
     set kullanici = baglanti.execute(SQL)
 
 
@@ -22,7 +23,7 @@
     Response.Cookies("kullanici").Expires = Date() + 30
 
 
-    SQL="select gorev.gorev_adi, kullanici.* from ucgem_firma_kullanici_listesi kullanici join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.id = '"& personel_id &"'"
+    SQL="select gorev.gorev_adi, kullanici.* from ucgem_firma_kullanici_listesi kullanici join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.id = '"& personel_id &"' and kullanici.firma_id = '"& FirmaID &"'"
     set personel = baglanti.execute(SQL)
 
     personel_resim = personel("personel_resim")

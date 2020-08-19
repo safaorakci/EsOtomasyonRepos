@@ -5,13 +5,16 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
+    KullaniciID = Request.Cookies("kullanici")("kullanici_id")
+
     if trn(request("islem"))="rapor_is_yuku_gosterim_proje_sectim_verimlilik" then
 
-            proje_id = trn(request("proje_id"))
-            dongu_baslangic = cdate(trn(request("baslangic")))
-            dongu_bitis = cdate(trn(request("bitis")))
-            gosterim_tipi = trn(request("gosterim_tipi"))
-            donem = trn(request("donem"))
+    proje_id = trn(request("proje_id"))
+    dongu_baslangic = cdate(trn(request("baslangic")))
+    dongu_bitis = cdate(trn(request("bitis")))
+    gosterim_tipi = trn(request("gosterim_tipi"))
+    donem = trn(request("donem"))
     
 %>
 <style>
@@ -496,7 +499,7 @@
         baslangic_tarihi = trn(request("baslangic_tarihi"))
         bitis_tarihi = trn(request("bitis_tarihi"))
 
-        SQL="select firma.firma_adi, firma.firma_telefon, firma.firma_mail, proje.* from ucgem_proje_listesi proje join ucgem_firma_listesi firma on firma.id = proje.proje_firma_id where proje.id = '"& proje_id &"'"
+        SQL="select firma.firma_adi, firma.firma_telefon, firma.firma_mail, proje.* from ucgem_proje_listesi proje join ucgem_firma_listesi firma on firma.id = proje.proje_firma_id where proje.id = '"& proje_id &"' and id = '"& FirmaID &"'"
         set cek = baglanti.execute(SQL)
 
         toplam_butce_tl = 0
@@ -545,7 +548,7 @@
         <h5 style="font-size: 15px; line-height: 30px;"><%=LNG("Bütçe Hesapları")%></h5>
 
         <%
-            sql="SELECT ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'TL'),0) AS gerceklesen_tl, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'USD'),0) AS gerceklesen_usd, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'EUR'),0) AS gerceklesen_eur, * FROM ahtapot_proje_butce_listesi butce WHERE butce.proje_id = '"& proje_id &"' AND butce.cop = 'false';"
+            sql="SELECT ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.firma_id = '"& FirmaID &"' and satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'TL'),0) AS gerceklesen_tl, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.firma_id = '"& FirmaID &"' and satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'USD'),0) AS gerceklesen_usd, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.firma_id = '"& FirmaID &"' and satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'EUR'),0) AS gerceklesen_eur, * FROM ahtapot_proje_butce_listesi butce WHERE butce.proje_id = '"& proje_id &"' AND butce.cop = 'false' and butce.firma_id = '"& FirmaID &"'"
             set butce = baglanti.execute(SQL)
             if butce.eof then
         %>
@@ -630,7 +633,7 @@
                     </thead>
                     <tbody>
                         <%
-                            SQL=" SELECT isnull(firma.firma_adi, '---') as firma_adi, butce.butce_hesabi_adi, satinalma.* from ahtapot_proje_satinalma_listesi satinalma join ahtapot_proje_butce_listesi butce on butce.id = satinalma.butce_hesabi left JOIN dbo.ucgem_firma_listesi firma ON firma.id = satinalma.tedarikci_id where satinalma.proje_id = '"& proje_id &"' and butce.id = '"& butce("id") &"' and satinalma.cop = 'false' AND satinalma.durum = 'true' AND satinalma.durum = butce.durum AND satinalma.cop = butce.cop"
+                            SQL=" SELECT isnull(firma.firma_adi, '---') as firma_adi, butce.butce_hesabi_adi, satinalma.* from ahtapot_proje_satinalma_listesi satinalma join ahtapot_proje_butce_listesi butce on butce.id = satinalma.butce_hesabi left JOIN dbo.ucgem_firma_listesi firma ON firma.id = satinalma.tedarikci_id where satinalma.proje_id = '"& proje_id &"' and butce.id = '"& butce("id") &"' and satinalma.cop = 'false' AND satinalma.durum = 'true' AND satinalma.durum = butce.durum AND satinalma.cop = butce.cop and satinalma.firma_id = '"& FirmID &"' and firma.id = '"& FirmaID &"'"
                             set satis = baglanti.execute(SQL)
                             if satis.eof then
                         %>
@@ -763,7 +766,7 @@
                 </thead>
                 <tbody>
                     <%
-                SQL="select * from ahtapot_proje_gelir_listesi where proje_id = '"& proje_id &"' and durum = 'true' and cop = 'false' order by planlanan_tarih asc"
+                SQL="select * from ahtapot_proje_gelir_listesi where proje_id = '"& proje_id &"' and firma_id = '"& FirmaID &"' and durum = 'true' and cop = 'false' order by planlanan_tarih asc"
                 set gelir = baglanti.execute(SQL)
                 if gelir.eof then
                     %>
@@ -950,14 +953,17 @@
             if not trim(yeni_is_yuku_proje_id)="0" then
                 proje_str = " AND (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-"& yeni_is_yuku_proje_id &"') > 0"
             end if
+            
+            'SQL="SELECT departman.departman_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0 " & kullanici_str2 &  tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' and not olay.color = 'rgb(52, 152, 219)')) AS gosterge_sayisi, ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0 "& kullanici_str2 & tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)')) AS gosterge_sayisi2 FROM dbo.ucgem_firma_kullanici_listesi kullanici JOIN dbo.tanimlama_departman_listesi departman ON departman.firma_id = kullanici.firma_id "& etiket_str2 &" AND departman.cop = 'false' AND departman.durum = 'true' WHERE kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& kullanici_str &" AND ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.etiket_id = kullanici.id AND (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0 " & tarih_str & etiket_str & proje_str & " AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)')) > 0 GROUP BY departman.departman_adi, departman.id;"
+            'set sayilar = baglanti.execute(SQL)
 
-            SQL="SELECT departman.departman_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0 " & kullanici_str2 &  tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' and not olay.color = 'rgb(52, 152, 219)')) AS gosterge_sayisi, ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0 "& kullanici_str2 & tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)')) AS gosterge_sayisi2 FROM dbo.ucgem_firma_kullanici_listesi kullanici JOIN dbo.tanimlama_departman_listesi departman ON departman.firma_id = kullanici.firma_id "& etiket_str2 &" AND departman.cop = 'false' AND departman.durum = 'true' WHERE kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& kullanici_str &" AND ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE olay.etiket_id = kullanici.id AND (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0"& tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)')) > 0 GROUP BY departman.departman_adi, departman.id;"
+            SQL = "SELECT departman.departman_adi, SUBSTRING(CONVERT(varchar(20), DATEADD(MINUTE, (select SUM(ISNULL(DATEDIFF(MINUTE, FORMAT(GETDATE(), CONVERT(varchar(20), olay.baslangic) +' '+ CONVERT(varchar(15), olay.baslangic_saati)), FORMAT(GETDATE(), CONVERT(varchar(20), olay.bitis) +' '+ CONVERT(varchar(15), olay.bitis_saati))), 0)) from ahtapot_ajanda_olay_listesi olay where (select COUNT(value) from string_split(olay.etiketler, ',') where value = 'departman-' + CONVERT(varchar(50), departman.id)) > 0 " & kullanici_str2 &  tarih_str & etiket_str & proje_str & " and olay.durum = 'true' and olay.cop = 'false' and olay.firma_id = '"& FirmaID &"' and not olay.color = 'rgb(52, 152, 219)' and not olay.color = 'rgb(250, 0, 0, 1)' and ((olay.baslangic BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME, '"& bitis_tarihi &"',103)) OR (olay.bitis BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"', 103)))) ,0), 114), 0, 6) as gosterge_sayisi, ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(50), departman.id)) > 0 "& kullanici_str2 & tarih_str & etiket_str & proje_str &" AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)' and not olay.color = 'rgb(250, 0, 0, 1)')) AS gosterge_sayisi2 FROM dbo.ucgem_firma_kullanici_listesi kullanici JOIN dbo.tanimlama_departman_listesi departman ON departman.firma_id = kullanici.firma_id AND departman.cop = 'false' AND departman.durum = 'true' JOIN ahtapot_ajanda_olay_listesi olay on kullanici.id = olay.etiket_id and olay.durum = 'true' and olay.cop = 'false' and not color = 'rgb(250, 0, 0, 1)' and not color = 'rgb(52, 152, 219)' WHERE kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& kullanici_str &" AND (select COUNT(value) from string_split(olay.etiketler, ',') where value = 'departman-' + CONVERT(varchar(15), departman.id)) > 0 " & tarih_str & etiket_str & proje_str & " GROUP BY departman.departman_adi, departman.id;"
             set sayilar = baglanti.execute(SQL)
             'response.Write(SQL)
         %>
 
 
-        <table class="table" width="100%" style="width: 100%;">
+        <table class="table mb-0" style="width: 100%;">
             <thead>
                 <tr>
                     <th style="text-align: left; vertical-align: middle; width: 200px; max-width: 35%;"><%=LNG("Departman")%></th>
@@ -1061,12 +1067,13 @@
                                         proje_str = " AND proje.id = '"& yeni_is_yuku_proje_id &"'"
                                     end if
 
-                                    SQL="SELECT proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'" & kullanici_str2 &  tarih_str & etiket_str &")) AS gosterge_sayisi, ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'"& kullanici_str2 &  tarih_str & etiket_str &")) AS gosterge_sayisi2 FROM dbo.ucgem_proje_listesi proje where proje.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& proje_str  &" AND proje.cop = 'false' AND proje.durum = 'true' AND ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'"& kullanici_str2 &  tarih_str & etiket_str &")) > 0 GROUP BY proje.proje_adi, proje.id;"
+                                    'SQL="SELECT proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'" & kullanici_str2 &  tarih_str & etiket_str &")) AS gosterge_sayisi, ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'"& kullanici_str2 &  tarih_str & etiket_str &")) AS gosterge_sayisi2 FROM dbo.ucgem_proje_listesi proje where proje.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& proje_str  &" AND proje.cop = 'false' AND proje.durum = 'true' AND ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis,103) + CONVERT(datetime, olay.bitis_saati)))), 0) FROM dbo.ahtapot_ajanda_olay_listesi olay WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = olay.IsID), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND olay.durum = 'true' AND olay.cop = 'false' and not color = 'rgb(52, 152, 219)'"& kullanici_str2 &  tarih_str & etiket_str &")) > 0 GROUP BY proje.proje_adi, proje.id;"
+                                    'set sayilar = baglanti.execute(SQL)
+
+                                    SQL = "SELECT proje.proje_adi, CAST(CAST((select SUM(ISNULL(DATEDIFF(MINUTE, FORMAT(GETDATE(), CONVERT(varchar(20), olay.baslangic) +' '+ CONVERT(varchar(15), olay.baslangic_saati)), FORMAT(GETDATE(), CONVERT(varchar(20), olay.bitis) +' '+ CONVERT(varchar(15), olay.bitis_saati))), 0))) AS int) / 60 AS varchar) + ':' + right('0' + CAST(CAST((select SUM(ISNULL(DATEDIFF(MINUTE, FORMAT(GETDATE(), CONVERT(varchar(20), olay.baslangic) +' '+ CONVERT(varchar(15), olay.baslangic_saati)), FORMAT(GETDATE(), CONVERT(varchar(20), olay.bitis) +' '+ CONVERT(varchar(15), olay.bitis_saati))), 0))) AS int) % 60 AS varchar(2)),2) AS gosterge_sayisi, (select SUM(ISNULL( DATEDIFF(MINUTE, FORMAT(GETDATE(), CONVERT(varchar(20), olay.baslangic) +' '+ CONVERT(varchar(15), olay.baslangic_saati)), FORMAT(GETDATE(), CONVERT(varchar(20), olay.bitis) +' '+ CONVERT(varchar(15), olay.bitis_saati))), 0))) AS gosterge_sayisi2 FROM ahtapot_ajanda_olay_listesi olay join ucgem_proje_listesi proje on proje.firma_id = olay.firma_id where proje.durum = 'true' and proje.cop = 'false' and proje.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' "& kullanici_str2 &" and olay.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and olay.durum = 'true' and olay.cop = 'false' and not olay.color = 'rgb(52, 152, 219)' and not olay.color = 'rgb(250, 0, 0, 1)'"& kullanici_str2 &  tarih_str & etiket_str &" and (select count(value) from string_split(olay.etiketler, ',') where value = 'proje-' + CONVERT(varchar(15), proje.id)) > 0 group by proje.proje_adi, proje.id"
                                     set sayilar = baglanti.execute(SQL)
                                     'response.Write(SQL)
         %>
-
-
         <table class="table" width="100%" style="width: 100%;">
             <thead>
                 <tr>
@@ -1252,6 +1259,7 @@
         </table>
     </fieldset>
 </div>
+
 <%
 
         if isdate(baslangic_tarihi)=true and isdate(bitis_tarihi)=true then
@@ -1278,13 +1286,11 @@
 
     SQL="SELECT ROW_NUMBER() OVER (ORDER BY departman.id ASC) AS rowid, 0 AS santiye_sayi, departman.id, departman.departman_adi, departman.departman_tipi, departman.sirano, ( SELECT COUNT(iss.id) FROM ucgem_is_listesi iss JOIN dbo.ucgem_is_gorevli_durumlari durum ON durum.is_id = iss.id WHERE iss.durum = 'true' AND iss.cop = 'false' AND (ISNULL(iss.tamamlanma_orani, 0) != 100) AND (SELECT COUNT(value) FROM STRING_SPLIT(iss.departmanlar, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(10), departman.id)) > 0 "& etiket_str & tarih_str & kullanici_str & proje_str &" ) AS gosterge_sayisi FROM tanimlama_departman_listesi departman WHERE departman.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' AND departman.durum = 'true' AND departman.cop = 'false' AND ( SELECT COUNT(iss.id) FROM ucgem_is_listesi iss JOIN dbo.ucgem_is_gorevli_durumlari durum ON durum.is_id = iss.id WHERE iss.durum = 'true' and iss.cop = 'false' AND (ISNULL(iss.tamamlanma_orani, 0) != 100) AND (SELECT COUNT(value) FROM STRING_SPLIT(iss.departmanlar, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(10), departman.id)) > 0 "& etiket_str &  tarih_str & kullanici_str & proje_str &" )>0 GROUP BY departman.id, departman.departman_adi, departman.departman_tipi, departman.sirano, departman.firma_id ORDER BY departman.departman_adi asc;"
     set sayilar = baglanti.execute(SQL)
-
+    'response.Write(SQL)
 %>
 <div class="col-md-6">
     <fieldset visible="true" style="border: 1px solid #cccccc; padding: 15px; margin-bottom: 15px;">
         <legend style="width: auto; padding-left: 5px; padding-right: 5px; font-size: 15px;"><%=LNG("Etiketlere Göre İş Dağılımı")%></legend>
-
-        <br />
         <table class="table" width="100%" style="width: 100%;">
             <thead>
                 <tr>
@@ -1356,6 +1362,71 @@
                     <td></td>
                 </tr>
             </tfoot>
+        </table>
+    </fieldset>
+</div>
+
+<div class="col-md-6">
+    <fieldset visible="true" style="border: 1px solid #cccccc; padding: 15px; margin-bottom: 15px;">
+        <legend style="width: auto; padding-left: 5px; padding-right: 5px; font-size: 15px;"><%=LNG("Proje Dışı İşler")%></legend>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    SQL = "select 'Proje Dışı İşler' as proje, COUNT(id) as is_sayisi, ISNULL((select SUBSTRING(CONVERT(varchar(20), DATEADD(MINUTE, (select SUM(ISNULL(DATEDIFF(MINUTE, FORMAT(GETDATE(), CONVERT(varchar(20), olay.baslangic) +' '+ CONVERT(varchar(15), olay.baslangic_saati)), FORMAT(GETDATE(), CONVERT(varchar(20), olay.bitis) +' '+ CONVERT(varchar(15), olay.bitis_saati))), 0)) from ahtapot_ajanda_olay_listesi olay where (select COUNT(value) from string_split(olay.etiketler, ',') where value = 'proje_disi_isler-0') > 0 AND olay.etiket_id = '"& rapor_personel_id &"' and ((olay.baslangic BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103)) OR (olay.bitis BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103))) and olay.durum = 'true' and olay.cop = 'false' and olay.firma_id = '"& FirmaID &"' and not olay.color = 'rgb(52, 152, 219)' and not olay.color = 'rgb(250, 0, 0, 1)') ,0), 114), 0, 6)), '00:00') as zaman, ISNULL((select SUM(ISNULL(DATEDIFF(MINUTE, FORMAT(GETDATE(), CONVERT(varchar(20), olay.baslangic) +' '+ CONVERT(varchar(15), olay.baslangic_saati)), FORMAT(GETDATE(), CONVERT(varchar(20), olay.bitis) +' '+ CONVERT(varchar(15), olay.bitis_saati))), 0)) from ahtapot_ajanda_olay_listesi olay where (select COUNT(value) from string_split(olay.etiketler, ',') where value = 'proje_disi_isler-0') > 0 AND olay.etiket_id = '"& KullaniciID &"' and ((olay.baslangic BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103)) OR (olay.bitis BETWEEN CONVERT(DATETIME,'"& baslangic_tarihi &"',103) AND CONVERT(DATETIME,'"& bitis_tarihi &"',103))) and olay.durum = 'true' and olay.cop = 'false' and olay.firma_id = '"& FirmaID &"' and not olay.color = 'rgb(52, 152, 219)' and not olay.color = 'rgb(250, 0, 0, 1)'), 0) as zaman2 from ucgem_is_listesi where durum = 'true' and cop = 'false' and firma_id = '"& FirmaID &"' and ((baslangic_tarihi BETWEEN CONVERT(DATETIME, '"& baslangic_tarihi &"', 103) AND CONVERT(DATETIME, '"& bitis_tarihi &"', 103)) OR (bitis_tarihi BETWEEN CONVERT(DATETIME, '"& baslangic_tarihi &"', 103) AND CONVERT(DATETIME, '"& bitis_tarihi &"', 103))) and (select COUNT(value) from string_split(departmanlar, ',') where value = 'proje_disi_isler-0') > 0 and (select COUNT(value) from string_split(gorevliler, ',') where value = "& rapor_personel_id &") > 0"
+                    set proje_disi = baglanti.execute(SQL)
+                    'response.Write(SQL)
+                    if proje_disi.eof then
+                %>
+                <tr>
+                    <td class="text-center font-weight-bold">Kayıt Bulunamadı.. !</td>
+                </tr>
+                <%
+                    end if
+
+                    do while not proje_disi.eof
+
+                        deger = proje_disi("zaman2")
+                        if deger = 0 then
+                            deger = 1
+                        end if
+
+                        eldeki = cint((cdbl(proje_disi("zaman2")) * 100) / cdbl(deger))
+                        if eldeki = 0 then
+                            eldeki = 1
+                        end if
+
+                        if eldeki>1 then
+                            eldeki = eldeki 
+                        end if
+
+                        toplam_tutar = cdbl(toplam_tutar) + cdbl(proje_disi("zaman2"))
+                %>
+                <tr>
+                    <td class="w-25">İş Sayısı</td>
+                    <td class="w-25"><%=proje_disi("is_sayisi") %></td>
+                    <td>
+                        <img src="/img/raporbar.png" width="<%=eldeki %>%" style="width: <%=eldeki %>%; height: 20px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-25">Süre</td>
+                    <td class="w-25"><%=proje_disi("zaman") %></td>
+                    <td>
+                        <img src="/img/raporbar.png" width="<%=eldeki %>%" style="width: <%=eldeki %>%; height: 20px;" />
+                    </td>
+                </tr>
+                <%
+                    proje_disi.movenext
+                    loop
+                %>
+            </tbody>
         </table>
     </fieldset>
 </div>
@@ -1547,9 +1618,9 @@
                 <tbody id="tbody">
                     <%               
 
-                                        SQL="EXEC dbo.ProjeAdamSaatCetveliRapor @proje_id = '"& yeni_is_yuku_proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @rapor_personel_id = '"& rapor_personel_id &"', @etiketler = '"& etiketler &"';"
-                                        'response.Write(SQL)
-                                        set cetvel = baglanti.execute(sql)
+                          SQL="EXEC dbo.ProjeAdamSaatCetveliRapor @proje_id = '"& yeni_is_yuku_proje_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @rapor_personel_id = '"& rapor_personel_id &"', @etiketler = '"& etiketler &"';"
+                        'response.Write(SQL)
+                          set cetvel = baglanti.execute(SQL)
 
                                         tarih_sayi = cdate(dongu_bitis) - cdate(dongu_baslangic) + 1
 
@@ -1614,6 +1685,676 @@
 
 
 </div>
+<%
+    elseif trn(request("islem")) = "personel_giris_cikis_getir_rapor" then
+
+        FirmaID = Request.Cookies("kullanici")("firma_id")
+        personel_id = trn(request("personel_id"))
+        baslangic = trn(request("baslangic"))
+        bitis = trn(request("bitis"))
+        toplamizin = 0
+        toplamRapor = 0
+        geldi = 0
+        gelmedi = 0
+
+        SQL="EXEC dbo.spGenelPuantaj '"& baslangic &"', '"& bitis &"', '"& personel_id &"', '"& FirmaID &"';"
+        set cetvel = baglanti.execute(SQL)
+        'response.Write(SQL)
+%>
+<div class="col-lg-12">
+    <style>
+        .guncizelge {
+            width: 30px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .ikincisi td {
+            background-color: #f8f5f5;
+        }
+
+        .ilkth {
+            width: 150px;
+            padding: 5px;
+            background-color: #32506d;
+            color: white;
+            line-height: 25px;
+            border: solid 1px #e8e8e8;
+        }
+
+        .ust_th_ilk {
+            background-color: #32506d;
+            border: solid 1px #e8e8e8;
+            border-left: 3px solid #32506d;
+            color: white;
+            line-height: 40px;
+            vertical-align: bottom;
+            padding: 5px;
+        }
+
+        .ust_th {
+            background-color: #32506d;
+            border: solid 1px #e8e8e8;
+            color: white;
+            line-height: 20px;
+            padding: 5px;
+        }
+
+        .alt_th {
+            text-align: center;
+            background-color: #4d7193;
+            border: solid 1px #e8e8e8;
+            color: white;
+            line-height: 25px;
+        }
+
+        .ustunegelince {
+            background-color: #fff;
+        }
+
+
+        .ustunegelince2 td {
+            background-color: #cce6ff !important;
+        }
+
+        .ust_td2 {
+            border: solid 1px #e8e8e8;
+            padding: 5px;
+            line-height: 20px;
+            font-weight: bold;
+            background-color: #32506d !important;
+            color: white !important;
+        }
+
+        .gosterge_td {
+            text-align: center;
+            background-color: #4d7193 !important;
+            color: white !important;
+        }
+
+        .sagcizgi {
+            border-right: 3px solid #32506d !important;
+        }
+
+        .alt_td {
+            text-align: center;
+            border: solid 1px #e8e8e8;
+            line-height: 20px;
+        }
+
+        .alt_td2 {
+            border-left: 3px solid #32506d;
+        }
+
+        .sarialan {
+            background-color: #f5ffa6 !important;
+        }
+
+
+        .tablediv {
+            padding-bottom: 15px;
+        }
+
+
+            .tablediv::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                border-radius: 10px;
+                background-color: #F5F5F5;
+            }
+
+            .tablediv::-webkit-scrollbar {
+                width: 12px;
+                background-color: #F5F5F5;
+            }
+
+            .tablediv::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+                background-color: #32506d;
+            }
+    </style>
+    <%
+        dongu_baslangic = cdate(baslangic)
+        dongu_bitis = cdate(bitis)
+    %>
+    <div class="h5" style="font-size: 15px;"><%=LNG("Genel Puantaj Cetveli")%></div>
+
+    <div class="tablediv" style="width: 100%; margin-top: 15px; overflow: auto;">
+        <table id="tablegosterge" style="border-color: #e8e8e8; font-family: Tahoma; width: 100%;" border="0">
+            <thead id="thead">
+                <tr>
+                    <th rowspan="2" class="ilkth headcol">
+                        <div style="width: 150px; text-align: center"><%=LNG("Personeller")%></div>
+                    </th>
+                    <% 
+                        son_ay = 0
+                        for x = dongu_baslangic to dongu_bitis 
+                            if not son_ay = month(x) then
+                                son_ay = month(x)
+
+                                cols = AyinSonGunu(cdate(x)) - day(cdate(x))
+
+                                if cdate( AyinSonGunu(cdate(x)) & "." & month(cdate(x)) & "." & year(cdate(x))) > dongu_bitis then
+                                    cols = day(dongu_bitis)
+                                end if
+
+                                cols = cols + 1
+                    %>
+                    <th class="ust_th" style="height: 80px" colspan="<%=cols%>"><%=monthname(son_ay) %>&nbsp;<%=year(x) %></th>
+                    <% 
+                            end if
+                        next
+                    %>
+                    <th class="alt_th" title="Toplam Giriş" rowspan="2">
+                        <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">Geldi</p>
+                    </th>
+                    <th class="alt_th" title="Toplam Çıkış" rowspan="2">
+                        <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">Gelmedi</p>
+                    </th>
+                    <th class="alt_th" title="Ücretsiz İzin" rowspan="2">
+                        <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">Ücretsiz İzin</p>
+                    </th>
+                    <th class="alt_th" title="Yıllık İzin" rowspan="2">
+                        <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">Yıllık İzin</p>
+                    </th>
+                    <th class="alt_th" title="İdari İzin" rowspan="2">
+                        <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">İdari İzin</p>
+                    </th>
+                    <th class="alt_th" title="Raporlu" rowspan="2">
+                        <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">Yarım Gün İzinli</p>
+                    </th>
+                    <th class="alt_th" title="Raporlu" rowspan="2">
+                        <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">Rapor</p>
+                    </th>
+                    <tr>
+                        <% for x = dongu_baslangic to dongu_bitis  %>
+                        <th class="alt_th" colspan="1">
+                            <%=day(x) %>
+                        </th>
+                        <% next %>
+                    </tr>
+            </thead>
+            <tbody id="tbody">
+                <%
+                        k = 0
+                        son_kaynak = ""
+                        sonKayit = 0
+                        value = ""
+                        izinliSure = 0
+                        toplamSure = 0
+                        do while not cetvel.eof 
+                            girdimi = false
+                            
+                            if not sonKayit = cetvel("id") then
+                                ucretsizIzin = 0
+                                yillikIzin = 0
+                                idariIzin = 0
+                                toplamRapor = 0
+                                geldi = 0
+                                gelmedi = 0
+                                toplamSure = 0
+                                izinliSure = 0
+                            end if
+
+                            sonKayit = cetvel("id")
+                            if sonKayit = cetvel("id") then
+                            
+                                ucretsizIzin = ucretsizIzin + cetvel("UcretsizIzin")
+                                yillikIzin = yillikIzin + cetvel("YillikIzin")
+                                idariIzin = idariIzin + cetvel("IdariIzin")
+                                toplamRapor = toplamRapor + cetvel("toplamRapor")
+                                if not cetvel("IzinliSure") = "-" then
+                                    toplamSure = toplamSure + cetvel("IzinliSure")
+                                end if
+
+                                if not cetvel("Giris") = "-" and not cetvel("Giris") = "t" and cetvel("IzinTuru") = "-" then
+                                    geldi = geldi + 1
+                                end if
+                                if cetvel("Giris") = "-" and cetvel("IzinTuru") = "-" and cdate(cetvel("Tarih")) < DateAdd("d", 1, cdate(date)) then
+                                    gelmedi = gelmedi + 1
+                                end if
+                            end if
+                            
+                            if not sonkaynak = cetvel("id") then
+                                sonkaynak = cetvel("id")
+                                girdimi = true
+                                k = k + 1
+                                klas = ""
+                                style = ""
+                                if k mod 2 = 0 then
+                                    klas = "ikincisi"
+                                end if
+                                gunsayi = 0
+                                if k > 1 then
+                %>
+                <% end if %>
+                <tr class=" ustunegelince <%=klas %>">
+                    <td style="width: 150px; text-align: center" class="ust_td2 headcol"><%=cetvel("Personel") %></td>
+                    <% end if %>
+                    <% 
+                        if cetvel("Giris") = "t" and cetvel("Cikis") = "t" then
+                            style = "background-color:#989898" 'tatil gri renk
+                        end if
+                        if not cetvel("Giris") = "-" and not cetvel("Giris") = "t" and cetvel("IzinTuru") = "-" then
+                            style = "background-color:lightgreen" 'geldi yeşil renk
+                        end if
+                        if cetvel("IzinTuru") = "-" and cetvel("Giris") = "-" then
+                            style = "background-color:#ff5d5d" 'gelmedi kırmızı renk
+                        end if
+                        if cdate(cetvel("Tarih")) > cdate(date) and not cetvel("Giris") = "t" then
+                            style = "background-color:white" 'boş alan
+                        end if
+                        if cetvel("IzinTuru") = "Ücretsiz Izin" then
+                            style = "background-color:#0099ff" 
+                            value = "Ü.İ"
+                        end if
+                        if cetvel("IzinTuru") = "Idari Izin" then
+                            style = "background-color:#cccc00" 
+                            value = "İ.İ"
+                        end if
+                        if cetvel("IzinTuru") = "Yillik Izin" then
+                            style = "background-color:#04cc5d"
+                            value = "Y.İ"
+                        end if
+                        if cetvel("IzinTuru") = "Rapor" then
+                            style = "background-color:#ffaa0f"
+                            value = "R"
+                        end if
+                        if cetvel("IzinTuru") = "Yarim Izin" then
+                            style = "background-color:#7f7dff"
+                            value = "Y"
+                            izinliSure = cetvel("IzinliSure")
+                        end if
+                    %>
+                    <td style="min-width: 40px !important; <%=style%>" class="alt_td">
+                        <!--<%if style = "background-color:#7f7dff" then %> title="<%=izinliSure %> <%end if %>-->
+                        <%if style = "background-color:#0099ff" then %>
+                        <%=value %>
+                        <%end if %>
+                        <%if style = "background-color:#cccc00" then %>
+                        <%=value %>
+                        <%end if %>
+                        <%if style = "background-color:#04cc5d" then %>
+                        <%=value %>
+                        <%end if %>
+                        <%if style = "background-color:#ffaa0f" then %>
+                        <%=value %>
+                        <%end if %>
+                        <%if style = "background-color:#7f7dff" then %>
+                        <%if not cetvel("IzinliSure") = "-" then %>
+                        <%=DakikadanSaatYap(izinliSure) %>
+                        <%else %>
+                                -
+                            <%end if %>
+                        <%end if %>
+                    </td>
+                    <%if Day(cetvel("Tarih")) = Day(DateSerial(Year(baslangic),Month(baslangic)+1,0)) then %>
+                    <td style="width: 35px" class="alt_td">
+                        <%=geldi %>
+                    </td>
+                    <td style="width: 35px" class="alt_td">
+                        <%=gelmedi %>
+                    </td>
+                    <td style="width: 35px" class="alt_td">
+                        <%=ucretsizIzin %>
+                    </td>
+                    <td style="width: 35px" class="alt_td">
+                        <%=yillikIzin %>
+                    </td>
+                    <td style="width: 35px" class="alt_td">
+                        <%=idariIzin %>
+                    </td>
+                    <td style="width: 35px" class="alt_td">
+                        <%=DakikadanSaatYap(toplamSure) %>
+                    </td>
+                    <td style="width: 35px" class="alt_td">
+                        <%=toplamRapor %>
+                    </td>
+                    <%end if %>
+                    <%  
+                        gunsayi = gunsayi + 1
+
+                        cetvel.movenext
+                        loop
+                    %>
+                </tr>
+                <tr>
+                    <td>
+                        <br />
+                    </td>
+                </tr>
+                <tr>
+                    <th style="border: none"></th>
+                    <th colspan="3" style="text-align: right">Geldi &nbsp;</th>
+                    <th style="background-color: lightgreen;"></th>
+                    <th colspan="4" style="text-align: right">Hafta Sonu &nbsp</th>
+                    <th style="background-color: #989898;"></th>
+                    <th colspan="4" style="text-align: right;">Ücretsiz İzin (Ü.İ) &nbsp</th>
+                    <th style="background-color: #0099ff;"></th>
+                </tr>
+                <tr>
+                    <th style="border: none"></th>
+                    <th colspan="3" style="text-align: right;">Gelmedi &nbsp</th>
+                    <th style="background-color: #ff5d5d;"></th>
+                    <th colspan="4" style="text-align: right">Yarım Gün İzinli &nbsp;</th>
+                    <th style="background-color: #7f7dff"></th>
+                    <th colspan="4" style="text-align: right;">Yıllık İzin (Y.İ) &nbsp</th>
+                    <th style="background-color: #04cc5d"></th>
+                </tr>
+                <tr>
+                    <th style="border: none" colspan="1"></th>
+                    <th colspan="3" style="text-align: right;">Raporlu (R) &nbsp</th>
+                    <th style="background-color: #ffaa0f"></th>
+                    <th colspan="4" style="text-align: right"></th>
+                    <th></th>
+                    <th colspan="4" style="text-align: right">İdari İzin (İ.İ) &nbsp;</th>
+                    <th style="background-color: #cccc00"></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<%
+    elseif trn(request("islem")) = "personel_giris_cikis_mesai_getir_rapor" then
+
+        FirmaID = Request.Cookies("kullanici")("firma_id")
+        personel_id = trn(request("personel_id"))
+        baslangic = trn(request("baslangic"))
+        bitis = trn(request("bitis"))
+
+        SQL="EXEC dbo.spOzelPuantaj '"& baslangic &"', '"& bitis &"', '"& personel_id &"', '"& FirmaID &"';"
+        set cetvel = baglanti.execute(SQL)
+        'response.Write(SQL)
+%>
+<div class="col-lg-12">
+    <style>
+        .guncizelge {
+            width: 30px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .ilkth {
+            width: 150px;
+            padding: 5px;
+            background-color: #32506d;
+            color: white;
+            line-height: 25px;
+            border: solid 1px #e8e8e8;
+        }
+
+        .ust_th_ilk {
+            background-color: #32506d;
+            border: solid 1px #e8e8e8;
+            border-left: 3px solid #32506d;
+            color: white;
+            line-height: 40px;
+            vertical-align: bottom;
+            padding: 5px;
+        }
+
+        .ust_th {
+            background-color: #32506d;
+            border: solid 1px #e8e8e8;
+            border-left: solid 3px white;
+            color: white;
+            line-height: 20px;
+            vertical-align: bottom;
+            padding: 5px;
+        }
+
+        .alt_th {
+            text-align: center;
+            background-color: #4d7193;
+            border: solid 1px #e8e8e8;
+            color: white;
+            line-height: 25px;
+        }
+
+        .ustunegelince {
+            background-color: #fff;
+        }
+
+
+        .ustunegelince2 td {
+            background-color: #cce6ff !important;
+        }
+
+        .ust_td2 {
+            border: solid 1px #e8e8e8;
+            padding: 5px;
+            line-height: 20px;
+            font-weight: bold;
+            background-color: #32506d !important;
+            color: white !important;
+        }
+
+        .gosterge_td {
+            text-align: center;
+            background-color: #4d7193 !important;
+            color: white !important;
+        }
+
+        .sagcizgi {
+            border-right: 3px solid #32506d !important;
+        }
+
+        .alt_td {
+            text-align: center;
+            border: solid 1px #e8e8e8;
+            line-height: 20px;
+        }
+
+        .alt_td2 {
+            border-left: 3px solid #32506d;
+        }
+
+        .sarialan {
+            background-color: #f5ffa6 !important;
+        }
+
+
+        .tablediv {
+            padding-bottom: 15px;
+        }
+
+
+            .tablediv::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                border-radius: 10px;
+                background-color: #F5F5F5;
+            }
+
+            .tablediv::-webkit-scrollbar {
+                width: 12px;
+                background-color: #F5F5F5;
+            }
+
+            .tablediv::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+                background-color: #32506d;
+            }
+    </style>
+
+    <%
+        dongu_baslangic = cdate(baslangic)
+        dongu_bitis = cdate(bitis)
+    %>
+    <div class="h5" style="font-size: 15px;"><%=LNG("Özel Puantaj Cetveli")%></div>
+
+    <div class="tablediv" style="width: 100%; margin-top: 15px; overflow: auto;">
+        <div id="tablediv">
+            <table id="tablegosterge" style="border-color: #e8e8e8; font-family: Tahoma; width: 100%;">
+                <thead id="thead">
+                    <tr>
+                        <th rowspan="3" class="ilkth headcol">
+                            <div style="width: 150px; text-align: center"><%=LNG("Personeller")%></div>
+                        </th>
+                        <% 
+                            son_ay = 0
+                            for x = dongu_baslangic to dongu_bitis 
+                                if not son_ay = month(x) then
+                                    son_ay = month(x)
+
+                                    cols = AyinSonGunu(cdate(x)) - day(cdate(x))
+
+                                    if cdate( AyinSonGunu(cdate(x)) & "." & month(cdate(x)) & "." & year(cdate(x))) > dongu_bitis then
+                                        cols = day(dongu_bitis)
+                                    end if
+
+                                    cols = cols + 1
+                        %>
+                        <th class="ust_th" colspan="<%=cols * 3 %>"><%=monthname(son_ay) %>&nbsp;<%=year(x) %></th>
+                        <% 
+                                end if
+                            next
+                        %>
+                        <th class="alt_th" title="Çalışma Saati" rowspan="3">
+                            <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">Çalışma Saati</p>
+                        </th>
+                        <th class="alt_th" title="Toplam Sayı" rowspan="3">
+                            <p style="transform: rotate(180deg); font-family: -webkit-body; -webkit-writing-mode: vertical-lr; line-height: 0.5; margin-bottom: 0px; padding: 7px 0px;">Gelmedi</p>
+                        </th>
+                        <tr>
+                            <% for x = dongu_baslangic to dongu_bitis  %>
+                            <th class="alt_th" style="<% if day(x)=1 then %> border-left: solid 3px white; <% end if %>" colspan="3">
+                                <%=day(x) %>
+                            </th>
+                            <% next %>
+                        </tr>
+                    <tr>
+                        <%for x = dongu_baslangic to dongu_bitis %>
+                        <th class="alt_th" colspan="1" title="Giriş">G</th>
+                        <th class="alt_th" colspan="1" title="İzinli">İ</th>
+                        <th class="alt_th" colspan="1" title="Mesai">M</th>
+                        <%next %>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <%
+                        k = 0
+                        son_kaynak = ""
+                        calismaSaati = 0
+                        gelmedi = 0
+                        do while not cetvel.eof 
+                            girdimi = false
+
+                            if not sonKayit = cetvel("id") then
+                                calismaSaati = 0
+                                gelmedi = 0
+                            end if
+
+                            sonKayit = cetvel("id")
+                            if sonKayit = cetvel("id") then
+                                if cetvel("Giris") = "GG" and not cetvel("izin") = "IZINLI" and not cetvel("Rapor") = "Rapor" and cdate(cetvel("Tarih")) <= cdate(date) then
+                                    gelmedi = gelmedi + 1
+                                end if
+                                calismaSaati = calismaSaati + cetvel("CalismaSaati")
+                            end if
+
+                            if not sonkaynak = cetvel("id") then
+                                sonkaynak = cetvel("id")
+                                girdimi = true
+                                k = k + 1
+                                klas = ""
+                                if k mod 2 = 0 then
+                                    klas = "ikincisi"
+                                end if
+                                                
+                                gunsayi = 0
+
+                                if k > 1 then
+                    %>
+                    <% end if %>
+                    <tr class=" ustunegelince <%=klas %>">
+                        <td style="width: 150px; text-align: center" class="ust_td2 headcol"><%=cetvel("Personel") %></td>
+                        <% end if %>
+
+                        <% 
+                            if cetvel("Giris") = "t" then
+                                style = "background-color:#989898" 'gri renk
+                            else
+                                style = "background-color:white"                                
+                                value = "-"
+                            end if
+
+                            if Cstr(cetvel("Giris")) = "Z" and not cetvel("izin") = "IZINLI" then
+                                style = "background-color:lightgreen"
+                            end if
+
+                            if not cetvel("Giris") = "t" and cetvel("Giris") = "GG" and cdate(cetvel("Tarih")) <= cdate(date) then
+                                style = "background-color:#ff5d5d" 'kırmızı renk
+                            end if
+
+                            if cetvel("Giris") = "Z" and cetvel("izin") = "IZINLI" or cetvel("Giris") = "GG" and cetvel("izin") = "IZINLI" then
+                                style = "background-color:white"
+                            end if
+
+                            if cetvel("Giris") = "G" then
+                                style = "background-color:orange"
+                            end if
+                        %>
+                        <td style="min-width: 40px; <%=Style%>" class="alt_td">
+                            <%if style = "background-color:white" then %>
+                            <%=value %>
+                            <%else %>
+                            <%end if %>
+                        </td>
+                        <td style="min-width: 40px" class="alt_td">
+                            <%=cetvel("izin") %>
+                        </td>
+                        <td style="min-width: 40px; border-right: 1px solid #6590b9" class="alt_td">
+                            <%=cetvel("Mesai") %>
+                        </td>
+                        <%if Day(cetvel("Tarih")) = Day(DateSerial(Year(baslangic),Month(baslangic)+1,0)) then %>
+                        <td style="width: 35px" class="alt_td">
+                            <%=DakikadanSaatYap(calismaSaati) %>
+                        </td>
+                        <td style="width: 35px" class="alt_td">
+                            <%=gelmedi %>
+                        </td>
+                        <%end if %>
+                        <%
+                        gunsayi = gunsayi + 1
+                        
+                        cetvel.movenext
+                        loop
+                        %>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br />
+                        </td>
+                    </tr>
+                    <tr style="font-family: Arial">
+                        <th style="border: none"></th>
+                        <th colspan="3" style="text-align: right">Zamanında &nbsp;</th>
+                        <th style="background-color: lightgreen;"></th>
+
+                        <th colspan="4" style="text-align: right">Gelmedi &nbsp</th>
+                        <th style="background-color: #ff5d5d;"></th>
+                    </tr>
+                    <tr style="font-family: Arial">
+                        <th style="border: none"></th>
+                        <th colspan="3" style="text-align: right">Gecikti &nbsp;</th>
+                        <th style="background-color: orange"></th>
+
+                        <th colspan="4" style="text-align: right">Hafta Sonu &nbsp</th>
+                        <th style="background-color: #989898;"></th>
+                    </tr>
+                    <tr style="font-family: Arial">
+                        <th style="border: none" colspan="1"></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <%
 
     elseif trn(request("islem"))="personel_adam_saat_rapor_getir" then
@@ -1752,12 +2493,11 @@
 
 
         SQL="EXEC dbo.PersonelAdamSaatCetveliRapor @personel_id = '"& personel_id &"', @firma_id = '"& Request.Cookies("kullanici")("firma_id") &"', @baslangic = '"& dongu_baslangic &"', @bitis = '"& dongu_bitis &"', @proje_id = '"& proje_id &"', @etiketler = '"& etiketler &"';"
-        set cetvel = baglanti.execute(sql)
-        'response.Write(SQL)
+    response.Write(SQL)
+        set cetvel = baglanti.execute(SQL)
     if cetvel.eof then
 %>
-<!--<%=LNG("Girilen Kriterlere Uygun Kayıt Bulunamadı.")%>-->
-<strong style="font-size:14px">Girilen Kriterlere Uygun Kayıt Bulunamadı</strong>
+<strong style="font-size: 14px">Girilen Kriterlere Uygun Kayıt Bulunamadı</strong>
 <% 
         Response.End
     end if%>
@@ -1952,7 +2692,7 @@
                                             bakiye_usd(0) = 0
                                             bakiye_eur(0) = 0
 
-                                            SQL="DECLARE @baslangic DATE = '"& cdate(baslangic_tarihi) &"'; DECLARE @bitis DATE = '"& cdate(bitis_tarihi) &"'; SELECT DATEADD(DAY, spt.number, @baslangic) AS tarih, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Tahsilat' AND parabirimi = 'TL' AND durum = 'true' AND cop = 'false' AND alacakli_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS tahsilat_tl, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Tahsilat' AND parabirimi = 'USD' AND durum = 'true' AND cop = 'false' AND alacakli_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS tahsilat_usd, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Tahsilat' AND parabirimi = 'USD' AND durum = 'true' AND cop = 'false' AND alacakli_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS tahsilat_eur, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Ödeme' AND parabirimi = 'TL' AND durum = 'true' AND cop = 'false' AND borclu_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS odeme_tl, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Ödeme' AND parabirimi = 'USD' AND durum = 'true' AND cop = 'false' AND borclu_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS odeme_usd, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Ödeme' AND parabirimi = 'USD' AND durum = 'true' AND cop = 'false' AND borclu_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS odeme_eur FROM master..spt_values spt where spt.type = 'P' AND DATEADD(DAY, number, @baslangic) <= @bitis;"
+                                            SQL="DECLARE @baslangic DATE = '"& cdate(baslangic_tarihi) &"'; DECLARE @bitis DATE = '"& cdate(bitis_tarihi) &"'; SELECT DATEADD(DAY, spt.number, @baslangic) AS tarih, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Tahsilat' AND parabirimi = 'TL' and firma_id = '"& FirmaID &"' AND durum = 'true' AND cop = 'false' AND alacakli_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS tahsilat_tl, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Tahsilat' AND parabirimi = 'USD' AND durum = 'true' AND cop = 'false' AND alacakli_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS tahsilat_usd, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Tahsilat' AND parabirimi = 'USD' AND durum = 'true' AND cop = 'false' AND alacakli_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS tahsilat_eur, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Ödeme' AND parabirimi = 'TL' AND durum = 'true' AND cop = 'false' AND borclu_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS odeme_tl, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Ödeme' AND parabirimi = 'USD' AND durum = 'true' AND cop = 'false' AND borclu_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS odeme_usd, (SELECT ISNULL(SUM(meblag),0) FROM dbo.cari_hareketler WHERE islem_tipi = 'Ödeme' AND parabirimi = 'USD' AND durum = 'true' AND cop = 'false' AND borclu_id = '1' AND vade_tarihi = DATEADD(DAY, spt.number, @baslangic)) AS odeme_eur FROM master..spt_values spt where spt.type = 'P' AND DATEADD(DAY, number, @baslangic) <= @bitis;"
                                             set cek = baglanti.execute(SQL)
                                             x = 0
                                             do while not cek.eof
@@ -2096,13 +2836,15 @@
     elseif trn(request("islem"))="proje_ic_liste_getir" then
 
         durum_id = trn(request("durum_id"))
+        ustId = trn(request("ustId"))
 
-        SQL="SELECT 999925216000000000 - isnull(dbo.ToTicks(CONVERT(DATETIME, proje.guncelleme_tarihi) + CONVERT(DATETIME, proje.guncelleme_saati)),0) guncelleme_ticks, 999925216000000000 - dbo.ToTicks(CONVERT(DATETIME, proje.ekleme_tarihi) + CONVERT(DATETIME, proje.ekleme_saati)) ekleme_ticks, isnull(proje.guncelleme_tarihi, getdate()) as guncelleme_tarihi, isnull(proje.guncelleme_saati, '00:00') as guncelleme_saati, guncelleyen.personel_ad + ' ' + guncelleyen.personel_soyad AS guncelleyen, musteri.firma_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS ekleyen, proje.ekleme_tarihi, proje.ekleme_saati, santiye_durum_id AS id, proje.id AS idd, UPPER(proje_adi) AS proje_adi, ( SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false' AND (ISNULL(tamamlanma_orani, 0) != 100) AND ( SELECT COUNT(value) FROM STRING_SPLIT(departmanlar, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id) ) > 0 ) AS is_sayisi, ( SELECT COUNT(id) FROM ucgem_proje_olay_listesi olay WHERE olay.proje_id = proje.id AND olay.durum = 'true' AND olay.cop = 'false' ) AS gosterge_sayisi, proje.proje_kodu FROM ucgem_proje_listesi proje JOIN ucgem_firma_kullanici_listesi kullanici ON kullanici.id = proje.ekleyen_id  left JOIN ucgem_firma_kullanici_listesi guncelleyen ON guncelleyen.id = proje.guncelleyen_id  JOIN dbo.ucgem_firma_listesi musteri ON musteri.id = proje.proje_firma_id  WHERE proje.santiye_durum_id = '"& durum_id &"' AND proje.durum = 'true' AND proje.cop = 'false' ORDER BY proje.id DESC;"
+        SQL="SELECT 999925216000000000 - isnull(dbo.ToTicks(CONVERT(DATETIME, proje.guncelleme_tarihi) + CONVERT(DATETIME, proje.guncelleme_saati)),0) guncelleme_ticks, 999925216000000000 - dbo.ToTicks(CONVERT(DATETIME, proje.ekleme_tarihi) + CONVERT(DATETIME, proje.ekleme_saati)) ekleme_ticks, isnull(proje.guncelleme_tarihi, getdate()) as guncelleme_tarihi, isnull(proje.guncelleme_saati, '00:00') as guncelleme_saati, guncelleyen.personel_ad + ' ' + guncelleyen.personel_soyad AS guncelleyen, musteri.firma_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS ekleyen, proje.ekleme_tarihi, proje.ekleme_saati, santiye_durum_id AS id, proje.id AS idd, proje.panoda_goster, UPPER(proje_adi) AS proje_adi, ( SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false' AND firma_id = '"& FirmaID &"' AND (ISNULL(tamamlanma_orani, 0) != 100) AND ( SELECT COUNT(value) FROM STRING_SPLIT(departmanlar, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id) ) > 0 ) AS is_sayisi, ( SELECT COUNT(id) FROM ucgem_proje_olay_listesi olay WHERE olay.proje_id = proje.id AND olay.durum = 'true' AND olay.cop = 'false' ) AS gosterge_sayisi, proje.proje_kodu FROM ucgem_proje_listesi proje JOIN ucgem_firma_kullanici_listesi kullanici ON kullanici.id = proje.ekleyen_id  left JOIN ucgem_firma_kullanici_listesi guncelleyen ON guncelleyen.id = proje.guncelleyen_id JOIN dbo.ucgem_firma_listesi musteri ON musteri.id = proje.proje_firma_id  WHERE proje.santiye_durum_id = '"& durum_id &"' and proje.durum = 'true' AND proje.cop = 'false' and proje.firma_id = '"& FirmaID &"' ORDER BY proje.id DESC;"
         set cek = baglanti.execute(SQL)
+        'response.Write(SQL)
 
         if cek.eof then
 
-            SQL="select durum_adi from tanimlama_santiye_durum_listesi where id = '"& durum_id &"'"
+            SQL="select durum_adi from tanimlama_santiye_durum_listesi where id = '"& durum_id &"' and firma_id = '"& FirmaID &"'"
             set cek2 = baglanti.execute(SQL)
 
 %>
@@ -2111,32 +2853,175 @@
 <center><%=cek2("durum_adi") %>&nbsp;<%=LNG("Kategorisinde Proje Bulunamadı.")%></center>
 <br />
 <% else %>
-<table id="dt_basic" class="table table-striped table-bordered table-hover datatableyap" width="100%">
+<style type="text/css">
+    .checkbox label:after,
+    .radio label:after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    .checkbox .cr,
+    .radio .cr {
+        position: relative;
+        display: inline-block;
+        border: 1px solid #a9a9a9;
+        border-radius: .25em;
+        width: 1.3em;
+        height: 1.3em;
+        float: left;
+        margin-right: .5em;
+    }
+
+    .radio .cr {
+        border-radius: 50%;
+    }
+
+        .checkbox .cr .cr-icon,
+        .radio .cr .cr-icon {
+            position: absolute;
+            font-size: .8em;
+            line-height: 0;
+            top: 50%;
+            left: 20%;
+        }
+
+        .radio .cr .cr-icon {
+            margin-left: 0.04em;
+        }
+
+    .checkbox label input[type="checkbox"],
+    .radio label input[type="radio"] {
+        display: none;
+    }
+
+        .checkbox label input[type="checkbox"] + .cr > .cr-icon,
+        .radio label input[type="radio"] + .cr > .cr-icon {
+            transform: scale(3) rotateZ(-20deg);
+            opacity: 0;
+            transition: all .3s ease-in;
+        }
+
+        .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+        .radio label input[type="radio"]:checked + .cr > .cr-icon {
+            transform: scale(1) rotateZ(0deg);
+            opacity: 1;
+        }
+
+        .checkbox label input[type="checkbox"]:disabled + .cr,
+        .radio label input[type="radio"]:disabled + .cr {
+            opacity: .5;
+        }
+
+    .border-bottom {
+        border-bottom: 1px solid #e3e3e3 !important;
+    }
+
+    .border-bottom {
+        border-bottom: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border-bottom-0 {
+        border-bottom: none !important;
+    }
+
+    .border-top-0 {
+        border-top: none !important;
+    }
+
+    .border-right {
+        border-right: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .border {
+        border: 1px solid rgba(0, 0, 0, .2) !important;
+    }
+
+    .f-13 {
+        font-size: 13px !important;
+    }
+
+    .cursor-pointer {
+        cursor: pointer !important;
+    }
+
+    .round {
+        border-radius: 5px;
+    }
+
+    .bg-skyblue {
+        background-color: #9ddce4;
+    }
+
+    .font-weight-semibold {
+        font-weight: 500 !important;
+    }
+
+    .text-dark {
+        color: black !important;
+    }
+
+    .bg-dark {
+        background-color: #153b5d !important;
+    }
+
+    .lightcyan {
+        background-color: #f5feff;
+    }
+
+    .w-auto {
+        min-width: 30px !important;
+        width: auto !important;
+    }
+
+    .h-15 {
+        height: 13px !important;
+    }
+
+    .prog-val {
+        font-size: 14px !important;
+        margin-top: -3px !important;
+    }
+</style>
+<div class="table-responsive border-top">
+    
+    <table id="dt_basic" class="table table-striped table-bordered table-hover datatableyap" width="100%">
     <thead>
         <tr>
-            <th data-hide="phone" style="line-height: 20px; padding: 5px!important; background-color: #000!important; color: white; text-align: center; height: 20px;"><%=LNG("Proje Kodu")%></th>
-            <th data-class="expand" style="line-height: 20px; padding: 5px!important; background-color: #000!important; color: white; height: 20px;"><%=LNG("Proje Adı")%></th>
-            <th data-hide="phone" style="line-height: 20px; padding: 5px!important; background-color: #000!important; color: white; text-align: center; height: 20px;"><%=LNG("Olay")%></th>
-            <th data-hide="phone" style="line-height: 20px; padding: 5px!important; background-color: #000!important; color: white; text-align: center; height: 20px;"><%=LNG("İş")%></th>
-            <th data-hide="phone" style="line-height: 20px; padding: 5px!important; background-color: #000!important; color: white; height: 20px;"><%=LNG("Firma")%></th>
-            <th data-hide="phone" style="line-height: 20px; padding: 5px!important; background-color: #000!important; color: white; text-align: center; height: 20px;"><%=LNG("Ekleme Tarihi")%></th>
-            <th data-hide="phone" style="line-height: 20px; padding: 5px!important; background-color: #000!important; color: white; text-align: center; height: 20px;"><%=LNG("Güncelleme Tarihi")%></th>
+            <th class="p-2 font-weight-bold f-13 bg-dark"><%=LNG("Proje Kodu")%></th>
+            <th class="p-2 font-weight-bold f-13 bg-dark"><%=LNG("Proje Adı")%></th>
+            <th class="p-2 font-weight-bold f-13 bg-dark"><%=LNG("Olay")%></th>
+            <th class="p-2 font-weight-bold f-13 bg-dark"><%=LNG("İş")%></th>
+            <th class="p-2 font-weight-bold f-13 bg-dark"><%=LNG("Firma")%></th>
+            <th class="p-2 font-weight-bold f-13 bg-dark"><%=LNG("Ekleme Tarihi")%></th>
+            <th class="p-2 font-weight-bold f-13 bg-dark"><%=LNG("Güncelleme Tarihi")%></th>
+            <th class="p-2 font-weight-bold f-13 bg-dark"><%=LNG("Panoda Göster")%></th>
         </tr>
     </thead>
     <tbody>
         <% do while not cek.eof %>
         <tr>
-            <td style="text-align: center; cursor: pointer" onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>');"><span style="font-weight: 500;"><%=cek("proje_kodu") %></span></td>
-            <td><span style="cursor: pointer;" onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>');"><span style="font-weight: 500;"><%=cek("proje_adi") %></span></span></td>
-            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>');" style="text-align: center; cursor: pointer; padding: 3px;">
-                <label class="label label-primary" style="font-size: 130%; background: #000;"><%=cek("gosterge_sayisi") %></label></td>
-            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>');" style="text-align: center; cursor: pointer;">
-                <label class="label label-danger" style="font-size: 130%;"><%=cek("is_sayisi") %></label></td>
-            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>');" style="cursor: pointer;"><%=cek("firma_adi") %></td>
-            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>');" data-order="<%=cek("ekleme_ticks") %>" style="text-align: center; cursor: pointer; padding: 3px!important;"><%=cdate(cek("ekleme_tarihi")) & " " & left(cek("ekleme_saati"),5) %><br />
-                <%=cek("ekleyen") %></td>
-            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>');" data-order="<%=cek("guncelleme_ticks") %>" style="text-align: center; cursor: pointer; padding: 3px!important;"><%=cdate(cek("guncelleme_tarihi")) & " " & left(cek("guncelleme_saati"),5) %><br />
-                <%=cek("guncelleyen") %></td>
+            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>&ustId=<%=ustId %>');" style="text-align: center; cursor: pointer"><span style="font-weight: 500;"><%=cek("proje_kodu") %></span></td>
+            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>&ustId=<%=ustId %>');" ><span style="cursor: pointer;"><span style="font-weight: 500;"><%=cek("proje_adi") %></span></span></td>
+            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>&ustId=<%=ustId %>');" style="text-align: center; cursor: pointer; padding: 3px;"><label class="label label-primary" style="font-size: 130%; background: #000;"><%=cek("gosterge_sayisi") %></label></td>
+            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>&ustId=<%=ustId %>');" style="text-align: center; cursor: pointer;"><label class="label label-danger" style="font-size: 130%;"><%=cek("is_sayisi") %></label></td>
+            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>&ustId=<%=ustId %>');" style="cursor: pointer;"><%=cek("firma_adi") %></td>
+            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>&ustId=<%=ustId %>');" data-order="<%=cek("ekleme_ticks") %>" style="text-align: center; cursor: pointer; padding: 3px!important;"><%=cdate(cek("ekleme_tarihi")) & " " & left(cek("ekleme_saati"),5) %><br /><%=cek("ekleyen") %></td>
+            <td onclick="sayfagetir('/santiye_detay/','jsid=4559&id=<%=cek("idd") %>&departman_id=<%=cek("id") %>&ustId=<%=ustId %>');" data-order="<%=cek("guncelleme_ticks") %>" style="text-align: center; cursor: pointer; padding: 3px!important;"><%=cdate(cek("guncelleme_tarihi")) & " " & left(cek("guncelleme_saati"),5) %><br /><%=cek("guncelleyen") %></td>
+            <td class="p-2 pt-3 pb-3 font-weight-semibold">
+                    <%
+                        iconState = ""
+                        chk = ""
+                        if cek("panoda_goster") = true then
+                            iconState = "fa fa-star"
+                            chk = "true"
+                        else
+                            iconState = "fa fa-star-o"
+                            chk = "false"
+                        end if
+                    %>
+                    <i class="<%=iconState %> cursor-pointer" id="showInClipboard<%=cek("idd") %>" chk="<%=chk %>" onclick="ShowInClipboard('<%=cek("idd") %>');" style="font-size: 1.5rem"></i>
+                </td>
         </tr>
         <%
     cek.movenext
@@ -2144,6 +3029,18 @@
         %>
     </tbody>
 </table>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#exampleTable').DataTable({
+            "searching": false,
+            "paging": true,
+            "ordering": false,
+            "responsive": true
+        });
+    });
+</script>
 <%
     end if
 
@@ -2224,7 +3121,7 @@
 
         ekleyen_id = cek(0)
 
-        SQL="update ucgem_firma_kullanici_listesi set kullanici_hid = '"& firma_id & "." & ekleyen_id &"' where id = '"& ekleyen_id &"';"
+        SQL="update ucgem_firma_kullanici_listesi set kullanici_hid = '"& firma_id & "." & ekleyen_id &"' where id = '"& ekleyen_id &"' and firma_id = '"& FirmaID &"'"
         set guncelle = baglanti.execute(SQL)
 
         SQL="SET NOCOUNT ON; insert into ucgem_firma_listesi(yetki_kodu, firma_hid, firma_adi, firma_yetkili, firma_telefon, firma_mail, firma_logo, firma_supervisor_id, default_parabirimi , cari_calisma_izni , genel_kar_tipi, genel_kar , genel_kar_pb, firma_gsm, kur_secimi, durum, cop, ekleyen_id, ekleyen_ip ,ekleme_tarihi, ekleme_saati, ekleyen_firma_id, ekleyen_firma_kodu) SELECT yetki_kodu, '0', firma_adi, firma_yetkili, firma_telefon, firma_mail, firma_logo, '"& ekleyen_id &"', default_parabirimi , cari_calisma_izni , genel_kar_tipi, genel_kar , genel_kar_pb, firma_gsm, kur_secimi, 'true', 'false', '"& ekleyen_id &"', '"& ekleyen_ip &"' , getdate(), getdate(), '"& firma_id &"', '"& firma_kodu &"' FROM dbo.ucgem_firma_listesi WHERE ekleyen_firma_id = '"& ornek_firma_id &"'; SELECT SCOPE_IDENTITY() id;"
@@ -2255,7 +3152,7 @@
         set ekle = baglanti.execute(SQL)
 
 
-        SQL="insert into ahtapot_proje_gantt_adimlari(proje_id, name, progress, progressByWorklog, irelevance, type, typeId, description, code, ilevel, status, depends, start, duration, iend, startIsMilestone, endIsMilestone , collapsed, canWrite, canAdd, canDelete, canAddIssue, hasChild, cop, start_tarih, end_tarih, start_uygulama, iend_uygulama, duration_uygulama, start_tarih_uygulama , end_tarih_uygulama) SELECT '"& proje_id &"', name, progress, progressByWorklog, irelevance, type, typeId, description, code, ilevel, status, depends, start, duration, iend, startIsMilestone, endIsMilestone , collapsed, canWrite, canAdd, canDelete, canAddIssue, hasChild, cop, start_tarih, end_tarih, start_uygulama, iend_uygulama, duration_uygulama, start_tarih_uygulama , end_tarih_uygulama FROM dbo.ahtapot_proje_gantt_adimlari WHERE proje_id = '"& ornek_proje_id &"'"
+        SQL="insert into ahtapot_proje_gantt_adimlari(proje_id, name, progress, progressByWorklog, irelevance, type, typeId, description, code, ilevel, status, depends, start, duration, iend, startIsMilestone, endIsMilestone , collapsed, canWrite, canAdd, canDelete, canAddIssue, hasChild, cop, start_tarih, end_tarih, start_uygulama, iend_uygulama, duration_uygulama, start_tarih_uygulama , end_tarih_uygulama, firma_id) SELECT '"& proje_id &"', name, progress, progressByWorklog, irelevance, type, typeId, description, code, ilevel, status, depends, start, duration, iend, startIsMilestone, endIsMilestone , collapsed, canWrite, canAdd, canDelete, canAddIssue, hasChild, cop, start_tarih, end_tarih, start_uygulama, iend_uygulama, duration_uygulama, start_tarih_uygulama , end_tarih_uygulama, firma_id FROM dbo.ahtapot_proje_gantt_adimlari WHERE proje_id = '"& ornek_proje_id &"'"
         set ekle = baglanti.execute(SQL)
 
         baslangic_tarihi = cdate(date) + 15

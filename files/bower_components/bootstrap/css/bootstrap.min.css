@@ -1652,7 +1652,7 @@ pre code {
 }*/
 .form-control {
     display: block;
-    width: 100%;
+    width: 100% !important;
     padding: .5rem .75rem;
     font-size: 1rem;
     line-height: 1.25;
@@ -2598,8 +2598,8 @@ tbody.collapse.show {
     z-index: 1000;
     display: none;
     float: left;
-    min-width: 10rem;
-    padding: .5rem 0;
+    min-width: 12.5rem;
+    padding: .5rem 0.5rem 0px .5rem;
     margin: .125rem 0 0;
     font-size: 1rem;
     color: #212529;
@@ -2608,7 +2608,10 @@ tbody.collapse.show {
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, .15);
-    border-radius: .25rem
+    border-radius: .25rem;
+    overflow-y: auto !important;
+    max-height: 200px !important;
+    height:auto !important;
 }
 .dropdown-divider {
     height: 0;
@@ -4461,6 +4464,12 @@ button.close {
     overflow: scroll
 }
 @media (min-width:576px) {
+
+    .modal-dialog-mini {
+        max-width: 400px !important;
+        margin: 30px auto !important;
+    }
+
     .modal-dialog {
         max-width: 500px;
         margin: 30px auto

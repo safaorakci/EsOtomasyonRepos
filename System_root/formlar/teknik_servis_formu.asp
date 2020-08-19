@@ -5,17 +5,18 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
     
+    FirmaID = Request.Cookies("kullanici")("firma_id")
     kullanici_id = trn(request("personel_id"))
 
-    SQL = "select personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where id='"& kullanici_id &"'"
+    SQL = "select personel_ad + ' ' + personel_soyad as adsoyad from ucgem_firma_kullanici_listesi where id='"& kullanici_id &"' and firma_id = '"& FirmaID &"'"
     set kullanici = baglanti.execute(SQL)
 
     form_id = trn(request("izin_id"))
 
-    SQL = "select LEFT(servis.BaslangicSaati,5) as Baslangic, LEFT(servis.BitisSaati,5) as Bitis, servis.* from servis_bakim_kayitlari servis where Durum = 'true' and Cop = 'false' and id = '"& form_id &"'"
+    SQL = "select LEFT(servis.BaslangicSaati,5) as Baslangic, LEFT(servis.BitisSaati,5) as Bitis, servis.* from servis_bakim_kayitlari servis where Durum = 'true' and Cop = 'false' and id = '"& form_id &"' and firma_id = '"& FirmaID &"'"
     set servisformu = baglanti.execute(SQL)
 
-    SQL = "SELECT ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 2)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, servis.EklemeTarihi)),3,2) + RIGHT('00' + SUBSTRING(CONVERT(NVARCHAR(10), servis.id),1,4), 3 )  AS seri_no FROM servis_bakim_kayitlari servis WHERE id = '"& form_id &"'"
+    SQL = "SELECT ISNULL((SELECT TOP 1 SUBSTRING( f.firma_adi, 1, 2)FROM ucgem_firma_listesi f ),'') + SUBSTRING(CONVERT(NVARCHAR(10), DATEPART(year, servis.EklemeTarihi)),3,2) + RIGHT('00' + SUBSTRING(CONVERT(NVARCHAR(10), servis.id),1,4), 3 )  AS seri_no FROM servis_bakim_kayitlari servis WHERE id = '"& form_id &"' and firma_id = '"& FirmaID &"'"
     set seriNo = baglanti.execute(SQL)
 
     SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
@@ -179,7 +180,7 @@
                                             id = split(servisformu("ParcaId"), ",")(x)
                                             Adet = split(servisformu("Adet"), ",")(x)
 
-                                        SQL = "select * from parca_listesi where durum = 'true' and cop = 'false' and id = '"& id &"'"
+                                        SQL = "select * from parca_listesi where durum = 'true' and cop = 'false' and id = '"& id &"' and firma_id = '"& FirmaID &"'"
                                         set parcadetay = baglanti.execute(SQL)
 
                                         if parcadetay.eof then

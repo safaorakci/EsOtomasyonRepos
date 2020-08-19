@@ -8,14 +8,10 @@
     cari_id = trn(request("cari_id"))
     tip = trn(request("tip"))
 
-
     if trim(tip)="firma" then
-
         SQL="select * from ucgem_firma_listesi where id = '"& cari_id &"' and ekleyen_firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
         set firma = baglanti.execute(SQL)
-
         cari_hesap_adi = firma("firma_adi")
-
     end if
 
 

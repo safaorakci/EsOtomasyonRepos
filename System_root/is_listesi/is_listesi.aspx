@@ -41,7 +41,8 @@
             background-color: #fffbae;
         }
     </style>
-    <section id="widget-grid">
+
+    <section id="widget-grid" class="d-none">
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 <button onclick="is_listesi_gosterge('benim_tum');" type="button" class="btn btn-lg btn-block" style="-webkit-border-top-left-radius: 15px; -webkit-border-top-right-radius: 15px; -moz-border-radius-topleft: 15px; -moz-border-radius-topright: 15px; border-top-left-radius: 15px; border-top-right-radius: 15px; font-size: 13px; background-color: #e2e2e2; border: 1px solid #ccc; border-bottom: none;"><i class="fa fa-child"></i>&nbsp;&nbsp;<% Response.Write(LNG("Bana Verilen İşler")); %></button>
@@ -230,9 +231,7 @@
                 <div class="col">
                     <div class="page-header-breadcrumb">
                         <ul class="breadcrumb-title">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);" onclick="yeni_is_ekle();" class="btn btn-success btn-round" style="color: white;"><i class="fa  fa-cube"></i>&nbsp;<% Response.Write(LNG("Yeni İş Emri Ekle")); %></a>
-                            </li>
-                            <li class="breadcrumb-item"><a href="javascript:void(0);" onclick="is_aramasi_yap();" class="btn btn-danger btn-round" style="color: white;"><i class="fa fa-search"></i>&nbsp;<% Response.Write(LNG("Arama Yap")); %></a>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);" onclick="yeni_is_ekle();" class="btn btn-success btn-round text-white"><i class="fa fa-cube"></i>&nbsp;<% Response.Write(LNG("Yeni İş Emri Ekle")); %></a>
                             </li>
                         </ul>
                     </div>
@@ -240,7 +239,7 @@
             </div>
         </div>
     </div>
-    <div id="is_listesi_takvim_yeri" style="display:none;">
+    <div id="is_listesi_takvim_yeri" style="display: none;">
         <div class="card">
             <div class="card-block" style="padding: 0; min-height: 250px;">
                 <div id="visualization">
@@ -262,199 +261,333 @@
                 <script>
                     $(function () {
                         is_listesi_timeline_calistir('<%Response.Write(baslangic_tarihi); %>', '<%Response.Write(bitis_tarihi); %>');
-            })
+                    })
                 </script>
             </div>
         </div>
     </div>
-    <section id="widget-grid" class="">
-        <div class="row">
-            <div class="col-sm-12">
-                <!-- Tab variant tab card start -->
-                <div class="card z-depth-top-0">
 
-                    <div class="card-block tab-icon" style="padding: 0px!important;">
-                        <!-- Row start -->
-                        <div class="row">
-                            <div class="col-lg-12 col-xl-12">
+    <style type="text/css">
+        .border-bottom {
+            border-bottom: 1px solid rgba(0, 0, 0, .2) !important;
+        }
 
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs tabs is_tab" role="tablist" style="text-align-last: justify">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" onclick="is_listesi('tum');" data-toggle="tab" href="#tum_isler_ust" role="tab"><i class="fa fa-lg fa-cubes" style="color: black;"></i><% Response.Write(LNG("Tamamlanmamış")); %></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" onclick="is_listesi('geciken');" data-toggle="tab" href="#geciken_isler_ust" role="tab"><i class="fa fa-lg fa-frown-o" style="color: red;"></i><% Response.Write(LNG("Gecikenler")); %></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" onclick="is_listesi('bekleyen');" data-toggle="tab" href="#bekleyen_isler_ust" role="tab"><i class="fa fa-lg fa-folder" style="color: #c79121;"></i><% Response.Write(LNG("Bekleyenler")); %></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" onclick="is_listesi('devameden');" data-toggle="tab" href="#devameden_isler_ust" role="tab"><i class="fa fa-lg fa-clock-o" style="color: blue;"></i><% Response.Write(LNG("Devam Edenler")); %></a>
-                                    </li>
+        .border-right {
+            border-right: 1px solid rgba(0, 0, 0, .2) !important;
+        }
 
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="biten" onclick="is_listesi('biten');" data-toggle="tab" href="#biten_isler_ust" role="tab"><i class="fa fa-lg fa-gavel" style="color: green;"></i><% Response.Write(LNG("Bitenler")); %></a>
-                                    </li>
+        .border {
+            border: 1px solid rgba(0, 0, 0, .2) !important;
+        }
 
-                                    <li class="nav-item">
-                                        <a class="nav-link" onclick="is_listesi('iptal');" data-toggle="tab" href="#iptal_isler_ust" role="tab"><i class="fa fa-minus-circle" style="color: black;"></i><% Response.Write(LNG("İptaller")); %></a>
-                                    </li>
+        .main-body .page-wrapper {
+            padding: 0.8rem;
+        }
 
-                                    <li class="nav-item" style="display: none;">
-                                        <a class="nav-link" data-toggle="tab" href="#takvim_gorunumu" role="tab"><i class="fa fa-lg fa fa-calendar"></i><% Response.Write(LNG("Ajanda")); %></a>
-                                    </li>
+        .f-11 {
+            font-size: 11px !important;
+        }
 
-                                </ul>
-                                <!-- Tab panes -->
-                                <div class="tab-content tabs card-block" style="padding: 0!important; border-left: 1px solid #ddd;">
-                                    <div class="tab-pane active" id="tum_isler_ust" role="tabpanel">
-                                        <div id="tum_isler_loading">
-                                            <br>
-                                            <table style="width: 100%; height: 100%;">
-                                                <tr>
-                                                    <td style="text-align: center; vertical-align: middle;">
-                                                        <div class="cell preloader5 loader-block">
-                                                            <div class="circle-5 l"></div>
-                                                            <div class="circle-5 m"></div>
-                                                            <div class="circle-5 r"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div id="tum_isler">
-                                            <script>
-                                                $(function () {
-                                                    is_listesi();
-                                                });
-                                            </script>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane " id="geciken_isler_ust" role="tabpanel">
-                                        <div id="geciken_isler_loading" style="display: none;">
-                                            <br>
-                                            <table style="width: 100%; height: 100%;">
-                                                <tr>
-                                                    <td style="text-align: center; vertical-align: middle;">
-                                                        <div class="cell preloader5 loader-block">
-                                                            <div class="circle-5 l"></div>
-                                                            <div class="circle-5 m"></div>
-                                                            <div class="circle-5 r"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div id="geciken_isler">
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane " id="bekleyen_isler_ust" role="tabpanel">
-                                        <div id="bekleyen_isler_loading" style="display: none;">
-                                            <br>
-                                            <table style="width: 100%; height: 100%;">
-                                                <tr>
-                                                    <td style="text-align: center; vertical-align: middle;">
-                                                        <div class="cell preloader5 loader-block">
-                                                            <div class="circle-5 l"></div>
-                                                            <div class="circle-5 m"></div>
-                                                            <div class="circle-5 r"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div id="bekleyen_isler">
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane " id="devameden_isler_ust" role="tabpanel">
-                                        <div id="devameden_isler_loading" style="display: none;">
-                                            <br>
-                                            <table style="width: 100%; height: 100%;">
-                                                <tr>
-                                                    <td style="text-align: center; vertical-align: middle;">
-                                                        <div class="cell preloader5 loader-block">
-                                                            <div class="circle-5 l"></div>
-                                                            <div class="circle-5 m"></div>
-                                                            <div class="circle-5 r"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div id="devameden_isler">
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane " id="biten_isler_ust" role="tabpanel">
-                                        <div id="biten_isler_loading" style="display: none;">
-                                            <br>
-                                            <table style="width: 100%; height: 100%;">
-                                                <tr>
-                                                    <td style="text-align: center; vertical-align: middle;">
-                                                        <div class="cell preloader5 loader-block">
-                                                            <div class="circle-5 l"></div>
-                                                            <div class="circle-5 m"></div>
-                                                            <div class="circle-5 r"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div id="biten_isler">
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane " id="iptal_isler_ust" role="tabpanel">
-                                        <div id="iptal_isler_loading" style="display: none;">
-                                            <br>
-                                            <table style="width: 100%; height: 100%;">
-                                                <tr>
-                                                    <td style="text-align: center; vertical-align: middle;">
-                                                        <div class="cell preloader5 loader-block">
-                                                            <div class="circle-5 l"></div>
-                                                            <div class="circle-5 m"></div>
-                                                            <div class="circle-5 r"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div id="iptal_isler">
-                                        </div>
+        .f-13 {
+            font-size: 13px !important;
+        }
+
+        .cursor-pointer {
+            cursor: pointer !important;
+        }
+
+        .img-40 {
+            width: 40px;
+        }
+
+        .img-30 {
+            width: 30px;
+        }
+
+        .round {
+            border-radius: 5px;
+        }
+
+        .card:hover {
+            -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+        }
+
+        .progress .progress-bar {
+            line-height: 17px !important;
+        }
+
+        .progress {
+            height: 1rem !important;
+        }
+
+        .display-inline-block {
+            display: inline-block !important;
+        }
+
+        .m-auto {
+            margin: auto !important;
+        }
+
+        .mt-default {
+            margin-top: .7rem !important;
+        }
+
+        .align-items-center {
+            align-items: center !important;
+        }
+
+        .text-align {
+            text-align: center !important;
+        }
+
+        .taskBoard:hover {
+            box-shadow: none;
+        }
+
+        .round-none {
+            border-radius: 0px;
+        }
+
+        .border-top {
+            border-top: 1px solid rgba(0, 0, 0, .2) !important;
+        }
+
+        .border-bottom-0 {
+            border-bottom: none !important;
+        }
+
+        #tabs {
+            background: #007b5e;
+            color: #eee;
+        }
+
+            #tabs h6.section-title {
+                color: #eee;
+            }
+
+            #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+                font-weight: normal !important;
+                color: black !important;
+                border: 1px solid rgba(0, 0, 0, .1) !important;
+                border-top-left-radius: .25rem;
+                border-top-right-radius: .25rem;
+                margin-top: 0px !important;
+            }
+
+        .nav-item:hover {
+            padding-bottom: 0px !important;
+        }
+
+        .nav-link {
+            padding: 10px !important;
+        }
+
+        #tabs .nav-tabs .nav-link {
+            border: 1px solid transparent;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+            color: #eee;
+            font-size: 20px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #444;
+            padding: 8px 25px 8px 10px;
+        }
+
+        .select2-container .select2-selection--single {
+            cursor: pointer;
+            height: 31px !important;
+        }
+
+        .wt-70 {
+            width: 70px !important;
+        }
+
+        .justify-content-end {
+            -webkit-box-pack: end !important;
+            -ms-flex-pack: end !important;
+            justify-content: flex-end !important;
+        }
+
+        .f-30 {
+            font-size: 30px !important;
+        }
+
+        .f-15 {
+            font-size: 15px !important;
+        }
+
+        .f-27 {
+            font-size: 27px !important;
+        }
+
+        .img-50 {
+            width: 50px !important;
+        }
+
+        .line-height {
+            line-height: 15px !important;
+        }
+    </style>
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <div class="col-md-12 mb-3 p-0">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active cursor-pointer" id="incomplete-tab" data-toggle="tab" onclick="TabsPassage('incomplete', 'task', 'tum');" aria-selected="true">Tamamlanmamış</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link cursor-pointer" id="delayed-tab" data-toggle="tab" onclick="TabsPassage('delayed', 'task', 'geciken');" aria-selected="false">Gecikenler</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link cursor-pointer" id="expectant-tab" data-toggle="tab" onclick="TabsPassage('expectant', 'task', 'bekleyen');" aria-selected="false">Bekleyen</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link cursor-pointer" id="continuing-tab" data-toggle="tab" onclick="TabsPassage('continuing', 'task', 'devameden');" aria-selected="false">Devam Edenler</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link cursor-pointer" id="ending-tab" data-toggle="tab" onclick="TabsPassage('ending', 'task', 'biten');" aria-selected="false">Bitenler</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link cursor-pointer" id="cancellations-tab" data-toggle="tab" onclick="TabsPassage('cancellations', 'task', 'iptal');" aria-selected="false">İptaller</a>
+            </li>
+        </ul>
+        <div class="tab-content border border-top-0 p-0" id="myTabContent">
+            <nav class="navbar navbar-light bg-light border-bottom p-2">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-8 p-1">
+                            <select class="wt-70 d-none">
+                                <option>25</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6 p-0" id="Mob-Task-States">
+                                    <div class="button-group">
+                                        <select id="framework" name="framework[]" multiple class="form-control">
+                                            <option value="TaskAttendant">Görevliler</option>
+                                            <option value="TaskAddPersonel">Ekleyen</option>
+                                            <option value="TaskTag">Etiketler</option>
+                                            <option value="TaskProgress">İlerleme</option>
+                                            <option value="TaskStartDate">Başlangıç</option>
+                                            <option value="TaskEndDate">Bitiş</option>
+                                            <option value="TaskPriority">Öncelik</option>
+                                            <option value="TaskState">Durum</option>
+                                        </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6 p-0">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Arama" id="SearchTaskInput" onkeyup="SearchTask();" />
+                                </div>
                             </div>
-
                         </div>
-                        <!-- Row end -->
                     </div>
                 </div>
-                <!-- Tab variant tab card start -->
+            </nav>
+            <nav class="navbar navbar-light bg-light border-bottom p-1" id="mob-Filter">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12">
+                        </div>
+                        <div class="col p-1 TaskView TaskAttendant" style="padding-right: 0px !important;">
+                            <select id="TaskAttendantSelect" filterkey="attendantname" name="framework[]" multiple class="form-control framework"></select>
+                        </div>
+                        <div class="col p-1 TaskView TaskAddPersonel" style="padding-right: 0px !important;">
+                            <select id="TaskAddPersonelSelect" filterkey="addpersonel" name="framework[]" multiple class="form-control framework"></select>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskTag" style="padding-right: 0px !important;">
+                            <select id="TaskTagSelect" filterkey="tasktag" name="framework[]" multiple class="form-control framework"></select>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskProgress" style="padding-right: 0px !important;">
+                            <select id="TaskProgressSelect" filterkey="progres" name="framework[]" multiple class="form-control framework">
+                                <option value="25">%25'den Az</option>
+                                <option value="50">%50'den fazla</option>
+                                <option value="75">%75'ten fazla</option>
+                                <option value="100">%100</option>
+                            </select>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskStartDate" style="padding-right: 0px !important;">
+                            <select id="TaskStartDateSelect" filterkey="startdate" name="framework[]" multiple class="form-control framework"></select>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskEndDate" style="padding-right: 0px !important;">
+                            <select id="TaskEndDateSelect" filterkey="enddate" name="framework[]" multiple class="form-control framework"></select>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskPriority" style="padding-right: 0px !important;">
+                            <select id="TaskPrioritySelect" filterkey="property" name="framework[]" multiple class="form-control framework"></select>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskState" style="padding-right: 0px !important;">
+                            <select id="TaskStateSelect" filterkey="state" name="framework[]" multiple class="form-control framework"></select>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <nav class="navbar navbar-light bg-light border-bottom p-2" id="mob-Header">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3 p-1">
+                            <h6 class="mb-0">İş Tanımı</h6>
+                        </div>
+                        <div class="col-xs-12 col p-1 TaskView TaskAttendant">
+                            <h6 class="mb-0">Görevliler</h6>
+                        </div>
+                        <div class="col-xs-12 col p-1 TaskView TaskAddPersonel">
+                            <h6 class="mb-0">Ekleyen Kişi</h6>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskTag">
+                            <h6 class="mb-0">Etiketler</h6>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskProgress">
+                            <h6 class="mb-0">Tamamlanma</h6>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskStartDate">
+                            <h6 class="mb-0">Başlangıç</h6>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskEndDate">
+                            <h6 class="mb-0">Bitiş</h6>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskPriority">
+                            <h6 class="mb-0">Öncelik</h6>
+                        </div>
+                        <div class="col p-1 col-xs-12 TaskView TaskState">
+                            <h6 class="mb-0">Durum</h6>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="tab-pane fade show active" id="incomplete" role="tabpanel" aria-labelledby="incomplete-tab">
+                <div id="tum" class="m-1 tasks">
+                    <script>
+                        $(function () {
+                            AllTask('tum');
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="delayed" role="tabpanel" aria-labelledby="delayed-tab">
+                <div id="geciken" class="m-1 tasks"></div>
+            </div>
+            <div class="tab-pane fade" id="expectant" role="tabpanel" aria-labelledby="expectant-tab">
+                <div id="bekleyen" class="m-1 tasks"></div>
+            </div>
+            <div class="tab-pane fade" id="continuing" role="tabpanel" aria-labelledby="continuing-tab">
+                <div id="devameden" class="m-1 tasks"></div>
+            </div>
+            <div class="tab-pane fade" id="ending" role="tabpanel" aria-labelledby="ending-tab">
+                <div id="biten" class="m-1 tasks"></div>
+            </div>
+            <div class="tab-pane fade" id="cancellations" role="tabpanel" aria-labelledby="cancellations-tab">
+                <div id="iptal" class="m-1 tasks"></div>
             </div>
         </div>
-
-        <div class="row">
-
-            <!-- a blank row to get started -->
-            <div class="col-sm-12">
-                <!-- your contents here -->
-            </div>
-
-        </div>
-    </section>
-
-
+    </div>
 
     <script type="text/javascript">
-
         $(document).ready(function () {
-
-
             pageSetUp();
-
-
             // Takvim Başlangıç
-
-
             "use strict";
 
             var date = new Date();
@@ -672,6 +805,5 @@
 
 
         })
-
     </script>
 </form>

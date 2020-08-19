@@ -5,6 +5,7 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 %>
 <html lang="tr">
 <head>
@@ -38,7 +39,7 @@
            fid = trn(request("fid"))
            kid = trn(request("kid"))
 
-        SQL="select firma.firma_adi, firma.firma_telefon, firma.firma_mail, proje.* from ucgem_proje_listesi proje join ucgem_firma_listesi firma on firma.id = proje.proje_firma_id where proje.id = '"& proje_id &"'"
+        SQL="select firma.firma_adi, firma.firma_telefon, firma.firma_mail, proje.* from ucgem_proje_listesi proje join ucgem_firma_listesi firma on firma.id = proje.proje_firma_id where proje.id = '"& proje_id &"' and firma.id = '"& FirmaID &"'"
         set cek = baglanti.execute(SQL)
 
         toplam_butce_tl = 0
@@ -58,7 +59,7 @@
         toplam_gelir_eur = 0
 
 
-           SQL="select personel_ad + ' ' + personel_soyad as isim from ucgem_firma_kullanici_listesi where id = '"& kid &"'"
+           SQL="select personel_ad + ' ' + personel_soyad as isim from ucgem_firma_kullanici_listesi where id = '"& kid &"' and firma_id = '"& FirmaID &"'"
            set personel_cek = baglanti.execute(SQL)
        
 %>
@@ -106,7 +107,7 @@
         <h3 style="font-size:15px; line-height:30px;"><%=LNG("BÜTÇE HESAPLARI")%></h3>
 
                                <%
-                        sql="SELECT ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'TL'),0) AS gerceklesen_tl, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'USD'),0) AS gerceklesen_usd, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'EUR'),0) AS gerceklesen_eur, * FROM ahtapot_proje_butce_listesi butce WHERE butce.proje_id = '"& proje_id &"' AND butce.cop = 'false';"
+                        sql="SELECT ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'TL'),0) AS gerceklesen_tl, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'USD'),0) AS gerceklesen_usd, ISNULL((SELECT SUM(satinalma.gerceklesen_tutar) FROM ahtapot_proje_satinalma_listesi satinalma WHERE satinalma.proje_id = butce.proje_id and butce.id = satinalma.butce_hesabi AND satinalma.cop = 'false' AND gerceklesen_pb = 'EUR'),0) AS gerceklesen_eur, * FROM ahtapot_proje_butce_listesi butce WHERE butce.proje_id = '"& proje_id &"' and butce.firma_id = '"& FirmaID &"' AND butce.cop = 'false';"
                         set butce = baglanti.execute(SQL)
                         if butce.eof then
                         %>
@@ -191,7 +192,7 @@
                     </thead>
                     <tbody>
                         <%
-                            SQL=" SELECT firma.firma_adi, butce.butce_hesabi_adi, satinalma.* from ahtapot_proje_satinalma_listesi satinalma join ahtapot_proje_butce_listesi butce on butce.id = satinalma.butce_hesabi JOIN dbo.ucgem_firma_listesi firma ON firma.id = satinalma.tedarikci_id where satinalma.proje_id = '"& proje_id &"' and butce.id = '"& butce("id") &"' and satinalma.cop = 'false' AND satinalma.durum = 'true' AND satinalma.durum = butce.durum AND satinalma.cop = butce.cop"
+                            SQL=" SELECT firma.firma_adi, butce.butce_hesabi_adi, satinalma.* from ahtapot_proje_satinalma_listesi satinalma join ahtapot_proje_butce_listesi butce on butce.id = satinalma.butce_hesabi JOIN dbo.ucgem_firma_listesi firma ON firma.id = satinalma.tedarikci_id where satinalma.proje_id = '"& proje_id &"' and butce.id = '"& butce("id") &"' and satinalma.cop = 'false' AND satinalma.durum = 'true' AND satinalma.durum = butce.durum AND satinalma.cop = butce.cop and butce.firma_id = '"& FirmaID &"' and satinalma.firma_id = '"& FirmaID &"'"
                             set satis = baglanti.execute(SQL)
                             if satis.eof then
                             %>
@@ -246,7 +247,7 @@
                         butce.movenext
                         loop
 
-                SQL="SELECT departman.departman_adi, kullanici.personel_ad, kullanici.personel_soyad,SUM(hesaplama.saat) AS saat, ISNULL( CONVERT(DECIMAL(18, 2), (SUM(hesaplama.saat)) * ISNULL(SUM(hesaplama.maliyet), 0)), 0 ) AS maliyet_tutari, 'TL' AS pb FROM tanimlama_departman_listesi departman JOIN dbo.ucgem_firma_kullanici_listesi kullanici ON departman.firma_id = kullanici.firma_id AND kullanici.cop = departman.cop AND kullanici.cop = departman.cop AND kullanici.cop = 'false' AND kullanici.durum = 'true' JOIN ( SELECT olay.etiketler, kaynak.id, olay.baslangic AS baslangic, SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) * 0.016667 ) AS saat, SUM(CASE WHEN kaynak.tip = 'PERSONEL' THEN kullanici.personel_saatlik_maliyet WHEN kaynak.tip = 'TASERON' THEN firma.taseron_saatlik_maliyet END) AS maliyet FROM dbo.gantt_kaynaklar kaynak JOIN ahtapot_ajanda_olay_listesi olay ON olay.etiket = kaynak.tip AND olay.etiket_id = kaynak.id AND (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(10), '"& proje_id &"')) > 0 AND olay.durum = 'true' AND olay.cop = 'false' AND olay.tamamlandi = 1 LEFT JOIN dbo.ucgem_firma_kullanici_listesi kullanici ON kullanici.id = kaynak.id LEFT JOIN dbo.ucgem_firma_listesi firma ON firma.id = kaynak.id WHERE kaynak.tip = 'PERSONEL' GROUP BY kaynak.id, olay.baslangic, olay.etiketler ) hesaplama ON hesaplama.id = kullanici.id AND (SELECT COUNT(value) FROM STRING_SPLIT(hesaplama.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(10),departman.id)) > 0 WHERE departman.firma_id = '"& fid &"' AND departman.durum = 'true' AND departman.cop = 'false' GROUP BY departman.departman_adi, kullanici.personel_ad, kullanici.personel_soyad ORDER BY departman.departman_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad"
+                SQL="SELECT departman.departman_adi, kullanici.personel_ad, kullanici.personel_soyad,SUM(hesaplama.saat) AS saat, ISNULL( CONVERT(DECIMAL(18, 2), (SUM(hesaplama.saat)) * ISNULL(SUM(hesaplama.maliyet), 0)), 0 ) AS maliyet_tutari, 'TL' AS pb FROM tanimlama_departman_listesi departman JOIN dbo.ucgem_firma_kullanici_listesi kullanici ON departman.firma_id = kullanici.firma_id AND kullanici.cop = departman.cop AND kullanici.cop = departman.cop AND kullanici.cop = 'false' AND kullanici.durum = 'true' JOIN ( SELECT olay.etiketler, kaynak.id, olay.baslangic AS baslangic, SUM((DATEDIFF( n, CONVERT(DATETIME, olay.baslangic) + CONVERT(DATETIME, olay.baslangic_saati), CONVERT(DATETIME, olay.bitis) + CONVERT(DATETIME, olay.bitis_saati) ) ) * 0.016667 ) AS saat, SUM(CASE WHEN kaynak.tip = 'PERSONEL' THEN kullanici.personel_saatlik_maliyet WHEN kaynak.tip = 'TASERON' THEN firma.taseron_saatlik_maliyet END) AS maliyet FROM dbo.gantt_kaynaklar kaynak JOIN ahtapot_ajanda_olay_listesi olay ON olay.etiket = kaynak.tip AND olay.etiket_id = kaynak.id AND (SELECT COUNT(value) FROM STRING_SPLIT(olay.etiketler, ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(10), '"& proje_id &"')) > 0 AND olay.durum = 'true' AND olay.cop = 'false' AND olay.tamamlandi = 1 LEFT JOIN dbo.ucgem_firma_kullanici_listesi kullanici ON kullanici.id = kaynak.id LEFT JOIN dbo.ucgem_firma_listesi firma ON firma.id = kaynak.id WHERE kaynak.tip = 'PERSONEL' GROUP BY kaynak.id, olay.baslangic, olay.etiketler ) hesaplama ON hesaplama.id = kullanici.id AND (SELECT COUNT(value) FROM STRING_SPLIT(hesaplama.etiketler, ',') WHERE value = 'departman-' + CONVERT(NVARCHAR(10),departman.id)) > 0 WHERE departman.firma_id = '"& fid &"' and kullanici.firma_id = '"& FirmaID &"' AND departman.durum = 'true' AND departman.cop = 'false' GROUP BY departman.departman_adi, kullanici.personel_ad, kullanici.personel_soyad ORDER BY departman.departman_adi, kullanici.personel_ad + ' ' + kullanici.personel_soyad"
                 
                 set departman = baglanti.execute(SQL)
             

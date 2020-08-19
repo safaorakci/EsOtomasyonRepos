@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 using System.Xml;
 using Ahtapot.App_Code.ayarlar;
 using System.Globalization;
+using Newtonsoft.Json;
 
 public partial class SiteMaster : MasterPage
 {
@@ -18,7 +19,7 @@ public partial class SiteMaster : MasterPage
     private const string AntiXsrfUserNameKey = "__AntiXsrfUserName";
     private string _antiXsrfTokenValue;
     public XmlDocument doc = new XmlDocument();
-    
+
 
     protected void Page_Init(object sender, EventArgs e)
     {
@@ -96,7 +97,7 @@ public partial class SiteMaster : MasterPage
 
 
 
-    
+
     public string LNG(string kelime)
     {
         string dil = Request.Cookies["kullanici"]["dil_secenek"].ToString();
@@ -111,7 +112,7 @@ public partial class SiteMaster : MasterPage
                 kelimevarmi = true;
             }
         }
-        if (!kelimevarmi && 1==2)
+        if (!kelimevarmi && 1 == 2)
         {
             ayarlar.baglan();
             ayarlar.cmd.Parameters.Clear();
@@ -119,7 +120,7 @@ public partial class SiteMaster : MasterPage
             ayarlar.cmd.Parameters.Add("kelimeler", kelime);
             ayarlar.cmd.ExecuteNonQuery();
         }
-        
+
         return kelime;
     }
 
@@ -136,6 +137,10 @@ public partial class SiteMaster : MasterPage
         public bool cariFinansman { get; set; }
         public bool isEmriOtmBaslatBitir { get; set; }
         public bool personelDevamKayitSistemi { get; set; }
+        public bool aracTakip { get; set; }
+        public bool toplantiYonetimi { get; set; }
+        public bool sirketYonetimi { get; set; }
+        public bool oneriKutusu { get; set; }
     }
 
     public ModulYetkiler modulYetkiler()
@@ -176,9 +181,103 @@ public partial class SiteMaster : MasterPage
                 yetkiler.isEmriOtmBaslatBitir = true;
             if (Convert.ToInt32(dataReader["ModulId"]) == 38 && Convert.ToBoolean(dataReader["Status"]) == true)
                 yetkiler.personelDevamKayitSistemi = true;
+            if (Convert.ToInt32(dataReader["ModulId"]) == 41 && Convert.ToBoolean(dataReader["Status"]) == true)
+                yetkiler.aracTakip = true;
         }
         ayarlar.cnn.Close();
         return yetkiler;
+    }
+
+    public class PersonelGorevYetkileriTop
+    {
+        public int SayfaID { get; set; }
+        public string SayfaAdi { get; set; }
+        public string SayfaLink { get; set; }
+        public string HtmlHref { get; set; }
+        public string HtmlId { get; set; }
+        public string SayfaIcon { get; set; }
+        public int UstID { get; set; }
+        public bool Basamak { get; set; }
+    }
+
+    public class PersonelGorevYetkileriBottom
+    {
+        public int SayfaID { get; set; }
+        public string SayfaAdi { get; set; }
+        public string SayfaLink { get; set; }
+        public string HtmlHref { get; set; }
+        public string HtmlId { get; set; }
+        public string SayfaIcon { get; set; }
+        public int UstID { get; set; }
+        public bool Basamak { get; set; }
+    }
+
+    public List<PersonelGorevYetkileriTop> personelYetkileriTop()
+    {
+
+        ayarlar.baglan();
+        ayarlar.cmd.Parameters.Clear();
+        ayarlar.cmd.CommandText = "EXEC PersonelGorevYetkileri @UserID, @ID, @Tab, 0, 0, 0, @companyID";
+        ayarlar.cmd.Parameters.AddWithValue("@UserID", SessionManager.CurrentUser.kullanici_id);
+        ayarlar.cmd.Parameters.AddWithValue("@ID", 0);
+        ayarlar.cmd.Parameters.AddWithValue("@Tab", 0);
+        ayarlar.cmd.Parameters.AddWithValue("@companyID", SessionManager.CurrentUser.firma_id);
+        ayarlar.cmd.ExecuteNonQuery();
+
+        List<PersonelGorevYetkileriTop> gorevYetkileri = new List<PersonelGorevYetkileriTop>();
+        SqlDataReader dataReader = ayarlar.cmd.ExecuteReader();
+        while (dataReader.Read())
+        {
+            PersonelGorevYetkileriTop personelGorev = new PersonelGorevYetkileriTop();
+            personelGorev.SayfaID = (Int32)dataReader["SayfaID"];
+            personelGorev.SayfaAdi = dataReader["SayfaAdi"].ToString();
+            personelGorev.SayfaLink = dataReader["SayfaLink"].ToString();
+            personelGorev.HtmlHref = dataReader["HtmlHref"].ToString();
+            personelGorev.HtmlId = dataReader["HtmlId"].ToString();
+            personelGorev.SayfaIcon = dataReader["SayfaIcon"].ToString();
+            personelGorev.UstID = (Int32)dataReader["UstID"];
+            personelGorev.Basamak = Convert.ToBoolean(dataReader["Basamak"]);
+
+            gorevYetkileri.Add(personelGorev);
+        }
+
+        dataReader.Close();
+
+        return gorevYetkileri;
+    }
+
+    public List<PersonelGorevYetkileriBottom> personelYetkileriBottom()
+    {
+
+        ayarlar.baglan();
+        ayarlar.cmd.Parameters.Clear();
+        ayarlar.cmd.CommandText = "EXEC PersonelGorevYetkileri @UserID, @ID, @Tab, 0, 0, 0, @companyID";
+        ayarlar.cmd.Parameters.AddWithValue("@UserID", SessionManager.CurrentUser.kullanici_id);
+        ayarlar.cmd.Parameters.AddWithValue("@ID", 1);
+        ayarlar.cmd.Parameters.AddWithValue("@Tab", 0);
+        ayarlar.cmd.Parameters.AddWithValue("@companyID", SessionManager.CurrentUser.firma_id);
+        ayarlar.cmd.ExecuteNonQuery();
+
+        List<PersonelGorevYetkileriBottom> gorevYetkileri = new List<PersonelGorevYetkileriBottom>();
+        SqlDataReader dataReader = ayarlar.cmd.ExecuteReader();
+        while (dataReader.Read())
+        {
+            PersonelGorevYetkileriBottom personelGorev = new PersonelGorevYetkileriBottom();
+            personelGorev.SayfaID = (Int32)dataReader["SayfaID"];
+            personelGorev.SayfaAdi = dataReader["SayfaAdi"].ToString();
+            personelGorev.SayfaLink = dataReader["SayfaLink"].ToString();
+            personelGorev.HtmlHref = dataReader["HtmlHref"].ToString();
+            personelGorev.HtmlId = dataReader["HtmlId"].ToString();
+            personelGorev.SayfaIcon = dataReader["SayfaIcon"].ToString();
+            personelGorev.UstID = (Int32)dataReader["UstID"];
+            personelGorev.Basamak = Convert.ToBoolean(dataReader["Basamak"]);
+
+            gorevYetkileri.Add(personelGorev);
+        }
+
+        dataReader.Close();
+
+        return gorevYetkileri;
     }
 
     public class FirmaBilgileri
@@ -191,27 +290,26 @@ public partial class SiteMaster : MasterPage
     {
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'";
+        ayarlar.cmd.CommandText = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS' and id = @firmaId";
+        ayarlar.cmd.Parameters.AddWithValue("@firmaId", SessionManager.CurrentUser.firma_id);
         ayarlar.cmd.ExecuteNonQuery();
 
         FirmaBilgileri firma = new FirmaBilgileri();
         SqlDataReader dataReader = ayarlar.cmd.ExecuteReader();
         while (dataReader.Read())
         {
-            if (dataReader["firma_kodu"].ToString() == "ESOTOMASYON")
-                firma.Title = "ESFLW";
-            else
-                firma.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader["firma_kodu"].ToString());
-
+            firma.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader["firma_kodu"].ToString());
             firma.Logo = dataReader["firma_logo"].ToString();
         }
+
+        dataReader.Close();
         ayarlar.cnn.Close();
         return firma;
     }
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+
     }
 
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)

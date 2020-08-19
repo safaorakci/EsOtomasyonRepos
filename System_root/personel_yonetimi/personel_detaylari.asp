@@ -1,52 +1,35 @@
 ﻿<!-- #include virtual="/data_root/conn.asp" -->
 <!-- #include virtual="/data_root/functions.asp" -->
 <% 
-    
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
     personel_id = trn(request("personel_id"))
+    ustId = trn(request("ustId"))
+    FirmaID = Request.Cookies("kullanici")("firma_id")
+    KullaniciID = Request.Cookies("kullanici")("kullanici_id")
 
-    SQL="select kullanici.personel_resim, gorev.gorev_adi, kullanici.personel_ad, kullanici.personel_soyad from ucgem_firma_kullanici_listesi kullanici join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.id = '"& personel_id &"' and kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
+    SQL="select kullanici.personel_resim, left(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'), len(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'))-1) as gorev_adi, kullanici.personel_ad, kullanici.personel_soyad from ucgem_firma_kullanici_listesi kullanici with(nolock) where kullanici.firma_id = '"& FirmaID &"' and kullanici.id = '"& personel_id &"' and kullanici.cop = 'false' order by kullanici.id asc"
     set personel = baglanti.execute(SQL)
 
-    SQL = "select * from tbl_ModulYetkileri where FirmaId = '"& Request.Cookies("kullanici")("firma_id") &"'"
+    SQL = "select ISNULL(k.yonetici_yetkisi, 'false') as yonetici_yetkisi from ucgem_firma_kullanici_listesi k where id = '"& KullaniciID &"'"
+    set yetkiKontrol = baglanti.execute(SQL)
+
+    SQL = "select * from tbl_ModulYetkileri where FirmaId = '"& FirmaID &"'"
     set tblModulYetkiler = baglanti.execute(SQL)
 
     personel_resim = personel("personel_resim")
     if len(trim(personel_resim))<15 then
         personel_resim = "/img/user.png"
     end if
+
+    SQL = "EXEC [dbo].PersonelGorevYetkileri '"& KullaniciID &"', 1, 1, 0, 0, '"& personel_id &"', '"& FirmaID &"'"
+    set personelTab = baglanti.execute(SQL)
 %>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
-
-<div class="page-body breadcrumb-page">
-    <div class="card page-header p-0">
-        <div class="card-block front-icon-breadcrumb row align-items-end">
-            <div class="breadcrumb-header col">
-                <div class="big-icon">
-                    <div class="card-block user-info" style="bottom: -73px;">
-                        <div class="media-left">
-                            <a href="#" class="profile-image">
-                                <img class="user-img img-radius" src="<%=personel_resim %>" style="width: 140px!important; height: 149px!important;">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-inline-block" style="padding-left: 175px;">
-                    <h5 style="font-size: 15px;"><%=personel("personel_ad") & " " & personel("personel_soyad") %></h5>
-                    <span><%=personel("gorev_adi") %></span>
-                </div>
-
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
+<style type="text/css">
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active i {
         color: #fff !important;
     }
@@ -71,7 +54,55 @@
     .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
         background: #58a5ff;
     }
+
+    .border-bottom {
+        border-bottom: 1px solid rgba(0, 0, 0, .1) !important;
+    }
+
+    .border-right {
+        border-right: 1px solid rgba(0, 0, 0, .1) !important;
+    }
+
+    .border {
+        border: 1px solid rgba(0, 0, 0, .1) !important;
+    }
+
+    .border-bottom-0 {
+        border-bottom: none !important;
+    }
+
+    .border-top-0 {
+        border-top: none !important;
+    }
+
+    .f-13 {
+        font-size: 13px !important;
+    }
 </style>
+
+<div class="page-body breadcrumb-page">
+    <div class="card page-header p-0">
+        <div class="card-block front-icon-breadcrumb row align-items-end">
+            <div class="breadcrumb-header col">
+                <div class="big-icon">
+                    <div class="card-block user-info" style="bottom: -73px; width: auto !important;">
+                        <div class="media-left">
+                            <a href="#" class="profile-image">
+                                <img class="user-img img-radius" src="<%=personel_resim %>" width="140" height="145">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-inline-block" style="padding-left: 175px;">
+                    <h5 style="font-size: 15px;"><%=personel("personel_ad") & " " & personel("personel_soyad") %></h5>
+                    <span><%=personel("gorev_adi") %></span>
+                </div>
+
+                <a href="javascript:void(0);" onclick="sayfagetir('/personel_yonetimi/','jsid=4559&ustId=<%=ustId %>');" class="btn btn-sm btn-labeled btn-success btn-round float-right f-13"><i class="fa fa-history mr-2"></i> Geri Dön</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-lg-12">
@@ -79,7 +110,24 @@
             <nav>
                 <ul>
                     <li class="nav-link_yeni"><a href="#personel_bilgileri" onclick="personel_bilgileri_getir('<%=personel_id %>', this);" class="icon icon-home"><span><%=LNG("Personel")%></span></a></li>
+                    <%
+                        if not personelTab.eof then
+                            do while not personelTab.eof
+                                if CInt(personelTab("UstID")) = CInt(ustId) then
+                    %>
+                    <li class="nav-link_yeni">
+                        <a href="<%=CStr(personelTab("HtmlHref"))%>" onclick="<%=personelTab("SayfaLink") %>" class="tabbuton icon icon-display">
+                            <span><%=personelTab("SayfaAdi") %></span>
+                        </a>
+                    </li>
+                    <%
+                                end if
+                            personelTab.movenext 
+                            loop
+                        end if
+                    %>
 
+                    <%if 1 = 2 then %>
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",103,")>0 then %>
                     <li class="nav-link_yeni"><a href="#giris_cikis" id="giris_cikis_buton" onclick="personel_giris_cikis_getir('<%=personel_id %>', this);" class="icon icon-box"><span><%=LNG("Giriş-İzin")%></span></a></li>
                     <% end if %>
@@ -101,11 +149,13 @@
                     <% end if %>
 
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",108,")>0 then %>
-                    <li class="nav-link_yeni"><a href="#dosyalar" onclick="personel_dosyalari_getir('<%=personel_id %>', this);" class="icon icon-tools"><span><%=LNG("Dosyalar")%></span></a></li>
+                    <li class="nav-link_yeni"><a href="#dosyalar" onclick="personel_dosyalari_getir('<%=personel_id %>', this, 'personel');" class="icon icon-tools"><span><%=LNG("Dosyalar")%></span></a></li>
                     <% end if %>
 
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",109,")>0 then %>
+                    <%if Request.Cookies("kullanici")("kullanici_id") = personel_id or yetkiKontrol("yonetici_yetkisi") = "true" then %>
                     <li class="nav-link_yeni"><a href="#personel_ajanda" onclick="personel_ajandasi_getir('<%=personel_id %>', this);" class="icon icon-home"><span><%=LNG("Ajanda")%></span></a></li>
+                    <%end if %>
                     <% end if %>
 
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",110,")>0 then %>
@@ -115,14 +165,11 @@
                     <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",111,")>0 then %>
                     <li class="nav-link_yeni"><a href="#adam_saat_cetveli" onclick="personel_adamsaat_getir('<%=personel_id %>', this, '<%=month(date) %>', '<%=year(date) %>');" class="icon icon-upload"><span><%=LNG("Adam-Saat")%></span></a></li>
                     <% end if %>
-
-                    <!--        <% if instr(Request.Cookies("kullanici")("yetkili_sayfalar"), ",112,")>0 then %>
-                    <li style="display:none;" class="nav-link_yeni"><a onclick="personel_raporlarini_getir('<%=personel_id %>', this);" style="-webkit-border-top-right-radius: 10px; -webkit-border-bottom-right-radius: 10px; -moz-border-radius-topright: 10px; -moz-border-radius-bottomright: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px;" href="#raporlar" class="icon icon-tools"><span><%=LNG("Raporlar")%></span></a></li>
-                    <% end if %>-->
+                    <% end if %>
                 </ul>
             </nav>
             <div class="content-wrap">
-                <section id="personel_bilgileri" class="personel_tablar">
+                <section id="personel_bilgileri_cek" class="personel_tablar">
                     <script>
                         $(function (){
                             personel_bilgileri_getir('<%=personel_id %>');
@@ -136,20 +183,20 @@
                 <section id="bordro_section" class="personel_tablar"></section>
 
                 <section id="zimmet" class="personel_tablar"></section>
-                <% if 1 = 2 then %>
-                <section id="cari_hareketler" class="personel_tablar">
-                </section>
-                <% end if %>
-                <section id="dosyalar" class="personel_tablar">
-                </section>
-                <section id="personel_ajanda" class="personel_tablar">
-                </section>
-                <section id="is_listesi_panel" class="personel_tablar">
-                </section>
-                <section id="adam_saat_cetveli" class="personel_tablar">
-                </section>
-                <!--  <section id="raporlar" class="personel_tablar">
-                </section>-->
+
+                <!--<section id="cari_hareketler" class="personel_tablar"></section>-->
+
+                <section id="dosyalar" class="personel_tablar"></section>
+
+                <section id="personel_ajanda" class="personel_tablar"></section>
+
+                <section id="is_listesi_panel" class="personel_tablar"></section>
+
+                <section id="adam_saat_cetveli" class="personel_tablar"></section>
+
+                <section id="personel_puanlama" class="personel_tablar"></section>
+
+                <section id="raporlar" class="personel_tablar"></section>
             </div>
         </div>
     </div>

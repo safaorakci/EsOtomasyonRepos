@@ -5,12 +5,13 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
     satinalma_id = trn(request("satinalma_id"))
 
-    SQL="select DISTINCT CASE WHEN satinalma.tedarikci_id = firma.id THEN firma.firma_adi ELSE 'Firma Belirtilmedi' END as firmaadi, satinalma.id, IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, aciklama, satinalma.durum, satinalma.cop, satinalma.firma_kodu, satinalma.ekleme_tarihi, satinalma.ekleme_saati from satinalma_listesi satinalma INNER JOIN ucgem_firma_listesi firma on satinalma.tedarikci_id = firma.id  or satinalma.tedarikci_id = 0 where satinalma.id = '"& satinalma_id &"'"
+    SQL="select DISTINCT CASE WHEN satinalma.tedarikci_id = firma.id THEN firma.firma_adi ELSE 'Firma Belirtilmedi' END as firmaadi, satinalma.id, IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, aciklama, satinalma.durum, satinalma.cop, satinalma.firma_kodu, satinalma.ekleme_tarihi, satinalma.ekleme_saati from satinalma_listesi satinalma INNER JOIN ucgem_firma_listesi firma on satinalma.tedarikci_id = firma.id  or satinalma.tedarikci_id = 0 where satinalma.id = '"& satinalma_id &"' and satinalma.firma_id = '"& FirmaID &"'"
     set satinalma = baglanti.execute(SQL)
 
-    SQL="SELECT personel_ad,personel_soyad FROM ucgem_firma_kullanici_listesi kullanici INNER JOIN satinalma_listesi satinalma on satinalma.ekleyen_id = kullanici.id WHERE satinalma.id = '"& satinalma_id &"'"
+    SQL="SELECT personel_ad,personel_soyad FROM ucgem_firma_kullanici_listesi kullanici INNER JOIN satinalma_listesi satinalma on satinalma.ekleyen_id = kullanici.id WHERE satinalma.id = '"& satinalma_id &"' and kullanici.firma_id = '"& FirmaID &"'"
     set kullanici = baglanti.execute(SQL)
 
     SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
@@ -35,12 +36,10 @@
             <tr>
                 <td colspan="2" style="vertical-align: middle; padding-bottom: 10px; text-align: -webkit-center;">
                     <span style="float: left;">
-                        <% if firmaBilgileri("firma_kodu") = "ESOTOMASYON" then%>
-                            <img src="<%=firmaLogo %>" style="width: 150px;" />
-                        <%end if %>
+                        <img src="<%=firmaLogo %>" style="width: 150px;" />
                     </span>
                     <br />
-                    <span style="font-weight:bold; font-size:30px;">SATINALMA FORMU</span>
+                    <span style="font-weight: bold; font-size: 30px; text-align: center">SATINALMA FORMU</span>
                 </td>
             </tr>
 
@@ -87,7 +86,7 @@
         </thead>
         <tbody>
             <% 
-                SQL="select siparis.*, parca.parca_kodu, parca.marka, parca.parca_adi, parca.minumum_miktar, parca.aciklama as paciklama from satinalma_siparis_listesi siparis join parca_listesi parca on parca.id= siparis.parcaId where siparis.SatinalmaId = '"& satinalma_id &"' and siparis.cop = 'false' order by siparis.id asc"
+                SQL="select siparis.*, parca.parca_kodu, parca.marka, parca.parca_adi, parca.minumum_miktar, parca.aciklama as paciklama from satinalma_siparis_listesi siparis join parca_listesi parca on parca.id= siparis.parcaId where siparis.SatinalmaId = '"& satinalma_id &"' and siparis.firma_id = '"& FirmaID &"' and siparis.cop = 'false' order by siparis.id asc"
                 set cek = baglanti.execute(SQL)
                 x = 0
                 do while not cek.eof

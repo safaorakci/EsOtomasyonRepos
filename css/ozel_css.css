@@ -46,7 +46,7 @@ table.dataTable td, table.dataTable th {
 
 table.dataTable {
     clear: both;
-    margin-bottom: 6px !important;
+    margin-bottom: 6px;
     max-width: none !important;
 }
 
@@ -89,7 +89,7 @@ div.dataTables_scrollFoot table {
 }
 
 table.table-bordered.dataTable {
-    border-collapse: separate !important;
+    /*border-collapse: separate !important;*/
 }
 
 table.table-bordered thead td, table.table-bordered thead th {

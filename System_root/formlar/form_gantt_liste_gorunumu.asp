@@ -5,8 +5,6 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
-    
-
     firma_id = trn(request("firma_id"))
     kullanici_id = trn(request("kullanici_id"))
     proje_id = trn(request("proje_id"))
@@ -58,7 +56,7 @@
         <table class="table " style="border: solid 1px #ccc; width:100%;" cellpadding="0" cellspacing="0" border="1">
             <tbody>
                 <%
-                    SQL="select * from ahtapot_proje_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false'"
+                    SQL="select * from ahtapot_proje_gantt_adimlari where proje_id = '"& proje_id &"' and cop = 'false' and firma_id = '"& firma_id &"'"
                     set adim = baglanti.execute(SQL)
                     do while not adim.eof
                 %>

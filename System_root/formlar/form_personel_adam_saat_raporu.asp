@@ -166,8 +166,7 @@
             <td style="vertical-align: top; text-align: left;">
                 <h2><%=LNG("PERSONEL ADAM-SAAT RAPORU")%></h2>
                 <span><%=LNG("Oluşturma Tarihi")%>&nbsp;:&nbsp;<%=now %></span></td>
-            <td style="vertical-align: top; text-align: right;">
-                <img src="/images/proskop_buyuk2_form.png" /></td>
+            <td style="vertical-align: top; text-align: right;"><img src="/images/proskop_buyuk2_form.png" /></td>
         </tr>
     </table>
     <div>

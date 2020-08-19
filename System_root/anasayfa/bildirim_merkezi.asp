@@ -56,7 +56,7 @@
                     <table class="table table-hover">
                         <tbody>
                             <%
-                                SQL="SELECT TOP 20 convert(datetime, bildirim.ekleme_tarihi) as ekleme_zamani, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_ad_soyad, kullanici.personel_resim, bildirim.* FROM ahtapot_bildirim_listesi bildirim JOIN dbo.ucgem_firma_kullanici_listesi kullanici ON kullanici.id = bildirim.ekleyen_id WHERE bildirim.user_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' ORDER BY bildirim.id desc"
+                                SQL="SELECT TOP 20 convert(datetime, bildirim.ekleme_tarihi) as ekleme_zamani, kullanici.personel_ad + ' ' + kullanici.personel_soyad AS personel_ad_soyad, kullanici.personel_resim, bildirim.* FROM ahtapot_bildirim_listesi bildirim JOIN dbo.ucgem_firma_kullanici_listesi kullanici ON kullanici.id = bildirim.ekleyen_id WHERE bildirim.user_id = '"& Request.Cookies("kullanici")("kullanici_id") &"' and bildirim.firma_id = '"& FirmaID &"' ORDER BY bildirim.id desc"
                                 set bildirim = baglanti.execute(SQL)
                                 bildirimler = ""
                                 do while not bildirim.eof
@@ -82,7 +82,7 @@
                                 bildirimler = bildirimler & "0"
 
                                 if  len(bildirimler)>1 then
-                                    SQL="update ahtapot_bildirim_listesi set okudumu = 1 where id in ("& bildirimler &")"
+                                    SQL="update ahtapot_bildirim_listesi set okudumu = 1 where id in ("& bildirimler &") and firma_id = '"& FirmaID &"'"
                                     set guncelle = baglanti.execute(SQL)
                                 end if
 

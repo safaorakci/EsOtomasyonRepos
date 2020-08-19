@@ -5,7 +5,9 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 %>
+
 <style>
     .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
         border-top: 1px solid #ccc !important;
@@ -84,7 +86,7 @@
                         <select id="grupAdi" class="form-control" onchange="ParametreDegerAl('/System_Root/ajax/islem1.aspx/ParametreDegerAl');">
                             <option value="0">Grup Seç...</option>
                         <%
-                            SQL = "select * from Hatirlatici.Grup where Silindi = 'false'"
+                            SQL = "select * from Hatirlatici.Grup where Silindi = 'false' and FirmaID = '"& FirmaID &"'"
                             set Grup = baglanti.execute(SQL)
 
                             if not Grup.eof then

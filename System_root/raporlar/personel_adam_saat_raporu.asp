@@ -126,8 +126,8 @@
 
                         <div class="col-sm-12 col-md-2">
                             <%=LNG("Departman")%><br />
-                            <select class="select2" name="etiketler" id="etiketler">
-                                <option value="0"><%=LNG("TÜMÜ")%></option>
+                            <select class="select2" name="etiketler" id="etiketler" multiple="multiple">
+                                <option value="0" selected><%=LNG("TÜMÜ")%></option>
                                 <%
                                 songrup = ""
                                 SQL="select * from etiketler etiket with(nolock) where etiket.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and tip = 'departman' order by grup, adi asc;"
@@ -168,15 +168,15 @@
                             </select>
                         </div>
 
-                        <div class="col-sm-12 col-md-1">
-
-                            <a class="btn btn-labeled btn-primary btn-sm" href="javascript:void(0);" onclick="personel_adam_saat_rapor_getir();"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("Sorgula")%></a>
+                        <div class="col-sm-12 col-md-1 align-self-end mt-2">
+                            <a class="btn btn-labeled btn-primary btn-mini text-white" onclick="personel_adam_saat_rapor_getir();"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("Sorgula")%></a>
                         </div>
 
-                        <div class="col-sm-12 col-md-12">
-                            <br />
-                            <div style="float: right;">
-                                <a class="btn btn-labeled btn-success btn-mini" href="javascript:void(0);" onclick="rapor_pdf_indir('personel_adam_saat_raporu');"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-warning btn-mini" href="javascript:void(0);" onclick="rapor_pdf_yazdir('personel_adam_saat_raporu');"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-primary btn-mini" href="javascript:void(0);" onclick="rapor_pdf_gonder('personel_adam_saat_raporu');"><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
+                        <div class="col-sm-12 col-md-12 align-self-end">
+                            <div class="float-right">
+                                <a class="btn btn-labeled btn-success btn-mini mr-1 text-white" onclick="rapor_pdf_indir('personel_adam_saat_raporu');"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>
+                                <a class="btn btn-labeled btn-warning btn-mini mr-1 text-white" onclick="rapor_pdf_yazdir('personel_adam_saat_raporu');"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>
+                                <a class="btn btn-labeled btn-primary btn-mini text-white" onclick="rapor_pdf_gonder('personel_adam_saat_raporu');"><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
                             </div>
 
                         </div>

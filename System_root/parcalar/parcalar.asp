@@ -76,14 +76,11 @@
             <div class="card">
                 <div class="card-header">
                     <h5>Stok Listesi</h5>
-
-                    <input type="button" style="float: right;" class="btn btn-primary" onclick="ModalParcaEkle();" value="Parça Ekle" />
-                    <input type="button" style="float: right; margin-right:15px;" class="btn btn-info" onclick="ModalParcaArama();" value="Arama Yap" />
-                    
-                    <div style="float:right" class="col-md-4">
-
-                    <input type="button" style="float:right; margin-left:45px" class="btn btn-warning" onclick="ModalExcellUpload();" value="Excell Upload">
-                    <input type="button" style="float:right; margin-left:20px" class="btn btn-danger" onclick="StokListesiTemizle();" value="Listeyi Temizle">
+                    <div class="col-md-12 text-right">
+                        <input type="button" class="btn btn-primary mr-1" onclick="ModalParcaEkle();" value="Parça Ekle" />
+                        <input type="button" class="btn btn-info mr-1" onclick="ModalParcaArama();" value="Arama Yap" />
+                        <input type="button" class="btn btn-warning mr-1" onclick="ModalExcellUpload();" value="Excell Upload">
+                        <input type="button" class="btn btn-danger mr-1" onclick="StokListesiTemizle();" value="Listeyi Temizle">
                     </div>
                 </div>
                 <div class="card-block">

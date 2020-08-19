@@ -63,273 +63,328 @@ function is_timer_start_kaydi_getir(is_id) {
     data += "&is_id=" + is_id;
     data = encodeURI(data);
     $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
-
+        timer.start();
     });
+}
 
+function is_listesi_calisma_kaydi(is_id, gorevli_id) {
+
+    var data = "islem=is_timer_start_kaydi";
+    data += "&is_id=" + is_id;
+    data += "&gorevli_id=" + gorevli_id;
+    data = encodeURI(data);
+    $("#calisma_kayitlari" + is_id + "-" + gorevli_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
+        datatableyap();
+    });
 }
 
 function is_timer_start_kaydi(is_id, TamamlanmaID, user_id) {
+
+    $("#TaskStartButton" + is_id + "-" + user_id).hide();
+    $("#TaskPauseButton" + is_id + "-" + user_id).show();
+    $("#TaskStopButton" + is_id + "-" + user_id).show();
+
     var data = "islem=is_timer_start_kaydi&islem2=baslat";
     data += "&is_id=" + is_id;
     data += "&TamamlanmaID=" + TamamlanmaID;
     data += "&userId=" + user_id;
     data = encodeURI(data);
-    $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
-        $('.stopButton').removeAttr("disabled");
+    $("#calisma_kayitlari" + is_id + "-" + user_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
+        datatableyap();
     });
 }
 
 
-function is_timer_pause_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
+function is_timer_pause_kaydi(is_id, TamamlanmaID, gorevli_id) {
 
     var baslangic_tarihi = $("#sonacikkayit" + is_id).attr("baslangic_tarihi");
     var baslama_saati = $("#sonacikkayit" + is_id).attr("baslangic_saati");
 
+    var baslik = $("#TaskPauseButton" + is_id + "-" + gorevli_id).attr("baslik");
+    var aciklama = $("#TaskPauseButton" + is_id + "-" + gorevli_id).attr("aciklama");
+
+    $("#TaskPauseButton" + is_id + "-" + gorevli_id).hide();
+    $("#TaskStartButton" + is_id + "-" + gorevli_id).show();
+
     var data = "islem=is_timer_start_kaydi&islem2=pause";
     data += "&is_id=" + is_id;
     data += "&TamamlanmaID=" + TamamlanmaID;
+    data += "&gorevli_id=" + gorevli_id;
+
+    timer.stop();
+
+    data += "&tamamlanma_orani=" + 10;
+    data += "&onceki_oran=" + 0;
+    data += "&baslama_saati=" + baslama_saati;
+    data += "&bitirme_saati=" + "";
+    data += "&baslama_tarihi=" + baslangic_tarihi;
+    data += "&bitirme_tarihi=" + "";
+    data += "&ajanda_baslik=" + baslik;
+    data += "&ajanda_aciklama=" + aciklama;
     data = encodeURI(data);
-    $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
-        //var tamamlanmaOrani = $(".easyPieChartlar").val();
+    $("#calisma_kayitlari" + is_id + "-" + gorevli_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
+        datatableyap();
         is_ilerleme_ajanda_senkronizasyon_kaydet2(is_id, TamamlanmaID, 10, 0, baslama_saati, '', baslangic_tarihi, '', baslik, aciklama);
     });
 
 }
 
-function is_timer_stop_kaydi(is_id, TamamlanmaID, zaman, baslik, aciklama) {
+function is_timer_stop_kaydi(is_id, TamamlanmaID, gorevli_id) {
+
+    var r = confirm("Kaydı Tamamlamak İstiyormusunuz. ?");
+    if (r) {
+        var baslangic_tarihi = $("#sonacikkayit" + is_id).attr("baslangic_tarihi");
+        var baslama_saati = $("#sonacikkayit" + is_id).attr("baslangic_saati");
+
+        var baslik = $("#TaskStopButton" + is_id + "-" + gorevli_id).attr("baslik");
+        var aciklama = $("#TaskStopButton" + is_id + "-" + gorevli_id).attr("aciklama");
+
+        timer.stop();
+
+        $("#TaskTimer" + is_id + "-" + gorevli_id).hide();
+        $("#Progres" + is_id + "-" + gorevli_id).css('width', '100%');
+        $("#ProgresTEXT" + is_id + "-" + gorevli_id).html("100%");
+
+        $("#taskProgress" + is_id).css('width', '100%');
+        $("#taskProgressTEXT" + is_id).html("100%");
+
+        var data = "islem=is_timer_start_kaydi&islem2=stop";
+        data += "&is_id=" + is_id;
+        data += "&TamamlanmaID=" + TamamlanmaID;
+        data += "&gorevli_id=" + gorevli_id;
+
+        data += "&tamamlanma_orani=" + 100;
+        data += "&onceki_oran=" + 0;
+        data += "&baslama_saati=" + baslama_saati;
+        data += "&bitirme_saati=" + "";
+        data += "&baslama_tarihi=" + baslangic_tarihi;
+        data += "&bitirme_tarihi=" + "";
+        data += "&ajanda_baslik=" + baslik;
+        data += "&ajanda_aciklama=" + aciklama;
+        data = encodeURI(data);
+        $("#calisma_kayitlari" + is_id + "-" + gorevli_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
+            datatableyap();
+            is_ilerleme_ajanda_senkronizasyon_kaydet2(is_id, TamamlanmaID, 100, 0, baslama_saati, '', baslangic_tarihi, '', baslik, aciklama);
+            manuel_isi_bitir2(TamamlanmaID, 100, is_id);
+        });
+    }
+                //setTimeout(function () {
+            //    var data = "islem=is_detay_goster";
+            //    data += "&is_id=" + is_id;
+            //    data = encodeURI(data);
+            //    $("#detay_row" + is_id).loadHTML({ url: "/ajax_request5/", data: data }, function () {
+            //        /*  if ($("#visualization").length>0) {
+            //              timeline.setSelection([$(tr).attr("id")], {
+            //                  focus: true
+            //              });
+            //          }*/
+            //        $(".easyPieChartlar").knob({
+            //            draw: function () {
+            //                // "tron" case
+            //                if (this.$.data('skin') == 'tron') {
+            //                    this.cursorExt = 0.3;
+            //                    var a = this.arc(this.cv) // Arc
+            //                        ,
+            //                        pa // Previous arc
+            //                        , r = 1;
+            //                    this.g.lineWidth = this.lineWidth;
+            //                    if (this.o.displayPrevious) {
+            //                        pa = this.arc(this.v);
+            //                        this.g.beginPath();
+            //                        this.g.strokeStyle = this.pColor;
+            //                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
+            //                        this.g.stroke();
+            //                    }
+            //                    this.g.beginPath();
+            //                    this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+            //                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
+            //                    this.g.stroke();
+            //                    this.g.lineWidth = 2;
+            //                    this.g.beginPath();
+            //                    this.g.strokeStyle = this.o.fgColor;
+            //                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+            //                    this.g.stroke();
+            //                    return false;
+            //                }
+            //            }
+            //        });
+            //        is_timer_start_kaydi_getir(is_id);
+
+            //        $('.pauseButton').attr("disabled", "disabled");
+            //        $('.stopButton').attr("disabled", "disabled");
+
+            //        timer = new easytimer.Timer();
+            //        var Id;
+
+            //        $('.startButton').click(function () {
+            //            $(this).attr("disabled", "disabled");
+            //            $('.pauseButton').removeAttr("disabled");
+            //            $('.stopButton').removeAttr("disabled");
+            //            timer.start();
+            //            var is_id = $(this).attr("is_id");
+            //            var TamamlanmaID = $(this).attr("tamamlanmaid");
+            //            var userId = $(this).attr("tamamlanmaid");
+            //            is_timer_start_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues());
+            //            Id = $(this).attr("user_id");
+            //        });
+            //        $('.pauseButton').click(function () {
+            //            $('.startButton').removeAttr("disabled");
+            //            var baslik = $(this).attr("baslik");
+            //            var aciklama = $(this).attr("aciklama");
+            //            var is_id = $(this).attr("is_id");
+            //            var TamamlanmaID = $(this).attr("tamamlanmaid");
+            //            var userId = $(this).attr("tamamlanmaid");
+            //            timer.pause();
+            //            is_timer_pause_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
+            //            Id = $(this).attr("user_id");
+            //        });
+            //        $('.stopButton').click(function () {
+            //            timer.stop();
+            //            var is_id = $(this).attr("is_id");
+            //            var TamamlanmaID = $(this).attr("tamamlanmaid");
+            //            var baslik = $('.pauseButton').attr("baslik");
+            //            var aciklama = $('.pauseButton').attr("aciklama");
+            //            var userId = $(this).attr("tamamlanmaid");
+            //            is_timer_stop_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
+            //            Id = $(this).attr("user_id");
+            //        });
+
+            //        timer.addEventListener('secondsUpdated', function (e) {
+            //            $('#basicUsage').html(timer.getTimeValues().toString());
+            //        });
+            //        timer.addEventListener('started', function (e) {
+            //            $('#basicUsage').html(timer.getTimeValues().toString());
+            //        });
+
+
+            //        $(".yeni_slider").each(function () {
+
+            //            var $slider = $(this);
+            //            var olcu = $(this).width();
+
+            //            $(this).noUiSlider({
+            //                range: [0, 100],
+            //                start: $(this).attr("start"),
+            //                handles: 1,
+            //                connect: true,
+            //                slide: function () {
+
+            //                    var asd = $(this);
+
+            //                    clearTimeout(slider_timer);
+            //                    slider_timer = setTimeout(function () {
+
+            //                        var oran = parseInt(asd.find(".noUi-connect").css("left"));
+            //                        oran = Math.round(100 - ((olcu - oran) / olcu * 100));
+            //                        var newVal = oran;
+
+            //                        if (parseFloat(newVal) > 97) {
+            //                            newVal = 100;
+            //                        }
+
+            //                        var onceki_oran = $("#easyPieChart" + $slider.attr("TamamlanmaID")).val();
+
+            //                        $("#easyPieChart" + $slider.attr("TamamlanmaID")).val(newVal);
 
 
 
-    var baslangic_tarihi = $("#sonacikkayit" + is_id).attr("baslangic_tarihi");
-    var baslama_saati = $("#sonacikkayit" + is_id).attr("baslangic_saati");
-
-    var data = "islem=is_timer_start_kaydi&islem2=stop";
-    data += "&is_id=" + is_id;
-    data += "&TamamlanmaID=" + TamamlanmaID;
-    data = encodeURI(data);
-    $("#is_timer_list" + is_id).loadHTML({ url: "/ajax_request5/", data: data, loading: false }, function () {
-        is_ilerleme_ajanda_senkronizasyon_kaydet2(is_id, TamamlanmaID, 100, 0, baslama_saati, '', baslangic_tarihi, '', baslik, aciklama);
-        manuel_isi_bitir2(TamamlanmaID, 100, is_id);
-
-        setTimeout(function () {
-            var data = "islem=is_detay_goster";
-            data += "&is_id=" + is_id;
-            data = encodeURI(data);
-            $("#detay_row" + is_id).loadHTML({ url: "/ajax_request5/", data: data }, function () {
-                /*  if ($("#visualization").length>0) {
-                      timeline.setSelection([$(tr).attr("id")], {
-                          focus: true
-                      });
-                  }*/
-                $(".easyPieChartlar").knob({
-                    draw: function () {
-                        // "tron" case
-                        if (this.$.data('skin') == 'tron') {
-                            this.cursorExt = 0.3;
-                            var a = this.arc(this.cv) // Arc
-                                ,
-                                pa // Previous arc
-                                , r = 1;
-                            this.g.lineWidth = this.lineWidth;
-                            if (this.o.displayPrevious) {
-                                pa = this.arc(this.v);
-                                this.g.beginPath();
-                                this.g.strokeStyle = this.pColor;
-                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
-                                this.g.stroke();
-                            }
-                            this.g.beginPath();
-                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
-                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
-                            this.g.stroke();
-                            this.g.lineWidth = 2;
-                            this.g.beginPath();
-                            this.g.strokeStyle = this.o.fgColor;
-                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
-                            this.g.stroke();
-                            return false;
-                        }
-                    }
-                });
-                is_timer_start_kaydi_getir(is_id);
-
-                $('.pauseButton').attr("disabled", "disabled");
-                $('.stopButton').attr("disabled", "disabled");
-
-                timer = new easytimer.Timer();
-                var Id;
-
-                $('.startButton').click(function () {
-                    $(this).attr("disabled", "disabled");
-                    $('.pauseButton').removeAttr("disabled");
-                    $('.stopButton').removeAttr("disabled");
-                    timer.start();
-                    var is_id = $(this).attr("is_id");
-                    var TamamlanmaID = $(this).attr("tamamlanmaid");
-                    var userId = $(this).attr("tamamlanmaid");
-                    is_timer_start_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues());
-                    Id = $(this).attr("user_id");
-                });
-                $('.pauseButton').click(function () {
-                    $('.startButton').removeAttr("disabled");
-                    var baslik = $(this).attr("baslik");
-                    var aciklama = $(this).attr("aciklama");
-                    var is_id = $(this).attr("is_id");
-                    var TamamlanmaID = $(this).attr("tamamlanmaid");
-                    var userId = $(this).attr("tamamlanmaid");
-                    timer.pause();
-                    is_timer_pause_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
-                    Id = $(this).attr("user_id");
-                });
-                $('.stopButton').click(function () {
-                    timer.stop();
-                    var is_id = $(this).attr("is_id");
-                    var TamamlanmaID = $(this).attr("tamamlanmaid");
-                    var baslik = $('.pauseButton').attr("baslik");
-                    var aciklama = $('.pauseButton').attr("aciklama");
-                    var userId = $(this).attr("tamamlanmaid");
-                    is_timer_stop_kaydi(is_id, TamamlanmaID, userId, timer.getTimeValues(), baslik, aciklama);
-                    Id = $(this).attr("user_id");
-                });
-
-                timer.addEventListener('secondsUpdated', function (e) {
-                    $('#basicUsage').html(timer.getTimeValues().toString());
-                });
-                timer.addEventListener('started', function (e) {
-                    $('#basicUsage').html(timer.getTimeValues().toString());
-                });
+            //                        $("#easyPieChart" + $slider.attr("TamamlanmaID")).knob({
+            //                            draw: function () {
+            //                                // "tron" case
+            //                                if (this.$.data('skin') == 'tron') {
+            //                                    this.cursorExt = 0.3;
+            //                                    var a = this.arc(this.cv) // Arc
+            //                                        ,
+            //                                        pa // Previous arc
+            //                                        , r = 1;
+            //                                    this.g.lineWidth = this.lineWidth;
+            //                                    if (this.o.displayPrevious) {
+            //                                        pa = this.arc(this.v);
+            //                                        this.g.beginPath();
+            //                                        this.g.strokeStyle = this.pColor;
+            //                                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
+            //                                        this.g.stroke();
+            //                                    }
+            //                                    this.g.beginPath();
+            //                                    this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+            //                                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
+            //                                    this.g.stroke();
+            //                                    this.g.lineWidth = 2;
+            //                                    this.g.beginPath();
+            //                                    this.g.strokeStyle = this.o.fgColor;
+            //                                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+            //                                    this.g.stroke();
+            //                                    return false;
+            //                                }
+            //                            }
+            //                        });
 
 
-                $(".yeni_slider").each(function () {
+            //                        /*
+            //                         * 
+            //                        var data = "TamamlanmaID=" + $slider.attr("TamamlanmaID");
+            //                        data += "&tamamlanma_orani=" + newVal;
+            //                        data += "&IsID=" + $slider.attr("IsID");
+            //                        var IsID = $slider.attr("IsID");
+            //                        $.ajax({
+            //                            type: "POST",
+            //                            url: "/System_Root/ajax/islem1.aspx/IsDurumGuncelle",
+            //                            data: JSON.stringify(QueryStringToJSON(data)),
+            //                            contentType: "application/json; charset=utf-8",
+            //                            dataType: "json",
+            //                            success: function (response) {
+            //                                if (response.d == "0") {
+            //                                    $.bigBox({
+            //                                        title: "Uyarı",
+            //                                        content: "Hata Oluştu",
+            //                                        color: "#C46A69",
+            //                                        icon: "fa fa-warning shake animated",
+            //                                        number: "1",
+            //                                        timeout: 6000
+            //                                    });
+            //                                } else {
+            //                                    $("#is_chart" + IsID).css('width', response.d + '%').attr('aria-valuenow', response.d).attr("data-progressbar-value", response.d);
+            //                                    mesaj_ver("Görevler", "Kayıt Başarıyla Güncellendi", "success");
+            //                                }
+            //                            }, failure: function (response) {
 
-                    var $slider = $(this);
-                    var olcu = $(this).width();
+            //                                $.bigBox({
+            //                                    title: "Uyarı",
+            //                                    content: "Hata Oluştu",
+            //                                    color: "#C46A69",
+            //                                    icon: "fa fa-warning shake animated",
+            //                                    number: "1",
+            //                                    timeout: 6000
+            //                                });
+            //                            }
+            //                        });
 
-                    $(this).noUiSlider({
-                        range: [0, 100],
-                        start: $(this).attr("start"),
-                        handles: 1,
-                        connect: true,
-                        slide: function () {
+            //                        */
 
-                            var asd = $(this);
+            //                        is_ilerleme_ajanda_senkronizasyon($slider.attr("TamamlanmaID"), newVal, $slider.attr("IsID"), onceki_oran);
 
-                            clearTimeout(slider_timer);
-                            slider_timer = setTimeout(function () {
+            //                    }, 300);
+            //                }
+            //            });
 
-                                var oran = parseInt(asd.find(".noUi-connect").css("left"));
-                                oran = Math.round(100 - ((olcu - oran) / olcu * 100));
-                                var newVal = oran;
+            //        });
 
-                                if (parseFloat(newVal) > 97) {
-                                    newVal = 100;
-                                }
+            //        fileyap();
 
-                                var onceki_oran = $("#easyPieChart" + $slider.attr("TamamlanmaID")).val();
-
-                                $("#easyPieChart" + $slider.attr("TamamlanmaID")).val(newVal);
-
-
-
-                                $("#easyPieChart" + $slider.attr("TamamlanmaID")).knob({
-                                    draw: function () {
-                                        // "tron" case
-                                        if (this.$.data('skin') == 'tron') {
-                                            this.cursorExt = 0.3;
-                                            var a = this.arc(this.cv) // Arc
-                                                ,
-                                                pa // Previous arc
-                                                , r = 1;
-                                            this.g.lineWidth = this.lineWidth;
-                                            if (this.o.displayPrevious) {
-                                                pa = this.arc(this.v);
-                                                this.g.beginPath();
-                                                this.g.strokeStyle = this.pColor;
-                                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
-                                                this.g.stroke();
-                                            }
-                                            this.g.beginPath();
-                                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
-                                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
-                                            this.g.stroke();
-                                            this.g.lineWidth = 2;
-                                            this.g.beginPath();
-                                            this.g.strokeStyle = this.o.fgColor;
-                                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
-                                            this.g.stroke();
-                                            return false;
-                                        }
-                                    }
-                                });
-
-
-                                /*
-                                 * 
-                                var data = "TamamlanmaID=" + $slider.attr("TamamlanmaID");
-                                data += "&tamamlanma_orani=" + newVal;
-                                data += "&IsID=" + $slider.attr("IsID");
-                                var IsID = $slider.attr("IsID");
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/System_Root/ajax/islem1.aspx/IsDurumGuncelle",
-                                    data: JSON.stringify(QueryStringToJSON(data)),
-                                    contentType: "application/json; charset=utf-8",
-                                    dataType: "json",
-                                    success: function (response) {
-                                        if (response.d == "0") {
-                                            $.bigBox({
-                                                title: "Uyarı",
-                                                content: "Hata Oluştu",
-                                                color: "#C46A69",
-                                                icon: "fa fa-warning shake animated",
-                                                number: "1",
-                                                timeout: 6000
-                                            });
-                                        } else {
-                                            $("#is_chart" + IsID).css('width', response.d + '%').attr('aria-valuenow', response.d).attr("data-progressbar-value", response.d);
-                                            mesaj_ver("Görevler", "Kayıt Başarıyla Güncellendi", "success");
-                                        }
-                                    }, failure: function (response) {
-
-                                        $.bigBox({
-                                            title: "Uyarı",
-                                            content: "Hata Oluştu",
-                                            color: "#C46A69",
-                                            icon: "fa fa-warning shake animated",
-                                            number: "1",
-                                            timeout: 6000
-                                        });
-                                    }
-                                });
-
-                                */
-
-                                is_ilerleme_ajanda_senkronizasyon($slider.attr("TamamlanmaID"), newVal, $slider.attr("IsID"), onceki_oran);
-
-                            }, 300);
-                        }
-                    });
-
-                });
-
-                fileyap();
-
-                setTimeout(function () {
-                    $(".file").attr("placeholder", "Yeni Dosya Yükle").css("height", "25px").css("margin-top", "5px;");
-                }, 1000);
-            });
-        }, 500);
-
-    });
-
+            //        setTimeout(function () {
+            //            $(".file").attr("placeholder", "Yeni Dosya Yükle").css("height", "25px").css("margin-top", "5px;");
+            //        }, 1000);
+            //    });
+            //}, 500);
 }
 
 
 
-function proje_ic_liste_getir(deger) {
+function proje_ic_liste_getir(deger, ustId) {
 
     var data = "islem=proje_ic_liste_getir";
     data += "&durum_id=" + deger;
+    data += "&ustId=" + ustId;
     data = encodeURI(data);
     $("#accoric" + deger).loadHTML({ url: "/ajax_request4/", data: data }, function () {
         datatableyap2();
@@ -377,7 +432,38 @@ function proje_adam_saat_getir_rapor() {
     $("#proje_adam_saat_donus").loadHTML({ url: "/ajax_request4/", data: data }, function () {
 
     });
+}
 
+function personel_giris_cikis_getir_rapor() {
+
+    var personel_id = $("#rapor_personel_id").val();
+    var baslangic = $("#personel_giris_cikis_saati_donem option:selected").attr("dongu_baslangic");
+    var bitis = $("#personel_giris_cikis_saati_donem option:selected").attr("dongu_bitis");
+
+    var data = "islem=personel_giris_cikis_getir_rapor";
+    data += "&personel_id=" + personel_id;
+    data += "&baslangic=" + baslangic;
+    data += "&bitis=" + bitis;
+    data = encodeURI(data);
+    $("#personel_giris_cikis_donus").loadHTML({ url: "/ajax_request4/", data: data }, function () {
+
+    });
+}
+
+function personel_giris_cikis_mesai_getir_rapor() {
+
+    var personel_id = $("#rapor_personel_id").val();
+    var baslangic = $("#personel_giris_cikis_saati_donem option:selected").attr("dongu_baslangic");
+    var bitis = $("#personel_giris_cikis_saati_donem option:selected").attr("dongu_bitis");
+
+    var data = "islem=personel_giris_cikis_mesai_getir_rapor";
+    data += "&personel_id=" + personel_id;
+    data += "&baslangic=" + baslangic;
+    data += "&bitis=" + bitis;
+    data = encodeURI(data);
+    $("#personel_giris_cikis_donus").loadHTML({ url: "/ajax_request4/", data: data }, function () {
+
+    });
 }
 
 function rapor_is_yuku_gosterim_proje_sectim_verimlilik(baslangic, bitis) {
@@ -533,8 +619,9 @@ function proje_satinalma_kaydet(nesne, proje_id) {
         var gerceklesen_tutar = $("#gerceklesen_tutar").val();
         var gerceklesen_pb = $("#gerceklesen_pb").val();
         var odeme_tarihi = $("#odeme_tarihi").val();
-        var tedarikci_id = $("#tedarikci_id").val();
+        //var tedarikci_id = $("#tedarikci_id").val();
         var satinalma_aciklama = $("#satinalma_aciklama").val();
+        var tarih = $("#tarih").val();
 
         var data = "islem=proje_butce_listesi_getir&islem2=satinalmaekle";
         data += "&proje_id=" + proje_id;
@@ -546,13 +633,16 @@ function proje_satinalma_kaydet(nesne, proje_id) {
         data += "&gerceklesen_tutar=" + gerceklesen_tutar;
         data += "&gerceklesen_pb=" + gerceklesen_pb;
         data += "&odeme_tarihi=" + odeme_tarihi;
-        data += "&tedarikci_id=" + tedarikci_id;
+        //data += "&tedarikci_id=" + tedarikci_id;
         data += "&satinalma_aciklama=" + satinalma_aciklama;
+        data += "&tarih=" + tarih;
         data = encodeURI(data);
-        $(nesne).attr("disabled", "disabled").val("İşlem Yapılıyor...");
+        //$(nesne).attr("disabled", "disabled").val("İşlem Yapılıyor...");
         $("#proje_butce_yeri").loadHTML({ url: "/ajax_request2/", data: data }, function () {
             $(".close").click();
             mesaj_ver("Proje Giderleri", "Kayıt Başarıyla Eklendi", "success");
+            datatableyap();
+            proje_butce_listesi_getir(proje_id);
         });
     }
 }
@@ -563,33 +653,32 @@ function proje_gelir_getir2(proje_id) {
     data += "&proje_id=" + proje_id;
     data = encodeURI(data);
     $("#proje_gelir_listesi").loadHTML({ url: "/ajax_request3/", data: data }, function () {
-
+        datatableyap();
     });
 
 }
 
-function proje_gelir_guncelle(nesne, proje_id, kayit_id) {
+function proje_gelir_guncelle(nesne, proje_id, kayit_id, durum) {
 
     if ($("#yeni_gelir_form input:not(input[type=button])").valid("valid")) {
 
         var gelir_adi = $("#gelir_adi").val();
-        var gelir_durum = $("#gelir_durum").val();
         var odeme_tutar = $("#odeme_tutar").val();
         var odeme_pb = $("#odeme_pb").val();
-        var planlanan_tarih = $("#planlanan_tarih").val();
-        var odeme_tarih = $("#odeme_tarih").val();
         var odeme_aciklama = $("#odeme_aciklama").val();
+        var ongorulen_id = $("#ongorulen_id").val();
+        var tarih = $("#tarih").val();
 
         var data = "islem=proje_gelir_listesi&islem2=guncelle";
         data += "&proje_id=" + proje_id;
         data += "&kayit_id=" + kayit_id;
+        data += "&ongorulen_id=" + ongorulen_id;
         data += "&gelir_adi=" + gelir_adi;
-        data += "&gelir_durum=" + gelir_durum;
         data += "&odeme_tutar=" + odeme_tutar;
         data += "&odeme_pb=" + odeme_pb;
-        data += "&planlanan_tarih=" + planlanan_tarih;
-        data += "&odeme_tarih=" + odeme_tarih;
         data += "&odeme_aciklama=" + odeme_aciklama;
+        data += "&tarih=" + tarih;
+        data += "&durum=" + durum;
         data = encodeURI(data);
         $(nesne).attr("disabled", "disabled").val("İşlem Yapılıyor...");
         $("#proje_gelir_listesi").loadHTML({ url: "/ajax_request3/", data: data }, function () {
@@ -600,22 +689,22 @@ function proje_gelir_guncelle(nesne, proje_id, kayit_id) {
 
 }
 
-function proje_gelir_kaydi_duzenle(proje_id, kayit_id) {
+function proje_gelir_kaydi_duzenle(proje_id, kayit_id, ongorulen_id, yer) {
 
     var data = "islem=proje_gelir_kaydi_duzenle";
     data += "&proje_id=" + proje_id;
     data += "&kayit_id=" + kayit_id;
+    data += "&yer=" + yer;
     data = encodeURI(data);
     $("#modal_butonum").click();
     $("#modal_div").loadHTML({ url: "/ajax_request3/", data: data }, function () {
         sayfa_yuklenince();
     });
-
-
 }
 
 function proje_gelir_kaydi_sil(proje_id, kayit_id) {
-    var r = confirm("Kaydi Silmek İstediğinize Emin misiniz?");
+
+    var r = confirm("Kaydı Silmek istediğinize Eminmisiniz.. ?");
     if (r) {
         var data = "islem=proje_gelir_listesi&islem2=sil";
         data += "&proje_id=" + proje_id;
@@ -623,40 +712,70 @@ function proje_gelir_kaydi_sil(proje_id, kayit_id) {
         data = encodeURI(data);
         $("#proje_gelir_listesi").loadHTML({ url: "/ajax_request3/", data: data }, function () {
             mesaj_ver("Proje Gelirleri", "Kayıt Başarıyla Silindi", "success");
+            sayfa_yuklenince();
         });
     }
+
+    //$.confirm({
+    //    title: 'Uyarı !',
+    //    content: 'Kaydı Silmek istediğinize Eminmisiniz.. ?',
+    //    icon: 'fa fa-warning',
+    //    type: 'orange',
+    //    bgOpacity: 0.7,
+    //    theme: 'material',
+    //    animation: 'zoom',
+    //    scrollToPreviousElement: false,
+    //    buttons: {
+    //        confirm: {
+    //            text: 'Evet',
+    //            btnClass: 'btn-blue',
+    //            keys: ['enter'],
+    //            action: function () {
+    //                var data = "islem=proje_gelir_listesi&islem2=sil";
+    //                data += "&proje_id=" + proje_id;
+    //                data += "&kayit_id=" + kayit_id;
+    //                data = encodeURI(data);
+    //                $("#proje_gelir_listesi").loadHTML({ url: "/ajax_request3/", data: data }, function () {
+    //                    mesaj_ver("Proje Gelirleri", "Kayıt Başarıyla Silindi", "success");
+    //                });
+    //            }
+    //        },
+    //        cancel: {
+    //            text: 'Hayır',
+    //            keys: ['esc']
+    //        }
+    //    }
+    //});
 }
 
-function proje_gelir_kaydet(nesne, proje_id) {
+function proje_gelir_kaydet(nesne, proje_id, durum) {
 
     if ($("#yeni_gelir_form input:not(input[type=button])").valid("valid")) {
 
         var gelir_adi = $("#gelir_adi").val();
-        var gelir_durum = $("#gelir_durum").val();
+        var ongorulen_id = $("#ongorulen_id").val();
         var odeme_tutar = $("#odeme_tutar").val();
         var odeme_pb = $("#odeme_pb").val();
-        var planlanan_tarih = $("#planlanan_tarih").val();
-        var odeme_tarih = $("#odeme_tarih").val();
+        var tarih = $("#tarih").val();
         var odeme_aciklama = $("#odeme_aciklama").val();
 
         var data = "islem=proje_gelir_listesi&islem2=ekle";
         data += "&proje_id=" + proje_id;
         data += "&gelir_adi=" + gelir_adi;
-        data += "&gelir_durum=" + gelir_durum;
+        data += "&ongorulen_id=" + ongorulen_id;
         data += "&odeme_tutar=" + odeme_tutar;
         data += "&odeme_pb=" + odeme_pb;
-        data += "&planlanan_tarih=" + planlanan_tarih;
-        data += "&odeme_tarih=" + odeme_tarih;
+        data += "&tarih=" + tarih;
         data += "&odeme_aciklama=" + odeme_aciklama;
+        data += "&durum=" + durum;
         data = encodeURI(data);
         $(nesne).attr("disabled", "disabled").val("İşlem Yapılıyor...");
         $("#proje_gelir_listesi").loadHTML({ url: "/ajax_request3/", data: data }, function () {
             $(".close").click();
             mesaj_ver("Proje Gelirleri", "Kayıt Başarıyla Eklendi", "success");
+            sayfa_yuklenince();
         });
-
     }
-
 }
 
 function proje_gelir_odendimi(deger) {
@@ -690,6 +809,8 @@ function proje_satinalma_guncelle(nesne, proje_id, kayit_id) {
         var gerceklesen_tutar = $("#gerceklesen_tutar").val();
         var gerceklesen_pb = $("#gerceklesen_pb").val();
         var satinalma_aciklama = $("#satinalma_aciklama").val();
+        var tarih = $("#tarih").val();
+        var odeme_tarihi = $("#odeme_tarihi").val();
 
 
         var data = "islem=proje_butce_listesi_getir&islem2=satinalmaguncelle";
@@ -703,11 +824,14 @@ function proje_satinalma_guncelle(nesne, proje_id, kayit_id) {
         data += "&gerceklesen_tutar=" + gerceklesen_tutar;
         data += "&gerceklesen_pb=" + gerceklesen_pb;
         data += "&satinalma_aciklama=" + satinalma_aciklama;
+        data += "&tarih=" + tarih;
+        data += "&odeme_tarihi=" + odeme_tarihi;
         data = encodeURI(data);
-        $(nesne).attr("disabled", "disabled").val("İşlem Yapılıyor...");
+        //$(nesne).attr("disabled", "disabled").val("İşlem Yapılıyor...");
         $("#proje_butce_yeri").loadHTML({ url: "/ajax_request2/", data: data }, function () {
             $(".close").click();
             mesaj_ver("Proje Giderleri", "Kayıt Başarıyla Güncellendi", "success");
+            proje_butce_listesi_getir(proje_id);
         });
     }
 
@@ -1150,7 +1274,7 @@ function parcalar_autocomplete_calistir3() { // Servis Forum Parça Ekleme
 
                     //+ "<td  style='width:170px'>" + "<span class='label label-success' style='font-size: 100%; padding: 5px; display: inline;'> Stoktan Kullanıldı </span>" + "</td>"
 
-                    var price = parseFloat(ui.item.maliyet * parseFloat($("#musteriparcaadeti").val()));
+                    var price = parseFloat(ui.item.maliyet.replace(",", ".") * parseFloat($("#musteriparcaadeti").val()));
                     var birimPB = "TL";
                     if (ui.item.birim_pb != "") {
                         birimPB = ui.item.birim_pb;

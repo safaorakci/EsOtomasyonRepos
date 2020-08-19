@@ -10,20 +10,21 @@
     <div class="row">
         <article class="col-xs-12 ">
             <div class="card">
-
-                <div id="beta_donus" class="card-block">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card-header" style="padding-left: 0;">
-                                <h5><%=LNG("Departmanlardaki İş Hacmi Raporu")%></h5>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div style="text-align: right;">
-                                <a class="btn btn-labeled btn-success btn-sm" href="javascript:void(0);" onclick="rapor_pdf_indir('departmanlardaki_is_hacmi');"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-warning btn-sm" href="javascript:void(0);" onclick="rapor_pdf_yazdir('departmanlardaki_is_hacmi');"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-primary btn-sm" href="javascript:void(0);" onclick="rapor_pdf_gonder('departmanlardaki_is_hacmi');"><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
-                            </div>
-                        </div>
+                <div class="card-header p-2 mt-2 ml-2">
+                    <h5 class="card-title"><%=LNG("Departmanlardaki İş Hacmi Raporu")%></h5>
+                    <div class="header-right float-right">
+                        <a class="btn btn-success btn-sm" href="javascript:void(0);" onclick="rapor_pdf_indir('departmanlardaki_is_hacmi');">
+                            <i class="fa fa-download"></i>İndir
+                        </a>
+                        <a class="btn btn-warning btn-sm" href="javascript:void(0);" onclick="rapor_pdf_yazdir('departmanlardaki_is_hacmi');">
+                            <i class="fa fa-print"></i>Yazdır
+                        </a>
+                        <a class="btn btn-primary btn-sm" href="javascript:void(0);" onclick="rapor_pdf_gonder('departmanlardaki_is_hacmi');">
+                            <i class="fa fa-send "></i>Gönder
+                        </a>
                     </div>
+                </div>
+                <div id="beta_donus" class="card-block">
                     <br />
                     <table class="table" width="100%" style="width: 100%;">
                         <thead>
@@ -35,10 +36,11 @@
                         </thead>
                         <tbody>
                             <%
-                        SQL="SELECT ROW_NUMBER() OVER (ORDER BY departman.id ASC) AS rowid, 0 AS santiye_sayi, departman.id, departman.departman_adi, departman.departman_tipi, departman.sirano, ( SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false' AND (ISNULL(tamamlanma_orani, 0) != 100) AND dbo.iceriyormu(departmanlar, 'departman-' + CONVERT(NVARCHAR(10), departman.id)) = 1 ) + ( SELECT COUNT(id) FROM ucgem_proje_olay_listesi olay WHERE olay.departman_id = departman.id AND olay.durum = 'true' AND olay.cop = 'false' ) AS gosterge_sayisi, ( SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false' ) + ( SELECT COUNT(id) FROM ucgem_proje_olay_listesi olay WHERE olay.durum = 'true' AND olay.cop = 'false' ) AS tum_sayi FROM tanimlama_departman_listesi departman LEFT JOIN ucgem_firma_kullanici_listesi kullanici ON dbo.iceriyormu(kullanici.departmanlar, departman.id) = 1 WHERE departman.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and departman.durum = 'true' AND departman.cop = 'false'  GROUP BY departman.id, departman.departman_adi, departman.departman_tipi, departman.sirano ORDER BY  gosterge_sayisi desc;"
+                        SQL="SELECT ROW_NUMBER() OVER (ORDER BY departman.id ASC) AS rowid, 0 AS santiye_sayi, departman.id, departman.departman_adi, departman.departman_tipi, departman.sirano, ( SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false' AND (ISNULL(tamamlanma_orani, 0) != 100) AND dbo.iceriyormu(departmanlar, 'departman-' + CONVERT(NVARCHAR(10), departman.id)) = 1) AS gosterge_sayisi, (SELECT COUNT(id) FROM ucgem_is_listesi WHERE durum = 'true' AND cop = 'false') AS tum_sayi FROM tanimlama_departman_listesi departman LEFT JOIN ucgem_firma_kullanici_listesi kullanici ON dbo.iceriyormu(kullanici.departmanlar, departman.id) = 1 WHERE departman.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and departman.durum = 'true' AND departman.cop = 'false' GROUP BY departman.id, departman.departman_adi, departman.departman_tipi, departman.sirano ORDER BY  gosterge_sayisi desc;"
                         set sayilar = baglanti.execute(SQL)
                         'response.Write(SQL)
 
+                        if not sayilar.eof then
                         en_yuksek = 0
                         do while not sayilar.eof
                             if cdbl(en_yuksek) < cdbl(sayilar("gosterge_sayisi")) then
@@ -65,20 +67,19 @@
                                 eldeki = eldeki 
                             end if
 
-                            toplam_tutar = cdbl(toplam_tutar) + cdbl(sayilar("gosterge_sayisi"))
+                            toplam_tutar = toplam_tutar + sayilar("gosterge_sayisi")
 
                             %>
-
                             <tr>
                                 <td style="text-align: center; padding: 5px; font-weight: bold; text-align: left;"><%=sayilar("departman_adi") %></td>
                                 <td style="text-align: center; padding: 5px;"><%=sayilar("gosterge_sayisi") %></td>
                                 <td style="padding-left: 15px; padding: 5px; text-align: left;">
                                     <img src="/img/raporbar.png" width="<%=eldeki %>%" style="width: <%=eldeki %>%; height: 20px;" /></td>
                             </tr>
-
                             <%
                         sayilar.movenext
                         loop
+                        end if
                             %>
                         </tbody>
                         <tfoot>

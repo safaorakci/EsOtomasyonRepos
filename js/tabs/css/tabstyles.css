@@ -9,38 +9,38 @@
 	background: rgba(40,44,42,0.05);
 }*/
 
-.tabs-style-bar nav ul {
+.tabs-style-bar nav ul:not(.multiselect-container) {
 	border: 4px solid transparent;
 }
 
-    .tabs-style-bar nav ul li a {
-        background-color: #fff;
-        color: #32506d;
-        transition: background-color 0.2s, color 0.2s;
-        vertical-align: middle;
-        border: 1px solid #e3e3e3;
-        padding-bottom: 10px;
-    }
+	.tabs-style-bar nav ul:not(.multiselect-container) li a {
+		background-color: #fff;
+		color: #32506d;
+		transition: background-color 0.2s, color 0.2s;
+		vertical-align: middle;
+		border: 1px solid #e3e3e3;
+		padding-bottom: 10px;
+	}
 
-.tabs-style-bar nav ul li a:hover,
-.tabs-style-bar nav ul li a:focus {
-    color: #56a5ff;
-}
+	.tabs-style-bar nav ul:not(.multiselect-container) li a:hover,
+	.tabs-style-bar nav ul:not(.multiselect-container) li a:focus {
+		color: #56a5ff;
+	}
 
-    .tabs-style-bar nav ul li a span {
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 30px;
-        padding-right: 5px;
-        padding-left: 5px;
-    }
+	.tabs-style-bar nav ul:not(.multiselect-container) li a span {
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		font-weight: 500;
+		font-size: 12px;
+		line-height: 30px;
+		padding-right: 5px;
+		padding-left: 5px;
+	}
 
-    .tabs-style-bar nav ul li.tab-current a {
-        background: #2a3139;
-        color: #fff;
-    }
+	.tabs-style-bar nav ul:not(.multiselect-container) li.tab-current a {
+		background: #2a3139;
+		color: #fff;
+	}
 
 /*****************************/
 /* Icon box */
@@ -50,58 +50,58 @@
 	background: rgba(255,255,255,0.4);
 }
 
-.tabs-style-iconbox nav ul li a {
-	overflow: visible;
-	padding: 2em 0;
-	line-height: 1;
-	-webkit-transition: color 0.2s;
-	transition: color 0.2s;
-}
+	.tabs-style-iconbox nav ul:not(.multiselect-container) li a {
+		overflow: visible;
+		padding: 2em 0;
+		line-height: 1;
+		-webkit-transition: color 0.2s;
+		transition: color 0.2s;
+	}
 
-.tabs-style-iconbox nav ul li a span {
-	font-weight: 700;
-	font-size: 0.7em;	
-}
+	.tabs-style-iconbox nav ul:not(.multiselect-container) li a span {
+		font-weight: 700;
+		font-size: 0.7em;
+	}
 
-.tabs-style-iconbox nav ul li.tab-current {
-	z-index: 100;
-}
+	.tabs-style-iconbox nav ul:not(.multiselect-container) li.tab-current {
+		z-index: 100;
+	}
 
-.tabs-style-iconbox nav ul li.tab-current a {
-	background: #fff;
-	box-shadow: -1px 0 0 #fff;
-}
+	.tabs-style-iconbox nav ul:not(.multiselect-container) li.tab-current a {
+		background: #fff;
+		box-shadow: -1px 0 0 #fff;
+	}
 
-.tabs-style-iconbox nav ul li.tab-current a::after {
-	position: absolute;
-	top: 100%;
-	left: 50%;
-	margin-left: -10px;
-	width: 0;
-	height: 0;
-	border: solid transparent;
-	border-width: 10px;
-	border-top-color: #fff;
-	content: '';
-	pointer-events: none;
-}
+	.tabs-style-iconbox nav ul:not(.multiselect-container) li.tab-current a::after {
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		margin-left: -10px;
+		width: 0;
+		height: 0;
+		border: solid transparent;
+		border-width: 10px;
+		border-top-color: #fff;
+		content: '';
+		pointer-events: none;
+	}
 
-.tabs-style-iconbox nav ul li:first-child::before,
-.tabs-style-iconbox nav ul li::after {
-	position: absolute;
-	top: 20%;
-	right: 0;
-	z-index: -1;
-	width: 1px;
-	height: 60%;
-	background: rgba(0,0,0,0.07);
-	content: '';
-}
+	.tabs-style-iconbox nav ul:not(.multiselect-container) li:first-child::before,
+	.tabs-style-iconbox nav ul:not(.multiselect-container) li::after {
+		position: absolute;
+		top: 20%;
+		right: 0;
+		z-index: -1;
+		width: 1px;
+		height: 60%;
+		background: rgba(0,0,0,0.07);
+		content: '';
+	}
 
-.tabs-style-iconbox nav ul li:first-child::before {
-	right: auto;
-	left: 0;
-}
+	.tabs-style-iconbox nav ul:not(.multiselect-container) li:first-child::before {
+		right: auto;
+		left: 0;
+	}
 
 .tabs-style-iconbox .icon::before {
 	display: block;

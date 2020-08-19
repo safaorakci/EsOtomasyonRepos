@@ -5,7 +5,7 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
-
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 %>
 
     <style>
@@ -149,7 +149,7 @@
                         <ul>
 
                             <%
-                                SQL="select month(toplanti_tarihi) as ay, count(id) as adet from ahtapot_toplanti_listesi where year(toplanti_tarihi) = '"& year(date) &"' group by month(toplanti_tarihi)"
+                                SQL="select month(toplanti_tarihi) as ay, count(id) as adet from ahtapot_toplanti_listesi where year(toplanti_tarihi) = '"& year(date) &"' and firma_id = '"& FirmaID &"' group by month(toplanti_tarihi)"
                                 set toplantilar = baglanti.execute(sQL)
                                 if toplantilar.eof then
                                 %>
@@ -170,7 +170,7 @@
                         <h2 class="recent-highlight bg-warning"><%=year(cdate(date))+1 %></h2>
                         <ul>
                             <%
-                                SQL="select month(toplanti_tarihi) as ay, count(id) as adet from ahtapot_toplanti_listesi where year(toplanti_tarihi) = '"& year(date)+1 &"' group by month(toplanti_tarihi)"
+                                SQL="select month(toplanti_tarihi) as ay, count(id) as adet from ahtapot_toplanti_listesi where year(toplanti_tarihi) = '"& year(date)+1  &"' and firma_id = '"& FirmaID &"' group by month(toplanti_tarihi)"
                                 set toplantilar = baglanti.execute(sQL)
                                 if toplantilar.eof then
                                 %>
@@ -190,7 +190,7 @@
                         <h2 class="recent-highlight bg-danger"><%=year(cdate(date))-1 %></h2>
                         <ul>
                             <%
-                                SQL="select month(toplanti_tarihi) as ay, count(id) as adet from ahtapot_toplanti_listesi where year(toplanti_tarihi) = '"& year(date)-1 &"' group by month(toplanti_tarihi)"
+                                SQL="select month(toplanti_tarihi) as ay, count(id) as adet from ahtapot_toplanti_listesi where year(toplanti_tarihi) = '"& year(date)-1 &"' and firma_id = '"& FirmaID &"' group by month(toplanti_tarihi)"
                                 set toplantilar = baglanti.execute(sQL)
                                 if toplantilar.eof then
                                 %>

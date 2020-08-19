@@ -21,10 +21,10 @@
 
 /* Nav */
 .tabs nav {
-	text-align: center;
+    text-align: center;
 }
 
-    .tabs nav ul {
+    .tabs nav ul:not(.multiselect-container):not(.pagination) {
         position: relative;
         display: -ms-flexbox;
         display: -webkit-flex;
@@ -45,42 +45,41 @@
         -moz-justify-content: center;
         -ms-justify-content: center;
         justify-content: center;
-        
     }
 
-.tabs nav ul li {
-	position: relative;
-	z-index: 1;
-	display: block;
-	margin: 0;
-	text-align: center;
-	-webkit-flex: 1;
-	-moz-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
-}
+        .tabs nav ul:not(.multiselect-container):not(.pagination) li {
+            position: relative;
+            z-index: 1;
+            display: block;
+            margin: 0;
+            text-align: center;
+            -webkit-flex: 1;
+            -moz-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+        }
 
-.tabs nav a {
-	position: relative;
-	display: block;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	line-height: 20px;
-}
+    .tabs nav a {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 20px;
+    }
 
-.tabs nav a span {
-	vertical-align: middle;
-	font-size: 0.75em;
-}
+        .tabs nav a span {
+            vertical-align: middle;
+            font-size: 0.75em;
+        }
 
     .tabs nav li.tab-current a {
         color: #4099ff;
     }
 
-.tabs nav a:focus {
-	outline: none;
-}
+    .tabs nav a:focus {
+        outline: none;
+    }
 
 /* Icons */
 /*
@@ -120,7 +119,7 @@
     margin-top: 10px;
 }
 
-.tabs-style-bar nav ul > li > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li > a.icon::before {
     background-color: white;
     padding: 3px;
     -webkit-border-radius: 5px;
@@ -129,69 +128,69 @@
 }
 
 
-.tabs-style-bar nav ul > li > a {
+.tabs-style-bar nav ul:not(.multiselect-container) > li > a {
     font-size: 15px;
 }
 
 
 
-.tabs-style-bar nav ul > li:nth-child(1) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(1) > a.icon::before {
     color: #4099ff;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(2) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(2) > a.icon::before {
     color: #F88EA4;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(3) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(3) > a.icon::before {
     color: #2ed8b6;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(4) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(4) > a.icon::before {
     color: #f1c40f;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(5) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(5) > a.icon::before {
     color: #ab7967;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(6) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(6) > a.icon::before {
     color: #39ADB5;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(7) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(7) > a.icon::before {
     color: #7C4DFF;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(8) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(8) > a.icon::before {
     color: #FF5370;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(9) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(9) > a.icon::before {
     color: #4099ff;
 }
 
 
 
-.tabs-style-bar nav ul > li:nth-child(10) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(10) > a.icon::before {
     color: #F88EA4;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(11) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(11) > a.icon::before {
     color: #2ed8b6;
 }
 
 
-.tabs-style-bar nav ul > li:nth-child(12) > a.icon::before {
+.tabs-style-bar nav ul:not(.multiselect-container) > li:nth-child(12) > a.icon::before {
     color: #f1c40f;
 }
 
@@ -238,10 +237,13 @@
 .icon-box::before {
 	content: "\e674";
 }
+.icon-money::before {
+    content: "\f0d6";
+}
 
 /* Content */
 .content-wrap {
-	position: relative;
+    position: relative;
 }
 
     .content-wrap section {
@@ -265,14 +267,14 @@
 	border-bottom: 1px solid rgba(255,255,255,0.6);
 }
 
-.no-flexbox nav ul {
-	display: block;
+.no-flexbox nav ul:not(.multiselect-container) {
+    display: block;
 }
 
-.no-flexbox nav ul li {
-	min-width: 15%;
-	display: inline-block;
-}
+    .no-flexbox nav ul:not(.multiselect-container) li {
+        min-width: 15%;
+        display: inline-block;
+    }
 
 @media screen and (max-width: 75em) {
 	.tabs nav a.icon span {

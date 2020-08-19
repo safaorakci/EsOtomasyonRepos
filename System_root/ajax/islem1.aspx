@@ -1,15 +1,17 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="islem1.aspx.cs" EnableViewState="false" Inherits="System_root_ajax_islem1" %>
+
 <form autocomplete="off" id="form1" class="smart-form validateform" runat="server">
+
 
     <asp:panel id="yeni_santiye_ekle_panel" runat="server">
 
         <div class="modal-header">
-            <% Response.Write(LNG("Proje Ekle")); %>
+            <h6 class="card-title">Proje Ekle</h6>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
             </div>
-        <div id="proje_ekle_form"  runat="server" class="smart-form validateform" style="padding:15px;">
+            <div id="proje_ekle_form" runat="server" class="smart-form validateform" style="padding:15px;">
 
                         <div class="row">
                             <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Firma :")); %></label>
@@ -72,7 +74,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="display:none">
                             <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Üretim Şablonu :")); %></label>
                             <div class="col-sm-12">
                                 <asp:dropdownlist ID="uretim_sablon_id" class="form-control select2" runat="server"></asp:dropdownlist>
@@ -86,12 +88,10 @@
                                 <asp:dropdownlist ID="firma_supervisor_id" class="form-control select2" runat="server"></asp:dropdownlist>
                             </div>
                         </div>
-            <div class="modal-footer">
-                    <input type="button" onclick="proje_ekle();" class="btn btn-primary" value="<% Response.Write(LNG("Proje Ekle")); %>" />
-
-                </div>
-                            
                         </div>
+            <div class="modal-footer">  
+                <asp:Button type="button" runat="server" id="proje_ekle_buton" class="btn btn-primary" text="Proje Ekle"></asp:Button>
+            </div>
     </asp:panel>
 
     <asp:panel id="tablo_customize_panel" runat="server">
@@ -124,7 +124,9 @@
 					            <td><%# DataBinder.Eval(Container.DataItem, "ekleme_tarihi") %></td>
 					            <td><%# DataBinder.Eval(Container.DataItem, "ekleme_saati") %></td>
                                 <td><%# DataBinder.Eval(Container.DataItem, "personel_adsoyad") %></td>
-					            <td><a class="btn btn-primary btn-xs" onclick="yeni_is_dosyasi_indir('<%# DataBinder.Eval(Container.DataItem, "id") %>');" href="javascript:void(0);"><% Response.Write(LNG("İndir")); %></a>&nbsp;&nbsp;<a class="btn btn-danger btn-xs" onclick="dosya_listesi_sil('<%# DataBinder.Eval(Container.DataItem, "id") %>', '<%# DataBinder.Eval(Container.DataItem, "is_id") %>');" href="javascript:void(0);"><% Response.Write(LNG("Sil")); %></a></td>
+					            <td>
+                                    <a class="btn btn-warning btn-mini text-white" onclick="OpenOrDownloadFile('<%# DataBinder.Eval(Container.DataItem, "dosya_yolu")%>')"><%# DataBinder.Eval(Container.DataItem, "Tip") %></a>
+                                    <a class="btn btn-danger btn-mini" onclick="dosya_listesi_sil('<%# DataBinder.Eval(Container.DataItem, "id") %>', '<%# DataBinder.Eval(Container.DataItem, "is_id") %>');" href="javascript:void(0);"><% Response.Write(LNG("Sil")); %></a></td>
 				            </tr>
                         </ItemTemplate>
                 </asp:Repeater>
@@ -159,11 +161,11 @@
                  });
 
              });
-        </script>
+         </script>
 
          <div class="modal-header"> 
              
-             <h4 class="modal-title"><% Response.Write(LNG("İş Düzenle")); %></h4>
+             <h6 class="modal-title"><% Response.Write(LNG("İş Düzenle")); %></h6>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -204,7 +206,7 @@
 
                                       dis_ekle_yeni_takvim_calistir();
                                   })
-                                </script>
+                              </script>
                         </div>
 
                         <div class="row" style="display:none;">
@@ -663,7 +665,7 @@
                 </a>
             </td>       
             <td class="icon-list-demo2">
-                <a href="javascript:void(0);" id="personel<%# DataBinder.Eval(Container.DataItem, "id") %>" onclick="sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id=<%# DataBinder.Eval(Container.DataItem, "id") %>');" rel="tooltip" data-placement="top" data-original-title="<% Response.Write(LNG("Personel Detaylarını Görüntüle")); %>">
+                <a href="javascript:void(0);" id="personel<%# DataBinder.Eval(Container.DataItem, "id") %>" onclick="sayfagetir('/personel_detaylari/', 'jsid=4559&personel_id=<%# DataBinder.Eval(Container.DataItem, "id") %>&ustId=<%=Request.Form["ustId"] %>');" rel="tooltip" data-placement="top" data-original-title="<% Response.Write(LNG("Personel Detaylarını Görüntüle")); %>">
                     <i class="fa fa-external-link"></i>
                 </a>
                 &nbsp;
@@ -682,81 +684,47 @@
 
     <asp:panel id="santiye_durum_panel" runat="server">
 
-        <script>
-            $(function () {
+        <script type="text/javascript">
 
-
-                var oTable = $('.datatableyap1').dataTable({
-                    /*"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
-                    "t" +
-                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-                    "autoWidth": true,
-                    "preDrawCallback": function () {
-
-                        var table = $(this);
-                        if (!responsiveHelper_dt_basic) {
-                            responsiveHelper_dt_basic = new ResponsiveDatatablesHelper(table, breakpointDefinition);
-                        }
-
-                    },
-                    "rowCallback": function (nRow) {
-                        responsiveHelper_dt_basic.createExpandIcon(nRow);
-                    },
-                    "drawCallback": function (oSettings) {
-                        responsiveHelper_dt_basic.respond();
-                    },
-                    "order": []*/
-
+            $(document).ready(function () {
+                $('.santiye-durum').dataTable({
+                    ordering: false,
+                    destroy: true
                 });
+            });
 
-
-                $(".datatableyap1  tbody").sortable({
+            $(function () {
+                $(".sortable").sortable({
                     opacity: 0.6,
-                    cursor: 'move',
+                    cursor: 'pointer',
                     update: function (ev, ui) {
-                        var oSettings = oTable.fnSettings();
-                        var clonedData = oSettings.aoData.slice();
                         var siralamam = "";
-                        $('.datatableyap1 tbody tr').each(function (i) {
-                            //   alert($('.datatableyap1 tbody tr td').html()[i]);
+
+                        $('.sortable tr').each(function (i) {
                             siralamam = siralamam + $(this).find(".idler").attr("id") + "-" + parseFloat(i + 1) + ",";
-                            var startPos = oTable.fnGetPosition(this);
-                            //alert("i: " + i + " startPos: " + startPos)
-                            clonedData[i] = oSettings.aoData[startPos];
-                            clonedData[i]._iId = i;
-                            // App specific - first table col contains an incremental count which needs to be refreshed after a move
-                            // Without cloning hack - do this with fnUpdate()
-                            clonedData[i].nTr.cells[0].innerHTML = i + 1;
-                            clonedData[i].nTr.cells[0].innerText = i + 1;
+                            //console.log(siralamam);
+                            //console.log("i: " + i);
                         })
-                        var data = "islem=siralamakaydet&siralama=" +
-                            siralamam +
-                            "&tablo=tanimlama_santiye_durum_listesi";
-                        $("#koftiden").loadHTML({ url: "/ajax_request/", data: data },
-                            function () {
-                                mesaj_ver("<% Response.Write(LNG("Departmanlar")); %>",
-                                    "<% Response.Write(LNG("Sıralama Başarıyla Kaydedildi")); %>",
-                                    "success");
-                            })
-                        // $(".datatableyap1").fnReloadAjax();
-                        // oTable.fnReloadAjax('/araclar/ajax_tablo_doldurucu/?tablono=' + $("#tablo1").attr('TabloNo') + '&' + sondata);
-                        oSettings.aoData = clonedData;
+                        var data = "islem=siralamakaydet&siralama=" + siralamam + "&tablo=tanimlama_santiye_durum_listesi";
+                        $("#koftiden").loadHTML({ url: "/ajax_request/", data: data }, function () {
+                            mesaj_ver("Departmanlar", "Sıralama Başarıyla Kaydedildi", "success");
+                        });
                     }
                 });
             });
         </script>
         <div  class="dt-responsive table-responsive">
-            <table id="dt_basic" class="table table-striped table-bordered table-hover datatableyap" style="width:973px">
+            <table id="dt_basic" class="table table-striped table-bordered table-hover santiye-durum" style="width:100%">
     <thead>
         <tr>
             <th style="width: 30px; ">ID</th>
             <th><% Response.Write(LNG("Durum Adı")); %></th>
-            <th style="width: 100px; text-align:center;"><% Response.Write(LNG("Proje Kodu Üret")); %></th>
-            <th style="width: 40px; text-align:center;"><% Response.Write(LNG("Durum")); %></th>
-            <th style="width: 60px;"><% Response.Write(LNG("İşlem")); %></th>
+            <th style="width: 80px; text-align:center; white-space:nowrap;"><% Response.Write(LNG("Proje Kodu Üret")); %></th>
+            <th style="width: 40px; text-align:center; white-space:nowrap;"><% Response.Write(LNG("Durum")); %></th>
+            <th style="width: 70px; white-space:nowrap;"><% Response.Write(LNG("İşlem")); %></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="sortable">
         <asp:Panel ID="santiye_durum_kayityok_panel" runat="server">
         <tr>
             <td colspan="3" style="text-align: center; vertical-align: middle;"><% Response.Write(LNG("Kayıt Yok")); %></td>
@@ -776,7 +744,7 @@
                <asp:Label runat="server" ID="str2santiye_label">
                     <asp:CheckBox ID="st2_santiye" runat="server"></asp:CheckBox>                   </asp:Label>
             </td>
-            <td class="icon-list-demo2">
+            <td class="icon-list-demo2" style="white-space:nowrap;">
                 <a href="javascript:void(0);" rel="tooltip" onclick="santiye_durum_duzenle(<%# DataBinder.Eval(Container.DataItem, "id") %>);" data-placement="top" data-original-title="<% Response.Write(LNG("Proje Durum Düzenle")); %>">
                     <i class="fa fa-edit"></i>
                 </a>&nbsp;
@@ -808,7 +776,7 @@
     <thead>
         <tr>
             <th style="width: 30px;">ID</th>
-            <th><% Response.Write(LNG("Görev Adı")); %></th>
+            <th style="white-space:nowrap;"><% Response.Write(LNG("Görev Adı")); %></th>
             <th style="width: 60px; text-align:center;"><% Response.Write(LNG("Durum")); %></th>
             <th style="width: 60px;"><% Response.Write(LNG("İşlem")); %></th>
         </tr>
@@ -824,12 +792,12 @@
                 <ItemTemplate>
                     <tr>
             <td style="width:30px;"><%# DataBinder.Eval(Container.DataItem, "sira") %></td>
-            <td><%# DataBinder.Eval(Container.DataItem, "gorev_adi") %></td>
+            <td style="white-space:nowrap;"><%# DataBinder.Eval(Container.DataItem, "gorev_adi") %></td>
             <td style="text-align:center; width:60px;">
                  <asp:Label runat="server" ID="str2_label">
                     <asp:CheckBox ID="st2" runat="server"></asp:CheckBox>                   </asp:Label>
             </td>
-            <td class="icon-list-demo2" style="width:60px;">
+            <td class="icon-list-demo2" style="width:60px; white-space:nowrap;">
                 <a href="javascript:void(0);" rel="tooltip" onclick="gorev_duzenle(<%# DataBinder.Eval(Container.DataItem, "id") %>);" data-placement="top" data-original-title="<% Response.Write(LNG("Görev Düzenle")); %>">
                     <i class="fa fa-edit"></i>
                 </a>&nbsp;
@@ -848,73 +816,35 @@
         </asp:panel>
     <asp:panel id="departmanlar_panel" runat="server">
 
-        <script>
-            $(function () {
+        <script type="text/javascript">
 
-
-                var oTable = $('.datatableyap1').dataTable({
-                    /* "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
-                     "t" +
-                     "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-                     "autoWidth": true,
-                     "preDrawCallback": function () {
- 
-                         var table = $(this);
-                         if (!responsiveHelper_dt_basic) {
-                             responsiveHelper_dt_basic = new ResponsiveDatatablesHelper(table, breakpointDefinition);
-                         }
- 
-                     },
-                     "rowCallback": function (nRow) {
-                         responsiveHelper_dt_basic.createExpandIcon(nRow);
-                     },
-                     "drawCallback": function (oSettings) {
-                         responsiveHelper_dt_basic.respond();
-                     },
-                     "order": []*/
-
+            $(document).ready(function () {
+                $('.departman-tanimlama').dataTable({
+                    ordering: false,
+                    destroy: true
                 });
+            });
 
-
-                $(".datatableyap1  tbody").sortable({
+            $(function () {
+                $(".sortable").sortable({
                     opacity: 0.6,
                     cursor: 'move',
                     update: function (ev, ui) {
-                        var oSettings = oTable.fnSettings();
-                        var clonedData = oSettings.aoData.slice();
                         var siralamam = "";
-                        $('.datatableyap1 tbody tr').each(function (i) {
-                            //   alert($('.datatableyap1 tbody tr td').html()[i]);
+                        $('.sortable tr').each(function (i) {
                             siralamam = siralamam + $(this).find(".idler").attr("id") + "-" + parseFloat(i + 1) + ",";
-                            var startPos = oTable.fnGetPosition(this);
-                            //alert("i: " + i + " startPos: " + startPos)
-                            clonedData[i] = oSettings.aoData[startPos];
-                            clonedData[i]._iId = i;
-                            // App specific - first table col contains an incremental count which needs to be refreshed after a move
-                            // Without cloning hack - do this with fnUpdate()
-                            clonedData[i].nTr.cells[0].innerHTML = i + 1;
-                            clonedData[i].nTr.cells[0].innerText = i + 1;
                         })
                         var data = "islem=siralamakaydet&siralama=" + siralamam + "&tablo=tanimlama_departman_listesi";
-                        $("#koftiden").loadHTML({ url: "/ajax_request/", data: data },
-                            function () {
-                                mesaj_ver("<% Response.Write(LNG("Departmanlar")); %>",
-                                    "<% Response.Write(LNG("Sıralama Başarıyla Kaydedildi")); %>",
-                                    "success");
-                            })
-                        // $(".datatableyap1").fnReloadAjax();
-                        // oTable.fnReloadAjax('/araclar/ajax_tablo_doldurucu/?tablono=' + $("#tablo1").attr('TabloNo') + '&' + sondata);
-                        oSettings.aoData = clonedData;
+                        $("#koftiden").loadHTML({ url: "/ajax_request/", data: data }, function () {
+                            mesaj_ver("Departmanlar", "Sıralama Başarıyla Kaydedildi", "success");
+                        });
                     }
                 });
-
-
-                c
             });
         </script>
 
     <div class="dt-responsive table-responsive">
-        <table id="dt_basic" class="table table-striped table-bordered table-hover text-nowrap datatableyap" style="width:973px">
+        <table id="dt_basic" class="table table-striped table-bordered table-hover text-nowrap departman-tanimlama" style="width:100%">
             <thead>
                 <tr>
                     <th style="width: 30px;">ID</th>
@@ -925,16 +855,16 @@
                     <th style="width: 60px;"><% Response.Write(LNG("İşlem")); %></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="sortable">
                 <asp:panel id="departmanlar_kayityok_panel" runat="server">
-        <tr>
-            <td colspan="5" style="text-align: center; vertical-align: middle;"><% Response.Write(LNG("Kayıt Yok")); %></td>
-        </tr>
-       </asp:panel>
+                    <tr>
+                        <td colspan="5" style="text-align: center; vertical-align: middle;"><% Response.Write(LNG("Kayıt Yok")); %></td>
+                    </tr>
+                </asp:panel>
                 <asp:panel id="departmanlar_kayitvar_panel" runat="server">
             <asp:Repeater ID="departmanlar_repeater" runat="server">
                 <ItemTemplate>
-                    <tr>
+                    <tr order-no="<%# DataBinder.Eval(Container.DataItem, "sirano") %>">
             <td class="idler" id="<%# DataBinder.Eval(Container.DataItem, "id") %>"><%# DataBinder.Eval(Container.DataItem, "sira") %></td>
             <td><%# DataBinder.Eval(Container.DataItem, "departman_adi") %></td>
                         
@@ -976,20 +906,15 @@
         <asp:panel id="yeni_olay_ekle_panel" runat="server">
 
 
-        <div id="yeni_olay_ekle_panel_form" style="padding:15px;">
-        <div class="modal-header"> 
-             
-             <div>
-		
-    <h4 class="modal-title"> <h5><% Response.Write(LNG("Olay Ekle")); %></h5></h4>
-        
-	</div>
-         
+        <div id="yeni_olay_ekle_panel_form">
+        <div class="modal-header">		
+            <h6 class="modal-title"><% Response.Write(LNG("Olay Ekle")); %></h6>         
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
             </button>
-            </div>
+        </div>
 
+        <div class="modal-body">
             <div class="row">
                 <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Olay :")); %></label>
                 <div class="col-sm-12">
@@ -1009,12 +934,16 @@
                             <i class="icon-prepend fa fa-calendar"></i>
                         </span>
                         <asp:TextBox ID="olay_tarihi" class="takvimyap form-control" runat="server"></asp:TextBox>
-                             <script>
+                             <script type="text/javascript">
                                  var dt = new Date();
                                  var time = dt.getHours() + ":" + dt.getMinutes();
                                  $("#olay_saati").val(time);
                                  $("#olay_tarihi").val(new Date().toLocaleDateString());
-                            </script>
+
+                                 $(".takvimyap").datepicker({
+                                     maxDate: dt
+                                 });
+                             </script>
                     </div>
                 </div>
             </div>
@@ -1029,38 +958,26 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-
-            
-            </div>
-        <div class="modal-footer" style="padding:20px">
-                <asp:Button runat="server" class="btn btn-primary"  ID="olay_kayit_buton"></asp:Button>
+        </div>
+        <div class="modal-footer">
+             <asp:Button runat="server" class="btn btn-primary btn-sm" ID="olay_kayit_buton"></asp:Button>
         </div>
 
             
     </asp:panel>
 
-        <asp:panel id="yeni_olay_duzenle_panel" runat="server">
-
-
-        <div id="yeni_olay_duzenle_panel_form" style="padding:15px;">
-
-            <div class="modal-header"> 
-             
-             <div>
-		
-    <h4 class="modal-title"> <h5><% Response.Write(LNG("Olay Düzenle")); %></h5></h4>
-        
-	</div>
-         
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-            </button>
+    <asp:panel id="yeni_olay_duzenle_panel" runat="server">
+        <div id="yeni_olay_duzenle_panel_form">
+            <div class="modal-header">
+                <h6 class="modal-title"><% Response.Write(LNG("Olay Düzenle")); %></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
-
-       
-
-            <div class="row">
+            <div class="modal-body">
+                            <div class="row">
                 <label class="col-sm-12 col-form-label"><% Response.Write(LNG("Olay :")); %></label>
                 <div class="col-sm-12">
                     <div class="input-group input-group-primary">
@@ -1079,6 +996,12 @@
                             <i class="icon-prepend fa fa-calendar"></i>
                         </span>
                         <asp:TextBox ID="dolay_tarihi" class="takvimyap form-control" runat="server"></asp:TextBox>
+                        <script type="text/javascript">
+                            var dt = new Date();
+                            $(".takvimyap").datepicker({
+                                maxDate: dt
+                            });
+                        </script>
                     </div>
                 </div>
             </div>
@@ -1093,13 +1016,11 @@
                     </div>
                 </div>
             </div>
-
-
-            
-            </div>
-        <div class="row modal-footer" style="padding:20px">
-                <asp:Button runat="server" class="btn btn-primary"  ID="olay_guncelle_buton"></asp:Button>&nbsp;
-        <asp:Button runat="server" class="btn btn-danger"  ID="olay_sil_buton"></asp:Button>
+            </div>   
+        </div>
+        <div class="modal-footer">
+            <asp:Button runat="server" class="btn btn-primary btn-sm"  ID="olay_guncelle_buton"></asp:Button>
+            <asp:Button runat="server" class="btn btn-danger btn-sm"  ID="olay_sil_buton"></asp:Button>
         </div>
 
             
@@ -1109,7 +1030,7 @@
         <asp:panel id="departman_duzenle_panel" runat="server">
 
          <div class="modal-header">
-                <h4 class="modal-title"><% Response.Write(LNG("Proje Durum Güncelle")); %></h4>
+                <h6 class="modal-title"><% Response.Write(LNG("Proje Durum Güncelle")); %></h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -1265,8 +1186,17 @@
                                                 <span style="float:right; margin-top:-30px; text-align:right;">İş Kodu :<br /><strong><%# DataBinder.Eval(Container.DataItem, "is_kodu") %></strong></span>
                                             </td>
 
-                                            <td class="tablo_gorevliler <%# DataBinder.Eval(Container.DataItem, "tablo_gorevliler") %>"><div>
-                                                <div class="project-members"><asp:Repeater ID="gorevli_repeater" runat="server"><ItemTemplate><span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "adi") %></span><a rel="tooltip"  data-toggle="tooltip" data-html="true" data-original-title="<img src='<%# DataBinder.Eval(Container.DataItem, "resim") %>' alt='<%# DataBinder.Eval(Container.DataItem, "adi") %>' class='online' style='width:75px;'><br><%# DataBinder.Eval(Container.DataItem, "adi") %>" data-placement="top"  href="javascript:void(0)"><img src="<%# DataBinder.Eval(Container.DataItem, "resim") %>" class="online"></a>&nbsp;</ItemTemplate></asp:Repeater></div></div>
+                                            <td class="tablo_gorevliler <%# DataBinder.Eval(Container.DataItem, "tablo_gorevliler") %>">
+                                                <div>
+                                                    <div class="project-members">
+                                                        <asp:Repeater ID="gorevli_repeater" runat="server">
+                                                            <ItemTemplate>
+                                                                <span class="hiddenspan"><%# DataBinder.Eval(Container.DataItem, "adi") %></span>
+                                                                <a rel="tooltip"  data-toggle="tooltip" data-html="true" data-original-title="<img src='<%# DataBinder.Eval(Container.DataItem, "resim") %>' alt='<%# DataBinder.Eval(Container.DataItem, "adi") %>' class='online' style='width:75px;'><br><%# DataBinder.Eval(Container.DataItem, "adi") %>" data-placement="top"  href="javascript:void(0)"><img src="<%# DataBinder.Eval(Container.DataItem, "resim") %>" class="online"></a>&nbsp;
+                                                            </ItemTemplate>
+                                                        </asp:Repeater>
+                                                    </div>
+                                                </div>
                                             </td>
 
                                             <td class="tablo_etiketler <%# DataBinder.Eval(Container.DataItem, "tablo_etiketler") %>"><div><%# DataBinder.Eval(Container.DataItem, "departman_isimleri") %>&nbsp;<%# DataBinder.Eval(Container.DataItem, "hidden_etiketler") %></div></td>
@@ -1307,6 +1237,141 @@
             </div>
         </asp:panel>
 
+        <asp:panel id="is_listesi_new_panel" runat="server">
+            <asp:Panel ID="isler_var_new_panel" runat="server">
+                <asp:Repeater ID="isler_new_repeater" runat="server">
+                    <ItemTemplate>               
+                        <div class="card mb-3 border round-none taskBoard" task-name="<%# DataBinder.Eval(Container.DataItem, "adi") %>">
+                            <div class="card-header p-2 pl-4 pr-4 border-bottom" id="headingOne">
+                                <div class="row">
+                                    <div class="col-md-3 p-1 m-auto TaskTitle">
+                                        <h5 class="card-title mb-0">
+                                            <a class="cursor-pointer" data-toggle="collapse" data-target="#collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" aria-expanded="false" aria-controls="collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" onclick="GetTaskDetail('<%# DataBinder.Eval(Container.DataItem, "id") %>');">
+                                                <i class="fa fa-arrow-right mr-1"></i> <label class="badge badge-success mb-0 mr-1" data-toggle="tooltip" data-placement="top" title="<%# DataBinder.Eval(Container.DataItem, "is_kodu") %>"><i class="fa fa-info"></i></label> <%# DataBinder.Eval(Container.DataItem, "id") %> - <%# DataBinder.Eval(Container.DataItem, "adi") %>
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div class="col p-1 m-auto TaskView TaskAttendant">
+                                        <span class="">
+                                            <asp:Repeater ID="gorevli_new_repeater" runat="server">
+                                                <ItemTemplate>
+                                                    <span class="d-none attendantname" attendantname="<%# DataBinder.Eval(Container.DataItem, "adi") %>"></span>
+                                                    <img class="img-30 round" src="<%# DataBinder.Eval(Container.DataItem, "resim") %>" />
+                                                </ItemTemplate>
+                                            </asp:Repeater>
+                                        </span>
+                                    </div>
+                                    <div class="col p-1 m-auto TaskView TaskAddPersonel">
+                                        <span class="text-nowrap display-inline-block">
+                                            <span class="addpersonel" addpersonel="<%# DataBinder.Eval(Container.DataItem, "ekleyen_adsoyad") %>"><%# DataBinder.Eval(Container.DataItem, "ekleyen_adsoyad") %></span>
+                                        </span>
+                                    </div>
+                                    <div class="col p-1 m-auto TaskView TaskTag">
+                                        <span class="tasktag" tasktag="<%# DataBinder.Eval(Container.DataItem, "departman_isimleri") %>">
+                                            <label class="badge badge-primary mb-0" data-toggle="tooltip" data-placement="top" title="<%# DataBinder.Eval(Container.DataItem, "departman_isimleri") %>">
+                                                ETİKETLER
+                                            </label>
+                                        </span>
+                                    </div>
+                                    <div class="col p-1 m-auto TaskView TaskProgress">
+                                        <span class="float-left mr-1 progres" progres="<%# DataBinder.Eval(Container.DataItem, "tamamlanma_orani") %>" id="taskProgressTEXT<%# DataBinder.Eval(Container.DataItem, "id") %>"><%# DataBinder.Eval(Container.DataItem, "tamamlanma_orani") %>%</span>
+                                        <div class="progress mb-0 round text-align">
+                                            <div class="progress-bar" id="taskProgress<%# DataBinder.Eval(Container.DataItem, "id") %>" role="progressbar" style="width:<%# DataBinder.Eval(Container.DataItem, "tamamlanma_orani") %>%;" aria-valuenow="<%# DataBinder.Eval(Container.DataItem, "tamamlanma_orani") %>" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col p-1 m-auto TaskView TaskStartDate">
+                                        <span class="text-align display-inline-block startdate" startdate="<%# DataBinder.Eval(Container.DataItem, "baslangic_tarihi") %>">
+                                            <i class="fa fa-calendar mr-1 "></i>
+                                            <%# DataBinder.Eval(Container.DataItem, "baslangic_tarihi") %> - <%# DataBinder.Eval(Container.DataItem, "baslangic_saati") %>
+                                        </span>
+                                    </div>
+                                    <div class="col p-1 m-auto TaskView TaskEndDate">
+                                        <span class="text-align display-inline-block enddate" enddate="<%# DataBinder.Eval(Container.DataItem, "bitis_tarihi") %>">
+                                            <i class="fa fa-calendar mr-1 "></i>
+                                            <%# DataBinder.Eval(Container.DataItem, "bitis_tarihi") %> - <%# DataBinder.Eval(Container.DataItem, "bitis_saati") %>
+                                        </span>
+                                    </div>
+                                    <div class="col p-1  text-center m-auto TaskView TaskPriority">
+                                        <span class="label label-<%# DataBinder.Eval(Container.DataItem, "oncelik_class") %> priority" priority="<%# DataBinder.Eval(Container.DataItem, "oncelik") %>"><%# DataBinder.Eval(Container.DataItem, "oncelik") %></span>
+                                    </div>
+                                    <div class="col p-1 text-center m-auto TaskView TaskState">
+                                        <span class="label label-<%# DataBinder.Eval(Container.DataItem, "is_durum_class") %> state" state="<%# DataBinder.Eval(Container.DataItem, "is_durum") %>"><%# DataBinder.Eval(Container.DataItem, "is_durum") %></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" class="collapse" aria-labelledby="headingOne<%# DataBinder.Eval(Container.DataItem, "id") %>" data-parent="#accordion">
+                                <div class="card-body p-3 bg-light-gray" id="TaskDetail<%# DataBinder.Eval(Container.DataItem, "id") %>">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+                <div class="col-md-12 mt-2 border-top p-0">
+                    <nav aria-label="Page navigation example" class="text-right">
+                        <ul id="pagination" class="pagination m-0 mt-2 mr-1">
+
+                        </ul>
+                    </nav>
+                </div>
+            </asp:panel>
+
+            <script type="text/javascript">
+                TaskPagination();
+
+                TaskFilterSelect();
+
+                FilterSelect();
+
+                $(document).ready(function () {
+
+                    $(".filter-button").find("span:first-child").addClass("f-13");
+
+                    $("#isler_var_new_panel .taskBoard:last-child").removeClass("mb-3").addClass("mb-0");
+
+                    if (window.innerWidth < 450) {
+                        $("#mob-Filter").hide();
+                        $("#mob-Header").hide();
+                        $("#Mob-Task-States").hide();
+
+                        $(".TaskTitle").addClass("border-bottom").removeClass("m-auto").addClass("pt-2 pb-2 mb-2");
+                        $(".TaskAddPersonel").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Ekleyen :</span>");
+                        $(".TaskProgress").removeClass("col").addClass("col-xs-12");
+                        $(".TaskEndDate").removeClass("col").addClass("col-xs-12").prepend("<span class='mr-2 display-inline-block font-weight-bold'>Termin Tarihi :</span>");
+                        $(".TaskAttendant").hide();
+                        $(".TaskTag").hide();
+                        $(".TaskStartDate").hide();
+                        $(".TaskDetails").slideUp();
+                    }
+                });
+
+                $(document).ready(function () {
+                    TaskFilter();
+
+                    $("#framework").on('change', function () {
+                        var search = [];
+                        $.each($('#framework option:selected'), function () {
+                            search.push($(this).val());
+                        });
+
+                        $("#is_listesi_new_panel").find(".taskBoard").find(".TaskView").hide();
+                        $("#mob-Header").find(".TaskView").hide();
+                        $("#mob-Filter").find(".TaskView").hide();
+                        $.each(search, function (key, value) {
+                            $("#mob-Header").find("." + value).show();
+                            $("#mob-Filter").find("." + value).show();
+                            $("#is_listesi_new_panel").find(".taskBoard").find("." + value).show();
+                        });
+                    });
+                });
+
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                })
+            </script>
+        </asp:panel>
+
         <asp:panel id="is_ara_panel" runat="server">
         <div class="modal-header"> 
              <h5><% Response.Write(LNG("İş Arama")); %></h5>
@@ -1323,7 +1388,7 @@
           <div class="col-md-6">
             <label class="col-sm-12 col-form-label"><% Response.Write(LNG("İş :")); %></label>
             <div class="col-sm-12">
-                <asp:TextBox id="is_ara_adi" style="width: 93%; padding-left: 35px; padding-top: 6px;" class="form-control" runat="server"></asp:TextBox>
+                <asp:TextBox id="is_ara_adi" style="width: 93%; padding-top: 6px;" class="form-control" runat="server"></asp:TextBox>
             </div>
           </div>
           <div class="col-md-6">
@@ -1405,6 +1470,13 @@
         </div>
     
     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#is_ara_gorevliler, #is_ara_santiyeler, #is_ara_durum, #is_ara_firmalar, #is_ara_departmanlar").select2({
+                                dropdownParent: $("#modal_div")
+                            });
+                        });
+                    </script>
           <div class="modal-footer">
                     <asp:Button runat="server" class="btn btn-primary"  ID="is_ara_button" ></asp:Button>
 
@@ -1579,7 +1651,7 @@
          <div class="modal-header"> 
              
              <asp:Panel id="is_ekle_baslik" runat="server">
-    <h4 class="modal-title"><% Response.Write(LNG("Yeni İş Emri Ekle")); %></h4>
+    <h6 class="modal-title"><% Response.Write(LNG("Yeni İş Emri Ekle")); %></h6>
         </asp:Panel>
          <asp:Panel id="is_ara_baslik" runat="server">
     <h4 class="modal-title"><% Response.Write(LNG("İş Arama")); %></h4>
@@ -1630,7 +1702,7 @@
                                       $("#yeni_is_baslangic_tarihi").datepicker('setDate', new Date());
                                       $("#yeni_is_bitis_tarihi").datepicker('setDate', new Date());
                                   })
-                            </script>
+                              </script>
                         </div>
 
                 <div class="row" style="display:none">
@@ -1846,6 +1918,13 @@
                         </div>
                     </div>
                 </div>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#yeni_is_oncelik").select2({
+                            dropdownParent: $("#modal_div")
+                        });
+                    });
+                </script>
                 <div class="modal-footer">
                     <asp:Button runat="server" class="btn btn-primary"  ID="yeni_is_ekle_button"></asp:Button>
                 </div>
@@ -2132,10 +2211,13 @@
     </asp:panel>
 </form>
 
-<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>--%>
+
+
+
 
 <script type="text/javascript">
     $(document).ready(function () {
         $('.js-example-basic-multiple').select2();
     });
+
 </script>

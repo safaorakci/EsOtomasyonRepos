@@ -6,6 +6,11 @@
 
     proje_id = trn(request("proje_id"))
     tip = trn(request("tip"))
+
+    FirmaID = Request.Cookies("kullanici")("firma_id")
+
+    SQL = "select id, adi, tip, grup from etiketler where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' order by grup desc"
+    set etiket = baglanti.execute(SQL)
 %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -150,18 +155,28 @@
     b[role=presentation] {
         padding-top: 10px;
     }
+
+    .border-color-danger {
+        border-color: rgba(0, 0, 0, 0);
+        border: 1px solid rgb(255, 83, 112);
+        border-radius: 0;
+        -webkit-box-shadow: 0 0 1px #999;
+        box-shadow: 0 0 1px #999;
+        color: rgb(255, 83, 112);
+    }
 </style>
 
 <form id="gimmeBack" style="display: none;" action="/ajax_timeline/" method="post" target="_blank">
-    <input type="hidden" name="prj" id="gimBaPrj"></form>
+    <input type="hidden" name="prj" id="gimBaPrj">
+</form>
 
 <script type="text/javascript">
-
     var ge;
     var ret;
 
     $(function () {
 
+        //$("#loader").hide();
         //localStorage.clear();
         var canWrite = true; //this is the default for test purposes
 
@@ -192,28 +207,26 @@
 
     });
 
-
-
     function getDemoProject() {
         //console.debug("getDemoProject")
         ret = {
             "tasks": [
-                { "id": -1, "name": "sHavalandırma Tesisatı", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 0, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 20, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
+                { "id": -1, "name": "sHavalandırma Tesisatı", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 0, "status": "STATUS_ACTIVE", "etiket": "proje-1", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 20, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
 
 
-                { "id": -2, "name": "Kanal İmalatı", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 10, "end": 1398203999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
+                { "id": -2, "name": "Kanal İmalatı", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_ACTIVE", "etiket": "proje-1", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 10, "end": 1398203999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
 
-                { "id": -3, "name": "Kanal Uygulama", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 2, "end": 1397167199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
+                { "id": -3, "name": "Kanal Uygulama", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_ACTIVE", "etiket": "proje-1", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 2, "end": 1397167199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
 
-                { "id": -4, "name": "Kanal Vidalama", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "3", "canWrite": true, "start": 1397167200000, "duration": 4, "end": 1397685599999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
+                { "id": -4, "name": "Kanal Vidalama", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "etiket": "proje-1", "depends": "3", "canWrite": true, "start": 1397167200000, "duration": 4, "end": 1397685599999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
 
-                { "id": -5, "name": "Kanal Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_SUSPENDED", "depends": "2:5", "canWrite": true, "start": 1398981600000, "duration": 5, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
+                { "id": -5, "name": "Kanal Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_SUSPENDED", "etiket": "proje-1", "depends": "2:5", "canWrite": true, "start": 1398981600000, "duration": 5, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true },
 
-                { "id": -6, "name": "Kalın Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "", "canWrite": true, "start": 1398981600000, "duration": 2, "end": 1399327199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
+                { "id": -6, "name": "Kalın Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "etiket": "proje-1", "depends": "", "canWrite": true, "start": 1398981600000, "duration": 2, "end": 1399327199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
 
-                { "id": -7, "name": "Orta Boy Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 3, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
+                { "id": -7, "name": "Orta Boy Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "etiket": "proje-1", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 3, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false },
 
-                { "id": -8, "name": "İnce Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 2, "end": 1539980581804, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false }
+                { "id": -8, "name": "İnce Döşeme", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "etiket": "proje-1", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 2, "end": 1539980581804, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false }
             ], "selectedRow": 2, "deletedTaskIds": [],
             "resources": [
                 { "id": "tmp_1", "name": "Kaynak 1" },
@@ -238,7 +251,6 @@
         return ret;
     }
 
-
     function iterationCopy(src) {
         let target = {};
         for (let prop in src) {
@@ -253,10 +265,8 @@
         return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
     }
 
-
-
     function loadGanttFromServer(taskId, callback) {
-
+        $("#loader").show();
         var asd;
         //this is a simulation: load data from the local storage if you have already played with the demo or a textarea with starting demo data
         //var ret = loadFromLocalStorage();
@@ -277,7 +287,7 @@
         $.getJSON(urlData, { CM: "LOADPROJECT", taskId: taskId }, function (response) {
             if (response.ok) {
 
-
+                $("#loader").hide();
                 if (!response.project.canWrite)
                     $(".ganttButtonBar button.requireWrite").attr("disabled", "true");
 
@@ -296,7 +306,6 @@
 
         return asd;
     }
-
 
     function saveGanttOnServer() {
 
@@ -321,11 +330,36 @@
             }
         }*/
 
+        var res = JSON.stringify(prj);
+        var index = [];
+
+        // build the index
+        for (var x in jQuery.parseJSON(res).tasks) {
+            index.push(x);
+        }
+
+        var result = jQuery.parseJSON(res);
+
+        // sort the index
+        //index.sort(function (a, b) {
+        //    return a == b ? 0 : (a > b ? 1 : -1);
+        //});
+
+        for (var i = 0; i < index.length; i++) {
+            result.tasks[i].orderIndex = index[i];
+        }
+
+        var jsonResult = JSON.stringify(result)
+
         $.ajax("/ajax_planlama/", {
             dataType: "json",
-            data: { islem: "kayit", tip: "<%=tip%>", proje_id: '<%=request("proje_id")%>', prj: JSON.stringify(prj), planning: planning },
+            data: { islem: "kayit", tip: "<%=tip%>", proje_id: '<%=request("proje_id")%>', prj: jsonResult, planning: planning },
             type: "POST",
+            beforeSend: function () {
+                $("#loader").show();
+            },
             success: function (response) {
+                $("#loader").hide();
                 window.parent.mesaj_ver("Proje Planı", '<%=LNG("Kayıt Başarıyla Güncellendi")%>', "success");
                 if (response.ok) {
                     if (response.project) {
@@ -367,7 +401,6 @@
         }
     }
 
-
     function clearGantt() {
         ge.reset();
     }
@@ -381,7 +414,6 @@
         /*  var uriContent = "data:text/html;charset=utf-8," + encodeURIComponent(JSON.stringify(prj));
          neww=window.open(uriContent,"dl");*/
     }
-
 
     function loadFromLocalStorage() {
         var ret;
@@ -397,7 +429,6 @@
         }
         return ret;
     }
-
 
     function saveInLocalStorage() {
         var prj = ge.saveProject();
@@ -471,57 +502,6 @@
 
 
         var ndo = createModalPopup(400, 500).append(resourceEditor);
-    }
-
-    function toplam_calisma_girdim(nesne) {
-        var value = $("#toplamcalisma").val();
-        if (value < 1) {
-            myAlert(nesne);
-            $("#saveButton").removeAttr("onclick");
-        }
-        else {
-            $("#saveButton").attr("onclick", "$(this).trigger('saveFullEditor.gantt');");
-            $("#toplamcalisma").removeAttr("tooltip");
-        }
-        var gun_sayisi = $("#duration").val();
-        var gunluk_saat = parseFloat($(nesne).val()) / parseFloat(gun_sayisi);
-        var taskId = $(nesne).attr("taskId");
-        var assId = $(nesne).attr("assId");
-        if (gunluk_saat == NaN) {
-            gunluk_saat = 0;
-        }
-        gunluk_saat = parseFloat(Math.round(gunluk_saat * 100) / 100).toFixed(2);
-        $("input[name=gunluk_calisma][taskId=" + taskId + "][assId=" + assId + "]").val(gunluk_saat);
-    }
-
-    function gunluk_calisma_girdim(nesne) {
-        var value = $("#gunlukcalisma").val();
-        if (value < 1) {
-            myAlert(nesne);
-            $("#saveButton").removeAttr("onclick");
-        }
-        else {
-            $("#saveButton").attr("onclick", "$(this).trigger('saveFullEditor.gantt');");
-            $("#gunlukcalisma").removeAttr("tooltip");
-        }
-        var gun_sayisi = $("#duration").val();
-        var toplam_saat = parseFloat($(nesne).val().replace(",", ".")) * parseFloat(gun_sayisi);
-        var taskId = $(nesne).attr("taskId");
-        var assId = $(nesne).attr("assId");
-        if (toplam_saat == NaN) {
-            toplam_saat = 0;
-        }
-        toplam_saat = parseFloat(Math.round(toplam_saat * 100) / 100).toFixed(2);
-        $("input[name=effort][taskId=" + taskId + "][assId=" + assId + "]").val(toplam_saat);
-    }
-
-    function myAlert(nesne) {
-        $(nesne).attr("title", "Çalışma saati '0', 'Negatif' veya 'Boş' değer eklenemez !");
-        $(nesne).tooltip({
-            placement: "bottom",
-            trigger: "mouseover"
-        });
-        $(nesne).trigger("mouseover");
     }
 
     function is_yuku_cizelgesi_ac2(start, end) {
@@ -645,7 +625,6 @@
         })
     }
 
-
     function karsilastirmali_gosterim_calistir(nesne) {
 
         if ($(nesne).attr("checked") == "checked") {
@@ -671,21 +650,24 @@
     });
 </script>
 
-<div id="gantEditorTemplates" style="display: none;">
+<div id="gantEditorTemplates">
     <div class="__template__" type="GANTBUTTONS">
         <!--
             <div class="ganttButtonBar noprint">
             <div class="buttons">
                 <button onclick="parent.uretim_sablonlarindan_secim_yap('<%=proje_id %>');" class="button requireWrite" title="edit resources"><i class="fa fa-clone"></i> <%=LNG("Üretim Şablonlarından Seç")%></button>
-                <button onclick="parent.proje_plan_kopyala('<%=proje_id %>');" class="button requireWrite" title="edit resources"><i class="fa fa-clone"></i> <%=LNG("Planı Kopyala")%></button>
-                <button onclick="parent.proje_sablonlara_kaydet('<%=proje_id %>');" class="button requireWrite" title="edit resources"><i class="fa fa-clone"></i> <%=LNG("Şablonlara Kaydet")%></button>
+                <button onclick="parent.proje_plan_kopyala('<%=proje_id %>');" class="button requireWrite" title="edit resources" style="display:none"><i class="fa fa-clone"></i> <%=LNG("Planı Kopyala")%></button>
+                <button onclick="parent.proje_sablonlara_kaydet('<%=proje_id %>');" class="button requireWrite" title="edit resources" style="display:none"><i class="fa fa-clone"></i> <%=LNG("Şablonlara Kaydet")%></button>
+            </div>
+           <div>
+             <span class="font-weight-bold" style="display:none; opacity: 0.7; border: 1px solid rgba(0,0,0,0.3); position:absolute; left: 44%; top: 500%; z-index:9999; padding: 40px; background-color: aquamarine; -webkit-box-shadow: 0px 0px 18px 0px rgba(0,0,0,0.75);-moz-box-shadow: 0px 0px 18px 0px rgba(0,0,0,0.75);box-shadow: 0px 0px 18px 0px rgba(0,0,0,0.75);" id="loader">Lütfen Bekleyin..</span>
             </div>
               <div class="buttons" style="height:auto;">
                 <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite" title="<%=LNG("Geri Al")%>"><span class="teamworkIcon">&#39;</span></button>
                 <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite" title="<%=LNG("İleri Al")%>"><span class="teamworkIcon">&middot;</span></button>
-                <span class="ganttButtonSeparator requireCanWrite requireCanAdd"></span>
-                <button onclick="$('#workSpace').trigger('addAboveCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanAdd" title="<%=LNG("Üstüne Ekle")%>"><span class="teamworkIcon">l</span></button>
-                <button onclick="$('#workSpace').trigger('addBelowCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanAdd" title="<%=LNG("Altına Ekle")%>"><span class="teamworkIcon">X</span></button>
+                <span style="display:none" class="ganttButtonSeparator requireCanWrite requireCanAdd"></span>
+                <button style="display:none" onclick="$('#workSpace').trigger('addAboveCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanAdd" title="<%=LNG("Üstüne Ekle")%>"><span class="teamworkIcon">l</span></button>
+                <button style="display:none" onclick="$('#workSpace').trigger('addBelowCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanAdd" title="<%=LNG("Altına Ekle")%>"><span class="teamworkIcon">X</span></button>
                 <span class="ganttButtonSeparator requireCanWrite requireCanInOutdent"></span>
                 <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="<%=LNG("Dışarı Çıkar")%>"><span class="teamworkIcon">.</span></button>
                 <button onclick="$('#workSpace').trigger('indentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="<%=LNG("İçeri Al")%>"><span class="teamworkIcon">:</span></button>
@@ -709,14 +691,14 @@
                 <button onclick="ge.splitter.resize(.1);return false;" class="button textual icon" ><span class="teamworkIcon">F</span></button>
                 <button onclick="ge.splitter.resize(50);return false;" class="button textual icon" ><span class="teamworkIcon">O</span></button>
                 <button onclick="ge.splitter.resize(100);return false;" class="button textual icon"><span class="teamworkIcon">R</span></button>
-                <span class="ganttButtonSeparator"></span>
+                <span style="display:none" class="ganttButtonSeparator"></span>
                 <button style="display:none;" onclick="$('#workSpace').trigger('fullScreen.gantt');return false;" class="button textual icon" title="FULLSCREEN" id="fullscrbtn"><span class="teamworkIcon">@</span></button>
                 <button style="display:none;" onclick="ge.element.toggleClass('colorByStatus' );return false;" class="button textual icon"><span class="teamworkIcon">&sect;</span></button>
 
-              <button onclick="parent.gantt_liste_gorunumu('<%=proje_id %>', '<%=tip %>');"  style="background-color:#f9c154;" class="button  requireWrite" title="edit resources"><i class="fa fa-reorder"></i> <%=LNG("Liste")%></button>
-              <button onclick="parent.is_yuku_cizelgesi_ac('<%=cdate(date)-2 %>', '<%=cdate(date)-1 %>');" style="background-color:#f9c154;" class="button requireWrite" title="edit resources"><i class="fa fa-cubes"></i> <%=LNG("İş Yükü")%></button>
+              <button style="display:none" onclick="parent.gantt_liste_gorunumu('<%=proje_id %>', '<%=tip %>');"  style="background-color:#f9c154;" class="button  requireWrite" title="edit resources"><i class="fa fa-reorder"></i> <%=LNG("Liste")%></button>
+              <button style="display:none" onclick="parent.is_yuku_cizelgesi_ac('<%=cdate(date)-2 %>', '<%=cdate(date)-1 %>');" style="background-color:#f9c154;" class="button requireWrite" title="edit resources"><i class="fa fa-cubes"></i> <%=LNG("İş Yükü")%></button>
 
-              <div style="width:160px; float:left; margin-top:12px;"><label style="cursor:pointer;" for="karsilastirmali_gosterim"><input name="karsilastirmali_gosterim" onclick="karsilastirmali_gosterim_calistir(this);" id="karsilastirmali_gosterim" type="checkbox"> <%=LNG("Karşılaştırmalı Gösterim")%></span></div>
+              <div style="display:none; width:160px; float:left; margin-top:12px;"><label style="cursor:pointer;" for="karsilastirmali_gosterim"><input name="karsilastirmali_gosterim" onclick="karsilastirmali_gosterim_calistir(this);" id="karsilastirmali_gosterim" type="checkbox"> <%=LNG("Karşılaştırmalı Gösterim")%></span></div>
               <button onclick="editResources();" style="display:none;" class="button textual requireWrite" title="edit resources"><span class="teamworkIcon">M</span></button>
               <div style="float:right;">
                   <button onclick="saveGanttOnServer();" class="button" style="background-color: #2ed8b6;" title="<%=LNG("Değişiklikleri Kaydet")%>"><%=LNG("Değişiklikleri Kaydet")%></button>
@@ -730,9 +712,10 @@
             </div>
             -->
     </div>
-    
+
     <div class="__template__" type="TASKSEDITHEAD">
         <!--
+
             <table class="gdfTable" cellspacing="0" cellpadding="0">
               <thead>
               <tr style="height:40px">
@@ -810,7 +793,6 @@
             -->
     </div>
 
-
     <div class="__template__" type="CHANGE_STATUS">
         <!--
               <div class="taskStatusBox">
@@ -823,9 +805,6 @@
               </div>
             -->
     </div>
-
-
-
 
     <div class="__template__" type="TASK_EDITOR">
         <!--
@@ -862,7 +841,7 @@
         </tr>
 
         <tr>
-          <td  colspan="2">
+          <td colspan="1" style="width:230px" valign="top">
             <label for="status" class=" "><%=LNG("Durum")%></label><br>
             <select id="status" name="status" class="taskStatus" status="(#=obj.status#)"  onchange="$(this).attr('STATUS',$(this).val());">
               <option value="STATUS_ACTIVE" class="taskStatus" status="STATUS_ACTIVE" ><%=LNG("Aktif")%></option>
@@ -872,6 +851,23 @@
               <option value="STATUS_FAILED" class="taskStatus" status="STATUS_FAILED" ><%=LNG("Hatalı")%></option>
               <option value="STATUS_UNDEFINED" class="taskStatus" status="STATUS_UNDEFINED" ><%=LNG("Diğer")%></option>
             </select>
+          </td>
+
+          <td style="width:300px; padding-right: 60px;">
+            <label for="etiket class=" "><%=LNG("Etiket")%></label><br>
+            <select id="etiket" name="etiket" class="form-control select2" multiple onchange="SelectedLabel();">
+                <%
+                    if not etiket.eof then
+                    do while not etiket.eof
+                %>
+                    <option value="<%=etiket("tip") %>-<%=etiket("id") %>"> [<%=etiket("grup") %>] - <%=etiket("adi") %></option>
+                <%
+                    etiket.movenext
+                    loop
+                    end if
+                %>
+            </select>
+            <span class="text-danger" id="etiket-state" style="display:none">Departman seçimi zorunludur...!</span>
           </td>
 
           <td valign="top" nowrap>
@@ -905,7 +901,7 @@
         </div>
 
     <div style="text-align: right; padding-top: 20px">
-      <input type="button" id="saveButton" onclick="$(this).trigger('saveFullEditor.gantt');" class="btn btn-success btn-sm text-dark" value="Kaydet"/>
+      <input type="button" id="saveButton" onclick="saveGant();" class="btn btn-success btn-sm text-dark" value="Kaydet"/>
     </div>
     </div>
     -->
@@ -913,12 +909,12 @@
     </div>
 
     <div class="__template__" type="ASSIGNMENT_ROW">
-                        <!--
-        <tr taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="assigEditRow" >
+        <!--
+        <tr taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="assigEditRow">
           <td style="width:50%;"><select style="width:100%;" name="resourceId"  class="form-control select2 resourceId" ></select></td>
           <td style="display:none;" ><select type="select" name="roleId" class="form-control"></select></td>
-          <td style="text-align:center;"> <input type="number" id="gunlukcalisma" style="width:100px" onkeyup="gunluk_calisma_girdim(this);" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="gunluk_calisma" name="gunluk_calisma" value="1" size="5" class="form-control timepicker"><span style="float:right" class="gunsayisi"> X (#=obj.task.duration#) gün<span></td>
-          <td style="text-align:center;"><input id="toplamcalisma" onkeyup="toplam_calisma_girdim(this);" type="text" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" name="effort" value="1.00" size="5" class="form-control timepicker"></td>
+          <td style="text-align:center;"> <input type="number" id="gunlukcalisma" style="width:100px" onkeyup="gunluk_calisma_girdim(this);" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="gunluk_calisma" name="gunluk_calisma" value="(#=obj.assig.gunluk_sure#)" size="5" class="form-control timepicker"><span style="float:right" class="gunsayisi"> X (#=obj.task.duration#) gün<span></td>
+          <td style="text-align:center;"><input id="toplamcalisma" onkeyup="toplam_calisma_girdim(this);" type="text" taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" name="effort" value="(#=obj.assig.toplam_sure#)" size="5" class="form-control timepicker"></td>
           <td align="center"><span class="teamworkIcon delAssig del" style="cursor: pointer">d</span></td>
         </tr>
         -->
@@ -947,11 +943,9 @@
     </tr>
     -->
     </div>
-
-
 </div>
-<script type="text/javascript">
 
+<script type="text/javascript">
     $.JST.loadDecorator("RESOURCE_ROW", function (resTr, res) {
         resTr.find(".delRes").click(function () { $(this).closest("tr").remove() });
     });
@@ -960,6 +954,7 @@
         var resEl = assigTr.find("[name=resourceId]");
         var opt = $('<option>');
         resEl.append(opt);
+
         for (var i = 0; i < taskAssig.task.master.resources.length; i++) {
             var res = taskAssig.task.master.resources[i];
             opt = $('<option optiongroup="' + res.tip + '">');
@@ -983,9 +978,28 @@
                 var tr = $(this).closest("[assId]").fadeOut(200, function () { $(this).remove() });
             });
         }
-
     });
 
+    $.JST.loadDecorator("TASK_EDITOR", function (assigTr, taskAssig) {
+        //var resEl = assigTr.find("[name=resourceId]");
+
+        console.log(taskAssig);
+
+        setTimeout(function () {
+            if (taskAssig.etiket !== null) {
+                var slpEtiket = taskAssig.etiket.split(',');
+
+                var selectedValue = new Array();
+
+                for (var i = 0; i < slpEtiket.length; i++) {
+                    selectedValue[i] = slpEtiket[i].replace(" ", "");
+                }
+
+                $("#etiket").val(selectedValue);
+                $("#etiket").select2();
+            }
+        }, 1000);
+    });
 
     function loadI18n() {
         GanttMaster.messages = {
@@ -1015,13 +1029,10 @@
         };
     }
 
-
-
     function createNewResource(el) {
         var row = el.closest("tr[taskid]");
         var name = row.find("[name=resourceId_txt]").val();
         var url = contextPath + "/applications/teamwork/resource/resourceNew.jsp?CM=ADD&name=" + encodeURI(name);
-
         openBlackPopup(url, 700, 320, function (response) {
             //fillare lo smart combo
             if (response && response.resId && response.resName) {
@@ -1032,6 +1043,102 @@
 
         });
     }
-</script >
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#etiket").trigger("change");
+    });
+
+    function SelectedLabel() {
+        if ($("#etiket").val().length > 0) {
+
+            $("#saveButton").attr("onclick", "$(this).trigger('saveFullEditor.gantt');");
+            $("#etiket-state").hide();
+            $("#s2id_etiket").removeClass("border-color-danger");
+
+            var selectVal = $("#etiket").val();
+            for (var i = 0; i < selectVal.length; i++) {
+                if (!selectVal[i].includes('departman')) {
+                    $("#saveButton").removeAttr("onclick");
+                    $("#etiket-state").show();
+                    $("#s2id_etiket").addClass("border-color-danger");
+                }
+                else {
+                    $("#saveButton").removeAttr("onclick").attr("onclick", "$(this).trigger('saveFullEditor.gantt');");
+                    $("#etiket-state").hide();
+                    $("#s2id_etiket").removeClass("border-color-danger");
+                }
+            }
+        }
+        else {
+            $("#saveButton").removeAttr("onclick").attr("onclick", "saveGant();");
+            $("#s2id_etiket").addClass("border-color-danger");
+            $("#etiket-state").show();
+        }
+    }
+
+    function saveGant() {
+        $("#s2id_etiket").addClass("border-color-danger");
+        $("#etiket-state").show();
+    }
+
+    function toplam_calisma_girdim(nesne) {
+        var value = $("#toplamcalisma").val();
+        if (value < 1) {
+            myAlert(nesne);
+            $("#saveButton").removeAttr("onclick");
+        }
+        else {
+            $("#saveButton").attr("onclick", "$(this).trigger('saveFullEditor.gantt');");
+            $("#toplamcalisma").removeAttr("tooltip");
+        }
+        var gun_sayisi = $("#duration").val();
+        var gunluk_saat = parseFloat($(nesne).val()) / parseFloat(gun_sayisi);
+        var taskId = $(nesne).attr("taskId");
+        var assId = $(nesne).attr("assId");
+        if (gunluk_saat == NaN) {
+            gunluk_saat = 0;
+        }
+        gunluk_saat = parseFloat(Math.round(gunluk_saat * 100) / 100).toFixed(2);
+        $("input[name=gunluk_calisma][taskId=" + taskId + "][assId=" + assId + "]").val(gunluk_saat);
+
+        SelectedLabel();
+    }
+
+    function gunluk_calisma_girdim(nesne) {
+        var value = $("#gunlukcalisma").val();
+        if (value < 1) {
+            myAlert(nesne);
+            $("#saveButton").removeAttr("onclick");
+        }
+        else {
+            $("#saveButton").attr("onclick", "$(this).trigger('saveFullEditor.gantt');");
+            $("#gunlukcalisma").removeAttr("tooltip");
+        }
+        var gun_sayisi = $("#duration").val();
+        var toplam_saat = parseFloat($(nesne).val().replace(",", ".")) * parseFloat(gun_sayisi);
+        var taskId = $(nesne).attr("taskId");
+        var assId = $(nesne).attr("assId");
+        if (toplam_saat == NaN) {
+            toplam_saat = 0;
+        }
+        toplam_saat = parseFloat(Math.round(toplam_saat * 100) / 100).toFixed(2);
+        $("input[name=effort][taskId=" + taskId + "][assId=" + assId + "]").val(toplam_saat);
+
+        SelectedLabel();
+    }
+
+    function myAlert(nesne) {
+        $(nesne).attr("title", "Çalışma saati '0', 'Negatif' veya 'Boş' değer eklenemez !");
+        $(nesne).tooltip({
+            placement: "bottom",
+            trigger: "mouseover"
+        });
+        $(nesne).trigger("mouseover");
+
+        SelectedLabel();
+    }
+</script>
 
 

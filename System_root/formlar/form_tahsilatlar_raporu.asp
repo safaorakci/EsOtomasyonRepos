@@ -5,8 +5,8 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
-               firma_id = trn(request("firma_id"))
-           kullanici_id = trn(request("kullanici_id"))
+    firma_id = trn(request("firma_id"))
+    kullanici_id = trn(request("kullanici_id"))
 
 %>
 <html lang="tr">

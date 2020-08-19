@@ -60,7 +60,6 @@
     </div>
 </div>
 
-
 <style>
     .md-tabs .nav-item {
         width: calc(100% / <%=sayi%>);
@@ -183,6 +182,7 @@
                             loop
                         end if
                     %>
+
                     <% if trim(yetki_kodu)="TASERON" then %>
 
                     <li <%if t < 1 then%> style="display:none" <%end if %> class="nav-link_yeni"><a style="-webkit-border-top-left-radius: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-topleft: 10px; -moz-border-radius-bottomleft: 10px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;" href="#musteri_bilgileri" onclick="musteri_bilgilerini_getir('<%=firma_id %>', this);" class="icon icon-home"><span><%=LNG("Müşteri")%></span></a></li>

@@ -17,8 +17,10 @@
     <link rel="icon" href="/files/assets/images/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/files/bower_components/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     <link rel="stylesheet" type="text/css" href="/files/assets/icon/themify-icons/themify-icons.css">
-    <link rel="stylesheet" type="text/css" href="/files/assets/icon/font-awesome/css/font-awesome.min.css">
+    <%--<link rel="stylesheet" type="text/css" href="/files/assets/icon/font-awesome/css/font-awesome.min.css">--%>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/files/assets/css/jquery.mCustomScrollbar.css">
     <link rel="stylesheet" href="/files/assets/pages/chart/radial/css/radial.css" type="text/css" media="all">
     <link rel="stylesheet" type="text/css" href="/files/assets/css/style.css">
@@ -39,6 +41,8 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="/js/NumberFormat154.js"></script>
     <link href="css/font-awesome-animation.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="css/start-rating.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -274,9 +278,79 @@
                         <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
                         <div class="pcoded-inner-navbar main-menu">
                             <%ModulYetkiler yetkiler = modulYetkiler(); %>
+                            <%List<PersonelGorevYetkileriTop> personelGorevTop = personelYetkileriTop();%>
+                            <%List<PersonelGorevYetkileriBottom> personelGorevBottom = personelYetkileriBottom();%>
                             <ul class="pcoded-item pcoded-left-item" style="margin-top: 20px;">
+                                <%int topId = -1; %>
 
-                                <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",60,") > 0)
+                                <%foreach (var top in personelGorevTop) { topId = top.UstID; %>
+                                    <%if (top.SayfaLink != "")
+                                        { %>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/<%=top.SayfaLink %>/','jsid=4559&ustId=<%=top.SayfaID %>');">
+                                                <span class="pcoded-micon"><i class="<%=top.SayfaIcon %>""></i><b>N</b></span>
+                                                <span class="pcoded-mtext"><%=top.SayfaAdi %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                    <% 
+                                        }
+                                        else
+                                        { %>
+                                            <li class="pcoded-hasmenu">
+                                                <a href="javascript:void(0)">
+                                                    <span class="pcoded-micon"><i class="<%=top.SayfaIcon %>"></i><b>BC</b></span>
+                                                    <span class="pcoded-mtext"><%=top.SayfaAdi %></span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                                <ul class="pcoded-submenu">
+                                                    <%foreach (var bottom in personelGorevBottom) { %>
+                                                        <%if (top.SayfaID == bottom.UstID) { %>
+                                                            <li class="">
+                                                                <a href="javascript:void(0);" onclick="sayfagetir('/<%=bottom.SayfaLink %>/','jsid=4559');">
+                                                                    <span class="pcoded-micon"><i class="<%=bottom.SayfaIcon %>"></i><b>N</b></span>
+                                                                    <span class="pcoded-mtext"><%=bottom.SayfaAdi %></span>
+                                                                    <span class="pcoded-mcaret"></span>
+                                                                </a>
+                                                            </li>
+                                                        <% } %>
+                                                    <% } %>
+                                                </ul>
+                                            </li>
+                                    <% } %>
+                                <% } %>
+                                <li class="pcoded-hasmenu" style="margin-top: 25px;">
+                                    <a href="javascript:void(0);">
+                                        <span class="pcoded-micon"><i class="fa fa-line-chart"></i><b>N</b></span>
+                                        <span class="pcoded-mtext"><%Response.Write(LNG("Destek")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/beta_hatalari/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Destek Talebi")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/video_destek/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Video Destek")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="PROSKOP_KULLANIM_KLAVUZU.pdf" target="_blank">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Kullanım Klavuzu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <%--<% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",60,") > 0)
                                     {%>
                                 <li class="">
                                     <a href="javascript:void(0);" onclick="sayfagetir('/anasayfa/', 'jsid=4559');">
@@ -315,8 +389,6 @@
                                     </a>
                                 </li>
                                 <% } %>
-
-
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",63,") > 0)
                                     {%>
                                 <li class="">
@@ -327,7 +399,6 @@
                                     </a>
                                 </li>
                                 <% } %>
-
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",64,") > 0)
                                     {%>
                                 <li class="">
@@ -338,7 +409,6 @@
                                     </a>
                                 </li>
                                 <% } %>
-
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",65,") > 0)
                                     { %>
                                 <li class="">
@@ -360,9 +430,9 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <% } %>
-                                <% } %>
-
+                                <% 
+                                        }
+                                    } %>
                                 <%if (yetkiler.teknikServis == true)
                                     {%>
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",67,") > 0)
@@ -374,9 +444,8 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <% } %>
-                                <% } %>
-
+                                <% }
+                                    } %>
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",68,") > 0)
                                     {%>
                                 <li class="">
@@ -387,7 +456,6 @@
                                     </a>
                                 </li>
                                 <% } %>
-
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",69,") > 0)
                                     {%>
                                 <li class="">
@@ -398,6 +466,8 @@
                                     </a>
                                 </li>
                                 <% } %>
+                                <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",118,") > 0)
+                                    { %>
                                 <%if (yetkiler.toplanti == true)
                                     { %>
                                 <li class="">
@@ -407,7 +477,72 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <%} %>
+                                <%}
+                                    } %>
+                                <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",131,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/toplantilar/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="fa fa-comments-o"></i><b>N</b></span>
+                                        <span class="pcoded-mtext">Toplantı Yönetimi</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <%}%>
+                                <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",132,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/sirket_kulturu/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="fa fa-rebel"></i><b>N</b></span>
+                                        <span class="pcoded-mtext">Şirket Kültürü</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <%}%>
+                                <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",133,") > 0)
+                                    {%>
+                                <li class="">
+                                    <a href="javascript:void(0);" onclick="sayfagetir('/oneri_kutusu/','jsid=4559');">
+                                        <span class="pcoded-micon"><i class="fa fa-certificate"></i><b>N</b></span>
+                                        <span class="pcoded-mtext">Öneri Kutusu</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <%}%>
+                                <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",134,") > 0)
+                                    {%>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="fa fa-bar-chart"></i><b>BC</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Personel Performans")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",135,") > 0)
+                                            {%>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/personel_puanlama/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
+                                                <span class="pcoded-mtext">Personel Puanlama</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <%}%>
+                                        <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",136,") > 0)
+                                            {%>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/performans/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
+                                                <span class="pcoded-mtext">Performans</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                       <% } %>
+                                    </ul>
+                                </li>
+                                <%}%>
+                                <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",119,") > 0)
+                                    { %>
                                 <%if (yetkiler.cariFinansman == true)
                                     { %>
                                 <li class="">
@@ -417,8 +552,10 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <%} %>
-
+                                <%}
+                                    }%>
+                                <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",120,") > 0)
+                                    { %>
                                 <%if (yetkiler.hatirlatici == true)
                                     {%>
                                 <li class="pcoded-hasmenu">
@@ -428,6 +565,8 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                     <ul class="pcoded-submenu">
+                                        <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",121,") > 0)
+                                            { %>
                                         <li class="">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/hatirlatici/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
@@ -435,6 +574,9 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
+                                        <%} %>
+                                        <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",122,") > 0)
+                                            { %>
                                         <li class="">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/parametredeger/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
@@ -442,10 +584,14 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
+                                        <%} %>
                                     </ul>
                                 </li>
-                                <%} %>
-                                <li class="pcoded-hasmenu">
+                                <%}
+                                    } %>
+                                <%if (yetkiler.aracTakip == true)
+                                    {%>
+                                <li class="pcoded-hasmenu" style="display: none;">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="fa fa-car"></i><b>BC</b></span>
                                         <span class="pcoded-mtext"><% Response.Write(LNG("Araç Takip")); %></span>
@@ -468,6 +614,32 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <%} %>
+                                <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",123,") > 0)
+                                    { %>
+                                <%if (yetkiler.aracTakip == true)
+                                    {%>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="fa fa-car"></i><b>BC</b></span>
+                                        <span class="pcoded-mtext"><% Response.Write(LNG("Araç Takip")); %></span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",124,") > 0)
+                                            { %>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/aracTakip/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i><b>N</b></span>
+                                                <span class="pcoded-mtext">Tanımlamalar</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <%} %>
+                                    </ul>
+                                </li>
+                                <%}
+                                    }%>
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",70,") > 0)
                                     {%>
                                 <li class="">
@@ -478,7 +650,6 @@
                                     </a>
                                 </li>
                                 <% } %>
-
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",71,") > 0)
                                     {%>
                                 <li class="pcoded-hasmenu">
@@ -551,7 +722,6 @@
 
                                         <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",88,") > 0)
                                             {%>
-
                                         <li class=" ">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/personel_adam_saat_raporu/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -560,10 +730,29 @@
                                             </a>
                                         </li>
                                         <% } %>
+                                        <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",125,") > 0)
+                                            { %>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/personel_giris_cikis_raporu/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Genel Personel Puantaj Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <%} %>
+                                        <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",126,") > 0)
+                                            { %>
+                                        <li class="">
+                                            <a href="javascript:void(0);" onclick="sayfagetir('/personel_giris_cikis_mesai_raporu/','jsid=4559');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext"><% Response.Write(LNG("Özel Personel Puantaj Raporu")); %></span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <% } %>
                                     </ul>
                                 </li>
                                 <% } %>
-
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",72,") > 0)
                                     {%>
                                 <li class="pcoded-hasmenu">
@@ -584,11 +773,13 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
-                                        <% } %>
-                                        <% } %>
+                                        <% }
+                                            } %>
 
                                         <%if (yetkiler.urunAgaci == true)
                                             { %>
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",129,") > 0)
+                                            {%>
                                         <li class="">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/ucun_agaci/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -596,6 +787,7 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
+                                        <% } %>
                                         <%} %>
 
                                         <%if (yetkiler.yillikIzinMezvuat == true)
@@ -657,6 +849,8 @@
                                             </a>
                                         </li>
                                         <% } %>
+                                        <%if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",127,") > 0)
+                                            { %>
                                         <li class=" ">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/zorunlu_dosya/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -664,6 +858,7 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
+                                        <%} %>
                                     </ul>
                                 </li>
                                 <% } %>
@@ -675,9 +870,10 @@
                                         <span class="pcoded-mtext"><% Response.Write(LNG("Ayarlar")); %></span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                    <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",81,") > 0)
-                                        {%>
+
                                     <ul class="pcoded-submenu">
+                                        <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",81,") > 0)
+                                            {%>
                                         <li class=" ">
                                             <a href="javascript:void(0);" onclick="sayfagetir('/sirket_ayarlari/','jsid=4559');">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -685,13 +881,10 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
+                                        <% } %>
                                     </ul>
-                                    <% } %>
-                                
-
-
                                 </li>
-                                <% } %>
+                                <%} %>
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",74,") > 0)
                                     {%>
                                 <li class=""></li>
@@ -703,7 +896,6 @@
                                     </a>
                                 </li>
                                 <% } %>
-
                                 <% if (SessionManager.CurrentUser.yetkili_sayfalar.IndexOf(",75,") > 0)
                                     {%>
                                 <li class=""></li>
@@ -714,17 +906,8 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <% } %>
-
+                                <%} %>--%>
                                 <li class=""></li>
-                                <li class="" style="margin-top: 25px;">
-                                    <a href="javascript:void(0);" onclick="sayfagetir('/beta_hatalari/','jsid=4559');">
-                                        <span class="pcoded-micon"><i class="fa fa-line-chart"></i><b>N</b></span>
-                                        <span class="pcoded-mtext"><% Response.Write(LNG("Destek")); %></span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>
-
                             </ul>
                         </div>
                     </nav>
@@ -818,6 +1001,7 @@
     <script src="/js/proskop.js"></script>
     <script src="/js/proskop_script.js"></script>
     <script src="/js/proskop_script2.js"></script>
+    <script src="/js/proskop_script3.js"></script>
     <script type="text/javascript" charset="utf-8" src="/js/components/jquery.autotab-1.1b.js"></script>
     <script type="text/javascript" charset="utf-8" src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>
     <script type="text/javascript" src="/js/spectrum.js"></script>
@@ -826,7 +1010,11 @@
     <script src="/js/jquery.maskMoney.js"></script>
     <script src="/js/components/print/jquery.printPage.js"></script>
     <script src="/js/easytimer/easytimer.min.js"></script>
-    <script src="../js/bootstrap-formhelpers.min.js"></script>
+    <script src="js/rating.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="js/bootstrap-multiselect.js"></script>
+
+    <script src="js/jquery.table2excel.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     <script type="text/javascript">
@@ -859,6 +1047,14 @@
         </div>
     </div>
 
+    <div class="modal fade modal-flex" id="Modal-overflow-mini" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-mini" role="document">
+            <div class="modal-content">
+                <div id="modal_div_mini"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(function () {
             bildirimleri_almaya_basla();
@@ -878,6 +1074,7 @@
         });
     </script>
 
+    <button id="modal_butonum_mini" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow-mini"></button>
     <button id="modal_butonum" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow"></button>
     <button id="modal_butonum2" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow2"></button>
     <button id="modal_butonum3" style="display: none;" type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#Modal-overflow3"></button>

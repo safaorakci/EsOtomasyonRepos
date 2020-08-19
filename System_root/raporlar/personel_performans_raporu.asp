@@ -144,12 +144,14 @@
                                 %>
                             </select>
                         </div>
-                        <div class="col-sm-12 col-md-2">
-                            <a class="btn btn-labeled btn-primary btn-mini" href="javascript:void(0);" onclick="personel_performans_raporu_getir();"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("Sorgula")%></a>
+                        <div class="col-sm-12 col-md-2 align-self-end mt-2">
+                            <a class="btn btn-labeled btn-primary btn-mini text-white" onclick="personel_performans_raporu_getir();"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("Sorgula")%></a>
                         </div>
-                        <div class="col-sm-12 col-md-12"><br />
-                            <div style="float: right;">
-                                <a class="btn btn-labeled btn-success btn-mini" href="javascript:void(0);" onclick="rapor_pdf_indir('personel_performans_raporu');"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-warning btn-mini" href="javascript:void(0);" onclick="rapor_pdf_yazdir('personel_performans_raporu');"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>&nbsp;&nbsp;<a class="btn btn-labeled btn-primary btn-mini" href="javascript:void(0);" onclick="rapor_pdf_gonder('personel_performans_raporu');"><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
+                        <div class="col-sm-12 col-md-12 align-self-end mt-2">
+                            <div class="float-right">
+                                <a class="btn btn-labeled btn-success btn-mini mr-1 text-white" onclick="rapor_pdf_indir('personel_performans_raporu');"><span class="btn-label"><i class="fa fa-download"></i></span><%=LNG("İndir")%> </a>
+                                <a class="btn btn-labeled btn-warning btn-mini mr-1 text-white" onclick="rapor_pdf_yazdir('personel_performans_raporu');"><span class="btn-label"><i class="fa fa-print"></i></span><%=LNG("Yazdır")%> </a>
+                                <a class="btn btn-labeled btn-primary btn-mini text-white" onclick="rapor_pdf_gonder('personel_performans_raporu');"><span class="btn-label"><i class="fa fa-send "></i></span><%=LNG("Gönder")%> </a>
                             </div>
                          
                         </div>

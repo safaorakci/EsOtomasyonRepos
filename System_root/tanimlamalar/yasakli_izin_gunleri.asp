@@ -69,41 +69,41 @@
     .dataTables_filter .input-group-addon + .form-control {
         height: 32px !important;
     }
+
+    .border-bottom {
+        border-bottom: 1px solid #eee !important;
+    }
 </style>
 <section id="widget-grid" class="">
     <div class="row">
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
             <div class="card">
-                <div class="card-header">
-                    <h5><% Response.Write(LNG("Yasaklı İzin Günleri Ekle")) %></h5>
+                <div class="card-header border-bottom p-3">
+                    <h5 class="card-title">Yasaklı İzin Günleri Ekle</h5>
                 </div>
-                <div class="card-block">
+                <div class="card-block p-3">
                     <form autocomplete="off" id="departman_ekle_form">
-                        <div class="row">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Başlangıç Tarihi")) %></label>
-                            <div class="col-sm-12 col-lg-12">
-                                <input type="text" class="takvimyap form-control" name="baslangic_tarihi" id="baslangic_tarihi" value="<%=FormatDate(date, "00") %>"/>
-                            </div>
+                        <div class="form-group">
+                            <label class="col-form-label"><% Response.Write(LNG("Başlangıç Tarihi")) %></label>
+                            <input type="text" class="takvimyap form-control" name="baslangic_tarihi" id="baslangic_tarihi" value="<%=FormatDate(date, "00") %>" />
                         </div>
-                        <div class="row">
-                            <label class="col-sm-12  col-lg-12 col-form-label"><% Response.Write(LNG("Başlangıç Tarihi")) %></label>
-                            <div class="col-sm-12 col-lg-12">
-                                <input type="text" class="takvimyap form-control" name="bitis_tarihi" id="bitis_tarihi" value="<%=FormatDate(date, "00") %>"/>
-                            </div>
+                        <div class="form-group">
+                            <label class="col-form-label"><% Response.Write(LNG("Başlangıç Tarihi")) %></label>
+                            <input type="text" class="takvimyap form-control" name="bitis_tarihi" id="bitis_tarihi" value="<%=FormatDate(date, "00") %>" />
                         </div>
                     </form>
-                    <div class="row modal-footer" style="margin-top: 20px;">
-                        <input type="button" class="btn btn-primary" onclick="YasakliGunEkle();" value="<% Response.Write(LNG("Yasaklı Gün Ekle")) %>" />
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-primary btn-mini" onclick="YasakliGunEkle();" value="<% Response.Write(LNG("Yasaklı Gün Ekle")) %>" />
                 </div>
             </div>
         </article>
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
             <div class="card">
-                <div class="card-header">
-                    <h5><% Response.Write(LNG("Yasaklı İzin Günleri")) %></h5>
+                <div class="card-header border-bottom p-3">
+                    <h5 class="card-title"><% Response.Write(LNG("Yasaklı İzin Günleri")) %></h5>
                 </div>
-                <div class="card-block">
+                <div class="card-block p-3">
                     <div id="yasakli_izin_listesi">
                         <script>
                             $(function (){

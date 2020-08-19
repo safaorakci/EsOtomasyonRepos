@@ -121,10 +121,6 @@ function dilayikla(value) {
     return (data1);
 }
 
-
-
-
-
 function pageSetUp() {
 
     var elem = Array.prototype.slice.call(document.querySelectorAll('.js-switch:not(.yapilan)'));
@@ -294,9 +290,6 @@ function AJAX() {
 
 
 function sayfagetir(sayfa, data) {
-
-
-
     tiklandi = 1;
 
     if (indis > buyukindis) {
@@ -340,8 +333,6 @@ function sayfagetir(sayfa, data) {
         data = data.slice(0, yer - 1);
     }
     sondata = data;
-
-
 }
 //personel_giris_cikis_getir('<%=personel_id %>', this)
 function CokluIsYap(sayfa,personelid, subpage,IsID) {
@@ -613,7 +604,7 @@ function upload(id, folderName) {
 
     for (var i = 0; i < totalFiles; i++) {
         var file = document.getElementById(id).files[i];
-        console.log(file);
+        //console.log(file);
         formData.append("FileUpload", file);
         formData.append("folderName", folderName);
     }
@@ -852,7 +843,7 @@ function datatableyap() {
     responsiveHelper_dt_basic = undefined;
     if ($('.datatableyap:not(.yapilan)').length > 0) {
         $('.datatableyap:not(.yapilan)').addClass("yapilan").removeClass("datatableyap").dataTable({
-            "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'><'col-sm-6 col-xs-12 hidden-xs'l>r>" + "t" + "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+            "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'><'col-sm-6 col-xs-12 hidden-xs'l>r>" + "t" + "<'dt-toolbar-footer border'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
             "autoWidth": true,
             "preDrawCallback": function () {
                 var table = $(this);
@@ -905,10 +896,8 @@ function datatableyap2() {
 }
 
 function ajax_dil(dil) {
-
     $(window).off('beforeunload');
     window.location.href = "/ajax_dil.aspx?jsid=4559&dil=" + dil;
-
 }
 
 

@@ -67,6 +67,7 @@
 </style>
 <%
     toplanti_id = trn(request("toplanti_id"))
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 
     SQL="select * from ahtapot_toplanti_listesi where id = '"& toplanti_id &"'"
     set toplanti = baglanti.execute(SQL)

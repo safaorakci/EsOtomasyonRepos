@@ -215,15 +215,17 @@ Class aspJSON
 	End Function
 
 	Private Function aj_JSONEncode(ByVal val)
-		val = Replace(val, "\", "\\")
-		val = Replace(val, """", "\""")
-		'val = Replace(val, "/", "\/")
-		val = Replace(val, Chr(8), "\b")
-		val = Replace(val, Chr(12), "\f")
-		val = Replace(val, Chr(10), "\n")
-		val = Replace(val, Chr(13), "\r")
-		val = Replace(val, Chr(9), "\t")
-		aj_JSONEncode = Trim(val)
+		if NOT IsNULL(val) then
+			val = Replace(val, "\", "\\")
+			val = Replace(val, """", "\""")
+			'val = Replace(val, "/", "\/")
+			val = Replace(val, Chr(8), "\b")
+			val = Replace(val, Chr(12), "\f")
+			val = Replace(val, Chr(10), "\n")
+			val = Replace(val, Chr(13), "\r")
+			val = Replace(val, Chr(9), "\t")
+			aj_JSONEncode = Trim(val)
+		end if
 	End Function
 
 	Private Function aj_JSONDecode(ByVal val)

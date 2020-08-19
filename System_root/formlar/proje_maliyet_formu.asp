@@ -6,18 +6,19 @@
     Response.CodePage = 65001
 
     proje_id = trn(request("proje_id"))
+    FirmaID = Request.Cookies("kullanici")("firma_id")
     
-    SQL="select DISTINCT CASE WHEN satinalma.tedarikci_id = firma.id THEN firma.firma_adi ELSE 'Firma Belirtilmedi' END as firmaadi, satinalma.id, IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, aciklama, satinalma.durum, satinalma.cop, satinalma.firma_kodu, satinalma.ekleme_tarihi, satinalma.ekleme_saati from satinalma_listesi satinalma INNER JOIN ucgem_firma_listesi firma on satinalma.tedarikci_id = firma.id  or satinalma.tedarikci_id = 0 where satinalma.proje_id = '"& proje_id &"' and not satinalma.durum = 'Iptal Edildi' and satinalma.cop = 'false'"
+    SQL="select DISTINCT CASE WHEN satinalma.tedarikci_id = firma.id THEN firma.firma_adi ELSE 'Firma Belirtilmedi' END as firmaadi, satinalma.id, IsId, baslik, siparis_tarihi, oncelik, tedarikci_id, proje_id, toplamtl, toplamusd, toplameur, aciklama, satinalma.durum, satinalma.cop, satinalma.firma_kodu, satinalma.ekleme_tarihi, satinalma.ekleme_saati from satinalma_listesi satinalma INNER JOIN ucgem_firma_listesi firma on satinalma.tedarikci_id = firma.id or satinalma.tedarikci_id = 0 where satinalma.proje_id = '"& proje_id &"' and not satinalma.durum = 'Iptal Edildi' and satinalma.cop = 'false' and satinalma.firma_id = '"& FirmaID &"'"
     set satinalma = baglanti.execute(SQL)
 
-    SQL="select is_parca.IsID, is_parca.ParcaId, is_parca.StoktanKullanilanAdet, is_parca.SiparisVerilenAdet from ucgem_is_listesi is_listesi, is_parca_listesi is_parca where is_parca.IsID = is_listesi.id and departmanlar like '%proje-"&proje_id&"%' and is_listesi.durum = 'true' and is_listesi.cop = 'false'"
+    SQL="select is_parca.IsID, is_parca.ParcaId, is_parca.StoktanKullanilanAdet, is_parca.SiparisVerilenAdet from ucgem_is_listesi is_listesi, is_parca_listesi is_parca where is_parca.IsID = is_listesi.id and departmanlar like '%proje-"&proje_id&"%' and is_listesi.durum = 'true' and is_listesi.cop = 'false' and is_listesi.firma_id = '"& FirmaID &"'"
     set stoktanKullanilan = baglanti.execute(SQL)
     'response.Write(SQL)
 
-    SQL="SELECT personel_ad,personel_soyad FROM ucgem_firma_kullanici_listesi kullanici INNER JOIN satinalma_listesi satinalma on satinalma.ekleyen_id = kullanici.id WHERE satinalma.proje_id = '"& proje_id &"' and not satinalma.durum = 'Iptal Edildi'"
+    SQL="SELECT personel_ad, personel_soyad FROM ucgem_firma_kullanici_listesi kullanici INNER JOIN satinalma_listesi satinalma on satinalma.ekleyen_id = kullanici.id WHERE satinalma.proje_id = '"& proje_id &"' and not satinalma.durum = 'Iptal Edildi' and kullanici.firma_id = '"& FirmaID &"'"
     set kullanici = baglanti.execute(SQL)
 
-    SQL = "SELECT ROW_NUMBER() OVER(ORDER BY kullanici.id) AS Id, kullanici.personel_ad + ' ' + personel_soyad as ad_soyad, proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM ((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) AS calismaSuresi, CONVERT(decimal(18,2), ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))) * 0.016667, 0) * kullanici.personel_saatlik_maliyet FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id))) AS toplamMaliyet, kullanici.personel_maliyet_pb FROM dbo.ucgem_proje_listesi proje, ucgem_firma_kullanici_listesi kullanici where proje.firma_id = '1' AND proje.id = '"& proje_id &"' AND proje.cop = 'false' AND proje.durum = 'true' AND ( ( SELECT ISNULL( SUM((DATEDIFF( n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) > 0 " 
+    SQL = "SELECT ROW_NUMBER() OVER(ORDER BY kullanici.id) AS Id, kullanici.personel_ad + ' ' + personel_soyad as ad_soyad, proje.proje_adi, dbo.DakikadanSaatYap((SELECT ISNULL(SUM ((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) AS calismaSuresi, CONVERT(decimal(18,2), ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))) * 0.016667, 0) * kullanici.personel_saatlik_maliyet FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id))) AS toplamMaliyet, kullanici.personel_maliyet_pb FROM dbo.ucgem_proje_listesi proje, ucgem_firma_kullanici_listesi kullanici where proje.firma_id = '"& FirmaID &"' AND proje.id = '"& proje_id &"' AND proje.cop = 'false' AND proje.durum = 'true' AND ((SELECT ISNULL(SUM((DATEDIFF(n, CONVERT(DATETIME, calisma.baslangic,103), CONVERT(DATETIME, calisma.bitis,103)))), 0) FROM dbo.ucgem_is_calisma_listesi calisma WITH (NOLOCK) WHERE (SELECT COUNT(value) FROM STRING_SPLIT((select departmanlar from ucgem_is_listesi where id = calisma.is_id and firma_id = '"& FirmaID &"'), ',') WHERE value = 'proje-' + CONVERT(NVARCHAR(50), proje.id)) > 0 AND calisma.durum = 'true' AND calisma.cop = 'false' and calisma.ekleyen_id = kullanici.id)) > 0" 
     set personelAdamSaat = baglanti.execute(SQL)
 
     SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"
@@ -81,25 +82,25 @@
                  end if
                  do while not satinalma.eof
 
-                 SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& satinalma("id") &"' and cop = 'false'"
+                 SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& satinalma("id") &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
                  set siparisparca = baglanti.execute(SQL)
 
                  do while not siparisparca.eof
                  s = s + 1
                  durum = 0
                  if NOT IsNull(siparisparca("IsId")) then
-                     SQL = "select id, IsID, ParcaId, StoktanKullanilanAdet, SiparisVerilenAdet from is_parca_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"'"
+                     SQL = "select id, IsID, ParcaId, StoktanKullanilanAdet, SiparisVerilenAdet from is_parca_listesi where ParcaId = '"& siparisparca("parcaId") &"' and IsID = '"& siparisparca("IsId") &"' and firma_id = '"& FirmaID &"'"
                      durum = 1
                  else
-                     SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& satinalma("id") &"' and parcaId = '"& siparisparca("parcaId") &"' and cop = 'false'"
+                     SQL = "select * from satinalma_siparis_listesi where SatinalmaId = '"& satinalma("id") &"' and parcaId = '"& siparisparca("parcaId") &"' and cop = 'false' and firma_id = '"& FirmaID &"'"
                      durum = 2
                  end if
                  set sondurum = baglanti.execute(SQL)
 
                  if durum = 1 then
-                    SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"'"
+                    SQL = "select * from parca_listesi where id = '"& sondurum("ParcaId") &"' and fimra_id = '"& FirmaID &"'"
                  else
-                    SQL = "select * from parca_listesi where id = '"& sondurum("parcaId") &"'"
+                    SQL = "select * from parca_listesi where id = '"& sondurum("parcaId") &"' and fimra_id = '"& FirmaID &"'"
                  end if
                  set parcaBilgi = baglanti.execute(SQL)
 
@@ -183,7 +184,7 @@
                 end if
                 do while not stoktanKullanilan.eof
                 k = k + 1
-                SQL = "select * from parca_listesi where id = '"& stoktanKullanilan("ParcaId") &"'"
+                SQL = "select * from parca_listesi where id = '"& stoktanKullanilan("ParcaId") &"' and fimra_id = '"& FirmaID &"'"
                 set parca = baglanti.execute(SQL)
 
                 birimPB = "TL"

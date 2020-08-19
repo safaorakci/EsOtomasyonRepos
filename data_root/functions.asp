@@ -60,12 +60,17 @@
 
 
     FUNCTION URLDecodes(str)
-
+    
         DIM objScript
         SET objScript = Server.CreateObject("ScriptControl")
         objScript.Language = "JavaScript"
-        URLDecodes = objScript.Eval("decodeURIComponent(""" & str & """.replace(/\+/g,"" ""))")
+    'response.Write("1")
+    'response.Write(objScript.Eval("decodeURIComponent(""" & str & """.replace(/\+/g,"" ""))"))
+    'response.Write("decodeURIComponent(""" & str & """.replace(/\+/g,"" ""))")
+        'URLDecodes = objScript.Eval("decodeURIComponent(""" & str & """.replace(/\+/g,"" ""))")
+    'response.Write("2")
         SET objScript = NOTHING
+    'response.Write("3")
 
     END FUNCTION
 
@@ -404,5 +409,27 @@ Function RelativeTime(dt)
 	    End If
     End Function
 
-   
+    Function myDateFormat(myDate)
+        d = TwoDigits(Day(myDate))
+        m = TwoDigits(Month(myDate))    
+        y = Year(myDate)
+
+        myDateFormat= m & "." & d & "." & y
+    End Function
+
+    Function TwoDigits(num)
+        If(Len(num)=1) Then
+            TwoDigits="0"&num
+        Else
+            TwoDigits=num
+        End If
+    End Function
+
+    Function pd(n, totalDigits) 
+        if totalDigits > len(n) then 
+            pd = String(totalDigits-len(n),"0") & n 
+        else 
+            pd = n 
+        end if 
+    End Function
 %>

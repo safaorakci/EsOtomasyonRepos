@@ -3,23 +3,23 @@
 <form autocomplete="off" id="form1" runat="server">
     <style>
         .ustunegelince {
-            background-color: #eff2f7!important;
-            color: #41454e!important;
-            text-transform: uppercase!important;
-            font-family: Roboto,sans-serif!important;
-            font-size: 14px!important;
+            background-color: #eff2f7 !important;
+            color: #41454e !important;
+            text-transform: uppercase !important;
+            font-family: Roboto,sans-serif !important;
+            font-size: 14px !important;
         }
 
-        .ustunegelince:hover {
-            background-color: #bfc4cd!important;
-            color: #fff!important;
-            padding-left: 25px!important;
-        }
+            .ustunegelince:hover {
+                background-color: #bfc4cd !important;
+                color: #fff !important;
+                padding-left: 25px !important;
+            }
 
-          .ustunegelince2:hover {
-            background-color: #bfc4cd!important;
-            color: #fff!important;
-            padding-left: 25px!important;
+        .ustunegelince2:hover {
+            background-color: #bfc4cd !important;
+            color: #fff !important;
+            padding-left: 25px !important;
         }
 
 
@@ -49,15 +49,14 @@
         #color-accordion .accordion-desc {
             border-left: 5px solid #4099ff !important;
             margin-top: 0px !important;
-            padding-top:10px;
+            padding-top: 10px;
         }
-
-
     </style>
     <style>
-    .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
-        border-top:1px solid #ccc!important;
-    }
+        .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+            border-top: 1px solid #ccc !important;
+        }
+
         table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > td.sorting_asc, table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
             padding-right: 30px !important;
         }
@@ -69,11 +68,6 @@
         table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc_disabled {
             cursor: pointer !important;
             position: relative !important;
-        }
-
-        .table > thead > tr > th {
-            border-bottom-color: #ccc !important;
-            background-color: white !important;
         }
 
         table.dataTable td, table.dataTable th {
@@ -133,19 +127,21 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-header-text" style="width: 100%; font-size: 20px;"><% Response.Write(LNG("PROJELER")); %>
-                        <div style="float: right; margin-right: 15px;"><a href="javascript:void(0);" onclick="yeni_santiye_ekle();" class="btn btn-round btn-labeled btn-success"><i class="fa  fa-cube"></i><% Response.Write(LNG("Yeni Proje Ekle")); %></a></div>
+                        <div style="float: right; margin-right: 15px;"><a href="javascript:void(0);" onclick="yeni_santiye_ekle(<%=Request.QueryString["ustId"] %>);" class="btn btn-round btn-labeled btn-success"><i class="fa  fa-cube"></i><% Response.Write(LNG("Yeni Proje Ekle")); %></a></div>
                     </h5>
                 </div>
-                <div style="padding-left:25px; padding-right:25px;">
+                <div style="padding-left: 25px; padding-right: 25px;">
                     <asp:listbox id="hizli_proje_arama" onchange="hizli_proje_sectim(this);" class="select2" runat="server"></asp:listbox>
                 </div>
                 <div class="card-block accordion-block color-accordion-block">
                     <div>
-                    <div>
-                        <div class="color-accordion" id="color-accordion">
+                        <div>
+                            <div class="color-accordion" id="color-accordion">
                             <asp:repeater id="santiyeler_repeater" runat="server">
                                 <ItemTemplate>
-                        <a class="accordion-msg ustunegelince  " onclick="proje_ic_liste_getir(<%# DataBinder.Eval(Container.DataItem, "id") %>);" href="#collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" id="acilacak_santiye<%# DataBinder.Eval(Container.DataItem, "id") %>" style="color:#4f4e4e; border-top:1px solid #fff; font-weight:normal; "><i class="fa fa-map-o projeikon"></i>&nbsp;&nbsp;<%# DataBinder.Eval(Container.DataItem, "durum_adi") %>
+                        <a class="accordion-msg ustunegelince" 
+                            onclick="proje_ic_liste_getir(<%# DataBinder.Eval(Container.DataItem, "id") %>, <%=Request.QueryString["ustId"] %>);" 
+                            href="#collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" id="acilacak_santiye<%# DataBinder.Eval(Container.DataItem, "id") %>" style="color:#4f4e4e; border-top:1px solid #fff; font-weight:normal; "><i class="fa fa-map-o projeikon"></i>&nbsp;&nbsp;<%# DataBinder.Eval(Container.DataItem, "durum_adi") %>
                             <div style="float: right; width: 50px; padding: 6px; text-align: center; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; margin-top: -25px; position: absolute; right: 30px; ">
                             <div class="pcoded-badge label label-inverse" style="width:35px; font-size:100%;">
                             <%# DataBinder.Eval(Container.DataItem, "santiye_sayisi") %>
@@ -162,13 +158,13 @@
                         </ItemTemplate>
                             </asp:repeater>
                         </div>
-                    </div>
-
-                    <div id="accordiv2" class="col-md-6">
-
-
-                    </div>
                         </div>
+
+                        <div id="accordiv2" class="col-md-6">
+
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,7 +186,7 @@
             });
 
             $("#hizli_proje_arama").attr("size", "1");
-            
+
             var songrup = "";
             $("#hizli_proje_arama option").each(function () {
                 var grup = $(this).attr("optiongroup");
@@ -200,14 +196,14 @@
                 }
             });
 
-           // $("#accordiv2").html($("#accordiv1").html());
+            // $("#accordiv2").html($("#accordiv1").html());
         });
 
     </script>
 
 
 
-        <%
+    <%
         string acilacak = "0";
         try
         {
@@ -231,59 +227,4 @@
     <%
         }
     %>
-
-
-    <%--    <div class="row">
-
-        <h2 class="row-seperator-header"><i class="fa fa-th-list"></i>&nbsp;Projeler
-            <div style="float: right; margin-right: 15px;">
-                <a href="javascript:void(0);" onclick="yeni_santiye_ekle();" class="btn btn-labeled btn-success"><span class="btn-label" style="color: white;"><i class="fa  fa-cube"></i></span>&nbsp;Yeni Proje Ekle </a>
-            </div>
-        </h2>
-        <article class="col-sm-12 col-md-12 col-lg-12">
-            <div class="jarviswidget well transparent" id="wid-id-9" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-                <header>
-                    <span class="widget-icon"><i class="fa fa-comments"></i></span>
-                    <h2>Projeler</h2>
-
-                </header>
-                <div>
-                    <div class="widget-body">
-                        <div class="panel-group smart-accordion-default" id="accordion">
-
-                            <asp:repeater id="santiyeler_repeater" runat="server">
-                                <ItemTemplate>
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title"><a id="acilacak_santiye<%# DataBinder.Eval(Container.DataItem, "id") %>" data-toggle="collapse" data-parent="#accordion" href="#collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" class="collapsed ustunegelince" style=" padding:15px; font-weight:bold; color: white;"><i class="fa fa-lg fa-angle-down pull-left"></i><i class="fa fa-lg fa-angle-up pull-left"></i><%# DataBinder.Eval(Container.DataItem, "durum_adi") %><div style="float:right; width:30px; background-color:#fff; color:black;  padding:6px; text-align:center; -webkit-border-radius: 10px;
--moz-border-radius: 10px;
-border-radius: 10px; margin-top:-5px;"><%# DataBinder.Eval(Container.DataItem, "santiye_sayisi") %></div></a></h4>
-                                        </div>
-                                        <div id="collapseOne<%# DataBinder.Eval(Container.DataItem, "id") %>" class="panel-collapse collapse">
-                                            <div class="panel-body">
-                                                <div class="btn-group-vertical" style="width:100%;">
-                                                    
-										        </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ItemTemplate>
-                            </asp:repeater>
-
-
-
-                        </div>
-
-                    </div>
-                    <!-- end widget content -->
-
-                </div>
-                <!-- end widget div -->
-
-            </div>
-            <!-- end widget -->
-
-        </article>
-
-    </div>--%>
 </form>

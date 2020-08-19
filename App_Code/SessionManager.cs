@@ -25,6 +25,8 @@ public class SessionManager
             if (cookie == null) return null;
 
             Kullanici kullanici = new Kullanici();
+            //kullanici.eposta = HttpUtility.UrlEncode(cookie["personel_eposta"]).ToString();
+            //kullanici.parola = HttpUtility.UrlEncode(cookie["personel_parola"]).ToString();
             kullanici.default_pb = HttpUtility.UrlDecode(cookie["default_pb"].ToString());
             kullanici.dil_secenek =
                 HttpUtility.UrlDecode(cookie["dil_secenek"].Equals(null) ? "turkce" : cookie["dil_secenek"].ToString());
@@ -67,6 +69,8 @@ public class SessionManager
         {
             Kullanici kullanici = (Kullanici)value;
             HttpCookie userCookie = new HttpCookie("kullanici");
+            //userCookie["eposta"] = HttpUtility.UrlEncode(kullanici.eposta);
+            //userCookie["parola"] = HttpUtility.UrlEncode(kullanici.parola);
             userCookie["default_pb"] = HttpUtility.UrlEncode(kullanici.default_pb);
             userCookie["dil_secenek"] = HttpUtility.UrlEncode(kullanici.dil_secenek);
             userCookie["yetki_kodu"] = HttpUtility.UrlEncode(kullanici.yetki_kodu);

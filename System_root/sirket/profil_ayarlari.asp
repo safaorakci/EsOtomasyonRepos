@@ -5,9 +5,10 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
     personel_id = Request.Cookies("kullanici")("kullanici_id")
 
-    SQL="select gorev.gorev_adi, kullanici.* from ucgem_firma_kullanici_listesi kullanici join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.id = '"& personel_id &"' and kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"'"
+    SQL="select kullanici.personel_resim, left(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'), len(ISNULL((select gorev_adi + ', ' from tanimlama_gorev_listesi where (SELECT COUNT(value) FROM STRING_SPLIT(kullanici.gorevler, ',') WHERE value =  id ) > 0 and cop = 'false' for xml path('')), '----'))-1) as gorev_adi, kullanici.personel_ad, kullanici.personel_soyad from ucgem_firma_kullanici_listesi kullanici with(nolock) where kullanici.firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' and kullanici.id = '"& personel_id &"' and kullanici.firma_id = '"& FirmaID &"' and kullanici.cop = 'false' order by kullanici.id asc"
     set personel = baglanti.execute(SQL)
 
     SQL = "select * from tbl_ModulYetkileri where FirmaId = '"& Request.Cookies("kullanici")("firma_id") &"'"

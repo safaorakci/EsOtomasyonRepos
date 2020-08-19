@@ -3,6 +3,8 @@
     Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
     Response.CodePage = 65001
 
+    FirmaID = Request.Cookies("kullanici")("firma_id")
+
     Sub ParcaParcaDosyaIndir(FilePath, FileName)
         Const clChunkSize = 1048576 ' 1MB
         Dim oStream, i
@@ -27,7 +29,7 @@
 
         dosya_id = request("dosya_id")
 
-        SQL="select * from ucgem_is_dosya_listesi where id = '"& dosya_id &"'"
+        SQL="select * from ucgem_is_dosya_listesi where id = '"& dosya_id &"' and firma_id = '"& FirmaID &"'"
         set cek = baglanti.execute(SQL)
 
         ParcaParcaDosyaIndir Server.MapPath(cek("dosya_yolu")), (cek("dosya_adi") & "." & split(right(cek("dosya_yolu"), 7), ".")(1))

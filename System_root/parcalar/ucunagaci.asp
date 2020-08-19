@@ -79,7 +79,7 @@
                     <div class="row">
 
                         <div class="col-md-3">
-                            <h5>Ürün Grubu Ekle</h5><br />
+                            <h6>Ürün Grubu Ekle</h6><br />
                             <div class="row">
                                 <label class="col-sm-12  col-lg-12 col-form-label">Grup Adı :</label>
                                 <div class="col-sm-12 col-lg-12">
@@ -93,14 +93,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <input type="button" value="Ürün Grubu Ekle" onclick="urun_grubu_ekle();" class="btn btn-primary" />
+                                    <input type="button" value="Ürün Grubu Ekle" onclick="urun_grubu_ekle();" class="btn btn-primary btn-mini float-right" />
                                 </div>
                             </div>
                         </div>
 
 
                         <div class="col-md-9">
-                            <h5>Ürün Ağaçları</h5><br />
+                            <h6>Ürün Ağaçları</h6><br />
                             <div id="urun_agac_listesi">
                                 <script>
                                     $(function (){

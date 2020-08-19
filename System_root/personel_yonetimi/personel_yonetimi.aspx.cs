@@ -52,6 +52,7 @@ public partial class System_root_personel_yonetimi_personel_yonetimi : System.We
         gorevler.DataValueField = "id";
         gorevler.DataBind();
         gorevler.CssClass = "select2";
+        gorevler.Attributes.Add("multiple", "multiple");
         gorevler.Style.Add("width", "100%");
 
         ayarlar.cnn.Close();

@@ -11,13 +11,11 @@ using System.Xml;
 
 public partial class System_root_santiyeler_santiyeler : System.Web.UI.Page
 {
-
     public XmlDocument doc = new XmlDocument();
 
     protected void Page_Load(object sender, EventArgs e)
     {
         doc.Load(Server.MapPath("/dil_cevirileri.xml"));
-
 
         ListItem litem = new ListItem();
         litem.Text = "Hızlı Proje Ara...";
@@ -37,18 +35,16 @@ public partial class System_root_santiyeler_santiyeler : System.Web.UI.Page
         //santiyeler_repeater.ItemCreated += Santiyeler_repeater_ItemCreated;
         santiyeler_repeater.DataBind();
 
-
-
         foreach (DataRow item in ds.Tables[1].Rows)
         {
             ListItem litem2 = new ListItem();
             litem2.Text = item["proje_adi"].ToString() + "-" + item["proje_kodu"].ToString();
             litem2.Value = item["idd"].ToString();
             litem2.Attributes.Add("santiye_durum_id", item["santiye_durum_id"].ToString());
+            litem2.Attributes.Add("UstId", Request.QueryString["ustId"]);
             litem2.Attributes.Add("optiongroup", item["durum_adi"].ToString());
             hizli_proje_arama.Items.Add(litem2);
         }
-
     }
 
     private void Santiyeler_repeater_ItemCreated(object sender, RepeaterItemEventArgs e)
@@ -78,6 +74,7 @@ public partial class System_root_santiyeler_santiyeler : System.Web.UI.Page
                 litem.Text = item["proje_adi"].ToString();
                 litem.Value = item["idd"].ToString();
                 litem.Attributes.Add("santiye_durum_id", drow["id"].ToString());
+                litem.Attributes.Add("UstId", Request.QueryString["ustId"]);
                 litem.Attributes.Add("optiongroup", drow["durum_adi"].ToString());
                 hizli_proje_arama.Items.Add(litem);
             }
@@ -88,13 +85,8 @@ public partial class System_root_santiyeler_santiyeler : System.Web.UI.Page
             {
                 kategori_yok.Visible = true;
             }
-
         }
     }
-
-
-
-
 
     public string LNG(string kelime)
     {

@@ -451,11 +451,6 @@ public partial class System_root_santiyeler_santiye_detay : System.Web.UI.Page
         ayarlar.cnn.Close();
     }
 
-
-
-
-
-
     public string LNG(string kelime)
     {
         string dil = Request.Cookies["kullanici"]["dil_secenek"].ToString();

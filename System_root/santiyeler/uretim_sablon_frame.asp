@@ -6,6 +6,11 @@
 
     proje_id = trn(request("proje_id"))
     tip = trn(request("tip"))
+
+    FirmaID = Request.Cookies("kullanici")("firma_id")
+
+    SQL = "select id, adi, tip, grup from etiketler where firma_id = '"& Request.Cookies("kullanici")("firma_id") &"' order by grup desc"
+    set etiket = baglanti.execute(SQL)
 %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -784,7 +789,7 @@
         </tr>
 
         <tr>
-          <td  colspan="2">
+          <td  colspan="1" style="width:230px" valign="top">
             <label for="status" class=" "><%=LNG("Durum")%></label><br>
             <select id="status" name="status" class="taskStatus" status="(#=obj.status#)"  onchange="$(this).attr('STATUS',$(this).val());">
               <option value="STATUS_ACTIVE" class="taskStatus" status="STATUS_ACTIVE" ><%=LNG("Aktif")%></option>
@@ -793,6 +798,22 @@
               <option value="STATUS_DONE" class="taskStatus" status="STATUS_DONE" ><%=LNG("Tamamlandı")%></option>
               <option value="STATUS_FAILED" class="taskStatus" status="STATUS_FAILED" ><%=LNG("Hatalı")%></option>
               <option value="STATUS_UNDEFINED" class="taskStatus" status="STATUS_UNDEFINED" ><%=LNG("Diğer")%></option>
+            </select>
+          </td>
+
+          <td style="width:300px; padding-right: 60px;">
+            <label for="etiket class=" "><%=LNG("Etiket")%></label><br>
+            <select id="etiket" name="etiket" class="form-control select2" multiple >
+                <%
+                    if not etiket.eof then
+                    do while not etiket.eof
+                %>
+                    <option value="<%=etiket("tip") %>-<%=etiket("id") %>"> [<%=etiket("grup") %>] - <%=etiket("adi") %></option>
+                <%
+                    etiket.movenext
+                    loop
+                    end if
+                %>
             </select>
           </td>
 
@@ -904,6 +925,27 @@
             });
         }
 
+    });
+
+    $.JST.loadDecorator("TASK_EDITOR", function (assigTr, taskAssig) {
+        //var resEl = assigTr.find("[name=resourceId]");
+
+        console.log(taskAssig);
+        setTimeout(function () {
+            if (taskAssig.etiket !== null) {
+                var slpEtiket = taskAssig.etiket.split(',');
+
+                var selectedValue = new Array();
+
+
+                for (var i = 0; i < slpEtiket.length; i++) {
+                    selectedValue[i] = slpEtiket[i].replace(" ", "");
+                }
+
+                $("#etiket").val(selectedValue);
+                $("#etiket").select2();
+            }
+        }, 1000);
     });
 
 

@@ -21,7 +21,7 @@ public partial class login : System.Web.UI.Page
 
         ayarlar.baglan();
         ayarlar.cmd.Parameters.Clear();
-        ayarlar.cmd.CommandText = "select isnull(gorev.yetkili_sayfalar,1) as yetkili_sayfalar , kullanici.*, firma.firma_hid, firma.id as firma_id from ucgem_firma_kullanici_listesi kullanici join ucgem_firma_listesi firma on firma.id = kullanici.firma_id join tanimlama_gorev_listesi gorev on gorev.id = kullanici.gorevler where kullanici.durum = 'true' and kullanici.cop = 'false' and kullanici.personel_eposta = @email and kullanici.personel_parola = @password;";
+        ayarlar.cmd.CommandText = "EXEC PersonelYetkiliSayfalar @email, @password";
         ayarlar.cmd.Parameters.Add("email", email);
         ayarlar.cmd.Parameters.Add("password", password);
         SqlDataAdapter sda = new SqlDataAdapter(ayarlar.cmd);
@@ -47,6 +47,8 @@ public partial class login : System.Web.UI.Page
 
                 Kullanici kullanici = new Kullanici();
                 kullanici.default_pb = "Auto";
+                //kullanici.eposta = kayitlar["personel_eposta"].ToString();
+                //kullanici.parola = kayitlar["personel_parola"].ToString();
                 kullanici.dil_secenek = kayitlar["dil"].ToString().Equals(null) ? "turkce" : dil_secenek;
                 kullanici.yetki_kodu = kayitlar["yetki_kodu"].ToString();
                 kullanici.firma_kodu = kayitlar["firma_kodu"].ToString();
@@ -130,11 +132,7 @@ public partial class login : System.Web.UI.Page
         SqlDataReader dataReader = ayarlar.cmd.ExecuteReader();
         while (dataReader.Read())
         {
-            if (dataReader["firma_kodu"].ToString() == "ESOTOMASYON")
-                firma.Title = "ESFLW";
-            else
-                firma.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader["firma_kodu"].ToString());
-
+            firma.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader["firma_kodu"].ToString());
             firma.Logo = dataReader["firma_logo"].ToString();
         }
         ayarlar.cnn.Close();

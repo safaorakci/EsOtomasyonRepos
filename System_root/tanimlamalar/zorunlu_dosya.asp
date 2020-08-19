@@ -74,16 +74,16 @@
     <div class="row">
         <div class="col-md-4">
             <div class="accordion" id="accordionExample">
-                <div class="card" style="margin-bottom: 15px">
-                    <div class="card-header" id="headingOne" style="padding: 15px !important; border-bottom: 1px solid #ccc">
-                        <h6 class="mb-0">
+                <div class="card">
+                    <div class="card-header border-bottom p-3" id="headingOne" style="padding: 15px !important; border-bottom: 1px solid #ccc">
+                        <h6 class="card-title mb-0">
                             Zorunlu Belgeler
                         </h6>
                     </div>
 
                     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                        <div class="card-body">
-                            <div class="form-group">
+                        <div class="card-body p-3">
+                            <div class="form-group mb-1">
                                 <label class="col-form-label">Dosya Adı</label>
                                 <input type="text" id="dosyaAdi" class="form-control" placeholder="Dosya Adı" required />
                             </div>
@@ -98,10 +98,11 @@
                                         </label>
                                     </div>
                                 </div>
-                                <hr style="margin-bottom: 5px; margin-top: 5px" />
                             </div>
-                            <button id="dosyaDuzenle" class="btn btn-info mb-3 float-right" style="display:none">Düzenle</button>
-                            <button id="dosyaKaydet" class="btn btn-success mb-3 float-right" onclick="ZorunluDosyaKayıt('/System_Root/ajax/islem1.aspx/ZorunluDosyaKayıt');">Kaydet</button>
+                        </div>
+                        <div class="modal-footer p-3">
+                            <button id="dosyaDuzenle" class="btn btn-info float-right btn-mini" style="display:none">Düzenle</button>
+                            <button id="dosyaKaydet" class="btn btn-success float-right btn-mini" onclick="ZorunluDosyaKayıt('/System_Root/ajax/islem1.aspx/ZorunluDosyaKayıt');">Kaydet</button>
                         </div>
                     </div>
                 </div>
@@ -109,10 +110,10 @@
         </div>
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header" style="border-bottom: 1px solid #ccc; padding: 15px">
+                <div class="card-header border-bottom p-3">
                     <h6 class="mb-0">Tanımlanan Belgeler</h6>
                 </div>
-                <div class="card-body" id="dosyalar">
+                <div class="card-body p-3" id="dosyalar">
                     <script>
                         $(function (){
                             ZorunluDosyaListesi();

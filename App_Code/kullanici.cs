@@ -13,6 +13,8 @@ public class Kullanici
 
 
     private string _default_pb = string.Empty;
+    private string _eposta = string.Empty;
+    private string _parola = string.Empty;
     private string _dil_secenek = string.Empty;
     private string _yetki_kodu = string.Empty;
     private string _firma_hid = string.Empty;
@@ -43,25 +45,33 @@ public class Kullanici
         set { _yetkili_sayfalar = value; }
     }
 
+    //public string eposta
+    //{
+    //    get { return _eposta; }
+    //    set { _eposta = value; }
+    //}
+
+    //public string parola
+    //{
+    //    get { return _parola; }
+    //    set { _parola = value; }
+    //}
 
     public string remember
     {
         get { return _remember; }
         set { _remember = value; }
     }
-
     public string default_pb
     {
         get { return _default_pb; }
         set { _default_pb = value; }
     }
-
     public string dil_secenek
     {
         get { return _dil_secenek; }
         set { _dil_secenek = value; }
     }
-
     public string firma_kodu
     {
         get { return _firma_kodu; }
@@ -92,13 +102,11 @@ public class Kullanici
         get { return _resim; }
         set { _resim = value; }
     }
-
     public string kullanici_adsoyad
     {
         get { return _kullanici_adsoyad; }
         set { _kullanici_adsoyad = value; }
     }
-
     public string durum
     {
         get { return _durum; }
@@ -109,48 +117,37 @@ public class Kullanici
         get { return _login; }
         set { _login = value; }
     }
-
     public DateTime login_tarih
     {
         get { return _login_tarih; }
         set { _login_tarih = value; }
     }
-
-
     public int firma_id
     {
         get { return _firma_id; }
         set { _firma_id = value; }
     }
-
-
-
     public int kullanici_id
     {
         get { return _kullanici_id; }
         set { _kullanici_id = value; }
     }
-
-
     public int ekleyen_id
     {
         get { return _ekleyen_id; }
         set { _ekleyen_id = value; }
     }
-
     public string departmanlar
     {
         get { return _departmanlar; }
         set { _departmanlar = value; }
     }
-
     public KullaniciRolleri Rolu
     {
         get { return _rolu; }
         set { _rolu = value; }
     }
     #endregion
-
 }
 
 

@@ -7,15 +7,16 @@
 
     izin_id = trn(request("izin_id"))
     personel_id = trn(request("personel_id"))
+    FirmaID = Request.Cookies("kullanici")("firma_id")
 
 
-    SQL="SELECT talep.*, personel.tcno, personel.personel_ad, personel.personel_soyad, isnull(gorev.gorev_adi, '') as gorev_adi FROM ucgem_personel_izin_talepleri talep JOIN dbo.ucgem_firma_kullanici_listesi personel ON personel.id = talep.personel_id left join dbo.tanimlama_gorev_listesi gorev on gorev.id = personel.gorevler where talep.id = '"& izin_id &"'"
+    SQL="SELECT talep.*, personel.tcno, personel.personel_ad, personel.personel_soyad, isnull(gorev.gorev_adi, '') as gorev_adi FROM ucgem_personel_izin_talepleri talep JOIN dbo.ucgem_firma_kullanici_listesi personel ON personel.id = talep.personel_id left join dbo.tanimlama_gorev_listesi gorev on gorev.id = personel.gorevler where talep.id = '"& izin_id &"' and talep.firma_id = '"& FirmaID &"' and gorev.firma_id = '"& FirmaID &"' and personel.firma_id = '"& FirmaID &"'"
     set izin = baglanti.execute(SQL)
 
-    SQL="select * from ucgem_firma_kullanici_listesi where id = '"& izin("OnaylayanId") &"'"
+    SQL="select * from ucgem_firma_kullanici_listesi where id = '"& izin("OnaylayanId") &"' and firma_id = '"& FirmaID &"'"
     set onaylayancek = baglanti.execute(SQL)
 
-    SQL="select STUFF((select departman_adi + ', ' from dbo.tanimlama_departman_listesi departman join ucgem_firma_kullanici_listesi personel on dbo.iceriyormu(personel.departmanlar, departman.id)=1 where personel.id = '1' FOR XML PATH('')), 1, 0, '') as departmanlar"
+    SQL="select STUFF((select departman_adi + ', ' from dbo.tanimlama_departman_listesi departman join ucgem_firma_kullanici_listesi personel on dbo.iceriyormu(personel.departmanlar, departman.id) = 1 where personel.id = '"& personel_id &"' and personel.firma_id = '"& FirmaID &"' FOR XML PATH('')), 1, 0, '') as departmanlar"
     set departmancek = baglanti.execute(SQL)
 
     SQL = "select * from ucgem_firma_listesi where yetki_kodu = 'BOSS'"

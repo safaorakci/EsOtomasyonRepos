@@ -47,6 +47,7 @@ namespace Ahtapot.App_Code.ayarlar
 
         public static SqlConnection cnn = new SqlConnection();
         public static SqlCommand cmd = new SqlCommand();
+        
 
         public const string PushOverAppKey = "a11zsk3q4qbd68y4244hg63biae61i";
         public const string PushOverGroupKey = "gqnjg2j1nkug4ochygfs7veyq5akdc";
@@ -59,6 +60,7 @@ namespace Ahtapot.App_Code.ayarlar
                 cnn.Open();
                 cmd.Connection = cnn;
             }
+
         }
         public static bool IsNumeric(string s)
         {

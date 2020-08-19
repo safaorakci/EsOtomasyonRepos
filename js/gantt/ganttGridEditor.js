@@ -207,7 +207,9 @@ GridEditor.prototype.refreshTaskRow = function (task) {
     row.find("[name=name]").val(task.name);
     row.find("[name=code]").val(task.code);
     row.find("[status]").attr("status", task.status);
-
+    row.find("[etiket]").val(task.etiket);
+    row.find("[orderIndex]").val(0);
+    
     row.find("[name=duration]").val(durationToString(task.duration)).prop("readonly", !canWrite || task.isParent() && task.master.shrinkParent);
     row.find("[name=progress]").val(task.progress).prop("readonly", !canWrite || task.progressByWorklog == true);
     row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
@@ -563,7 +565,7 @@ function DateChanged(StartDateTime,EndDateTime) {
     data = "islem=DateTimeChanged";
     data += "&StartDateTime=" + StartDateTime;
     data += "&EndDateTime=" + EndDateTime;
-    console.log(data);
+    //console.log(data);
 
 
     $.ajax("/ajax_planlama/", {
@@ -571,7 +573,7 @@ function DateChanged(StartDateTime,EndDateTime) {
         data: { islem: "DateTimeChanged",prj: JSON.stringify(data)},
         type: "POST",
         success: function (response) {
-            console.log("girdi");
+            //console.log("girdi");
             if (response.ok) {
                 if (response.project) {
                     
@@ -724,6 +726,7 @@ GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
             var assigsTable = taskEditor.find("#assigsTable");
             var assigRow = $.JST.createFromTemplate({ task: task, assig: { id: "tmp_" + new Date().getTime() + "_" + cnt } }, "ASSIGNMENT_ROW");
             assigsTable.append(assigRow);
+
             $("#bwinPopupd").scrollTop(10000);
         }).click();
 
@@ -733,9 +736,12 @@ GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
             var task = self.master.getTask(taskId); // get task again because in case of rollback old task is lost
 
             self.master.beginTransaction();
+           
             task.name = taskEditor.find("#name").val();
             task.description = taskEditor.find("#description").val();
             task.code = taskEditor.find("#code").val();
+            task.etiket = taskEditor.find("#etiket").val();
+            
             task.progress = parseFloat(taskEditor.find("#progress").val());
             //task.duration = parseInt(taskEditor.find("#duration").val()); //bicch rimosso perchè devono essere ricalcolata dalla start end, altrimenti sbaglia
             task.startIsMilestone = taskEditor.find("#startIsMilestone").is(":checked");
